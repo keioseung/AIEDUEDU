@@ -161,7 +161,17 @@ export default function DashboardPage() {
         const stored = localStorage.getItem('userProgress')
         if (stored) {
           const parsed = JSON.parse(stored)
-          return parsed[sessionId]?.[selectedDate] || []
+          const userData = parsed[sessionId]
+          if (userData) {
+            // selectedDate가 있는 경우 해당 날짜의 데이터 반환
+            if (selectedDate && userData[selectedDate]) {
+              console.log(`대시보드 - ${selectedDate} 날짜의 로컬 AI 정보:`, userData[selectedDate])
+              return userData[selectedDate]
+            }
+            // selectedDate가 없으면 오늘 날짜의 데이터 반환
+            const today = new Date().toISOString().split('T')[0]
+            return userData[today] || []
+          }
         }
       } catch (error) {
         console.error('Failed to parse local progress:', error)
@@ -174,6 +184,16 @@ export default function DashboardPage() {
   const backendProgress = userProgress?.[selectedDate] || []
   const learnedAIInfo = Math.max(localProgress.length, backendProgress.length)
   const aiInfoProgress = totalAIInfo > 0 ? (learnedAIInfo / totalAIInfo) * 100 : 0
+  
+  // 디버깅: 진행율 계산 확인
+  console.log('대시보드 진행율 계산:', {
+    selectedDate,
+    totalAIInfo,
+    localProgress: localProgress.length,
+    backendProgress: backendProgress.length,
+    learnedAIInfo,
+    aiInfoProgress
+  })
 
   // 실제 학습한 용어 개수 계산 - 백엔드 데이터와 로컬 데이터 통합
   const totalTerms = 60 // 3개 AI 정보 × 20개 용어씩
@@ -188,10 +208,14 @@ export default function DashboardPage() {
           const parsed = JSON.parse(stored)
           const userData = parsed[sessionId]
           if (userData && userData.terms_by_date) {
-            // 모든 날짜의 용어 개수 합계
-            return Object.values(userData.terms_by_date).reduce((total: number, terms: any) => {
-              return total + (Array.isArray(terms) ? terms.length : 0)
-            }, 0)
+            // selectedDate가 있는 경우 해당 날짜의 용어 개수 반환
+            if (selectedDate && userData.terms_by_date[selectedDate]) {
+              console.log(`대시보드 - ${selectedDate} 날짜의 로컬 용어:`, userData.terms_by_date[selectedDate])
+              return userData.terms_by_date[selectedDate].length
+            }
+            // selectedDate가 없으면 오늘 날짜의 용어 개수 반환
+            const today = new Date().toISOString().split('T')[0]
+            return userData.terms_by_date[today]?.length || 0
           }
         }
       } catch (error) {
@@ -204,6 +228,16 @@ export default function DashboardPage() {
   // 백엔드와 로컬 데이터 중 더 큰 값 사용
   const learnedTerms = Math.max(learnedTermsFromBackend, localTermsCount)
   const termsProgress = totalTerms > 0 ? (learnedTerms / totalTerms) * 100 : 0
+  
+  // 디버깅: 용어 진행율 계산 확인
+  console.log('대시보드 용어 진행율 계산:', {
+    selectedDate,
+    totalTerms,
+    learnedTermsFromBackend,
+    localTermsCount,
+    learnedTerms,
+    termsProgress
+  })
 
   // 퀴즈 점수 계산 - 당일 푼 전체 문제수가 분모, 정답 맞춘 총 개수가 분자
   const quizScore = (() => {

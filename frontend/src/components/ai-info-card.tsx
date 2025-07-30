@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles } from 'lucide-react'
 import { useUpdateUserProgress, useCheckAchievements, useUpdateTermProgress, useLearnedTerms } from '@/hooks/use-user-progress'
+import { useQueryClient } from '@tanstack/react-query'
 import type { AIInfoItem, TermItem } from '@/types'
 import { userProgressAPI } from '@/lib/api'
 
@@ -28,6 +29,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   const [isLearning, setIsLearning] = useState(false)
   const [showAllTermsComplete, setShowAllTermsComplete] = useState(false)
   const [showRelearnButton, setShowRelearnButton] = useState(false)
+  const queryClient = useQueryClient()
   const updateProgressMutation = useUpdateUserProgress()
   const checkAchievementsMutation = useCheckAchievements()
   const updateTermProgressMutation = useUpdateTermProgress()
@@ -54,7 +56,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
   const actualLearnedTerms = new Set<string>()
   
-  // React Query 데이터에서 문자열만 추가
+  // React Query 데이터에서 문자열만 추가 (우선순위 높음)
   if (learnedTerms instanceof Set) {
     for (const term of learnedTerms) {
       if (typeof term === 'string') {
@@ -63,10 +65,18 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     }
   }
   
-  // localStorage 데이터 추가
+  // localStorage 데이터 추가 (백업용)
   for (const term of localLearnedTerms) {
     actualLearnedTerms.add(term)
   }
+  
+  // 디버깅: 용어 학습 상태 확인
+  console.log(`용어 학습 상태 - ${sessionId}_${date}_${index}:`, {
+    learnedTerms: Array.from(learnedTerms || []),
+    localLearnedTerms: Array.from(localLearnedTerms),
+    actualLearnedTerms: Array.from(actualLearnedTerms),
+    totalTerms: info.terms?.length || 0
+  })
   
   // prop이 바뀌거나 forceUpdate, selectedDate가 바뀌면 동기화
   useEffect(() => {
@@ -112,6 +122,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
 
           // 즉시 데이터 새로고침
           await refetchLearnedTerms()
+          
+          // 관련 쿼리들 무효화하여 데이터 동기화
+          queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+          queryClient.invalidateQueries({ queryKey: ['user-progress', sessionId] })
+          queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId] })
 
           // N개 학습완료 알림 매번 표시
           setShowAllTermsComplete(true)
@@ -321,6 +336,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                           
                           // 즉시 데이터 새로고침
                           await refetchLearnedTerms()
+                          
+                          // 관련 쿼리들 무효화하여 데이터 동기화
+                          queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+                          queryClient.invalidateQueries({ queryKey: ['user-progress', sessionId] })
+                          queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId] })
                           
                           // 진행률 업데이트 콜백 호출
                           if (onProgressUpdate) {
