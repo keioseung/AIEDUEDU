@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+// Railway 배포 환경의 백엔드 주소 사용
+const API_BASE_URL = 'https://aieduedu-production-d8db.up.railway.app'
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

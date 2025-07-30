@@ -12,6 +12,7 @@ origins = [
     "http://localhost:3000",
     "https://simple-production-b0b3.up.railway.app",
     "https://simple-production-142c.up.railway.app",
+    "https://aieduedu-production.up.railway.app",  # 현재 프론트엔드 주소
     "*"  # 모든 origin 허용 (개발 중)
 ]
 
