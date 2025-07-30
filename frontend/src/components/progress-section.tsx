@@ -573,6 +573,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         </div>
         <div className="glass rounded-2xl p-6">
           {(() => {
+            const chartData = periodStats?.period_data || []
             // 디버깅: 조건 확인
             console.log('그래프 렌더링 조건 확인:', {
               uniqueChartDataLength: uniqueChartData.length,
@@ -580,7 +581,6 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               hasData: uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
             })
             
-            const chartData = periodStats?.period_data || []
             return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
           })() ? (
             <div className="space-y-8">
