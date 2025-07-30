@@ -123,8 +123,14 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           // localStorage는 백엔드 데이터와 동기화
           const updatedLearnedTerms = await refetchLearnedTerms()
           if (updatedLearnedTerms.data) {
-            setLocalLearnedTerms(updatedLearnedTerms.data)
-            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...updatedLearnedTerms.data]))
+            const stringSet = new Set<string>()
+            for (const term of updatedLearnedTerms.data) {
+              if (typeof term === 'string') {
+                stringSet.add(term)
+              }
+            }
+            setLocalLearnedTerms(stringSet)
+            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...stringSet]))
           }
           
           // 관련 쿼리들 무효화하여 데이터 동기화
@@ -339,8 +345,14 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                           // localStorage는 백엔드 데이터와 동기화
                           const updatedLearnedTerms = await refetchLearnedTerms()
                           if (updatedLearnedTerms.data) {
-                            setLocalLearnedTerms(updatedLearnedTerms.data)
-                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...updatedLearnedTerms.data]))
+                            const stringSet = new Set<string>()
+                            for (const term of updatedLearnedTerms.data) {
+                              if (typeof term === 'string') {
+                                stringSet.add(term)
+                              }
+                            }
+                            setLocalLearnedTerms(stringSet)
+                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...stringSet]))
                           }
                           
                           // 관련 쿼리들 무효화하여 데이터 동기화
