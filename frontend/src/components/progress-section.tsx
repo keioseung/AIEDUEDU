@@ -100,6 +100,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       console.log('진행률 탭 - selectedDate 변경됨:', selectedDate)
       // 쿼리 무효화하여 데이터 새로고침
       queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+      queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
       
       // 로컬 스토리지에서 해당 날짜의 AI 정보 학습 데이터 확인
       if (typeof window !== 'undefined') {
@@ -194,27 +195,35 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     return []
   })()
   
-  // 백엔드 데이터와 로컬 데이터 통합
-  const combinedData = [...chartData, ...localAIProgress]
-  
-  // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선)
-  const uniqueChartData = combinedData.reduce((acc: PeriodData[], current: PeriodData) => {
-    const existingIndex = acc.findIndex(item => item.date === current.date)
-    if (existingIndex === -1) {
-      acc.push(current)
-    } else {
-      // 중복된 날짜가 있으면 더 높은 값을 사용 (로컬 데이터 우선)
-      acc[existingIndex] = {
-        ...acc[existingIndex],
-        ai_info: Math.max(acc[existingIndex].ai_info, current.ai_info),
-        terms: Math.max(acc[existingIndex].terms, current.terms),
-        quiz_score: Math.max(acc[existingIndex].quiz_score, current.quiz_score),
-        quiz_correct: Math.max(acc[existingIndex].quiz_correct, current.quiz_correct),
-        quiz_total: Math.max(acc[existingIndex].quiz_total, current.quiz_total)
+  // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선)
+  const uniqueChartData = (() => {
+    const combinedData = [...localAIProgress, ...chartData]
+    
+    // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선)
+    const uniqueData = combinedData.reduce((acc: PeriodData[], current: PeriodData) => {
+      const existingIndex = acc.findIndex(item => item.date === current.date)
+      if (existingIndex === -1) {
+        acc.push(current)
+      } else {
+        // 중복된 날짜가 있으면 로컬 데이터를 우선적으로 사용
+        const existing = acc[existingIndex]
+        acc[existingIndex] = {
+          ...existing,
+          ai_info: Math.max(existing.ai_info, current.ai_info),
+          terms: Math.max(existing.terms, current.terms),
+          quiz_score: Math.max(existing.quiz_score, current.quiz_score),
+          quiz_correct: Math.max(existing.quiz_correct, current.quiz_correct),
+          quiz_total: Math.max(existing.quiz_total, current.quiz_total)
+        }
       }
-    }
-    return acc
-  }, []).sort((a: PeriodData, b: PeriodData) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      return acc
+    }, []).sort((a: PeriodData, b: PeriodData) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    
+    // 디버깅: 최종 그래프 데이터 확인
+    console.log('최종 그래프 데이터:', uniqueData)
+    
+    return uniqueData
+  })()
   
   // 최대값을 고정값으로 설정 (AI 정보: 3, 용어: 60, 퀴즈: 100)
   const maxAI = 3;
@@ -389,9 +398,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">오늘 학습 수</span>
+              <span className="text-white/70 text-sm">
+                {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
+              </span>
               <span className="text-blue-400 font-bold text-lg">
-                {stats?.today_ai_info || 0}
+                {(() => {
+                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                  if (selectedDate && uniqueChartData.length > 0) {
+                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                    if (selectedDateData) {
+                      return selectedDateData.ai_info
+                    }
+                  }
+                  return stats?.today_ai_info || 0
+                })()}
               </span>
             </div>
             <div className="flex justify-between items-center">
@@ -423,9 +443,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">오늘 학습 수</span>
+              <span className="text-white/70 text-sm">
+                {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
+              </span>
               <span className="text-purple-400 font-bold text-lg">
-                {stats?.today_terms || 0}
+                {(() => {
+                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                  if (selectedDate && uniqueChartData.length > 0) {
+                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                    if (selectedDateData) {
+                      return selectedDateData.terms
+                    }
+                  }
+                  return stats?.today_terms || 0
+                })()}
               </span>
             </div>
             <div className="flex justify-between items-center">
@@ -457,15 +488,37 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">오늘 누적 점수</span>
+              <span className="text-white/70 text-sm">
+                {selectedDate ? `${selectedDate} 누적 점수` : '오늘 누적 점수'}
+              </span>
               <span className="text-green-400 font-bold text-lg">
-                {stats?.today_quiz_score || 0}%
+                {(() => {
+                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                  if (selectedDate && uniqueChartData.length > 0) {
+                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                    if (selectedDateData) {
+                      return `${selectedDateData.quiz_score}%`
+                    }
+                  }
+                  return `${stats?.today_quiz_score || 0}%`
+                })()}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">오늘 정답률</span>
+              <span className="text-white/70 text-sm">
+                {selectedDate ? `${selectedDate} 정답률` : '오늘 정답률'}
+              </span>
               <span className="text-white font-semibold">
-                {stats?.today_quiz_correct || 0}/{stats?.today_quiz_total || 0}
+                {(() => {
+                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                  if (selectedDate && uniqueChartData.length > 0) {
+                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                    if (selectedDateData) {
+                      return `${selectedDateData.quiz_correct}/${selectedDateData.quiz_total}`
+                    }
+                  }
+                  return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
+                })()}
               </span>
             </div>
             <div className="flex justify-between items-center">
@@ -541,7 +594,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className="text-xs text-white/50 mt-2 text-center" style={{fontSize:'11px'}}>
+                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'11px'}}>
                               {new Date(data.date).getDate()}
                             </div>
                           </div>
@@ -604,7 +657,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className="text-xs text-white/50 mt-2 text-center" style={{fontSize:'11px'}}>
+                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'11px'}}>
                               {new Date(data.date).getDate()}
                             </div>
                           </div>
@@ -667,7 +720,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className="text-xs text-white/50 mt-2 text-center" style={{fontSize:'11px'}}>
+                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'11px'}}>
                               {new Date(data.date).getDate()}
                             </div>
                           </div>
