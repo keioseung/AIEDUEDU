@@ -445,7 +445,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">누적 총 학습 수</span>
               <span className="text-white font-semibold">
-                {stats?.total_learned || 0}
+                {stats?.total_ai_info_available || stats?.total_learned || 0}
               </span>
             </div>
           </div>

@@ -53,10 +53,10 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     }
   }, [sessionId, date, index])
   
-  // 실제 학습된 용어는 React Query 데이터만 사용 (백엔드 데이터가 최신)
+  // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
   const actualLearnedTerms = new Set<string>()
   
-  // React Query 데이터에서 문자열만 추가
+  // React Query 데이터에서 문자열만 추가 (우선순위 높음)
   if (learnedTerms instanceof Set) {
     for (const term of learnedTerms) {
       if (typeof term === 'string') {
@@ -65,11 +65,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     }
   }
   
-  // localStorage 데이터는 백업용으로만 사용 (React Query 데이터가 없을 때만)
-  if (actualLearnedTerms.size === 0) {
-    for (const term of localLearnedTerms) {
-      actualLearnedTerms.add(term)
-    }
+  // localStorage 데이터 추가 (백업용)
+  for (const term of localLearnedTerms) {
+    actualLearnedTerms.add(term)
   }
   
   // 디버깅: 용어 학습 상태 확인
@@ -117,21 +115,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             infoIndex: index
           })
 
-          // 즉시 데이터 새로고침
-          await refetchLearnedTerms()
+          // localStorage에 즉시 저장
+          const newLocalTerms = new Set([...localLearnedTerms, currentTerm.term])
+          setLocalLearnedTerms(newLocalTerms)
+          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
           
-          // localStorage는 백엔드 데이터와 동기화
-          const updatedLearnedTerms = await refetchLearnedTerms()
-          if (updatedLearnedTerms.data) {
-            const stringSet = new Set<string>()
-            for (const term of updatedLearnedTerms.data) {
-              if (typeof term === 'string') {
-                stringSet.add(term)
-              }
-            }
-            setLocalLearnedTerms(stringSet)
-            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...stringSet]))
-          }
+          // 백엔드 데이터 새로고침
+          await refetchLearnedTerms()
           
           // 관련 쿼리들 무효화하여 데이터 동기화
           queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
@@ -339,21 +329,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                             infoIndex: index
                           })
                           
-                          // 즉시 데이터 새로고침
-                          await refetchLearnedTerms()
+                          // localStorage에 즉시 저장
+                          const newLocalTerms = new Set([...localLearnedTerms, term.term])
+                          setLocalLearnedTerms(newLocalTerms)
+                          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
                           
-                          // localStorage는 백엔드 데이터와 동기화
-                          const updatedLearnedTerms = await refetchLearnedTerms()
-                          if (updatedLearnedTerms.data) {
-                            const stringSet = new Set<string>()
-                            for (const term of updatedLearnedTerms.data) {
-                              if (typeof term === 'string') {
-                                stringSet.add(term)
-                              }
-                            }
-                            setLocalLearnedTerms(stringSet)
-                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...stringSet]))
-                          }
+                          // 백엔드 데이터 새로고침
+                          await refetchLearnedTerms()
                           
                           // 관련 쿼리들 무효화하여 데이터 동기화
                           queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
