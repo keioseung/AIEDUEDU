@@ -208,7 +208,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   
   // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선)
   const uniqueChartData = (() => {
+    const chartData = periodStats?.period_data || []
     const combinedData = [...localAIProgress, ...chartData]
+    
+    // 디버깅: 원본 데이터 확인
+    console.log('그래프 데이터 계산:', {
+      localAIProgress: localAIProgress,
+      chartData: chartData,
+      combinedData: combinedData
+    })
     
     // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선)
     const uniqueData = combinedData.reduce((acc: PeriodData[], current: PeriodData) => {
@@ -564,7 +572,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           </div>
         </div>
         <div className="glass rounded-2xl p-6">
-          {uniqueChartData.length > 0 ? (
+          {(() => {
+            // 디버깅: 조건 확인
+            console.log('그래프 렌더링 조건 확인:', {
+              uniqueChartDataLength: uniqueChartData.length,
+              uniqueChartData: uniqueChartData,
+              hasData: uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
+            })
+            
+            const chartData = periodStats?.period_data || []
+            return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
+          })() ? (
             <div className="space-y-8">
               {/* AI 정보 추이 */}
               <div>
