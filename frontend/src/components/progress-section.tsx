@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { BarChart3, TrendingUp, BookOpen, Target, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useUserStats } from '@/hooks/use-user-progress'
-import { userProgressAPI } from '@/lib/api'
+import { userProgressAPI, aiInfoAPI } from '@/lib/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 interface ProgressSectionProps {
@@ -37,6 +37,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   const { data: stats } = useUserStats(sessionId)
   const queryClient = useQueryClient()
+  
+  // 선택된 날짜의 AI 정보 데이터 가져오기
+  const { data: aiInfoData } = useQuery({
+    queryKey: ['ai-info', selectedDate || new Date().toISOString().split('T')[0]],
+    queryFn: async () => {
+      const date = selectedDate || new Date().toISOString().split('T')[0]
+      const response = await aiInfoAPI.getByDate(date)
+      return response.data
+    },
+    enabled: !!selectedDate || true,
+  })
 
   // 기간별 데이터 계산
   const getPeriodDates = () => {
@@ -225,9 +236,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     return uniqueData
   })()
   
-  // 최대값을 고정값으로 설정 (AI 정보: 3, 용어: 60, 퀴즈: 100)
-  const maxAI = 3;
-  const maxTerms = 60;
+  // 실제 데이터에서 총 정보 수와 총 용어 수 계산
+  const totalAIInfo = aiInfoData?.length || 0
+  const totalTerms = (() => {
+    if (!aiInfoData) return 0
+    let total = 0
+    for (const info of aiInfoData) {
+      if (info.terms && Array.isArray(info.terms)) {
+        total += info.terms.length
+      }
+    }
+    return total
+  })()
+  
+  // 최대값을 실제 데이터로 설정
+  const maxAI = totalAIInfo;
+  const maxTerms = totalTerms;
   const maxQuiz = 100;
 
   return (
@@ -416,7 +440,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">총 정보 수</span>
-              <span className="text-blue-400 font-bold text-base">3</span>
+              <span className="text-blue-400 font-bold text-base">{totalAIInfo}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">누적 총 학습 수</span>
@@ -461,7 +485,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">총 용어 수</span>
-              <span className="text-purple-400 font-bold text-base">60</span>
+              <span className="text-purple-400 font-bold text-base">{totalTerms}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">누적 총 용어 수</span>
@@ -550,7 +574,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <span className="text-white/80 font-medium">AI 정보 학습</span>
                   </div>
                   <span className="text-white/60 text-sm">
-                    최대: {maxAI}개
+                    최대: {maxAI > 0 ? maxAI : 3}개
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
@@ -565,9 +589,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className="flex items-end gap-2 h-32">
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
-                        const aiHeight = Math.max((data.ai_info / maxAI) * barMaxHeight, data.ai_info > 0 ? 4 : 0);
-                        const isFullAI = data.ai_info === maxAI;
-                        const percent = Math.round((data.ai_info / maxAI) * 100);
+                        const effectiveMaxAI = maxAI > 0 ? maxAI : 3;
+                        const aiHeight = Math.max((data.ai_info / effectiveMaxAI) * barMaxHeight, data.ai_info > 0 ? 4 : 0);
+                        const isFullAI = data.ai_info === effectiveMaxAI;
+                        const percent = Math.round((data.ai_info / effectiveMaxAI) * 100);
                         return (
                           <div key={index} className="flex flex-col items-center w-8">
                             <div className="relative w-full">
@@ -613,7 +638,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <span className="text-white/80 font-medium">용어 학습</span>
                   </div>
                   <span className="text-white/60 text-sm">
-                    최대: {maxTerms}개
+                    최대: {maxTerms > 0 ? maxTerms : 60}개
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
@@ -628,9 +653,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className="flex items-end gap-2 h-32">
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
-                        const termsHeight = Math.max((data.terms / maxTerms) * barMaxHeight, data.terms > 0 ? 4 : 0);
-                        const isFullTerms = data.terms === maxTerms;
-                        const percent = Math.round((data.terms / maxTerms) * 100);
+                        const effectiveMaxTerms = maxTerms > 0 ? maxTerms : 60;
+                        const termsHeight = Math.max((data.terms / effectiveMaxTerms) * barMaxHeight, data.terms > 0 ? 4 : 0);
+                        const isFullTerms = data.terms === effectiveMaxTerms;
+                        const percent = Math.round((data.terms / effectiveMaxTerms) * 100);
                         return (
                           <div key={index} className="flex flex-col items-center w-8">
                             <div className="relative w-full">
