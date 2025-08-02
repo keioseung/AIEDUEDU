@@ -167,6 +167,45 @@ def delete_ai_info(date: str, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "AI info deleted successfully"}
 
+@router.delete("/{date}/item/{item_index}")
+def delete_ai_info_item(date: str, item_index: int, db: Session = Depends(get_db)):
+    """특정 날짜의 특정 항목을 삭제합니다."""
+    try:
+        ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
+        if not ai_info:
+            raise HTTPException(status_code=404, detail="AI info not found")
+        
+        # item_index에 따라 해당 필드를 비움
+        if item_index == 0:
+            ai_info.info1_title = ""
+            ai_info.info1_content = ""
+            ai_info.info1_terms = "[]"
+        elif item_index == 1:
+            ai_info.info2_title = ""
+            ai_info.info2_content = ""
+            ai_info.info2_terms = "[]"
+        elif item_index == 2:
+            ai_info.info3_title = ""
+            ai_info.info3_content = ""
+            ai_info.info3_terms = "[]"
+        else:
+            raise HTTPException(status_code=400, detail="Invalid item index. Must be 0, 1, or 2.")
+        
+        # 모든 필드가 비어있으면 전체 레코드 삭제
+        if (not ai_info.info1_title and not ai_info.info1_content and
+            not ai_info.info2_title and not ai_info.info2_content and
+            not ai_info.info3_title and not ai_info.info3_content):
+            db.delete(ai_info)
+        else:
+            db.commit()
+        
+        db.commit()
+        return {"message": f"Item {item_index} deleted successfully"}
+        
+    except Exception as e:
+        print(f"Error in delete_ai_info_item: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete item: {str(e)}")
+
 @router.get("/dates/all")
 def get_all_ai_info_dates(db: Session = Depends(get_db)):
     dates = [row.date for row in db.query(AIInfo).order_by(AIInfo.date).all()]

@@ -140,6 +140,21 @@ export default function AdminAIInfoPage() {
     }
   })
 
+  // AI 정보 개별 항목 삭제
+  const deleteItemMutation = useMutation({
+    mutationFn: async ({ date, itemIndex }: { date: string; itemIndex: number }) => {
+      return aiInfoAPI.deleteItem(date, itemIndex)
+    },
+    onSuccess: () => {
+      refetchAIInfo()
+      refetchDates()
+      setSuccess('항목이 삭제되었습니다!')
+    },
+    onError: () => {
+      setError('항목 삭제에 실패했습니다. 다시 시도해주세요.')
+    }
+  })
+
   // 프롬프트 추가/수정
   const promptMutation = useMutation({
     mutationFn: async (data: { title: string; content: string; id?: number }) => {
@@ -371,6 +386,12 @@ export default function AdminAIInfoPage() {
 
   const handleDelete = (date: string) => {
     deleteMutation.mutate(date)
+  }
+
+  const handleDeleteItem = (date: string, itemIndex: number) => {
+    if (window.confirm('정말 이 항목을 삭제하시겠습니까?')) {
+      deleteItemMutation.mutate({ date, itemIndex })
+    }
   }
 
   // 프롬프트 관리 핸들러
@@ -805,13 +826,22 @@ export default function AdminAIInfoPage() {
                         <div key={idx} className="mb-4 last:mb-0 bg-white/5 rounded-lg p-4">
                           <div className="font-bold text-lg text-white mb-2">{info.title}</div>
                           <div className="text-white/70 text-sm whitespace-pre-line mb-3">{info.content}</div>
-                          <button 
-                            onClick={() => handleEdit(info, idx)} 
-                            className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition flex items-center gap-2"
-                          >
-                            <FaEdit className="w-4 h-4" />
-                            수정
-                          </button>
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => handleEdit(info, idx)} 
+                              className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition flex items-center gap-2"
+                            >
+                              <FaEdit className="w-4 h-4" />
+                              수정
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteItem(dateItem, idx)} 
+                              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition flex items-center gap-2"
+                            >
+                              <FaTrash className="w-4 h-4" />
+                              삭제
+                            </button>
+                          </div>
                         </div>
                       ))
                     ) : null

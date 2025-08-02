@@ -291,6 +291,7 @@ export const aiInfoAPI = {
   getByDate: (date: string) => api.get(`/api/ai-info/${date}`),
   add: (data: any) => api.post('/api/ai-info/', data),
   delete: (date: string) => api.delete(`/api/ai-info/${date}`),
+  deleteItem: (date: string, itemIndex: number) => api.delete(`/api/ai-info/${date}/item/${itemIndex}`),
   getAllDates: () => api.get('/api/ai-info/dates/all'),
 
   getTermsQuiz: (sessionId: string) => api.get(`/api/ai-info/terms-quiz/${sessionId}`),
