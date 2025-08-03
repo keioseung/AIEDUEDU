@@ -10,6 +10,7 @@ export default function IntroPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTyping, setIsTyping] = useState(true)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isMobile, setIsMobile] = useState(false)
   
   const fullText = "AI Mastery Hub"
   const taglines = [
@@ -19,6 +20,16 @@ export default function IntroPage() {
     "AI 세계의 핵심 개념을 쉽게 이해하세요"
   ]
   const [currentTagline, setCurrentTagline] = useState(0)
+
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // 타이핑 애니메이션
   useEffect(() => {
@@ -43,14 +54,16 @@ export default function IntroPage() {
     }
   }, [isTyping, taglines.length])
 
-  // 마우스 위치 추적
+  // 마우스 위치 추적 (데스크톱에서만)
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
+    if (!isMobile) {
+      const handleMouseMove = (e: MouseEvent) => {
+        setMousePosition({ x: e.clientX, y: e.clientY })
+      }
+      window.addEventListener('mousemove', handleMouseMove)
+      return () => window.removeEventListener('mousemove', handleMouseMove)
     }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  }, [isMobile])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
@@ -63,19 +76,21 @@ export default function IntroPage() {
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-pink-900/20 animate-gradient-shift" />
       <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-purple-900/10 animate-gradient-float" />
       
-      {/* 인터랙티브 마우스 효과 */}
-      <div 
-        className="absolute w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-1000 ease-out"
-        style={{
-          left: mousePosition.x - 192,
-          top: mousePosition.y - 192,
-          transform: 'translate(-50%, -50%)'
-        }}
-      />
+      {/* 인터랙티브 마우스 효과 (데스크톱에서만) */}
+      {!isMobile && (
+        <div 
+          className="absolute w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-1000 ease-out"
+          style={{
+            left: mousePosition.x - 192,
+            top: mousePosition.y - 192,
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+      )}
       
-      {/* 움직이는 파티클 효과 */}
+      {/* 움직이는 파티클 효과 (모바일에서는 줄임) */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(30)].map((_, i) => (
+        {[...Array(isMobile ? 15 : 30)].map((_, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-white/30 rounded-full animate-float"
@@ -89,17 +104,17 @@ export default function IntroPage() {
         ))}
       </div>
 
-      {/* 빛나는 효과 */}
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      {/* 빛나는 효과 (모바일에서는 줄임) */}
+      <div className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-96 md:h-96 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/2 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
 
-      {/* 움직이는 선 효과 */}
+      {/* 움직이는 선 효과 (모바일에서는 줄임) */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(isMobile ? 3 : 5)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-px h-32 bg-gradient-to-b from-transparent via-purple-500/30 to-transparent animate-slide-down"
+            className="absolute w-px h-16 md:h-32 bg-gradient-to-b from-transparent via-purple-500/30 to-transparent animate-slide-down"
             style={{
               left: `${20 + i * 15}%`,
               animationDelay: `${i * 0.5}s`,
@@ -110,26 +125,26 @@ export default function IntroPage() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-8">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-6 md:py-8">
         {/* 헤더 섹션 */}
-        <div className="text-center mb-16 md:mb-20">
+        <div className="text-center mb-12 md:mb-16 lg:mb-20">
           {/* 로고 및 제목 */}
-          <div className="flex flex-col items-center gap-8 mb-12">
+          <div className="flex flex-col items-center gap-6 md:gap-8 mb-8 md:mb-12">
             <div className="relative">
-              <div className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center shadow-2xl animate-glow">
-                <FaRobot className="text-4xl md:text-5xl text-white" />
+              <div className="w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center shadow-2xl animate-glow">
+                <FaRobot className="text-3xl md:text-4xl lg:text-5xl text-white" />
               </div>
-              <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
+              <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
               {/* 빛나는 효과 */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-3xl blur-xl animate-pulse" />
             </div>
             <div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-6 animate-text-glow">
+              <h1 className="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-4 md:mb-6 animate-text-glow mobile-text">
                 {typedText}
                 {isTyping && <span className="animate-blink">|</span>}
               </h1>
-              <div className="h-10 md:h-12">
-                <p className="text-xl md:text-2xl lg:text-3xl text-purple-300 font-medium animate-fade-in-out">
+              <div className="h-8 md:h-10 lg:h-12">
+                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-purple-300 font-medium animate-fade-in-out mobile-text">
                   {taglines[currentTagline]}
                 </p>
               </div>
@@ -137,8 +152,8 @@ export default function IntroPage() {
           </div>
 
           {/* 메인 텍스트 */}
-          <div className="text-center mb-12 md:mb-16 max-w-4xl mx-auto">
-            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 max-w-4xl mx-auto">
+            <h2 className="text-xl md:text-2xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight mobile-text">
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                 매일 업데이트되는 AI 정보
               </span>
@@ -151,15 +166,15 @@ export default function IntroPage() {
                 실전 퀴즈로 지식을 점검
               </span>
             </h2>
-            <p className="text-white/70 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-              최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br />
+            <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto mobile-text">
+              최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br className="hidden sm:block" />
               실전 문제를 통해 확실한 이해를 확인하세요
             </p>
           </div>
 
           {/* CTA 버튼 */}
           <button
-            className="group px-12 md:px-16 py-5 md:py-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-xl md:text-2xl rounded-2xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-4 mx-auto animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow"
+            className="group px-8 md:px-12 lg:px-16 py-4 md:py-5 lg:py-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-lg md:text-xl lg:text-2xl rounded-2xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-3 md:gap-4 mx-auto animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow touch-optimized mobile-touch-target"
             onClick={() => router.push('/auth')}
           >
             <span className="relative z-10">지금 시작하기</span>
@@ -169,7 +184,7 @@ export default function IntroPage() {
         </div>
 
         {/* 기능 카드들 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-5xl mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-5xl mb-16 md:mb-20">
           {[
             { 
               icon: FaBrain, 
@@ -192,35 +207,35 @@ export default function IntroPage() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float"
+              className="group bg-white/5 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 animate-icon-glow`}>
-                  <feature.icon className="text-white text-2xl" />
+                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300 animate-icon-glow`}>
+                  <feature.icon className="text-white text-xl md:text-2xl" />
                 </div>
-                <h3 className="text-white font-bold text-2xl mb-4">{feature.title}</h3>
-                <p className="text-gray-300 text-base leading-relaxed">{feature.desc}</p>
+                <h3 className="text-white font-bold text-xl md:text-2xl mb-3 md:mb-4 mobile-text">{feature.title}</h3>
+                <p className="text-gray-300 text-sm md:text-base leading-relaxed mobile-text">{feature.desc}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* 하단 통계 */}
-        <div className="grid grid-cols-3 gap-8 md:gap-12 w-full max-w-4xl">
+        <div className="grid grid-cols-3 gap-4 md:gap-8 lg:gap-12 w-full max-w-4xl">
           {[
             { label: "매일 새로운", value: "AI 정보", icon: FaBrain },
             { label: "핵심 개념", value: "관련 용어", icon: FaRocket },
             { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine }
           ].map((stat, index) => (
             <div key={index} className="text-center animate-stat-fade-in" style={{ animationDelay: `${index * 0.3}s` }}>
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 animate-stat-glow">
-                <stat.icon className="text-purple-400 text-xl md:text-2xl" />
+              <div className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2 md:mb-3 animate-stat-glow">
+                <stat.icon className="text-purple-400 text-lg md:text-xl lg:text-2xl" />
               </div>
-              <div className="text-xl md:text-2xl font-bold text-white mb-1">{stat.value}</div>
-              <div className="text-white/60 text-sm">{stat.label}</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 mobile-text">{stat.value}</div>
+              <div className="text-white/60 text-xs md:text-sm mobile-text">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -334,6 +349,22 @@ export default function IntroPage() {
         }
         .animate-stat-glow {
           animation: stat-glow 3s ease-in-out infinite;
+        }
+        
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+          .animate-float {
+            animation-duration: 8s;
+          }
+          .animate-gradient-shift {
+            animation-duration: 12s;
+          }
+          .animate-gradient-float {
+            animation-duration: 8s;
+          }
+          .animate-card-float {
+            animation-duration: 6s;
+          }
         }
       `}</style>
     </div>
