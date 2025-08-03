@@ -197,14 +197,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const generateLinePath = (data: PeriodData[], type: 'ai_info' | 'terms' | 'quiz_score', maxValue: number) => {
     if (data.length === 0) return '';
     
+    // 막대그래프와 동일한 너비 계산
     const barWidth = uniqueChartData.length <= 7 ? 32 : uniqueChartData.length <= 14 ? 20 : 8;
     const gap = uniqueChartData.length <= 7 ? 8 : uniqueChartData.length <= 14 ? 4 : 0;
     const totalWidth = barWidth + gap;
     
     const points = data.map((d, index) => {
+      // X축 위치를 막대그래프와 정확히 일치하도록 계산
       const x = index * totalWidth + barWidth / 2;
-      // Y축 계산: 0%는 Y축 0% 지점(128px), 100%는 맨 위(0px)
-      // 막대그래프와 동일한 높이 계산 로직 사용
+      // Y축 계산: 막대그래프와 동일한 높이 계산 로직 사용
       const percentage = Math.min((d[type] / maxValue) * 100, 100);
       const y = 128 - (percentage / 100) * 128;
       return `${x},${y}`;
@@ -765,7 +766,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '16px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
                           stroke="url(#blueGradient)"
@@ -853,7 +854,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '16px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
                           stroke="url(#purpleGradient)"
@@ -941,7 +942,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '16px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
                           stroke="url(#greenGradient)"
