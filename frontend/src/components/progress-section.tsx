@@ -170,12 +170,6 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     return index === 0 || index % 5 === 0 || index === dataLength - 1; // 월간: 0일 + 5일마다 + 마지막 날
   };
 
-  // 선그래프 표시 여부 결정
-  const shouldShowLineGraph = () => {
-    const dataLength = uniqueChartData.length;
-    return dataLength > 7; // 주간(7일 이하)에서는 선그래프 숨김
-  };
-
   // 평균 계산 함수
   const calculateAverage = (data: PeriodData[], type: 'ai_info' | 'terms' | 'quiz_score') => {
     const validData = data.filter(d => d[type] > 0);
@@ -191,27 +185,6 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       const maxValue = type === 'ai_info' ? (maxAI > 0 ? maxAI : 3) : (maxTerms > 0 ? maxTerms : 60);
       return Math.min(Math.round((average / maxValue) * 100), 100);
     }
-  };
-
-  // 선그래프 SVG 경로 생성
-  const generateLinePath = (data: PeriodData[], type: 'ai_info' | 'terms' | 'quiz_score', maxValue: number) => {
-    if (data.length === 0) return '';
-    
-    // 막대그래프와 동일한 너비 계산
-    const barWidth = uniqueChartData.length <= 7 ? 32 : uniqueChartData.length <= 14 ? 20 : 8;
-    const gap = uniqueChartData.length <= 7 ? 8 : uniqueChartData.length <= 14 ? 4 : 0;
-    const totalWidth = barWidth + gap;
-    
-    const points = data.map((d, index) => {
-      // X축 위치를 막대그래프와 정확히 일치하도록 계산
-      const x = index * totalWidth + barWidth / 2;
-      // Y축 계산: 막대그래프와 동일한 높이 계산 로직 사용
-      const percentage = Math.min((d[type] / maxValue) * 100, 100);
-      const y = 128 - (percentage / 100) * 128;
-      return `${x},${y}`;
-    });
-    
-    return `M ${points.join(' L ')}`;
   };
 
   // 날짜 변경 핸들러 - 상위 컴포넌트에 알림
@@ -764,24 +737,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         <div key={v} style={{height: 128/5}}>{v}%</div>
                       ))}
                     </div>
-                    {/* SVG 선그래프 */}
-                    {shouldShowLineGraph() && (
-                      <svg className="absolute left-0 pointer-events-none" style={{ top: '-20px', minWidth: getContainerMinWidth(), height: '128px', marginLeft: '48px' }}>
-                        <path
-                          d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
-                          stroke="url(#blueGradient)"
-                          strokeWidth="2"
-                          fill="none"
-                          opacity="0.8"
-                        />
-                        <defs>
-                          <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#3B82F6" />
-                            <stop offset="100%" stopColor="#06B6D4" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    )}
+
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -852,24 +808,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         <div key={v} style={{height: 128/5}}>{v}%</div>
                       ))}
                     </div>
-                    {/* SVG 선그래프 */}
-                    {shouldShowLineGraph() && (
-                      <svg className="absolute left-0 pointer-events-none" style={{ top: '-20px', minWidth: getContainerMinWidth(), height: '128px', marginLeft: '48px' }}>
-                        <path
-                          d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
-                          stroke="url(#purpleGradient)"
-                          strokeWidth="2"
-                          fill="none"
-                          opacity="0.8"
-                        />
-                        <defs>
-                          <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#8B5CF6" />
-                            <stop offset="100%" stopColor="#EC4899" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    )}
+
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -940,24 +879,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         <div key={v} style={{height: 128/5}}>{v}%</div>
                       ))}
                     </div>
-                    {/* SVG 선그래프 */}
-                    {shouldShowLineGraph() && (
-                      <svg className="absolute left-0 pointer-events-none" style={{ top: '-20px', minWidth: getContainerMinWidth(), height: '128px', marginLeft: '48px' }}>
-                        <path
-                          d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
-                          stroke="url(#greenGradient)"
-                          strokeWidth="2"
-                          fill="none"
-                          opacity="0.8"
-                        />
-                        <defs>
-                          <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#10B981" />
-                            <stop offset="100%" stopColor="#059669" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    )}
+
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
