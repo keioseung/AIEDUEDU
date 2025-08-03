@@ -348,8 +348,8 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
             'today_quiz_score': today_quiz_score,
             'today_quiz_correct': today_quiz_correct,
             'today_quiz_total': today_quiz_total,
-            'total_ai_info_available': total_ai_info_available,
-            'total_terms_available': total_terms_available,
+            'total_ai_info_available': stats.get('total_learned', total_ai_info_available),  # total_learned 우선 사용
+            'total_terms_available': stats.get('total_terms_learned', total_terms_available),  # total_terms_learned 우선 사용
             'cumulative_quiz_score': cumulative_quiz_score,
             'total_quiz_correct': total_quiz_correct,
             'total_quiz_questions': total_quiz_questions
@@ -358,6 +358,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     
     return {
         'total_learned': 0,
+        'total_terms_learned': 0,
         'streak_days': 0,
         'last_learned_date': None,
         'quiz_score': 0,
@@ -367,8 +368,8 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         'today_quiz_score': today_quiz_score,
         'today_quiz_correct': today_quiz_correct,
         'today_quiz_total': today_quiz_total,
-        'total_ai_info_available': total_ai_info_available,
-        'total_terms_available': total_terms_available,
+        'total_ai_info_available': 0,  # total_learned와 동일
+        'total_terms_available': 0,  # total_terms_learned와 동일
         'cumulative_quiz_score': cumulative_quiz_score,
         'total_quiz_correct': total_quiz_correct,
         'total_quiz_questions': total_quiz_questions
