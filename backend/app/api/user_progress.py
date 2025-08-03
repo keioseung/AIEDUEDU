@@ -606,13 +606,19 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
     
     for date in date_list:
         # AI 정보 학습 수 - 해당 날짜에 학습한 AI 정보 개수
-        ai_progress_list = db.query(UserProgress).filter(
+        ai_progress = db.query(UserProgress).filter(
             UserProgress.session_id == session_id,
             UserProgress.date == date,
-            UserProgress.info_index.isnot(None)  # AI 정보 학습 기록만
-        ).all()
+            ~UserProgress.date.like('__%')  # AI 정보 학습 기록만 (date가 __로 시작하지 않는 것들)
+        ).first()
         
-        ai_count = len(ai_progress_list)  # 해당 날짜에 학습한 AI 정보 개수
+        ai_count = 0
+        if ai_progress and ai_progress.learned_info:
+            try:
+                learned_data = json.loads(ai_progress.learned_info)
+                ai_count = len(learned_data) if isinstance(learned_data, list) else 0
+            except json.JSONDecodeError:
+                ai_count = 0
         
         # 용어 학습 수 - 해당 날짜에 학습한 용어 개수
         terms_progress = db.query(UserProgress).filter(
