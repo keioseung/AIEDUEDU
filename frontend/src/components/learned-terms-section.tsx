@@ -262,14 +262,14 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             className="px-3 md:px-4 py-2 md:py-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2"
           >
             <Filter className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="hidden sm:inline">필터</span>
+            <span className="inline">필터</span>
           </button>
           <button
             onClick={() => setShowTermList(!showTermList)}
             className="px-3 md:px-4 py-2 md:py-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2"
           >
             <Menu className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="hidden sm:inline">목록</span>
+            <span className="inline">목록</span>
           </button>
         </div>
       </div>

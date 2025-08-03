@@ -495,10 +495,7 @@ export default function DashboardPage() {
                   </span>
                 </div>
                 
-                {/* 활성 탭 인디케이터 */}
-                {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white/80 rounded-full"></div>
-                )}
+
               </button>
             ))}
           </div>
