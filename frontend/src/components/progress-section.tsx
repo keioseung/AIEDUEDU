@@ -167,7 +167,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     const dataLength = uniqueChartData.length;
     if (dataLength <= 7) return true; // 주간: 모든 날짜 표시
     if (dataLength <= 14) return index % 2 === 0; // 2주: 2일마다 표시
-    return index % 5 === 0 || index === dataLength - 1; // 월간: 5일마다 + 마지막 날
+    return index === 0 || index % 5 === 0 || index === dataLength - 1; // 월간: 0일 + 5일마다 + 마지막 날
   };
 
   // 선그래프 표시 여부 결정
@@ -765,7 +765,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '16px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
                           stroke="url(#blueGradient)"
@@ -853,7 +853,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '16px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
                           stroke="url(#purpleGradient)"
@@ -941,7 +941,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '16px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
                           stroke="url(#greenGradient)"
