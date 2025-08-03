@@ -98,6 +98,62 @@ input, textarea {
 
 .card-hover:hover {
   transform: translateY(-6px) scale(1.03);
+}
+
+/* 모바일 최적화 스타일 */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* 터치 최적화 */
+.touch-optimized {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 모바일에서 버튼 터치 영역 확대 */
+@media (max-width: 768px) {
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .mobile-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .mobile-padding {
+    padding: 12px;
+  }
+}
+
+/* 스와이프 제스처 최적화 */
+.swipe-container {
+  touch-action: pan-y pinch-zoom;
+  overflow: hidden;
+}
+
+/* 모바일에서 카드 간격 조정 */
+@media (max-width: 768px) {
+  .mobile-gap {
+    gap: 8px;
+  }
+  
+  .mobile-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
   box-shadow: 0 16px 40px rgba(99,102,241,0.12);
 }
 

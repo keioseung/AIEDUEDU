@@ -428,27 +428,31 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* 탭 메뉴 */}
-      <div className="flex justify-center mb-6 md:mb-8">
-        <div className="flex flex-wrap gap-2 md:gap-4 bg-white/10 backdrop-blur-xl rounded-2xl p-2 md:p-3 shadow-lg border border-white/10">
-          {[
-            { id: 'ai', label: 'AI 정보', gradient: 'from-blue-500 to-purple-500' },
-            { id: 'quiz', label: '용어 퀴즈', gradient: 'from-purple-500 to-pink-500' },
-            { id: 'progress', label: '진행률', gradient: 'from-pink-500 to-blue-500' },
-            { id: 'term', label: '용어 학습', gradient: 'from-purple-500 to-blue-500' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              className={`px-4 md:px-6 py-2 md:py-3 rounded-xl font-bold text-sm md:text-base transition-all ${
-                activeTab === tab.id 
-                  ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg` 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              }`}
-              onClick={() => setActiveTab(tab.id as any)}
-            >
-              {tab.label}
-            </button>
-          ))}
+      {/* 모바일 최적화 탭 메뉴 */}
+      <div className="flex justify-center mb-4 md:mb-8">
+        <div className="w-full max-w-md md:max-w-none">
+          <div className="flex bg-white/10 backdrop-blur-xl rounded-2xl p-1 md:p-3 shadow-lg border border-white/10 overflow-x-auto scrollbar-hide">
+            {[
+              { id: 'ai', label: 'AI 정보', gradient: 'from-blue-500 to-purple-500', icon: '🤖' },
+              { id: 'quiz', label: '용어 퀴즈', gradient: 'from-purple-500 to-pink-500', icon: '🎯' },
+              { id: 'progress', label: '진행률', gradient: 'from-pink-500 to-blue-500', icon: '📊' },
+              { id: 'term', label: '용어 학습', gradient: 'from-purple-500 to-blue-500', icon: '📚' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                className={`flex-shrink-0 px-3 md:px-6 py-3 md:py-3 rounded-xl font-bold text-sm md:text-base transition-all duration-200 min-w-0 ${
+                  activeTab === tab.id 
+                    ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg transform scale-105` 
+                    : 'text-white/70 hover:bg-white/10 hover:text-white active:scale-95'
+                }`}
+                onClick={() => setActiveTab(tab.id as any)}
+              >
+                <span className="hidden sm:inline mr-1">{tab.icon}</span>
+                <span className="sm:hidden">{tab.icon}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
