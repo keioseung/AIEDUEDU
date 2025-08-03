@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HelpCircle, CheckCircle, XCircle, RotateCcw, BookOpen, Target, Trophy, Star, Sparkles, Award } from 'lucide-react'
+import { HelpCircle, CheckCircle, XCircle, RotateCcw, BookOpen, Target, Trophy, Star, Sparkles, Award, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import { useUpdateQuizScore, useCheckAchievements } from '@/hooks/use-user-progress'
@@ -151,15 +151,15 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
   return (
     <section className="mb-8 relative">
-      {/* 날짜 선택기 - 항상 표시 */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="text-white/70 text-sm">
+      {/* 날짜 선택기 - 모바일 최적화 */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 md:mb-6 gap-3">
+        <div className="text-white/70 text-sm mobile-text">
           {isLoading ? '퀴즈를 생성하고 있습니다...' : 
            quizData?.quizzes && quizData.quizzes.length > 0 ? `총 ${quizData.total_terms}개 용어 중 ${quizData.quizzes.length}개 출제` : 
            ''}
         </div>
-        <div className="flex items-center gap-2">
-          <label htmlFor="quiz-date-select" className="text-white/80 text-sm font-medium">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <label htmlFor="quiz-date-select" className="text-white/80 text-sm font-medium whitespace-nowrap">
             퀴즈 날짜:
           </label>
           <input
@@ -167,28 +167,28 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             type="date"
             value={selectedDate}
             onChange={(e) => onDateChange?.(e.target.value)}
-            className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="flex-1 sm:flex-none bg-white/10 border border-white/20 rounded-lg px-3 py-2 md:py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-optimized mobile-touch-target"
           />
         </div>
       </div>
 
       {/* 로딩 상태 */}
       {isLoading && (
-        <div className="glass rounded-2xl p-8 flex items-center justify-center">
-          <div className="text-white text-lg">퀴즈를 생성하고 있습니다...</div>
+        <div className="glass rounded-2xl p-6 md:p-8 flex items-center justify-center">
+          <div className="text-white text-base md:text-lg mobile-text">퀴즈를 생성하고 있습니다...</div>
         </div>
       )}
 
       {/* 데이터가 없을 때 */}
       {!isLoading && (!quizData?.quizzes || quizData.quizzes.length === 0) && (
-        <div className="glass rounded-2xl p-8">
+        <div className="glass rounded-2xl p-6 md:p-8">
           <div className="text-center text-white">
-            <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-60" />
-            <h3 className="text-xl font-semibold mb-2">등록된 용어가 없습니다</h3>
-            <p className="text-white/70 mb-4">
+            <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-60" />
+            <h3 className="text-lg md:text-xl font-semibold mb-2 mobile-text">등록된 용어가 없습니다</h3>
+            <p className="text-white/70 mb-4 text-sm md:text-base mobile-text">
               {quizData?.message || `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`}
             </p>
-            <div className="text-sm text-white/50">
+            <div className="text-xs md:text-sm text-white/50 mobile-text">
               선택한 날짜: {selectedDate}
             </div>
           </div>
@@ -197,14 +197,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
       {/* 퀴즈 내용 - 데이터가 있을 때만 표시 */}
       {!isLoading && quizData?.quizzes && quizData.quizzes.length > 0 && (
-        <div className="glass rounded-2xl p-8">
+        <div className="glass rounded-2xl p-4 md:p-8">
           {/* 퀴즈 진행상황 */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-white/70">
+          <div className="mb-4 md:mb-6">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <span className="text-white/70 text-sm md:text-base mobile-text">
                 {currentQuizIndex + 1} / {quizData.quizzes.length}
               </span>
-              <span className="text-white font-semibold">
+              <span className="text-white font-semibold text-sm md:text-base mobile-text">
                 점수: {score} / {quizData.quizzes.length}
               </span>
             </div>
@@ -218,29 +218,29 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
           {/* 퀴즈 내용 */}
           {currentQuiz && !quizCompleted && (
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-white mb-4">
+                <h3 className="text-lg md:text-xl font-semibold text-white mb-3 md:mb-4 mobile-text leading-tight">
                   {currentQuiz.question}
                 </h3>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2 md:space-y-3">
                 {[currentQuiz.option1, currentQuiz.option2, currentQuiz.option3, currentQuiz.option4].map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     disabled={showResult}
-                    className={`w-full p-4 text-left rounded-lg border-2 transition-all ${getOptionClass(index)}`}
+                    className={`w-full p-3 md:p-4 text-left rounded-lg border-2 transition-all touch-optimized mobile-touch-target ${getOptionClass(index)}`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="font-semibold">{String.fromCharCode(65 + index)}.</span>
-                      <span>{option}</span>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <span className="font-semibold text-sm md:text-base">{String.fromCharCode(65 + index)}.</span>
+                      <span className="text-sm md:text-base mobile-text flex-1">{option}</span>
                       {showResult && index === currentQuiz.correct && (
-                        <CheckCircle className="w-5 h-5 ml-auto" />
+                        <CheckCircle className="w-4 h-4 md:w-5 md:h-5 ml-auto flex-shrink-0" />
                       )}
                       {showResult && selectedAnswer === index && index !== currentQuiz.correct && (
-                        <XCircle className="w-5 h-5 ml-auto" />
+                        <XCircle className="w-4 h-4 md:w-5 md:h-5 ml-auto flex-shrink-0" />
                       )}
                     </div>
                   </button>
@@ -248,26 +248,29 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
               </div>
 
               {/* 결과 표시 */}
-              {showResult && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-4 rounded-lg bg-white/10 border border-white/20"
-                >
-                  <h4 className="text-lg font-semibold text-white mb-2">
-                    {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
-                  </h4>
-                  <p className="text-white/80">{currentQuiz.explanation}</p>
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {showResult && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20"
+                  >
+                    <h4 className="text-base md:text-lg font-semibold text-white mb-2 mobile-text">
+                      {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
+                    </h4>
+                    <p className="text-white/80 text-sm md:text-base mobile-text">{currentQuiz.explanation}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* 액션 버튼 */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-4">
                 {!showResult ? (
                   <button
                     onClick={handleSubmitAnswer}
                     disabled={selectedAnswer === null}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 md:py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed touch-optimized mobile-touch-target text-sm md:text-base"
                   >
                     답안 제출
                   </button>
@@ -276,24 +279,25 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                     {currentQuizIndex < quizData.quizzes.length - 1 ? (
                       <button
                         onClick={handleNextQuiz}
-                        className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600"
+                        className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 md:py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600 touch-optimized mobile-touch-target text-sm md:text-base"
                       >
                         다음 문제
                       </button>
                     ) : (
                       <button
                         onClick={handleNextQuiz}
-                        className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-3 rounded-lg font-semibold hover:from-yellow-600 hover:to-orange-600"
+                        className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-3 md:py-3 rounded-lg font-semibold hover:from-yellow-600 hover:to-orange-600 touch-optimized mobile-touch-target text-sm md:text-base"
                       >
                         퀴즈 완료하기
                       </button>
                     )}
                     <button
                       onClick={handleResetQuiz}
-                      className="px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 flex items-center gap-2"
+                      className="px-4 md:px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 flex items-center justify-center gap-2 touch-optimized mobile-touch-target text-sm md:text-base"
                     >
                       <RotateCcw className="w-4 h-4" />
-                      다시 시작
+                      <span className="hidden sm:inline">다시 시작</span>
+                      <span className="sm:hidden">재시작</span>
                     </button>
                   </>
                 )}
@@ -306,40 +310,41 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center space-y-6"
+              className="text-center space-y-4 md:space-y-6"
             >
-              <div className="space-y-4">
-                <div className="text-6xl mb-4">
+              <div className="space-y-3 md:space-y-4">
+                <div className="text-4xl md:text-6xl mb-3 md:mb-4">
                   {finalScore.percentage >= 90 ? '🏆' : 
                    finalScore.percentage >= 80 ? '🥇' : 
                    finalScore.percentage >= 70 ? '🥈' : 
                    finalScore.percentage >= 60 ? '🥉' : '📚'}
                 </div>
                 
-                <h3 className="text-3xl font-bold text-white mb-2">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 mobile-text">
                   퀴즈 완료!
                 </h3>
                 
-                <div className="text-2xl font-bold text-white mb-2">
+                <div className="text-xl md:text-2xl font-bold text-white mb-2 mobile-text">
                   {finalScore.score} / {finalScore.total}
                 </div>
                 
-                <div className="text-xl text-white/80 mb-4">
+                <div className="text-lg md:text-xl text-white/80 mb-3 md:mb-4 mobile-text">
                   정답률: {finalScore.percentage}%
                 </div>
                 
-                <div className="text-lg text-white/70 mb-6">
+                <div className="text-base md:text-lg text-white/70 mb-4 md:mb-6 mobile-text">
                   {getScoreMessage(finalScore.percentage)}
                 </div>
               </div>
               
-              <div className="flex gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
                 <button
                   onClick={handleResetQuiz}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 flex items-center gap-2"
+                  className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 flex items-center justify-center gap-2 touch-optimized mobile-touch-target text-sm md:text-base"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  다시 도전
+                  <span className="hidden sm:inline">다시 도전</span>
+                  <span className="sm:hidden">재도전</span>
                 </button>
               </div>
             </motion.div>
@@ -354,13 +359,13 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10 bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl shadow-2xl border border-green-300"
+            className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10 bg-gradient-to-r from-green-500 to-emerald-500 text-white p-3 md:p-4 rounded-xl shadow-2xl border border-green-300"
           >
-            <div className="flex items-center gap-3">
-              <Award className="w-6 h-6 animate-bounce" />
+            <div className="flex items-center gap-2 md:gap-3">
+              <Award className="w-5 h-5 md:w-6 md:h-6 animate-bounce" />
               <div>
-                <div className="font-bold text-lg">🎉 퀴즈 완료!</div>
-                <div className="text-sm opacity-90">성적이 저장되었습니다!</div>
+                <div className="font-bold text-base md:text-lg">🎉 퀴즈 완료!</div>
+                <div className="text-xs md:text-sm opacity-90">성적이 저장되었습니다!</div>
               </div>
             </div>
           </motion.div>
@@ -374,13 +379,13 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             initial={{ opacity: 0, y: -20, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.8 }}
-            className="fixed top-4 right-4 z-50 bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-4 rounded-xl shadow-2xl border border-yellow-300"
+            className="fixed top-4 right-4 z-50 bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-3 md:p-4 rounded-xl shadow-2xl border border-yellow-300"
           >
-            <div className="flex items-center gap-3">
-              <Trophy className="w-6 h-6 animate-bounce" />
+            <div className="flex items-center gap-2 md:gap-3">
+              <Trophy className="w-5 h-5 md:w-6 md:h-6 animate-bounce" />
               <div>
-                <div className="font-bold text-lg">🎉 성취 달성!</div>
-                <div className="text-sm opacity-90">새로운 성취를 획득했습니다!</div>
+                <div className="font-bold text-base md:text-lg">🎉 성취 달성!</div>
+                <div className="text-xs md:text-sm opacity-90">새로운 성취를 획득했습니다!</div>
               </div>
             </div>
           </motion.div>
