@@ -428,28 +428,80 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* 모바일 최적화 탭 메뉴 */}
-      <div className="flex justify-center mb-4 md:mb-8">
-        <div className="w-full max-w-md md:max-w-none">
-          <div className="flex bg-white/10 backdrop-blur-xl rounded-2xl p-1 md:p-3 shadow-lg border border-white/10 overflow-x-auto scrollbar-hide">
+      {/* 세련된 고급스러운 탭 메뉴 */}
+      <div className="flex justify-center mb-6 md:mb-10">
+        <div className="w-full max-w-2xl md:max-w-4xl">
+          <div className="flex bg-white/5 backdrop-blur-2xl rounded-3xl p-2 md:p-4 shadow-2xl border border-white/20 overflow-x-auto scrollbar-hide">
             {[
-              { id: 'ai', label: 'AI 정보', gradient: 'from-blue-500 to-purple-500', icon: '🤖' },
-              { id: 'quiz', label: '용어 퀴즈', gradient: 'from-purple-500 to-pink-500', icon: '🎯' },
-              { id: 'progress', label: '진행률', gradient: 'from-pink-500 to-blue-500', icon: '📊' },
-              { id: 'term', label: '용어 학습', gradient: 'from-purple-500 to-blue-500', icon: '📚' }
+              { 
+                id: 'ai', 
+                label: 'AI 정보', 
+                gradient: 'from-blue-600 via-purple-600 to-indigo-600',
+                hoverGradient: 'from-blue-500 via-purple-500 to-indigo-500',
+                icon: '🤖',
+                description: '인공지능 정보 학습'
+              },
+              { 
+                id: 'quiz', 
+                label: '용어 퀴즈', 
+                gradient: 'from-purple-600 via-pink-600 to-rose-600',
+                hoverGradient: 'from-purple-500 via-pink-500 to-rose-500',
+                icon: '🎯',
+                description: '용어 퀴즈 풀기'
+              },
+              { 
+                id: 'progress', 
+                label: '진행률', 
+                gradient: 'from-emerald-600 via-teal-600 to-cyan-600',
+                hoverGradient: 'from-emerald-500 via-teal-500 to-cyan-500',
+                icon: '📊',
+                description: '학습 진행 상황'
+              },
+              { 
+                id: 'term', 
+                label: '용어 학습', 
+                gradient: 'from-amber-600 via-orange-600 to-red-600',
+                hoverGradient: 'from-amber-500 via-orange-500 to-red-500',
+                icon: '📚',
+                description: '용어 카드 학습'
+              }
             ].map((tab) => (
               <button
                 key={tab.id}
-                className={`flex-shrink-0 px-3 md:px-6 py-3 md:py-3 rounded-xl font-bold text-sm md:text-base transition-all duration-200 min-w-0 ${
+                className={`group relative flex-shrink-0 px-4 md:px-8 py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base transition-all duration-300 min-w-0 overflow-hidden ${
                   activeTab === tab.id 
-                    ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg transform scale-105` 
-                    : 'text-white/70 hover:bg-white/10 hover:text-white active:scale-95'
+                    ? `bg-gradient-to-r ${tab.gradient} text-white shadow-2xl transform scale-105 ring-2 ring-white/20` 
+                    : 'text-white/80 hover:text-white hover:bg-white/10 active:scale-95'
                 }`}
                 onClick={() => setActiveTab(tab.id as any)}
               >
-                <span className="hidden sm:inline mr-1">{tab.icon}</span>
-                <span className="sm:hidden">{tab.icon}</span>
-                <span className="hidden sm:inline">{tab.label}</span>
+                {/* 활성 탭 배경 효과 */}
+                {activeTab === tab.id && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-50"></div>
+                )}
+                
+                {/* 호버 효과 */}
+                {activeTab !== tab.id && (
+                  <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${tab.hoverGradient}"></div>
+                )}
+                
+                <div className="relative z-10 flex flex-col items-center gap-1 md:gap-2">
+                  {/* 아이콘 */}
+                  <span className="text-lg md:text-xl filter drop-shadow-sm">{tab.icon}</span>
+                  
+                  {/* 라벨 */}
+                  <span className="font-bold tracking-wide drop-shadow-sm">{tab.label}</span>
+                  
+                  {/* 설명 (데스크톱에서만 표시) */}
+                  <span className="hidden lg:block text-xs opacity-80 font-medium tracking-wide">
+                    {tab.description}
+                  </span>
+                </div>
+                
+                {/* 활성 탭 인디케이터 */}
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white/80 rounded-full"></div>
+                )}
               </button>
             ))}
           </div>
