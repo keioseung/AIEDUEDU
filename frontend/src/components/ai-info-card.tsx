@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles } from 'lucide-react'
+import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useUpdateUserProgress, useCheckAchievements, useUpdateTermProgress, useLearnedTerms } from '@/hooks/use-user-progress'
 import { useQueryClient } from '@tanstack/react-query'
 import type { AIInfoItem, TermItem } from '@/types'
@@ -29,6 +29,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   const [isLearning, setIsLearning] = useState(false)
   const [showAllTermsComplete, setShowAllTermsComplete] = useState(false)
   const [showRelearnButton, setShowRelearnButton] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
   const queryClient = useQueryClient()
   const updateProgressMutation = useUpdateUserProgress()
   const checkAchievementsMutation = useCheckAchievements()
@@ -69,8 +71,32 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   for (const term of localLearnedTerms) {
     actualLearnedTerms.add(term)
   }
-  
 
+  // 터치 제스처 처리
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > 50
+    const isRightSwipe = distance < -50
+
+    if (isLeftSwipe && hasTerms) {
+      handleNextTerm()
+    } else if (isRightSwipe && hasTerms) {
+      handlePrevTerm()
+    }
+
+    setTouchStart(null)
+    setTouchEnd(null)
+  }
   
   // prop이 바뀌거나 forceUpdate, selectedDate가 바뀌면 동기화
   useEffect(() => {
@@ -93,8 +119,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   // 용어가 있는지 확인
   const hasTerms = info.terms && info.terms.length > 0
   const currentTerm = hasTerms && info.terms ? info.terms[currentTermIndex] : null
-
-
 
   const handleNextTerm = async () => {
     if (hasTerms && info.terms) {
@@ -202,17 +226,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     }
   }
 
-  // 키보드 단축키로 이전/다음 용어 이동
-  useEffect(() => {
-    if (!showTerms) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') handleNextTerm();
-      if (e.key === 'ArrowLeft') handlePrevTerm();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showTerms, currentTermIndex, info.terms]);
-
   const handlePrevTerm = () => {
     if (hasTerms && info.terms) {
       setCurrentTermIndex((prev: number) => (prev - 1 + info.terms!.length) % info.terms!.length);
@@ -224,158 +237,188 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="glass card-hover p-8 md:p-10 flex flex-col gap-6 relative shadow-lg border border-white/10"
+      className="glass card-hover p-4 md:p-8 lg:p-10 flex flex-col gap-4 md:gap-6 relative shadow-lg border border-white/10"
     >
       {/* 헤더 */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-full ${isLearned ? 'bg-green-500' : 'bg-blue-500'} shadow-md`}>
+      <div className="flex items-start justify-between mb-3 md:mb-4">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className={`p-1.5 md:p-2 rounded-full ${isLearned ? 'bg-green-500' : 'bg-blue-500'} shadow-md`}>
             {isLearned ? (
-              <CheckCircle className="w-5 h-5 text-white" />
+              <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-white" />
             ) : (
-              <Circle className="w-5 h-5 text-white" />
+              <Circle className="w-4 h-4 md:w-5 md:h-5 text-white" />
             )}
           </div>
-          <div>
-            <h3 className="text-lg font-semibold gradient-text line-clamp-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base md:text-lg font-semibold gradient-text line-clamp-2 leading-tight">
               {info.title}
             </h3>
-            <p className="text-white/60 text-sm">
+            <p className="text-white/60 text-xs md:text-sm">
               {isLearned ? '학습 완료' : '학습 필요'}
             </p>
           </div>
         </div>
       </div>
+      
       {/* 내용 */}
-      <div className="mb-4 text-white/90 text-base leading-relaxed whitespace-pre-line">
+      <div className="mb-3 md:mb-4 text-white/90 text-sm md:text-base leading-relaxed whitespace-pre-line">
         <p className={isExpanded ? '' : 'line-clamp-3'}>
           {info.content}
         </p>
         {info.content.length > 150 && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="btn mt-2 text-xs px-3 py-1"
+            className="btn mt-2 text-xs px-3 py-1.5 md:py-2 touch-optimized"
           >
             {isExpanded ? '접기' : '더보기'}
           </button>
         )}
       </div>
+      
       {/* 용어 학습 섹션 */}
       {hasTerms && (
-        <div className="mb-4">
+        <div className="mb-3 md:mb-4">
           <button
             onClick={() => setShowTerms(!showTerms)}
-            className="flex items-center gap-2 text-blue-300 hover:text-blue-200 text-sm font-medium mb-3"
+            className="flex items-center gap-2 text-blue-300 hover:text-blue-200 text-sm font-medium mb-3 touch-optimized mobile-touch-target"
           >
             <Brain className="w-4 h-4" />
-            {showTerms ? '용어 학습 숨기기' : '관련 용어 학습하기'}
+            <span className="hidden sm:inline">{showTerms ? '용어 학습 숨기기' : '관련 용어 학습하기'}</span>
+            <span className="sm:hidden">{showTerms ? '숨기기' : '용어 학습'}</span>
             {/* 항상 완료 개수 표시 */}
             {hasTerms && (
               <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">
-                {actualLearnedTerms.size}개 학습완료
+                {actualLearnedTerms.size}개 완료
               </span>
             )}
           </button>
           
-          {showTerms && currentTerm && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white/10 backdrop-blur-xl rounded-xl p-4 border border-white/20"
-            >
-              {/* 진행률 바 */}
-              <div className="mb-3">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-white/60">{currentTermIndex + 1} / {info.terms?.length || 0}</span>
-                  <span className="text-xs text-green-400 font-bold">{actualLearnedTerms.size}개 학습완료</span>
+          <AnimatePresence>
+            {showTerms && currentTerm && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="bg-white/10 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/20"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                {/* 진행률 바 */}
+                <div className="mb-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-white/60">{currentTermIndex + 1} / {info.terms?.length || 0}</span>
+                    <span className="text-xs text-green-400 font-bold">{actualLearnedTerms.size}개 학습완료</span>
+                  </div>
+                  <div className="w-full bg-white/20 rounded-full h-2">
+                    <div
+                      className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300"
+                      style={{ width: `${((currentTermIndex + 1) / (info.terms?.length || 1)) * 100}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full bg-white/20 rounded-full h-2">
-                  <div
-                    className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full"
-                    style={{ width: `${((currentTermIndex + 1) / (info.terms?.length || 1)) * 100}%` }}
-                  />
+                
+                {/* 현재 용어 강조 */}
+                <div className="text-center mb-3">
+                  <div className="text-xl md:text-2xl font-extrabold text-blue-200 mb-2 animate-pulse mobile-text">
+                    {currentTerm.term}
+                  </div>
+                  <div className="text-white/80 text-sm md:text-base mobile-text">{currentTerm.description}</div>
                 </div>
-              </div>
-              {/* 현재 용어 강조 */}
-              <div className="text-center mb-3">
-                <div className="text-2xl font-extrabold text-blue-200 mb-2 animate-pulse">{currentTerm.term}</div>
-                <div className="text-white/80 text-base">{currentTerm.description}</div>
-              </div>
-              {/* 이전/다음 버튼 */}
-              <div className="flex justify-between gap-2 mb-3">
-                <button
-                  onClick={handlePrevTerm}
-                  className="px-3 py-1 bg-blue-400/80 text-white rounded-lg hover:bg-blue-500 transition text-sm font-medium"
-                >
-                  이전 용어
-                </button>
-                <button
-                  onClick={handleNextTerm}
-                  className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium"
-                >
-                  다음 용어
-                </button>
-              </div>
-              {/* 전체 용어 목록 점프 */}
-              <div className="flex flex-wrap gap-2 justify-center mt-2">
-                {info.terms?.map((term, idx) => (
+                
+                {/* 스와이프 안내 */}
+                <div className="text-center mb-3">
+                  <p className="text-xs text-white/50">← 스와이프하여 용어 이동 →</p>
+                </div>
+                
+                {/* 이전/다음 버튼 */}
+                <div className="flex justify-between gap-2 mb-3">
                   <button
-                    key={term.term}
-                    onClick={async () => {
-                      setCurrentTermIndex(idx);
-                      // 클릭한 용어를 학습완료로 표시
-                      if (!actualLearnedTerms.has(term.term)) {
-                        try {
-                          // localStorage에 즉시 저장 (낙관적 업데이트)
-                          const newLocalTerms = new Set([...localLearnedTerms, term.term])
-                          setLocalLearnedTerms(newLocalTerms)
-                          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-                          
-                          // 백엔드 업데이트
-                          await updateTermProgressMutation.mutateAsync({
-                            sessionId,
-                            term: term.term,
-                            date,
-                            infoIndex: index
-                          })
-                          
-                          // 진행률 업데이트 콜백 호출
-                          if (onProgressUpdate) {
-                            onProgressUpdate()
-                          }
-                        } catch (error) {
-                          console.error('Failed to update term progress:', error)
-                          // 에러 시 localStorage 롤백
-                          const rollbackTerms = new Set([...localLearnedTerms])
-                          rollbackTerms.delete(term.term)
-                          setLocalLearnedTerms(rollbackTerms)
-                          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
-                        }
-                      }
-                    }}
-                    className={`px-2 py-1 rounded text-xs font-bold border transition-all ${idx === currentTermIndex ? 'bg-green-500 text-white border-green-600' : actualLearnedTerms.has(term.term) ? 'bg-green-400/80 text-white border-green-500' : 'bg-white/20 text-white/70 border-white/30 hover:bg-blue-400/40'}`}
+                    onClick={handlePrevTerm}
+                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 md:py-3 bg-blue-400/80 text-white rounded-lg hover:bg-blue-500 transition text-sm font-medium touch-optimized mobile-touch-target"
                   >
-                    {term.term}
+                    <ChevronLeft className="w-4 h-4" />
+                    <span className="hidden sm:inline">이전</span>
                   </button>
-                ))}
-              </div>
-              {/* 학습 완료 축하 메시지 */}
-              {actualLearnedTerms.size === info.terms?.length && info.terms.length > 0 && (
-                <div className="mt-4 text-center animate-bounce">
-                  <span className="inline-block bg-green-500 text-white px-4 py-2 rounded-full font-bold shadow">🎉 모든 용어 학습 완료! 재학습하려면 재시작하세요.</span>
+                  <button
+                    onClick={handleNextTerm}
+                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 md:py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium touch-optimized mobile-touch-target"
+                  >
+                    <span className="hidden sm:inline">다음</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
-              )}
-            </motion.div>
-          )}
+                
+                {/* 전체 용어 목록 점프 - 모바일 최적화 */}
+                <div className="flex flex-wrap gap-1 md:gap-2 justify-center mt-2">
+                  {info.terms?.map((term, idx) => (
+                    <button
+                      key={term.term}
+                      onClick={async () => {
+                        setCurrentTermIndex(idx);
+                        // 클릭한 용어를 학습완료로 표시
+                        if (!actualLearnedTerms.has(term.term)) {
+                          try {
+                            // localStorage에 즉시 저장 (낙관적 업데이트)
+                            const newLocalTerms = new Set([...localLearnedTerms, term.term])
+                            setLocalLearnedTerms(newLocalTerms)
+                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                            
+                            // 백엔드 업데이트
+                            await updateTermProgressMutation.mutateAsync({
+                              sessionId,
+                              term: term.term,
+                              date,
+                              infoIndex: index
+                            })
+                            
+                            // 진행률 업데이트 콜백 호출
+                            if (onProgressUpdate) {
+                              onProgressUpdate()
+                            }
+                          } catch (error) {
+                            console.error('Failed to update term progress:', error)
+                            // 에러 시 localStorage 롤백
+                            const rollbackTerms = new Set([...localLearnedTerms])
+                            rollbackTerms.delete(term.term)
+                            setLocalLearnedTerms(rollbackTerms)
+                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
+                          }
+                        }
+                      }}
+                      className={`px-2 py-1 md:px-3 md:py-2 rounded text-xs font-bold border transition-all touch-optimized mobile-touch-target ${
+                        idx === currentTermIndex 
+                          ? 'bg-green-500 text-white border-green-600' 
+                          : actualLearnedTerms.has(term.term) 
+                            ? 'bg-green-400/80 text-white border-green-500' 
+                            : 'bg-white/20 text-white/70 border-white/30 hover:bg-blue-400/40'
+                      }`}
+                    >
+                      {term.term}
+                    </button>
+                  ))}
+                </div>
+                
+                {/* 학습 완료 축하 메시지 */}
+                {actualLearnedTerms.size === info.terms?.length && info.terms.length > 0 && (
+                  <div className="mt-3 md:mt-4 text-center animate-bounce">
+                    <span className="inline-block bg-green-500 text-white px-3 md:px-4 py-2 rounded-full font-bold shadow text-sm mobile-text">
+                      🎉 모든 용어 학습 완료!
+                    </span>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
       {/* 액션 버튼 */}
-      <div className="flex gap-3">
+      <div className="flex gap-2 md:gap-3">
         <button
           onClick={handleLearnToggle}
           disabled={isLearned || isLearning}
-          className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg text-sm font-medium transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target ${
             isLearned
               ? 'bg-green-500 text-white cursor-default'
               : isLearning
@@ -384,10 +427,10 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          {isLearned ? '학습완료' : '학습완료'}
+          <span className="hidden sm:inline">{isLearned ? '학습완료' : '학습완료'}</span>
+          <span className="sm:hidden">{isLearned ? '완료' : '학습'}</span>
         </button>
-        {/* 부분 초기화 버튼 제거됨 */}
-        <button className="p-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all">
+        <button className="p-2.5 md:p-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all touch-optimized mobile-touch-target">
           <ExternalLink className="w-4 h-4" />
         </button>
       </div>
@@ -409,8 +452,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         )}
       </AnimatePresence>
 
-      {/* 모든 용어 학습 완료 알림 제거됨 */}
-
       {/* 성취 알림 */}
       <AnimatePresence>
         {showAchievement && (
@@ -418,13 +459,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             initial={{ opacity: 0, y: -20, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.8 }}
-            className="fixed top-4 right-4 z-50 bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-4 rounded-xl shadow-2xl border border-yellow-300"
+            className="fixed top-4 right-4 z-50 bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-3 md:p-4 rounded-xl shadow-2xl border border-yellow-300"
           >
-            <div className="flex items-center gap-3">
-              <Trophy className="w-6 h-6 animate-bounce" />
+            <div className="flex items-center gap-2 md:gap-3">
+              <Trophy className="w-5 h-5 md:w-6 md:h-6 animate-bounce" />
               <div>
-                <div className="font-bold text-lg">🎉 성취 달성!</div>
-                <div className="text-sm opacity-90">새로운 성취를 획득했습니다!</div>
+                <div className="font-bold text-base md:text-lg">🎉 성취 달성!</div>
+                <div className="text-xs md:text-sm opacity-90">새로운 성취를 획득했습니다!</div>
               </div>
             </div>
           </motion.div>
