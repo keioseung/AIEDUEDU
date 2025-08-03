@@ -54,30 +54,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     queryKey: ['ai-info-total-days'],
     queryFn: async () => {
       try {
-        console.log('Fetching total days...')
         const response = await aiInfoAPI.getTotalDays()
-        console.log('Total days API response:', response.data)
         return response.data
       } catch (error) {
-        console.error('Failed to fetch total days:', error)
         // API 호출 실패 시 dates/all을 사용하여 계산
         try {
-          console.log('Trying to fetch dates instead...')
           const datesResponse = await aiInfoAPI.getAllDates()
           const totalDays = datesResponse.data.length
-          console.log('Calculated total days from dates:', totalDays)
           return { total_days: totalDays }
         } catch (datesError) {
-          console.error('Failed to fetch dates:', datesError)
           return { total_days: 0 }
         }
       }
     },
   })
-
-  // 디버깅: totalDaysData 값 확인
-  console.log('totalDaysData:', totalDaysData)
-  console.log('stats:', stats)
 
   // 기간별 데이터 계산
   const getPeriodDates = () => {
@@ -116,18 +106,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     enabled: !!sessionId && !!periodDates.start && !!periodDates.end,
   })
 
-  // 진단용: 실제로 받아오는 기간별 학습 데이터와 파라미터 콘솔 출력
-  console.log('periodStats API 파라미터', sessionId, periodDates.start, periodDates.end);
-  if (Array.isArray(periodStats?.period_data)) {
-    periodStats.period_data.forEach((d, i) => {
-      console.log(`Day ${i}:`, d.date, 'AI:', d.ai_info, 'Terms:', d.terms, 'Quiz:', d.quiz_score);
-      if ((d.ai_info === 0 || d.ai_info === undefined) && (d.terms === 0 || d.terms === undefined) && (d.quiz_score === 0 || d.quiz_score === undefined)) {
-        console.warn(`Day ${i} (${d.date}): 모든 값이 0이거나 undefined! DB 저장/조회/sessionId/날짜 문제 가능성 높음.`);
-      }
-    });
-  } else {
-    console.warn('periodStats?.period_data가 배열이 아님:', periodStats?.period_data);
-  }
+
 
   // 동적 막대 너비 계산
   const getBarWidth = () => {
@@ -189,39 +168,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   // 날짜 변경 핸들러 - 상위 컴포넌트에 알림
   const handleDateChange = (date: string) => {
-    console.log('진행률 탭 - 날짜 변경:', date)
     onDateChange?.(date)
   }
 
   // selectedDate가 변경될 때 데이터 리페치
   useEffect(() => {
     if (selectedDate) {
-      console.log('진행률 탭 - selectedDate 변경됨:', selectedDate)
       // 쿼리 무효화하여 데이터 새로고침
       queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
       queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
-      
-      // 로컬 스토리지에서 해당 날짜의 AI 정보 학습 데이터 확인
-      if (typeof window !== 'undefined') {
-        try {
-          const stored = localStorage.getItem('userProgress')
-          if (stored) {
-            const parsed = JSON.parse(stored)
-            const userData = parsed[sessionId]
-            if (userData && userData[selectedDate]) {
-              console.log(`진행률 - ${selectedDate} 날짜의 AI 정보 학습 데이터:`, userData[selectedDate])
-            }
-          }
-        } catch (error) {
-          console.error('Failed to check local progress for selected date:', error)
-        }
-      }
     }
   }, [selectedDate, sessionId, queryClient])
 
   // 기간 변경 핸들러
   const handlePeriodChange = (type: 'week' | 'month' | 'custom') => {
-    console.log('진행률 탭 - 기간 변경:', type)
     setPeriodType(type)
     if (type === 'custom') {
       const today = new Date()
@@ -239,12 +199,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   // 커스텀 날짜 변경 핸들러
   const handleCustomStartDateChange = (date: string) => {
-    console.log('진행률 탭 - 시작 날짜 변경:', date)
     setCustomStartDate(date)
   }
 
   const handleCustomEndDateChange = (date: string) => {
-    console.log('진행률 탭 - 종료 날짜 변경:', date)
     setCustomEndDate(date)
   }
 
@@ -276,9 +234,6 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               let termsCount = localTerms.length
               
               // selectedDate가 현재 날짜와 같다면 로컬 데이터를 더 정확하게 반영
-              if (selectedDate && dateStr === selectedDate) {
-                console.log(`진행률 - ${dateStr} 날짜의 로컬 데이터: AI=${aiCount}, Terms=${termsCount}`)
-              }
               
               localData.push({
                 date: dateStr,
@@ -293,7 +248,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           }
         }
       } catch (error) {
-        console.error('Failed to parse local progress:', error)
+        // 로컬 데이터 파싱 실패 시 무시
       }
     }
     return []
@@ -304,12 +259,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     const chartData = periodStats?.period_data || []
     const combinedData = [...localAIProgress, ...chartData]
     
-    // 디버깅: 원본 데이터 확인
-    console.log('그래프 데이터 계산:', {
-      localAIProgress: localAIProgress,
-      chartData: chartData,
-      combinedData: combinedData
-    })
+
     
     // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선)
     const uniqueData = combinedData.reduce((acc: PeriodData[], current: PeriodData) => {
@@ -331,8 +281,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       return acc
     }, []).sort((a: PeriodData, b: PeriodData) => new Date(a.date).getTime() - new Date(b.date).getTime())
     
-    // 디버깅: 최종 그래프 데이터 확인
-    console.log('최종 그래프 데이터:', uniqueData)
+
     
     return uniqueData
   })()
@@ -556,7 +505,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   const totalLearned = stats?.total_ai_info_available || stats?.total_learned || 0
                   const maxPossible = totalDays * 2 // 일 수 * 2
                   const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
-                  console.log('AI 정보 학습 계산:', { totalDays, totalLearned, maxPossible, percentage, totalDaysData })
+
                   return `${totalLearned}/${maxPossible} (${percentage}%)`
                 })()}
               </span>
@@ -613,7 +562,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   const totalTermsLearned = stats?.total_terms_learned || 0
                   const maxPossible = totalDays * 40 // 일 수 * 40
                   const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
-                  console.log('용어 학습 계산:', { totalDays, totalTermsLearned, maxPossible, percentage, totalDaysData })
+
                   return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
                 })()}
               </span>
@@ -677,7 +626,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
                   const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
                   const percentage = stats?.cumulative_quiz_score || 0
-                  console.log('퀴즈 전체 누적 계산:', { correct, total, percentage, stats })
+
                   return `${correct}/${total} (${percentage}%)`
                 })()}
               </span>
@@ -702,12 +651,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             </div>
           ) : (() => {
             const chartData = periodStats?.period_data || []
-            // 디버깅: 조건 확인
-            console.log('그래프 렌더링 조건 확인:', {
-              uniqueChartDataLength: uniqueChartData.length,
-              uniqueChartData: uniqueChartData,
-              hasData: uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
-            })
+
             
             return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
           })() ? (

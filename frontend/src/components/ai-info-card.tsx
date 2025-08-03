@@ -70,13 +70,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     actualLearnedTerms.add(term)
   }
   
-  // 디버깅: 용어 학습 상태 확인
-  console.log(`용어 학습 상태 - ${sessionId}_${date}_${index}:`, {
-    learnedTerms: Array.from(learnedTerms || []),
-    localLearnedTerms: Array.from(localLearnedTerms),
-    actualLearnedTerms: Array.from(actualLearnedTerms),
-    totalTerms: info.terms?.length || 0
-  })
+
   
   // prop이 바뀌거나 forceUpdate, selectedDate가 바뀌면 동기화
   useEffect(() => {
@@ -181,7 +175,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         if (onProgressUpdate) onProgressUpdate()
       } else {
         // 학습 전 상태에서 학습 완료 상태로 변경
-        console.log('🔍 AI 정보 학습 완료 시도:', { sessionId, date, infoIndex: index })
+    
         await updateProgressMutation.mutateAsync({
           sessionId,
           date,

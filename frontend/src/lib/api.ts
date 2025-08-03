@@ -16,11 +16,7 @@ api.interceptors.request.use((config) => {
     const token = localStorage.getItem('access_token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
-      console.log('🔐 API 요청에 토큰 추가:', token.substring(0, 20) + '...')
-    } else {
-      console.warn('⚠️ API 요청에 토큰 없음!')
     }
-    console.log('📡 API 요청:', config.method?.toUpperCase(), config.url)
   }
   return config
 })
@@ -28,32 +24,13 @@ api.interceptors.request.use((config) => {
 // 토큰 만료 시 자동 로그아웃 처리
 api.interceptors.response.use(
   (response) => {
-    console.log('✅ API 응답 성공:', response.status, response.config.url)
     return response
   },
   (error) => {
-    console.error('❌ API 응답 에러:', {
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      url: error.config?.url,
-      method: error.config?.method,
-      data: error.response?.data,
-      headers: error.response?.headers
-    })
-    
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      console.warn('🔒 401 Unauthorized - 자동 로그아웃')
       localStorage.removeItem('access_token')
       localStorage.removeItem('currentUser')
       window.location.href = '/auth'
-    }
-    
-    if (error.response?.status === 405) {
-      console.error('🚫 Method Not Allowed - 가능한 원인:')
-      console.error('  1. 잘못된 HTTP 메서드')
-      console.error('  2. 라우터 등록 문제')
-      console.error('  3. CORS 프리플라이트 이슈')
-      console.error('  4. 인증 토큰 문제')
     }
     
     return Promise.reject(error)
@@ -281,7 +258,7 @@ export const systemAPI = {
         log_level: 'info'
       })
     } catch (error) {
-      console.error('Failed to log user activity:', error)
+      // 로그 기록 실패는 무시
     }
   }
 }

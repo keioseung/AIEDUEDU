@@ -681,5 +681,4 @@ async def get_admin_stats(
         }
         
     except Exception as e:
-        print(f"Admin stats error: {e}")
-        raise HTTPException(status_code=500, detail=f"통계 조회 실패: {str(e)}") 
+        raise HTTPException(status_code=500, detail="통계 조회 실패") 

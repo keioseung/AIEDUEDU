@@ -38,7 +38,6 @@ def get_user_progress(session_id: str, db: Session = Depends(get_db)):
 @router.post("/{session_id}/{date}/{info_index}")
 def update_user_progress(session_id: str, date: str, info_index: int, request: Request, db: Session = Depends(get_db)):
     """사용자의 학습 진행상황을 업데이트하고 통계를 계산합니다."""
-    print(f"DEBUG: update_user_progress called - session_id: {session_id}, date: {date}, info_index: {info_index}")
     
     progress = db.query(UserProgress).filter(
         UserProgress.session_id == session_id, 
@@ -50,7 +49,6 @@ def update_user_progress(session_id: str, date: str, info_index: int, request: R
         if info_index not in learned:
             learned.append(info_index)
             progress.learned_info = json.dumps(learned)
-            print(f"DEBUG: Updated existing progress - learned: {learned}")
     else:
         learned = [info_index]
         progress = UserProgress(
@@ -60,10 +58,8 @@ def update_user_progress(session_id: str, date: str, info_index: int, request: R
             stats=None
         )
         db.add(progress)
-        print(f"DEBUG: Created new progress - learned: {learned}")
     
     db.commit()
-    print(f"DEBUG: Progress saved to database")
     
     # 통계 업데이트
     update_user_statistics(session_id, db)
@@ -130,7 +126,6 @@ def update_term_progress(session_id: str, term_data: dict, request: Request, db:
 
 def update_user_statistics(session_id: str, db: Session):
     """사용자의 통계를 계산하고 업데이트합니다."""
-    print(f"DEBUG: update_user_statistics called for session_id: {session_id}")
     
     # AI 정보 학습 기록 가져오기
     ai_progress = db.query(UserProgress).filter(
@@ -138,7 +133,7 @@ def update_user_statistics(session_id: str, db: Session):
         ~UserProgress.date.like('__%')
     ).all()
     
-    print(f"DEBUG: Found {len(ai_progress)} AI progress records")
+
     
     # 용어 학습 기록 가져오기
     terms_progress = db.query(UserProgress).filter(
@@ -158,11 +153,10 @@ def update_user_statistics(session_id: str, db: Session):
                 if isinstance(learned_data, list):
                     total_learned += len(learned_data)
                     learned_dates.append(p.date)
-                    print(f"DEBUG: Date {p.date} - learned_data: {learned_data}, total_learned now: {total_learned}")
+                    pass
                 else:
-                    print(f"DEBUG: Date {p.date} - learned_data is not a list: {learned_data}")
-            except json.JSONDecodeError as e:
-                print(f"DEBUG: JSON decode error for date {p.date}: {e}")
+                    pass
+            except json.JSONDecodeError:
                 continue
     
     # 용어 학습 통계
