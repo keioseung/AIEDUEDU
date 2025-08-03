@@ -612,8 +612,7 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
         # AI 정보 학습 수 - 해당 날짜에 학습한 AI 정보 개수
         ai_progress = db.query(UserProgress).filter(
             UserProgress.session_id == session_id,
-            UserProgress.date == date,
-            ~UserProgress.date.like('__%')  # AI 정보 학습 기록만 (date가 __로 시작하지 않는 것들)
+            UserProgress.date == date
         ).first()
         
         ai_count = 0
