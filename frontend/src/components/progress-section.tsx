@@ -467,6 +467,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   const totalLearned = stats?.total_ai_info_available || stats?.total_learned || 0
                   const maxPossible = totalDays * 2 // 일 수 * 2
                   const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
+                  console.log('AI 정보 학습 계산:', { totalDays, totalLearned, maxPossible, percentage })
                   return `${totalLearned}/${maxPossible} (${percentage}%)`
                 })()}
               </span>
@@ -518,6 +519,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   const totalTermsLearned = stats?.total_terms_learned || 0
                   const maxPossible = totalDays * 40 // 일 수 * 40
                   const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
+                  console.log('용어 학습 계산:', { totalDays, totalTermsLearned, maxPossible, percentage })
                   return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
                 })()}
               </span>
