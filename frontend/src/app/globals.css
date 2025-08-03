@@ -154,8 +154,6 @@ input, textarea {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-  box-shadow: 0 16px 40px rgba(99,102,241,0.12);
-}
 
 .btn {
   display: inline-flex;
