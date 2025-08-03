@@ -134,8 +134,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     const dataLength = uniqueChartData.length;
     if (dataLength <= 7) return 'w-8'; // 주간: 32px
     if (dataLength <= 14) return 'w-5'; // 2주: 20px
-    if (dataLength <= 30) return 'w-3'; // 월간: 12px
-    if (dataLength <= 60) return 'w-2'; // 2개월: 8px
+    if (dataLength <= 30) return 'w-2'; // 월간: 8px (더 좁게)
+    if (dataLength <= 60) return 'w-1'; // 2개월: 4px
     return 'w-1'; // 3개월 이상: 4px
   };
 
@@ -151,8 +151,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     const dataLength = uniqueChartData.length;
     if (dataLength <= 7) return `${dataLength * 40}px`; // 주간: 40px per bar
     if (dataLength <= 14) return `${dataLength * 24}px`; // 2주: 24px per bar
-    if (dataLength <= 30) return `${dataLength * 12}px`; // 월간: 12px per bar
-    if (dataLength <= 60) return `${dataLength * 8}px`; // 2개월: 8px per bar
+    if (dataLength <= 30) return `${dataLength * 8}px`; // 월간: 8px per bar (더 좁게)
+    if (dataLength <= 60) return `${dataLength * 4}px`; // 2개월: 4px per bar
     return `${dataLength * 4}px`; // 3개월 이상: 4px per bar
   };
 
@@ -168,6 +168,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     if (dataLength <= 7) return true; // 주간: 모든 날짜 표시
     if (dataLength <= 14) return index % 2 === 0; // 2주: 2일마다 표시
     return index % 5 === 0 || index === dataLength - 1; // 월간: 5일마다 + 마지막 날
+  };
+
+  // 선그래프 표시 여부 결정
+  const shouldShowLineGraph = () => {
+    const dataLength = uniqueChartData.length;
+    return dataLength > 7; // 주간(7일 이하)에서는 선그래프 숨김
   };
 
   // 평균 계산 함수
@@ -239,8 +245,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       setCustomStartDate(weekAgo.toISOString().split('T')[0])
       setCustomEndDate(today.toISOString().split('T')[0])
     }
-    // 기간 변경 시 쿼리 무효화하여 데이터 새로고침
-    queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+    // 기간 변경 시 즉시 쿼리 무효화하여 데이터 새로고침
+    setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+      queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId, periodDates.start, periodDates.end] })
+    }, 100)
   }
 
   // 커스텀 날짜 변경 핸들러
@@ -739,21 +748,23 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       ))}
                     </div>
                     {/* SVG 선그래프 */}
-                    <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
-                      <path
-                        d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
-                        stroke="url(#blueGradient)"
-                        strokeWidth="2"
-                        fill="none"
-                        opacity="0.8"
-                      />
-                      <defs>
-                        <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#3B82F6" />
-                          <stop offset="100%" stopColor="#06B6D4" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
+                    {shouldShowLineGraph() && (
+                      <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                        <path
+                          d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
+                          stroke="url(#blueGradient)"
+                          strokeWidth="2"
+                          fill="none"
+                          opacity="0.8"
+                        />
+                        <defs>
+                          <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#3B82F6" />
+                            <stop offset="100%" stopColor="#06B6D4" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    )}
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -788,11 +799,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            {shouldShowXAxisLabel(index) && (
-                              <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px'}}>
-                                {new Date(data.date).getDate()}
-                              </div>
-                            )}
+                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px', minHeight: '16px'}}>
+                              {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                            </div>
                           </div>
                         );
                       })}
@@ -827,21 +836,23 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       ))}
                     </div>
                     {/* SVG 선그래프 */}
-                    <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
-                      <path
-                        d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
-                        stroke="url(#purpleGradient)"
-                        strokeWidth="2"
-                        fill="none"
-                        opacity="0.8"
-                      />
-                      <defs>
-                        <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#8B5CF6" />
-                          <stop offset="100%" stopColor="#EC4899" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
+                    {shouldShowLineGraph() && (
+                      <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                        <path
+                          d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
+                          stroke="url(#purpleGradient)"
+                          strokeWidth="2"
+                          fill="none"
+                          opacity="0.8"
+                        />
+                        <defs>
+                          <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#8B5CF6" />
+                            <stop offset="100%" stopColor="#EC4899" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    )}
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -876,11 +887,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            {shouldShowXAxisLabel(index) && (
-                              <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px'}}>
-                                {new Date(data.date).getDate()}
-                              </div>
-                            )}
+                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px', minHeight: '16px'}}>
+                              {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                            </div>
                           </div>
                         );
                       })}
@@ -915,21 +924,23 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       ))}
                     </div>
                     {/* SVG 선그래프 */}
-                    <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
-                      <path
-                        d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
-                        stroke="url(#greenGradient)"
-                        strokeWidth="2"
-                        fill="none"
-                        opacity="0.8"
-                      />
-                      <defs>
-                        <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#10B981" />
-                          <stop offset="100%" stopColor="#059669" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
+                    {shouldShowLineGraph() && (
+                      <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                        <path
+                          d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
+                          stroke="url(#greenGradient)"
+                          strokeWidth="2"
+                          fill="none"
+                          opacity="0.8"
+                        />
+                        <defs>
+                          <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#10B981" />
+                            <stop offset="100%" stopColor="#059669" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    )}
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -963,11 +974,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            {shouldShowXAxisLabel(index) && (
-                              <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px'}}>
-                                {new Date(data.date).getDate()}
-                              </div>
-                            )}
+                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px', minHeight: '16px'}}>
+                              {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                            </div>
                           </div>
                         );
                       })}
