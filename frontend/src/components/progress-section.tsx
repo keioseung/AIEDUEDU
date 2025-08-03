@@ -133,27 +133,33 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const getBarWidth = () => {
     const dataLength = uniqueChartData.length;
     if (dataLength <= 7) return 'w-8'; // 주간: 32px
-    if (dataLength <= 14) return 'w-6'; // 2주: 24px
-    if (dataLength <= 30) return 'w-4'; // 월간: 16px
-    if (dataLength <= 60) return 'w-3'; // 2개월: 12px
-    return 'w-2'; // 3개월 이상: 8px
+    if (dataLength <= 14) return 'w-5'; // 2주: 20px
+    if (dataLength <= 30) return 'w-3'; // 월간: 12px
+    if (dataLength <= 60) return 'w-2'; // 2개월: 8px
+    return 'w-1'; // 3개월 이상: 4px
   };
 
   const getBarGap = () => {
     const dataLength = uniqueChartData.length;
     if (dataLength <= 7) return 'gap-2'; // 주간: 8px
     if (dataLength <= 14) return 'gap-1'; // 2주: 4px
-    if (dataLength <= 30) return 'gap-0.5'; // 월간: 2px
+    if (dataLength <= 30) return 'gap-0'; // 월간: 0px
     return 'gap-0'; // 2개월 이상: 0px
   };
 
   const getContainerMinWidth = () => {
     const dataLength = uniqueChartData.length;
     if (dataLength <= 7) return `${dataLength * 40}px`; // 주간: 40px per bar
-    if (dataLength <= 14) return `${dataLength * 32}px`; // 2주: 32px per bar
-    if (dataLength <= 30) return `${dataLength * 24}px`; // 월간: 24px per bar
-    if (dataLength <= 60) return `${dataLength * 18}px`; // 2개월: 18px per bar
-    return `${dataLength * 12}px`; // 3개월 이상: 12px per bar
+    if (dataLength <= 14) return `${dataLength * 24}px`; // 2주: 24px per bar
+    if (dataLength <= 30) return `${dataLength * 12}px`; // 월간: 12px per bar
+    if (dataLength <= 60) return `${dataLength * 8}px`; // 2개월: 8px per bar
+    return `${dataLength * 4}px`; // 3개월 이상: 4px per bar
+  };
+
+  // 퍼센트 표시 방식 결정
+  const shouldShowPercentage = () => {
+    const dataLength = uniqueChartData.length;
+    return dataLength <= 14; // 2주 이하일 때만 퍼센트 표시
   };
 
   // 날짜 변경 핸들러 - 상위 컴포넌트에 알림
@@ -199,6 +205,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       setCustomStartDate(weekAgo.toISOString().split('T')[0])
       setCustomEndDate(today.toISOString().split('T')[0])
     }
+    // 기간 변경 시 쿼리 무효화하여 데이터 새로고침
+    queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
   }
 
   // 커스텀 날짜 변경 핸들러
@@ -714,7 +722,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 }}
                               />
                               {/* bar 위에 % */}
-                              {data.ai_info > 0 && (
+                              {data.ai_info > 0 && shouldShowPercentage() && (
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
                                     ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
@@ -778,7 +786,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 }}
                               />
                               {/* bar 위에 % */}
-                              {data.terms > 0 && (
+                              {data.terms > 0 && shouldShowPercentage() && (
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
                                     ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
@@ -841,7 +849,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 }}
                               />
                               {/* bar 위에 % */}
-                              {data.quiz_score > 0 && (
+                              {data.quiz_score > 0 && shouldShowPercentage() && (
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
                                     ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
