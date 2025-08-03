@@ -175,10 +175,10 @@ export function useLearnedTerms(sessionId: string, date: string, infoIndex: numb
       return new Set<string>()
     },
     enabled: !!sessionId && !!date,
-    staleTime: 0, // 항상 최신 데이터 사용
+    staleTime: 30 * 1000, // 30초간 캐시 유지 (너무 자주 새로고침 방지)
     gcTime: 5 * 60 * 1000, // 5분간 캐시 유지
-    refetchOnWindowFocus: true, // 창 포커스 시 새로고침 활성화
+    refetchOnWindowFocus: false, // 창 포커스 시 새로고침 비활성화
     refetchOnMount: true, // 컴포넌트 마운트 시 새로고침 활성화
-    refetchOnReconnect: true, // 네트워크 재연결 시 새로고침 활성화
+    refetchOnReconnect: false, // 네트워크 재연결 시 새로고침 비활성화
   })
 } 

@@ -108,6 +108,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       const currentTerm = info.terms[currentTermIndex]
       if (currentTerm && !actualLearnedTerms.has(currentTerm.term)) {
         try {
+          // localStorage에 즉시 저장 (낙관적 업데이트)
+          const newLocalTerms = new Set([...localLearnedTerms, currentTerm.term])
+          setLocalLearnedTerms(newLocalTerms)
+          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+          
+          // 백엔드 업데이트
           await updateTermProgressMutation.mutateAsync({
             sessionId,
             term: currentTerm.term,
@@ -115,18 +121,18 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             infoIndex: index
           })
 
-          // localStorage에 즉시 저장
-          const newLocalTerms = new Set([...localLearnedTerms, currentTerm.term])
-          setLocalLearnedTerms(newLocalTerms)
-          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-          
-          // 백엔드 데이터 새로고침
-          await refetchLearnedTerms()
-          
-          // 관련 쿼리들 무효화하여 데이터 동기화
-          queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
-          queryClient.invalidateQueries({ queryKey: ['user-progress', sessionId] })
-          queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId] })
+          // 성취 확인 (지연 실행)
+          setTimeout(async () => {
+            try {
+              const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
+              if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
+                setShowAchievement(true)
+                setTimeout(() => setShowAchievement(false), 3000)
+              }
+            } catch (error) {
+              console.error('Failed to check achievements:', error)
+            }
+          }, 1000)
 
           // N개 학습완료 알림 매번 표시
           setShowAllTermsComplete(true)
@@ -136,15 +142,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           if (onProgressUpdate) {
             onProgressUpdate()
           }
-
-          // 성취 확인
-          const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
-          if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
-            setShowAchievement(true)
-            setTimeout(() => setShowAchievement(false), 3000)
-          }
         } catch (error) {
           console.error('Failed to update term progress:', error)
+          // 에러 시 localStorage 롤백
+          const rollbackTerms = new Set([...localLearnedTerms])
+          rollbackTerms.delete(currentTerm.term)
+          setLocalLearnedTerms(rollbackTerms)
+          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
         }
       }
       // 다음 용어로 이동
@@ -322,6 +326,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                       // 클릭한 용어를 학습완료로 표시
                       if (!actualLearnedTerms.has(term.term)) {
                         try {
+                          // localStorage에 즉시 저장 (낙관적 업데이트)
+                          const newLocalTerms = new Set([...localLearnedTerms, term.term])
+                          setLocalLearnedTerms(newLocalTerms)
+                          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                          
+                          // 백엔드 업데이트
                           await updateTermProgressMutation.mutateAsync({
                             sessionId,
                             term: term.term,
@@ -329,25 +339,17 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                             infoIndex: index
                           })
                           
-                          // localStorage에 즉시 저장
-                          const newLocalTerms = new Set([...localLearnedTerms, term.term])
-                          setLocalLearnedTerms(newLocalTerms)
-                          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-                          
-                          // 백엔드 데이터 새로고침
-                          await refetchLearnedTerms()
-                          
-                          // 관련 쿼리들 무효화하여 데이터 동기화
-                          queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
-                          queryClient.invalidateQueries({ queryKey: ['user-progress', sessionId] })
-                          queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId] })
-                          
                           // 진행률 업데이트 콜백 호출
                           if (onProgressUpdate) {
                             onProgressUpdate()
                           }
                         } catch (error) {
                           console.error('Failed to update term progress:', error)
+                          // 에러 시 localStorage 롤백
+                          const rollbackTerms = new Set([...localLearnedTerms])
+                          rollbackTerms.delete(term.term)
+                          setLocalLearnedTerms(rollbackTerms)
+                          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
                         }
                       }
                     }}
