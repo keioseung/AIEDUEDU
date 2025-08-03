@@ -766,7 +766,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '20px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginLeft: '48px', marginBottom: '20px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
                           stroke="url(#blueGradient)"
@@ -854,7 +854,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '20px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginLeft: '48px', marginBottom: '20px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
                           stroke="url(#purpleGradient)"
@@ -942,7 +942,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginBottom: '20px' }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px', marginLeft: '48px', marginBottom: '20px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
                           stroke="url(#greenGradient)"
