@@ -53,8 +53,23 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const { data: totalDaysData } = useQuery({
     queryKey: ['ai-info-total-days'],
     queryFn: async () => {
-      const response = await aiInfoAPI.getTotalDays()
-      return response.data
+      try {
+        const response = await aiInfoAPI.getTotalDays()
+        console.log('Total days API response:', response.data)
+        return response.data
+      } catch (error) {
+        console.error('Failed to fetch total days:', error)
+        // API 호출 실패 시 dates/all을 사용하여 계산
+        try {
+          const datesResponse = await aiInfoAPI.getAllDates()
+          const totalDays = datesResponse.data.length
+          console.log('Calculated total days from dates:', totalDays)
+          return { total_days: totalDays }
+        } catch (datesError) {
+          console.error('Failed to fetch dates:', datesError)
+          return { total_days: 0 }
+        }
+      }
     },
   })
 
