@@ -162,6 +162,40 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     return dataLength <= 14; // 2주 이하일 때만 퍼센트 표시
   };
 
+  // X축 범례 표시 방식 결정 (5일 단위)
+  const shouldShowXAxisLabel = (index: number) => {
+    const dataLength = uniqueChartData.length;
+    if (dataLength <= 7) return true; // 주간: 모든 날짜 표시
+    if (dataLength <= 14) return index % 2 === 0; // 2주: 2일마다 표시
+    return index % 5 === 0 || index === dataLength - 1; // 월간: 5일마다 + 마지막 날
+  };
+
+  // 평균 계산 함수
+  const calculateAverage = (data: PeriodData[], type: 'ai_info' | 'terms' | 'quiz_score') => {
+    const validData = data.filter(d => d[type] > 0);
+    if (validData.length === 0) return 0;
+    
+    const sum = validData.reduce((acc, d) => acc + d[type], 0);
+    return Math.round(sum / validData.length);
+  };
+
+  // 선그래프 SVG 경로 생성
+  const generateLinePath = (data: PeriodData[], type: 'ai_info' | 'terms' | 'quiz_score', maxValue: number) => {
+    if (data.length === 0) return '';
+    
+    const barWidth = uniqueChartData.length <= 7 ? 32 : uniqueChartData.length <= 14 ? 20 : 12;
+    const gap = uniqueChartData.length <= 7 ? 8 : uniqueChartData.length <= 14 ? 4 : 0;
+    const totalWidth = barWidth + gap;
+    
+    const points = data.map((d, index) => {
+      const x = index * totalWidth + barWidth / 2;
+      const y = 128 - Math.min((d[type] / maxValue) * 128, 128);
+      return `${x},${y}`;
+    });
+    
+    return `M ${points.join(' L ')}`;
+  };
+
   // 날짜 변경 핸들러 - 상위 컴포넌트에 알림
   const handleDateChange = (date: string) => {
     console.log('진행률 탭 - 날짜 변경:', date)
@@ -682,22 +716,44 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               {/* AI 정보 추이 */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-white/80 font-medium">AI 정보 학습</span>
+                    <span className="text-white/90 font-semibold">AI 정보 학습</span>
+                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 rounded-full">
+                      <span className="text-blue-300 text-xs">평균</span>
+                      <span className="text-blue-200 font-bold text-sm">
+                        {calculateAverage(uniqueChartData, 'ai_info')}개
+                      </span>
+                    </div>
                   </div>
                   <span className="text-white/60 text-sm">
                     최대: {maxAI > 0 ? maxAI : 3}개
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32" style={{ minWidth: getContainerMinWidth() }}>
+                  <div className="flex flex-row items-end h-32 relative" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
                         <div key={v} style={{height: 128/5}}>{v}%</div>
                       ))}
                     </div>
+                    {/* SVG 선그래프 */}
+                    <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                      <path
+                        d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
+                        stroke="url(#blueGradient)"
+                        strokeWidth="2"
+                        fill="none"
+                        opacity="0.8"
+                      />
+                      <defs>
+                        <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#3B82F6" />
+                          <stop offset="100%" stopColor="#06B6D4" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -732,9 +788,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'11px'}}>
-                              {new Date(data.date).getDate()}
-                            </div>
+                            {shouldShowXAxisLabel(index) && (
+                              <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px'}}>
+                                {new Date(data.date).getDate()}
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -746,22 +804,44 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               {/* 용어 학습 추이 */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                    <span className="text-white/80 font-medium">용어 학습</span>
+                    <span className="text-white/90 font-semibold">용어 학습</span>
+                    <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/20 rounded-full">
+                      <span className="text-purple-300 text-xs">평균</span>
+                      <span className="text-purple-200 font-bold text-sm">
+                        {calculateAverage(uniqueChartData, 'terms')}개
+                      </span>
+                    </div>
                   </div>
                   <span className="text-white/60 text-sm">
                     최대: {maxTerms > 0 ? maxTerms : 60}개
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32" style={{ minWidth: getContainerMinWidth() }}>
+                  <div className="flex flex-row items-end h-32 relative" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
                         <div key={v} style={{height: 128/5}}>{v}%</div>
                       ))}
                     </div>
+                    {/* SVG 선그래프 */}
+                    <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                      <path
+                        d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
+                        stroke="url(#purpleGradient)"
+                        strokeWidth="2"
+                        fill="none"
+                        opacity="0.8"
+                      />
+                      <defs>
+                        <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#8B5CF6" />
+                          <stop offset="100%" stopColor="#EC4899" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -790,15 +870,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
                                     ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
-                                    : 'bg-gradient-to-r from-purple-400 to-pink-300 text-white shadow-lg shadow-purple-500/30 px-1.5 py-0.5 rounded-md'
+                                    : 'bg-gradient-to-r from-purple-400 to-pink-300 text-white shadow-lg shadow-purple-500/30 px-1.5 py-0.0.5 rounded-md'
                                 }`}>
                                   {percent}%
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'11px'}}>
-                              {new Date(data.date).getDate()}
-                            </div>
+                            {shouldShowXAxisLabel(index) && (
+                              <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px'}}>
+                                {new Date(data.date).getDate()}
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -810,22 +892,44 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               {/* 퀴즈 점수 추이 */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-white/80 font-medium">퀴즈 점수</span>
+                    <span className="text-white/90 font-semibold">퀴즈 점수</span>
+                    <div className="flex items-center gap-1 px-2 py-1 bg-green-500/20 rounded-full">
+                      <span className="text-green-300 text-xs">평균</span>
+                      <span className="text-green-200 font-bold text-sm">
+                        {calculateAverage(uniqueChartData, 'quiz_score')}%
+                      </span>
+                    </div>
                   </div>
                   <span className="text-white/60 text-sm">
                     최대: {maxQuiz}%
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32" style={{ minWidth: getContainerMinWidth() }}>
+                  <div className="flex flex-row items-end h-32 relative" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
                         <div key={v} style={{height: 128/5}}>{v}%</div>
                       ))}
                     </div>
+                    {/* SVG 선그래프 */}
+                    <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                      <path
+                        d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
+                        stroke="url(#greenGradient)"
+                        strokeWidth="2"
+                        fill="none"
+                        opacity="0.8"
+                      />
+                      <defs>
+                        <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#10B981" />
+                          <stop offset="100%" stopColor="#059669" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
@@ -859,9 +963,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'11px'}}>
-                              {new Date(data.date).getDate()}
-                            </div>
+                            {shouldShowXAxisLabel(index) && (
+                              <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px'}}>
+                                {new Date(data.date).getDate()}
+                              </div>
+                            )}
                           </div>
                         );
                       })}
