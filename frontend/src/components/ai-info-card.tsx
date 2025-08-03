@@ -180,12 +180,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         if (setForceUpdate) setForceUpdate(prev => prev + 1)
         if (onProgressUpdate) onProgressUpdate()
       } else {
-                 // 학습 전 상태에서 학습 완료 상태로 변경
-         await updateProgressMutation.mutateAsync({
-           sessionId,
-           date,
-           infoIndex: index
-         })
+        // 학습 전 상태에서 학습 완료 상태로 변경
+        console.log('🔍 AI 정보 학습 완료 시도:', { sessionId, date, infoIndex: index })
+        await updateProgressMutation.mutateAsync({
+          sessionId,
+          date,
+          infoIndex: index
+        })
          setIsLearned(true)
          setShowLearnComplete(true)
          setTimeout(() => setShowLearnComplete(false), 3000)

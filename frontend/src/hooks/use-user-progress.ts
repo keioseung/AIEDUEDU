@@ -39,7 +39,9 @@ export function useUpdateUserProgress() {
       date: string
       infoIndex: number 
     }) => {
+      console.log('🚀 useUpdateUserProgress 호출:', { sessionId, date, infoIndex })
       const response = await userProgressAPI.update(sessionId, date, infoIndex)
+      console.log('✅ useUpdateUserProgress 응답:', response.data)
       return response.data
     },
     onSuccess: (data, { sessionId }) => {
