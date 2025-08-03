@@ -187,9 +187,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     if (type === 'quiz_score') {
       return Math.round(average); // 퀴즈는 이미 % 단위
     } else {
-      // AI 정보와 용어는 최대값 대비 %로 계산
+      // AI 정보와 용어는 최대값 대비 %로 계산 (최대 100% 제한)
       const maxValue = type === 'ai_info' ? (maxAI > 0 ? maxAI : 3) : (maxTerms > 0 ? maxTerms : 60);
-      return Math.round((average / maxValue) * 100);
+      return Math.min(Math.round((average / maxValue) * 100), 100);
     }
   };
 
@@ -744,7 +744,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                   </div>
                   <span className="text-white/60 text-sm">
-                    최대: {maxAI > 0 ? maxAI : 3}개
+                    최대: 100%
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
@@ -832,7 +832,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                   </div>
                   <span className="text-white/60 text-sm">
-                    최대: {maxTerms > 0 ? maxTerms : 60}개
+                    최대: 100%
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
