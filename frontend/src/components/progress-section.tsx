@@ -129,6 +129,33 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     console.warn('periodStats?.period_data가 배열이 아님:', periodStats?.period_data);
   }
 
+  // 동적 막대 너비 계산
+  const getBarWidth = () => {
+    const dataLength = uniqueChartData.length;
+    if (dataLength <= 7) return 'w-8'; // 주간: 32px
+    if (dataLength <= 14) return 'w-6'; // 2주: 24px
+    if (dataLength <= 30) return 'w-4'; // 월간: 16px
+    if (dataLength <= 60) return 'w-3'; // 2개월: 12px
+    return 'w-2'; // 3개월 이상: 8px
+  };
+
+  const getBarGap = () => {
+    const dataLength = uniqueChartData.length;
+    if (dataLength <= 7) return 'gap-2'; // 주간: 8px
+    if (dataLength <= 14) return 'gap-1'; // 2주: 4px
+    if (dataLength <= 30) return 'gap-0.5'; // 월간: 2px
+    return 'gap-0'; // 2개월 이상: 0px
+  };
+
+  const getContainerMinWidth = () => {
+    const dataLength = uniqueChartData.length;
+    if (dataLength <= 7) return `${dataLength * 40}px`; // 주간: 40px per bar
+    if (dataLength <= 14) return `${dataLength * 32}px`; // 2주: 32px per bar
+    if (dataLength <= 30) return `${dataLength * 24}px`; // 월간: 24px per bar
+    if (dataLength <= 60) return `${dataLength * 18}px`; // 2개월: 18px per bar
+    return `${dataLength * 12}px`; // 3개월 이상: 12px per bar
+  };
+
   // 날짜 변경 핸들러 - 상위 컴포넌트에 알림
   const handleDateChange = (date: string) => {
     console.log('진행률 탭 - 날짜 변경:', date)
@@ -656,7 +683,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32" style={{ minWidth: `${uniqueChartData.length * 40}px` }}>
+                  <div className="flex flex-row items-end h-32" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
@@ -664,7 +691,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       ))}
                     </div>
                     {/* bar + 날짜 */}
-                    <div className="flex items-end gap-2 h-32">
+                    <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
                         const effectiveMaxAI = maxAI > 0 ? maxAI : 3;
@@ -672,7 +699,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         const isFullAI = data.ai_info >= effectiveMaxAI;
                         const percent = Math.min(Math.round((data.ai_info / effectiveMaxAI) * 100), 100);
                         return (
-                          <div key={index} className="flex flex-col items-center w-8">
+                          <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
                               <div
                                 className={
@@ -720,7 +747,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32" style={{ minWidth: `${uniqueChartData.length * 40}px` }}>
+                  <div className="flex flex-row items-end h-32" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
@@ -728,7 +755,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       ))}
                     </div>
                     {/* bar + 날짜 */}
-                    <div className="flex items-end gap-2 h-32">
+                    <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
                         const effectiveMaxTerms = maxTerms > 0 ? maxTerms : 60;
@@ -736,7 +763,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         const isFullTerms = data.terms >= effectiveMaxTerms;
                         const percent = Math.min(Math.round((data.terms / effectiveMaxTerms) * 100), 100);
                         return (
-                          <div key={index} className="flex flex-col items-center w-8">
+                          <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
                               <div
                                 className={
@@ -784,7 +811,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32" style={{ minWidth: `${uniqueChartData.length * 40}px` }}>
+                  <div className="flex flex-row items-end h-32" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
@@ -792,14 +819,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       ))}
                     </div>
                     {/* bar + 날짜 */}
-                    <div className="flex items-end gap-2 h-32">
+                    <div className={`flex items-end h-32 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
                         const quizHeight = Math.min(Math.max((data.quiz_score / maxQuiz) * barMaxHeight, data.quiz_score > 0 ? 4 : 0), barMaxHeight);
                         const isFullQuiz = data.quiz_score >= maxQuiz;
                         const percent = Math.min(Math.round((data.quiz_score / maxQuiz) * 100), 100);
                         return (
-                          <div key={index} className="flex flex-col items-center w-8">
+                          <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
                               <div
                                 className={
