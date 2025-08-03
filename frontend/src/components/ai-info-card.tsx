@@ -180,20 +180,25 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         if (setForceUpdate) setForceUpdate(prev => prev + 1)
         if (onProgressUpdate) onProgressUpdate()
       } else {
-        // 학습 전 상태에서 학습 완료 상태로 변경
-        await updateProgressMutation.mutateAsync({
-          sessionId,
-          date,
-          infoIndex: index
-        })
-        setIsLearned(true)
-        setShowLearnComplete(true)
-        setTimeout(() => setShowLearnComplete(false), 3000)
-        if (onProgressUpdate) onProgressUpdate()
-        const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
-        if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
-          setShowAchievement(true)
-        }
+                 // 학습 전 상태에서 학습 완료 상태로 변경
+         await updateProgressMutation.mutateAsync({
+           sessionId,
+           date,
+           infoIndex: index
+         })
+         setIsLearned(true)
+         setShowLearnComplete(true)
+         setTimeout(() => setShowLearnComplete(false), 3000)
+         
+         // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
+         queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+         queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+         
+         if (onProgressUpdate) onProgressUpdate()
+         const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
+         if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
+           setShowAchievement(true)
+         }
       }
     } catch (error) {
       console.error('Failed to update progress:', error)

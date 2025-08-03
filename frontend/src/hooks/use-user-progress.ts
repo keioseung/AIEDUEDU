@@ -45,6 +45,7 @@ export function useUpdateUserProgress() {
     onSuccess: (data, { sessionId }) => {
       queryClient.invalidateQueries({ queryKey: ['user-progress', sessionId] })
       queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+      queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
     },
   })
 }
