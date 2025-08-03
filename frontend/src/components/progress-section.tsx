@@ -182,7 +182,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     if (validData.length === 0) return 0;
     
     const sum = validData.reduce((acc, d) => acc + d[type], 0);
-    return Math.round(sum / validData.length);
+    const average = sum / validData.length;
+    
+    if (type === 'quiz_score') {
+      return Math.round(average); // 퀴즈는 이미 % 단위
+    } else {
+      // AI 정보와 용어는 최대값 대비 %로 계산
+      const maxValue = type === 'ai_info' ? (maxAI > 0 ? maxAI : 3) : (maxTerms > 0 ? maxTerms : 60);
+      return Math.round((average / maxValue) * 100);
+    }
   };
 
   // 선그래프 SVG 경로 생성
@@ -731,7 +739,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 rounded-full">
                       <span className="text-blue-300 text-xs">평균</span>
                       <span className="text-blue-200 font-bold text-sm">
-                        {calculateAverage(uniqueChartData, 'ai_info')}개
+                        {calculateAverage(uniqueChartData, 'ai_info')}%
                       </span>
                     </div>
                   </div>
@@ -749,7 +757,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'ai_info', maxAI > 0 ? maxAI : 3)}
                           stroke="url(#blueGradient)"
@@ -819,7 +827,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/20 rounded-full">
                       <span className="text-purple-300 text-xs">평균</span>
                       <span className="text-purple-200 font-bold text-sm">
-                        {calculateAverage(uniqueChartData, 'terms')}개
+                        {calculateAverage(uniqueChartData, 'terms')}%
                       </span>
                     </div>
                   </div>
@@ -837,7 +845,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'terms', maxTerms > 0 ? maxTerms : 60)}
                           stroke="url(#purpleGradient)"
@@ -925,7 +933,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
                     {/* SVG 선그래프 */}
                     {shouldShowLineGraph() && (
-                      <svg className="absolute inset-0 pointer-events-none" style={{ minWidth: getContainerMinWidth() }}>
+                      <svg className="absolute top-0 left-0 pointer-events-none" style={{ minWidth: getContainerMinWidth(), height: '128px' }}>
                         <path
                           d={generateLinePath(uniqueChartData, 'quiz_score', maxQuiz)}
                           stroke="url(#greenGradient)"
