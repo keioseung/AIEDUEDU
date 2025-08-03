@@ -49,6 +49,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     enabled: !!selectedDate || true,
   })
 
+  // AI 정보가 등록된 총 일 수 가져오기
+  const { data: totalDaysData } = useQuery({
+    queryKey: ['ai-info-total-days'],
+    queryFn: async () => {
+      const response = await aiInfoAPI.getTotalDays()
+      return response.data
+    },
+  })
+
   // 기간별 데이터 계산
   const getPeriodDates = () => {
     const today = new Date()
@@ -447,13 +456,19 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">총 정보 수</span>
+              <span className="text-white/70 text-sm">일별 총 정보 수</span>
               <span className="text-blue-400 font-bold text-base">{totalAIInfo}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">누적 총 학습 수</span>
               <span className="text-white font-semibold">
-                {stats?.total_ai_info_available || stats?.total_learned || 0}
+                {(() => {
+                  const totalDays = totalDaysData?.total_days || 0
+                  const totalLearned = stats?.total_ai_info_available || stats?.total_learned || 0
+                  const maxPossible = totalDays * 2 // 일 수 * 2
+                  const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
+                  return `${totalLearned}/${maxPossible} (${percentage}%)`
+                })()}
               </span>
             </div>
           </div>
@@ -492,13 +507,19 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">총 용어 수</span>
+              <span className="text-white/70 text-sm">일별 총 용어 수</span>
               <span className="text-purple-400 font-bold text-base">{totalTerms}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">누적 총 용어 수</span>
               <span className="text-white font-semibold">
-                {stats?.total_terms_learned || 0}
+                {(() => {
+                  const totalDays = totalDaysData?.total_days || 0
+                  const totalTermsLearned = stats?.total_terms_learned || 0
+                  const maxPossible = totalDays * 40 // 일 수 * 40
+                  const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
+                  return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
+                })()}
               </span>
             </div>
           </div>
@@ -556,7 +577,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">전체 누적</span>
               <span className="text-white/50 text-sm">
-                {stats?.cumulative_quiz_score || 0}%
+                {(() => {
+                  const correct = stats?.cumulative_quiz_correct || 0
+                  const total = stats?.cumulative_quiz_total || 0
+                  const percentage = stats?.cumulative_quiz_score || 0
+                  return `${correct}/${total} (${percentage}%)`
+                })()}
               </span>
             </div>
           </div>

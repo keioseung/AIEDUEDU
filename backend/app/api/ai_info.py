@@ -211,6 +211,12 @@ def get_all_ai_info_dates(db: Session = Depends(get_db)):
     dates = [row.date for row in db.query(AIInfo).order_by(AIInfo.date).all()]
     return dates
 
+@router.get("/total-days")
+def get_total_ai_info_days(db: Session = Depends(get_db)):
+    """AI 정보가 등록된 총 일 수를 반환합니다."""
+    total_days = db.query(AIInfo).count()
+    return {"total_days": total_days}
+
 @router.get("/terms-quiz/{session_id}")
 def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
     """사용자가 학습한 날짜의 모든 용어로 퀴즈를 생성합니다."""

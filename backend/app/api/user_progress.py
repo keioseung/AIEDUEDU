@@ -808,5 +808,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         "cumulative_quiz_score": cumulative_quiz_score,
         "cumulative_quiz_correct": cumulative_quiz_correct,
         "cumulative_quiz_total": cumulative_quiz_total,
-        "streak_days": streak_days
+        "streak_days": streak_days,
+        "total_ai_info_available": total_learned,  # 호환성을 위해 추가
+        "total_terms_available": total_terms_learned  # 호환성을 위해 추가
     } 
