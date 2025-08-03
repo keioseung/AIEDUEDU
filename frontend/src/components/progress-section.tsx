@@ -203,8 +203,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     
     const points = data.map((d, index) => {
       const x = index * totalWidth + barWidth / 2;
-      // Y축을 128px에서 계산하되, 0%는 맨 아래(128px), 100%는 맨 위(0px)
-      const y = 128 - Math.min((d[type] / maxValue) * 128, 128);
+      // Y축 계산: 0%는 Y축 0% 지점(128px), 100%는 맨 위(0px)
+      // 막대그래프와 동일한 높이 계산 로직 사용
+      const percentage = Math.min((d[type] / maxValue) * 100, 100);
+      const y = 128 - (percentage / 100) * 128;
       return `${x},${y}`;
     });
     
