@@ -155,10 +155,14 @@ def update_user_statistics(session_id: str, db: Session):
         if p.learned_info:
             try:
                 learned_data = json.loads(p.learned_info)
-                total_learned += len(learned_data)
-                learned_dates.append(p.date)
-                print(f"DEBUG: Date {p.date} - learned_data: {learned_data}, total_learned now: {total_learned}")
-            except json.JSONDecodeError:
+                if isinstance(learned_data, list):
+                    total_learned += len(learned_data)
+                    learned_dates.append(p.date)
+                    print(f"DEBUG: Date {p.date} - learned_data: {learned_data}, total_learned now: {total_learned}")
+                else:
+                    print(f"DEBUG: Date {p.date} - learned_data is not a list: {learned_data}")
+            except json.JSONDecodeError as e:
+                print(f"DEBUG: JSON decode error for date {p.date}: {e}")
                 continue
     
     # 용어 학습 통계
