@@ -486,11 +486,8 @@ export default function DashboardPage() {
                 )}
                 
                 <div className="relative z-10 flex flex-col items-center gap-1 md:gap-2">
-                  {/* 아이콘 */}
-                  <span className="text-lg md:text-xl filter drop-shadow-sm">{tab.icon}</span>
-                  
                   {/* 라벨 */}
-                  <span className="font-bold tracking-wide drop-shadow-sm">{tab.label}</span>
+                  <span className="font-bold tracking-wide drop-shadow-sm text-base md:text-lg">{tab.label}</span>
                   
                   {/* 설명 (데스크톱에서만 표시) */}
                   <span className="hidden lg:block text-xs opacity-80 font-medium tracking-wide">
