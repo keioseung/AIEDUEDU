@@ -54,6 +54,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     queryKey: ['ai-info-total-days'],
     queryFn: async () => {
       try {
+        console.log('Fetching total days...')
         const response = await aiInfoAPI.getTotalDays()
         console.log('Total days API response:', response.data)
         return response.data
@@ -61,6 +62,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         console.error('Failed to fetch total days:', error)
         // API 호출 실패 시 dates/all을 사용하여 계산
         try {
+          console.log('Trying to fetch dates instead...')
           const datesResponse = await aiInfoAPI.getAllDates()
           const totalDays = datesResponse.data.length
           console.log('Calculated total days from dates:', totalDays)
@@ -72,6 +74,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       }
     },
   })
+
+  // 디버깅: totalDaysData 값 확인
+  console.log('totalDaysData:', totalDaysData)
+  console.log('stats:', stats)
 
   // 기간별 데이터 계산
   const getPeriodDates = () => {
@@ -595,9 +601,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               <span className="text-white/70 text-sm">전체 누적</span>
               <span className="text-white/50 text-sm">
                 {(() => {
-                  const correct = stats?.cumulative_quiz_correct || 0
-                  const total = stats?.cumulative_quiz_total || 0
+                  const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
+                  const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
                   const percentage = stats?.cumulative_quiz_score || 0
+                  console.log('퀴즈 전체 누적 계산:', { correct, total, percentage, stats })
                   return `${correct}/${total} (${percentage}%)`
                 })()}
               </span>
