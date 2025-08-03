@@ -107,7 +107,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   const periodDates = getPeriodDates()
 
-  const { data: periodStats } = useQuery<PeriodStats>({
+  const { data: periodStats, isLoading: periodStatsLoading } = useQuery<PeriodStats>({
     queryKey: ['period-stats', sessionId, periodDates.start, periodDates.end],
     queryFn: async () => {
       const response = await userProgressAPI.getPeriodStats(sessionId, periodDates.start, periodDates.end)
@@ -197,12 +197,13 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const generateLinePath = (data: PeriodData[], type: 'ai_info' | 'terms' | 'quiz_score', maxValue: number) => {
     if (data.length === 0) return '';
     
-    const barWidth = uniqueChartData.length <= 7 ? 32 : uniqueChartData.length <= 14 ? 20 : 12;
+    const barWidth = uniqueChartData.length <= 7 ? 32 : uniqueChartData.length <= 14 ? 20 : 8;
     const gap = uniqueChartData.length <= 7 ? 8 : uniqueChartData.length <= 14 ? 4 : 0;
     const totalWidth = barWidth + gap;
     
     const points = data.map((d, index) => {
       const x = index * totalWidth + barWidth / 2;
+      // Y축을 128px에서 계산하되, 0%는 맨 아래(128px), 100%는 맨 위(0px)
       const y = 128 - Math.min((d[type] / maxValue) * 128, 128);
       return `${x},${y}`;
     });
@@ -718,7 +719,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           </div>
         </div>
         <div className="glass rounded-2xl p-6">
-          {(() => {
+          {periodStatsLoading ? (
+            <div className="text-center text-white/60 py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p>학습 데이터를 불러오는 중...</p>
+            </div>
+          ) : (() => {
             const chartData = periodStats?.period_data || []
             // 디버깅: 조건 확인
             console.log('그래프 렌더링 조건 확인:', {
