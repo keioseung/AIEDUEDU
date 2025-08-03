@@ -609,7 +609,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">전체 누적</span>
-              <span className="text-white/50 text-sm">
+              <span className="text-white font-semibold">
                 {(() => {
                   const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
                   const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
