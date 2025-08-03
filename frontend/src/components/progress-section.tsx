@@ -668,9 +668,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
                         const effectiveMaxAI = maxAI > 0 ? maxAI : 3;
-                        const aiHeight = Math.max((data.ai_info / effectiveMaxAI) * barMaxHeight, data.ai_info > 0 ? 4 : 0);
-                        const isFullAI = data.ai_info === effectiveMaxAI;
-                        const percent = Math.round((data.ai_info / effectiveMaxAI) * 100);
+                        const aiHeight = Math.min(Math.max((data.ai_info / effectiveMaxAI) * barMaxHeight, data.ai_info > 0 ? 4 : 0), barMaxHeight);
+                        const isFullAI = data.ai_info >= effectiveMaxAI;
+                        const percent = Math.min(Math.round((data.ai_info / effectiveMaxAI) * 100), 100);
                         return (
                           <div key={index} className="flex flex-col items-center w-8">
                             <div className="relative w-full">
@@ -732,9 +732,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
                         const effectiveMaxTerms = maxTerms > 0 ? maxTerms : 60;
-                        const termsHeight = Math.max((data.terms / effectiveMaxTerms) * barMaxHeight, data.terms > 0 ? 4 : 0);
-                        const isFullTerms = data.terms === effectiveMaxTerms;
-                        const percent = Math.round((data.terms / effectiveMaxTerms) * 100);
+                        const termsHeight = Math.min(Math.max((data.terms / effectiveMaxTerms) * barMaxHeight, data.terms > 0 ? 4 : 0), barMaxHeight);
+                        const isFullTerms = data.terms >= effectiveMaxTerms;
+                        const percent = Math.min(Math.round((data.terms / effectiveMaxTerms) * 100), 100);
                         return (
                           <div key={index} className="flex flex-col items-center w-8">
                             <div className="relative w-full">
@@ -754,7 +754,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                               {data.terms > 0 && (
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
-                                    ? 'bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 text-white shadow-2xl shadow-purple-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-pink-300' 
+                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
                                     : 'bg-gradient-to-r from-purple-400 to-pink-300 text-white shadow-lg shadow-purple-500/30 px-1.5 py-0.5 rounded-md'
                                 }`}>
                                   {percent}%
@@ -795,9 +795,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className="flex items-end gap-2 h-32">
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 128;
-                        const quizHeight = Math.max((data.quiz_score / maxQuiz) * barMaxHeight, data.quiz_score > 0 ? 4 : 0);
-                        const isFullQuiz = data.quiz_score === maxQuiz;
-                        const percent = Math.round((data.quiz_score / maxQuiz) * 100);
+                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuiz) * barMaxHeight, data.quiz_score > 0 ? 4 : 0), barMaxHeight);
+                        const isFullQuiz = data.quiz_score >= maxQuiz;
+                        const percent = Math.min(Math.round((data.quiz_score / maxQuiz) * 100), 100);
                         return (
                           <div key={index} className="flex flex-col items-center w-8">
                             <div className="relative w-full">
@@ -817,7 +817,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                               {data.quiz_score > 0 && (
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
-                                    ? 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 text-white shadow-2xl shadow-green-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-emerald-300' 
+                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
                                     : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-1.5 py-0.5 rounded-md'
                                 }`}>
                                   {percent}%
