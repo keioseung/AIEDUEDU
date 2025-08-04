@@ -341,19 +341,20 @@ export default function SystemManagementPage() {
                 {showBackupHistory && (
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {backupHistory.map((backup, index) => (
-                    <div key={index} className="text-white/70 text-sm bg-white/5 p-2 rounded">
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium">{backup.filename}</span>
-                        <span className="text-xs text-white/50">
-                          {new Date(backup.created_at).toLocaleDateString('ko-KR')}
-                        </span>
+                      <div key={index} className="text-white/70 text-sm bg-white/5 p-2 rounded">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">{backup.filename}</span>
+                          <span className="text-xs text-white/50">
+                            {new Date(backup.created_at).toLocaleDateString('ko-KR')}
+                          </span>
+                        </div>
+                        <div className="text-xs mt-1 text-white/40">
+                          {backup.description || backup.backup_type} • {backup.created_by}
+                        </div>
                       </div>
-                      <div className="text-xs mt-1 text-white/40">
-                        {backup.description || backup.backup_type} • {backup.created_by}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
