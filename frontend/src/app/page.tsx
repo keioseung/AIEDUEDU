@@ -127,7 +127,7 @@ export default function IntroPage() {
       {/* 메인 컨텐츠 */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-6 md:py-8">
         {/* 헤더 섹션 */}
-        <div className="text-center mb-12 md:mb-16 lg:mb-20">
+        <div className="text-center mb-12 md:mb-16 lg:mb-20 w-full max-w-6xl mx-auto">
           {/* 로고 및 제목 */}
           <div className="flex flex-col items-center gap-6 md:gap-8 mb-8 md:mb-12">
             <div className="relative">
@@ -138,13 +138,13 @@ export default function IntroPage() {
               {/* 빛나는 효과 */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-3xl blur-xl animate-pulse" />
             </div>
-            <div>
-              <h1 className="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-4 md:mb-6 animate-text-glow mobile-text">
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-4 md:mb-6 animate-text-glow mobile-text text-center">
                 {typedText}
                 {isTyping && <span className="animate-blink">|</span>}
               </h1>
-              <div className="h-8 md:h-10 lg:h-12">
-                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-purple-300 font-medium animate-fade-in-out mobile-text">
+              <div className="h-8 md:h-10 lg:h-12 flex items-center justify-center">
+                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-purple-300 font-medium animate-fade-in-out mobile-text text-center max-w-3xl mx-auto leading-relaxed">
                   {taglines[currentTagline]}
                 </p>
               </div>
@@ -152,39 +152,39 @@ export default function IntroPage() {
           </div>
 
           {/* 메인 텍스트 */}
-          <div className="text-center mb-8 md:mb-12 lg:mb-16 max-w-4xl mx-auto">
-            <h2 className="text-xl md:text-2xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight mobile-text">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 max-w-5xl mx-auto px-4">
+            <h2 className="text-xl md:text-2xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight mobile-text text-center">
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent block mb-2 md:mb-3">
                 매일 업데이트되는 AI 정보
               </span>
-              <br />
-              <span className="text-white/90">
+              <span className="text-white/90 block mb-2 md:mb-3">
                 관련 용어를 학습
               </span>
-              <br />
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent block">
                 실전 퀴즈로 지식을 점검
               </span>
             </h2>
-            <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto mobile-text">
+            <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-4xl mx-auto mobile-text text-center">
               최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br className="hidden sm:block" />
               실전 문제를 통해 확실한 이해를 확인하세요
             </p>
           </div>
 
           {/* CTA 버튼 */}
-          <button
-            className="group px-8 md:px-12 lg:px-16 py-4 md:py-5 lg:py-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-lg md:text-xl lg:text-2xl rounded-2xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-3 md:gap-4 mx-auto animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow touch-optimized mobile-touch-target"
-            onClick={() => router.push('/auth')}
-          >
-            <span className="relative z-10">지금 시작하기</span>
-            <FaArrowRight className="group-hover:translate-x-2 transition-transform duration-200 relative z-10" />
-            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-          </button>
+          <div className="flex justify-center mb-8 md:mb-12">
+            <button
+              className="group px-8 md:px-12 lg:px-16 py-4 md:py-5 lg:py-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-lg md:text-xl lg:text-2xl rounded-2xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-3 md:gap-4 animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow touch-optimized mobile-touch-target"
+              onClick={() => router.push('/auth')}
+            >
+              <span className="relative z-10">지금 시작하기</span>
+              <FaArrowRight className="group-hover:translate-x-2 transition-transform duration-200 relative z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            </button>
+          </div>
         </div>
 
         {/* 기능 카드들 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-5xl mb-16 md:mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-6xl mb-16 md:mb-20 px-4">
           {[
             { 
               icon: FaBrain, 
@@ -207,24 +207,24 @@ export default function IntroPage() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="group bg-white/5 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized"
+              className="group bg-white/5 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized text-center"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col items-center">
                 <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300 animate-icon-glow`}>
                   <feature.icon className="text-white text-xl md:text-2xl" />
                 </div>
-                <h3 className="text-white font-bold text-xl md:text-2xl mb-3 md:mb-4 mobile-text">{feature.title}</h3>
-                <p className="text-gray-300 text-sm md:text-base leading-relaxed mobile-text">{feature.desc}</p>
+                <h3 className="text-white font-bold text-xl md:text-2xl mb-3 md:mb-4 mobile-text text-center">{feature.title}</h3>
+                <p className="text-gray-300 text-sm md:text-base leading-relaxed mobile-text text-center">{feature.desc}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* 하단 통계 */}
-        <div className="grid grid-cols-3 gap-4 md:gap-8 lg:gap-12 w-full max-w-4xl">
+        <div className="grid grid-cols-3 gap-4 md:gap-8 lg:gap-12 w-full max-w-5xl px-4">
           {[
             { label: "매일 새로운", value: "AI 정보", icon: FaBrain },
             { label: "핵심 개념", value: "관련 용어", icon: FaRocket },
@@ -234,8 +234,8 @@ export default function IntroPage() {
               <div className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2 md:mb-3 animate-stat-glow">
                 <stat.icon className="text-purple-400 text-lg md:text-xl lg:text-2xl" />
               </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 mobile-text">{stat.value}</div>
-              <div className="text-white/60 text-xs md:text-sm mobile-text">{stat.label}</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 mobile-text text-center">{stat.value}</div>
+              <div className="text-white/60 text-xs md:text-sm mobile-text text-center">{stat.label}</div>
             </div>
           ))}
         </div>
