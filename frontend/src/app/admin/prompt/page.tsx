@@ -42,6 +42,10 @@ export default function AdminPromptPage() {
   const [selectedBaseId, setSelectedBaseId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
+  // 목록 보기 상태
+  const [showPromptList, setShowPromptList] = useState(false)
+  const [showBaseContentList, setShowBaseContentList] = useState(false)
+
   useEffect(() => {
     const pData = localStorage.getItem('prompts')
     if (pData) setPrompts(JSON.parse(pData))
@@ -188,7 +192,20 @@ export default function AdminPromptPage() {
         </form>
         <div className="grid gap-6 mb-10">
           {prompts.length === 0 && <div className="text-gray-400 text-center">등록된 프롬프트가 없습니다.</div>}
-          {prompts.map(p => (
+          
+          {/* 목록 보기 버튼 */}
+          {prompts.length > 0 && (
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={() => setShowPromptList(!showPromptList)}
+                className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+              >
+                {showPromptList ? '목록 숨기기' : '목록 보기'} ({prompts.length}개)
+              </button>
+            </div>
+          )}
+          
+          {showPromptList && prompts.map(p => (
             <div key={p.id} className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow">
               <div className="flex-1">
                 <div className="font-bold text-lg text-pink-900 mb-1">{p.title}</div>
@@ -221,7 +238,20 @@ export default function AdminPromptPage() {
         </form>
         <div className="grid gap-6 mb-10">
           {baseContents.length === 0 && <div className="text-gray-400 text-center">등록된 기반 내용이 없습니다.</div>}
-          {baseContents.map(b => (
+          
+          {/* 목록 보기 버튼 */}
+          {baseContents.length > 0 && (
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={() => setShowBaseContentList(!showBaseContentList)}
+                className="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+              >
+                {showBaseContentList ? '목록 숨기기' : '목록 보기'} ({baseContents.length}개)
+              </button>
+            </div>
+          )}
+          
+          {showBaseContentList && baseContents.map(b => (
             <div key={b.id} className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow">
               <div className="flex-1">
                 <div className="font-bold text-lg text-pink-900 mb-1">{b.title}</div>

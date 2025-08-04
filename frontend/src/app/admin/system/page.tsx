@@ -45,6 +45,9 @@ export default function SystemManagementPage() {
     enableAnalytics: true
   })
 
+  // 목록 보기 상태
+  const [showBackupHistory, setShowBackupHistory] = useState(false)
+
   // 데이터베이스 관리 상태
   const [dbStatus, setDbStatus] = useState<any>(null)
   const [isInitializingDb, setIsInitializingDb] = useState(false)
@@ -326,9 +329,18 @@ export default function SystemManagementPage() {
             {/* 백업 히스토리 */}
             {backupHistory.length > 0 && (
               <div className="mt-6 pt-6 border-t border-white/10">
-                <h3 className="text-white font-semibold mb-4">최근 백업</h3>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
-                  {backupHistory.slice(0, 5).map((backup, index) => (
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-white font-semibold">백업 히스토리</h3>
+                  <button
+                    onClick={() => setShowBackupHistory(!showBackupHistory)}
+                    className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg font-medium transition-all flex items-center gap-2 text-sm border border-blue-500/30"
+                  >
+                    {showBackupHistory ? '목록 숨기기' : '목록 보기'} ({backupHistory.length}개)
+                  </button>
+                </div>
+                {showBackupHistory && (
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {backupHistory.map((backup, index) => (
                     <div key={index} className="text-white/70 text-sm bg-white/5 p-2 rounded">
                       <div className="flex justify-between items-center">
                         <span className="font-medium">{backup.filename}</span>

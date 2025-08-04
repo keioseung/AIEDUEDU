@@ -53,6 +53,11 @@ export default function AdminAIInfoPage() {
   const [baseEditId, setBaseEditId] = useState<number | null>(null)
   const [showBaseContent, setShowBaseContent] = useState<number | null>(null)
 
+  // 목록 보기 상태
+  const [showAIInfoList, setShowAIInfoList] = useState(false)
+  const [showPromptList, setShowPromptList] = useState(false)
+  const [showBaseContentList, setShowBaseContentList] = useState(false)
+
   // 프롬프트+기반내용 합치기 상태
   const [selectedPromptId, setSelectedPromptId] = useState<number | null>(null)
   const [selectedBaseId, setSelectedBaseId] = useState<number | null>(null)
@@ -796,7 +801,20 @@ export default function AdminAIInfoPage() {
             
             <div className="grid gap-4">
               {dates.length === 0 && <div className="text-white/50 text-center">등록된 AI 정보가 없습니다.</div>}
-              {dates.map(dateItem => (
+              
+              {/* 목록 보기 버튼 */}
+              {dates.length > 0 && (
+                <div className="flex justify-center mb-4">
+                  <button
+                    onClick={() => setShowAIInfoList(!showAIInfoList)}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+                  >
+                    {showAIInfoList ? '목록 숨기기' : '목록 보기'} ({dates.length}개)
+                  </button>
+                </div>
+              )}
+              
+              {showAIInfoList && dates.map(dateItem => (
                 <div key={dateItem} className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <div className="flex items-center justify-between mb-4">
                     <div className="text-blue-400 font-medium">{dateItem}</div>
@@ -925,7 +943,20 @@ export default function AdminAIInfoPage() {
             
             <div className="grid gap-4">
               {prompts.length === 0 && <div className="text-white/50 text-center">등록된 프롬프트가 없습니다.</div>}
-              {prompts.map(p => (
+              
+              {/* 목록 보기 버튼 */}
+              {prompts.length > 0 && (
+                <div className="flex justify-center mb-4">
+                  <button
+                    onClick={() => setShowPromptList(!showPromptList)}
+                    className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+                  >
+                    {showPromptList ? '목록 숨기기' : '목록 보기'} ({prompts.length}개)
+                  </button>
+                </div>
+              )}
+              
+              {showPromptList && prompts.map(p => (
                 <div key={p.id} className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <div className="flex items-center justify-between mb-4">
                     <div className="font-bold text-lg text-white">{p.title}</div>
@@ -1008,7 +1039,20 @@ export default function AdminAIInfoPage() {
             
             <div className="grid gap-4">
               {baseContents.length === 0 && <div className="text-white/50 text-center">등록된 기반 내용이 없습니다.</div>}
-              {baseContents.map(b => (
+              
+              {/* 목록 보기 버튼 */}
+              {baseContents.length > 0 && (
+                <div className="flex justify-center mb-4">
+                  <button
+                    onClick={() => setShowBaseContentList(!showBaseContentList)}
+                    className="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+                  >
+                    {showBaseContentList ? '목록 숨기기' : '목록 보기'} ({baseContents.length}개)
+                  </button>
+                </div>
+              )}
+              
+              {showBaseContentList && baseContents.map(b => (
                 <div key={b.id} className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <div className="flex items-center justify-between mb-4">
                     <div className="font-bold text-lg text-white">{b.title}</div>
