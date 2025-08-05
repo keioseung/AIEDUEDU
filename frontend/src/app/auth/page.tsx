@@ -10,7 +10,7 @@ export default function AuthPage() {
   const [tab, setTab] = useState<'login' | 'register'>('login')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState<'admin' | 'user'>('user')
+  const [role, setRole] = useState<'user'>('user')
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -261,35 +261,7 @@ export default function AuthPage() {
                       </button>
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-white/80 text-sm font-medium mb-2">
-                      계정 유형
-                    </label>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setRole('user')}
-                        className={`flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all ${
-                          role === 'user' 
-                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg' 
-                            : 'bg-white/10 text-white/60 hover:text-white hover:bg-white/20'
-                        }`}
-                      >
-                        일반 사용자
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setRole('admin')}
-                        className={`flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all ${
-                          role === 'admin' 
-                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg' 
-                            : 'bg-white/10 text-white/60 hover:text-white hover:bg-white/20'
-                        }`}
-                      >
-                        관리자
-                      </button>
-                    </div>
-                  </div>
+
                   {error && (
                     <div className="text-red-400 text-sm text-center bg-red-500/10 border border-red-500/20 rounded-lg p-3">
                       {error}
