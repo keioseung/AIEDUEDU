@@ -59,7 +59,7 @@ export default function PWARegister() {
           .then(() => {
             console.log('Background sync registered');
           })
-          .catch((error) => {
+          .catch((error: unknown) => {
             console.log('Background sync registration failed:', error);
           });
       });
