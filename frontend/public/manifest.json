@@ -1,0 +1,43 @@
+{
+  "name": "AI Mastery Hub",
+  "short_name": "AI Hub",
+  "description": "AI 학습을 위한 종합 플랫폼",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ko",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "AI 정보",
+      "short_name": "AI",
+      "description": "AI 관련 정보 보기",
+      "url": "/dashboard?tab=ai",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "퀴즈",
+      "short_name": "Quiz",
+      "description": "AI 퀴즈 풀기",
+      "url": "/dashboard?tab=quiz",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -2,176 +2,125 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
+/* Android 15 호환성을 위한 CSS 변수 */
 :root {
-  --primary: #6366f1;
-  --secondary: #a5b4fc;
-  --accent: #f472b6;
-  --bg-gradient: linear-gradient(135deg, #6366f1 0%, #a5b4fc 100%);
-  --bg-dark: #18181b;
-  --bg-light: #f8fafc;
-  --card-bg: rgba(255,255,255,0.08);
-  --card-blur: blur(12px);
-  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  --border: 1px solid rgba(255,255,255,0.18);
-  --radius: 18px;
+  --safe-area-inset-top: env(safe-area-inset-top);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --safe-area-inset-left: env(safe-area-inset-left);
+  --safe-area-inset-right: env(safe-area-inset-right);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/* Android 15 더 넓은 화면 지원 */
+@supports (padding: max(0px)) {
+  .safe-area-padding {
+    padding-top: max(0px, var(--safe-area-inset-top));
+    padding-bottom: max(0px, var(--safe-area-inset-bottom));
+    padding-left: max(0px, var(--safe-area-inset-left));
+    padding-right: max(0px, var(--safe-area-inset-right));
   }
 }
 
-body {
-  color: #fff;
-  background: var(--bg-gradient);
-  font-family: 'Inter', sans-serif;
-  min-height: 100vh;
-  letter-spacing: -0.01em;
+/* 시스템 바 투명도 지원 (Android 15) */
+@supports (backdrop-filter: blur(10px)) {
+  .system-bar-transparent {
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 }
 
-input, textarea {
-  color: #111 !important;
+/* Android 15 동작 탐색 지원 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .navigation-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
-/* 커스텀 스크롤바 */
-::-webkit-scrollbar {
-  width: 8px;
+/* 상태 표시줄 안전 영역 */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .status-bar-safe {
+    padding-top: env(safe-area-inset-top);
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 4px;
+/* PWA 스타일 */
+@media (display-mode: standalone) {
+  body {
+    /* PWA 모드에서의 추가 스타일 */
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(99,102,241,0.18);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-/* 애니메이션 클래스 */
-.fade-in {
-  animation: fadeIn 0.5s cubic-bezier(0.22,1,0.36,1);
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: none; }
-}
-
-.slide-up {
-  animation: slideUp 0.3s ease-out;
-}
-
-.bounce-in {
-  animation: bounceIn 0.6s ease-out;
-}
-
-/* 그라데이션 텍스트 */
-.gradient-text {
-  background: linear-gradient(90deg, #6366f1 0%, #f472b6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* 글래스모피즘 효과 */
-.glass {
-  background: var(--card-bg);
-  backdrop-filter: var(--card-blur);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-/* 카드 호버 효과 */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
-}
-
-.card-hover:hover {
-  transform: translateY(-6px) scale(1.03);
-}
-
-/* 모바일 최적화 스타일 */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
-}
-
-/* 터치 최적화 */
-.touch-optimized {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* 모바일에서 버튼 터치 영역 확대 */
-@media (max-width: 768px) {
-  .mobile-touch-target {
+/* Android 15 호환성을 위한 터치 최적화 */
+@media (hover: none) and (pointer: coarse) {
+  .touch-optimized {
     min-height: 44px;
     min-width: 44px;
   }
-  
-  .mobile-text {
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  
-  .mobile-padding {
-    padding: 12px;
+}
+
+/* 성능 최적화 */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0f172a;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Android 15 시스템 바 호환성 */
+@media screen and (max-width: 768px) {
+  body {
+    /* 모바일에서 시스템 바 고려 */
+    padding-top: var(--safe-area-inset-top);
+    padding-bottom: var(--safe-area-inset-bottom);
   }
 }
 
-/* 스와이프 제스처 최적화 */
-.swipe-container {
-  touch-action: pan-y pinch-zoom;
-  overflow: hidden;
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* 모바일에서 카드 간격 조정 */
-@media (max-width: 768px) {
-  .mobile-gap {
-    gap: 8px;
-  }
-  
-  .mobile-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+::-webkit-scrollbar-track {
+  background: #1e293b;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius);
-  font-weight: 600;
-  font-size: 1rem;
-  background: linear-gradient(90deg, #6366f1 0%, #f472b6 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-  border: none;
-  cursor: pointer;
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
 }
-.btn:hover {
-  background: linear-gradient(90deg, #6366f1 0%, #a5b4fc 100%);
-  box-shadow: 0 4px 16px rgba(99,102,241,0.16);
-  transform: translateY(-2px) scale(1.04);
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* 포커스 스타일 (접근성) */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Android 15 호환성을 위한 애니메이션 최적화 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 } 

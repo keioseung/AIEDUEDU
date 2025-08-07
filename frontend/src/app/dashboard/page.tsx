@@ -36,10 +36,10 @@ function WeeklyBarGraph({ weeklyData }: { weeklyData: any[] }) {
   const maxTerms = 20;
   const maxQuiz = 100;
   return (
-    <div className="w-full max-w-3xl mx-auto mb-8">
+    <div className="w-full max-w-3xl mx-auto mb-8 safe-area-padding">
       <div className="flex justify-between mb-2 px-2">
         {weeklyData.map((day, idx) => (
-          <div key={idx} className={`text-xs font-bold text-center ${day.isToday ? 'text-yellow-400' : 'text-white/60'}`}>{day.day}</div>
+          <div key={idx} className={`text-xs font-bold text-center touch-optimized ${day.isToday ? 'text-yellow-400' : 'text-white/60'}`}>{day.day}</div>
         ))}
       </div>
       <div className="flex gap-2 h-32 items-end">
@@ -349,7 +349,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden px-4 safe-area-padding navigation-safe">
       {/* 고급스러운 배경 효과 */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
