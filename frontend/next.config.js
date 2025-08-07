@@ -36,7 +36,7 @@ const nextConfig = {
   },
   // PWA 지원을 위한 설정
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // critters 의존성 문제로 임시 비활성화
   },
   // 성능 최적화
   compress: true,
