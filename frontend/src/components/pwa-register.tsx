@@ -2,6 +2,21 @@
 
 import { useEffect } from 'react'
 
+// Background Sync API 타입 확장
+interface ServiceWorkerRegistration {
+  sync: {
+    register(tag: string): Promise<void>;
+  };
+}
+
+declare global {
+  interface ServiceWorkerRegistration {
+    sync: {
+      register(tag: string): Promise<void>;
+    };
+  }
+}
+
 export default function PWARegister() {
   useEffect(() => {
     // PWA 서비스 워커 등록
@@ -40,7 +55,7 @@ export default function PWARegister() {
     if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
       navigator.serviceWorker.ready.then((registration) => {
         // 백그라운드 동기화 등록
-        registration.sync.register('background-sync')
+        (registration as any).sync.register('background-sync')
           .then(() => {
             console.log('Background sync registered');
           })
