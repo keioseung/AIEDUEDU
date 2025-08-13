@@ -154,8 +154,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       return
     }
     
-    // 필터나 목록이 열려있으면 자동재생 중단
-    if (showFilters || showTermList) {
+    // 필터가 열려있으면 자동재생 중단 (목록은 열려있어도 자동재생 가능)
+    if (showFilters) {
       if (currentIntervalId) {
         clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
@@ -171,7 +171,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
 
     // 자동재생 시작
     const startAutoPlay = () => {
-      if (!autoPlay || showFilters || showTermList) return
+      if (!autoPlay || showFilters) return
       
       // 다음 용어로 이동
       setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
@@ -332,7 +332,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       
       // 자동재생 시작
       const startAutoPlay = () => {
-        if (!autoPlay || showFilters || showTermList) return
+        if (!autoPlay || showFilters) return
         
         // 다음 용어로 이동
         setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
