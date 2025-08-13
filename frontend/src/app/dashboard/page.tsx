@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaBookOpen, FaCalendar, FaClipboard, FaBullseye, FaFire, FaStar, FaCrosshairs, FaChartBar } from 'react-icons/fa'
+import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaBookOpen, FaCalendar, FaClipboard, FaBullseye, FaFire, FaStar, FaCrosshairs, FaChartBar, FaSignOutAlt } from 'react-icons/fa'
 import { TrendingUp, Calendar, Trophy, Sun, Target, BarChart3, BookOpen } from 'lucide-react'
 import Sidebar from '@/components/sidebar'
 import AIInfoCard from '@/components/ai-info-card'
@@ -12,6 +12,7 @@ import LearnedTermsSection from '@/components/learned-terms-section'
 import useAIInfo from '@/hooks/use-ai-info'
 import useUserProgress, { useUserStats } from '@/hooks/use-user-progress'
 import { useRouter } from 'next/navigation'
+import { logout } from '@/lib/api'
 
 import { useQueryClient } from '@tanstack/react-query'
 import { userProgressAPI } from '@/lib/api'
@@ -387,6 +388,17 @@ export default function DashboardPage() {
 
       {/* 헤더 섹션 */}
       <div className="relative z-10 flex flex-col items-center justify-center pt-8 md:pt-12 pb-6">
+        {/* 상단 로그아웃 버튼 */}
+        <div className="absolute top-4 right-4 md:top-6 md:right-6">
+          <button
+            onClick={logout}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
+          >
+            <FaSignOutAlt className="text-sm" />
+            <span className="hidden sm:inline">로그아웃</span>
+          </button>
+        </div>
+
         {/* 상단 아이콘과 제목 */}
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-6 md:mb-8 text-center md:text-left">
           <div className="relative">

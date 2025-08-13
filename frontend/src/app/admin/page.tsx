@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar } from 'react-icons/fa'
+import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar, FaSignOutAlt } from 'react-icons/fa'
+import { logout } from '@/lib/api'
 
 const adminMenus = [
   { 
@@ -155,6 +156,17 @@ export default function AdminPage() {
       <div className="relative z-10 p-4 sm:p-6 lg:p-8">
         {/* 헤더 섹션 */}
         <div className="flex flex-col items-center justify-center pt-6 sm:pt-8 md:pt-12 pb-8 sm:pb-12">
+          {/* 상단 로그아웃 버튼 */}
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
+            >
+              <FaSignOutAlt className="text-sm" />
+              <span className="hidden sm:inline">로그아웃</span>
+            </button>
+          </div>
+
           {/* 상단 아이콘과 제목 */}
           <div className="flex flex-col items-center gap-4 sm:gap-6 mb-8 sm:mb-12 text-center">
             <div className="relative">

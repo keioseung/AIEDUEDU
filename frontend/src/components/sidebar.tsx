@@ -11,9 +11,11 @@ import {
   BookOpen, 
   Trophy,
   Menu,
-  X
+  X,
+  LogOut
 } from 'lucide-react'
 import { useAIInfoDates, useAddAIInfo, useDeleteAIInfo } from '@/hooks/use-ai-info'
+import { logout } from '@/lib/api'
 
 import type { AIInfoItem } from '@/types'
 
@@ -213,6 +215,17 @@ function Sidebar({ selectedDate, onDateChange, sessionId }: SidebarProps) {
               </div>
             </div>
           )}
+
+          {/* 로그아웃 버튼 */}
+          <div className="pt-6 border-t border-white/10">
+            <button
+              onClick={logout}
+              className="w-full flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all"
+            >
+              <LogOut className="w-5 h-5" />
+              로그아웃
+            </button>
+          </div>
         </div>
       </motion.aside>
 
