@@ -37,6 +37,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   const [showTermList, setShowTermList] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
+  const [countdown, setCountdown] = useState(0)
+  const [showSpeedControl, setShowSpeedControl] = useState(false)
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -131,18 +133,53 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     localStorage.setItem('favoriteTerms', JSON.stringify([...newFavorites]))
   }
 
-  // 자동 재생 기능
+  // 자동 재생 기능 (완전히 수정)
   useEffect(() => {
-    if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) return
+    if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) {
+      setCountdown(0)
+      return
+    }
     
     // 필터나 목록이 열려있으면 자동재생 중단
-    if (showFilters || showTermList) return
+    if (showFilters || showTermList) {
+      setCountdown(0)
+      return
+    }
 
-    const interval = setInterval(() => {
-      setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
-    }, autoPlayInterval)
+    // 카운트다운 시작
+    const startCountdown = () => {
+      setCountdown(3)
+      const countdownInterval = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
 
-    return () => clearInterval(interval)
+      // 카운트다운 완료 후 자동재생 시작
+      setTimeout(() => {
+        if (autoPlay) {
+          const playInterval = setInterval(() => {
+            if (!autoPlay || showFilters || showTermList) {
+              clearInterval(playInterval)
+              return
+            }
+            setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
+          }, autoPlayInterval)
+          
+          return () => clearInterval(playInterval)
+        }
+      }, 3000)
+    }
+
+    startCountdown()
+
+    return () => {
+      setCountdown(0)
+    }
   }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
 
   // 터치 제스처 처리
@@ -268,6 +305,12 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     setIsProcessing(true)
     setAutoPlay(!autoPlay)
     setTimeout(() => setIsProcessing(false), 300)
+  }
+
+  // 속도 조절 함수
+  const changeSpeed = (newInterval: number) => {
+    setAutoPlayInterval(newInterval)
+    setShowSpeedControl(false)
   }
 
   if (isLoading) {
@@ -525,20 +568,73 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             {currentTermIndex + 1} / {filteredTerms.length}
           </div>
           <div className="flex gap-3">
-            <button
-              onTouchStart={handleWebViewTouch(toggleAutoPlaySafe)}
-              onClick={toggleAutoPlaySafe}
-              className={`p-3 rounded-xl transition-all font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button ${
-                autoPlay
-                  ? 'bg-red-500/30 text-red-300 border border-red-500/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
-              }`}
-              disabled={filteredTerms.length === 0}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              {autoPlay ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              <span className="hidden sm:inline">{autoPlay ? '정지' : '자동재생'}</span>
-            </button>
+            <div className="relative">
+              <button
+                onTouchStart={handleWebViewTouch(toggleAutoPlaySafe)}
+                onClick={toggleAutoPlaySafe}
+                className={`p-3 rounded-xl transition-all font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button ${
+                  autoPlay
+                    ? 'bg-red-500/30 text-red-300 border border-red-500/50'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                }`}
+                disabled={filteredTerms.length === 0}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                {autoPlay ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                <span className="hidden sm:inline">{autoPlay ? '정지' : '자동재생'}</span>
+              </button>
+              
+              {/* 속도 조절 버튼 */}
+              <button
+                onTouchStart={handleWebViewTouch(() => setShowSpeedControl(!showSpeedControl))}
+                onClick={() => setShowSpeedControl(!showSpeedControl)}
+                className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-blue-600 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                ⚙️
+              </button>
+              
+              {/* 속도 조절 드롭다운 */}
+              {showSpeedControl && (
+                <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-xl rounded-lg p-3 border border-white/20 z-10 min-w-[120px]">
+                  <div className="text-white text-sm font-medium mb-2">재생 속도</div>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => changeSpeed(1000)}
+                      className={`w-full text-left px-2 py-1 rounded text-xs ${
+                        autoPlayInterval === 1000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
+                      }`}
+                    >
+                      빠름 (1초)
+                    </button>
+                    <button
+                      onClick={() => changeSpeed(3000)}
+                      className={`w-full text-left px-2 py-1 rounded text-xs ${
+                        autoPlayInterval === 3000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
+                      }`}
+                    >
+                      보통 (3초)
+                    </button>
+                    <button
+                      onClick={() => changeSpeed(5000)}
+                      className={`w-full text-left px-2 py-1 rounded text-xs ${
+                        autoPlayInterval === 5000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
+                      }`}
+                    >
+                      느림 (5초)
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* 카운트다운 표시 */}
+            {autoPlay && countdown > 0 && (
+              <div className="flex items-center justify-center w-12 h-12 bg-red-500/30 text-red-300 rounded-xl border border-red-500/50">
+                <span className="text-lg font-bold">{countdown}</span>
+              </div>
+            )}
+            
             <button
               onTouchStart={handleWebViewTouch(handlePrevTermSafe)}
               onClick={handlePrevTermSafe}
@@ -590,11 +686,11 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                     }`}
                     onTouchStart={handleWebViewTouch(() => {
                       setCurrentTermIndex(index)
-                      setShowTermList(false)
+                      // 목록을 닫지 않음
                     })}
                     onClick={() => {
                       setCurrentTermIndex(index)
-                      setShowTermList(false)
+                      // 목록을 닫지 않음
                     }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
