@@ -31,16 +31,79 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showSpeedControl, setShowSpeedControl] = useState(false)
 
-  // 모든 AI 정보 가져오기
-  const { data: allAIInfo = [], isLoading } = useQuery<AIInfoItem[]>({
+  // 모든 AI 정보 가져오기 (getAll API 시도)
+  const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
     queryKey: ['all-ai-info'],
     queryFn: async () => {
-      const response = await aiInfoAPI.getAll()
-      return response.data
+      try {
+        const response = await aiInfoAPI.getAll()
+        return response.data
+      } catch (error) {
+        console.log('getAll API 실패, getAllDates API 사용:', error)
+        return []
+      }
     },
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
   })
+
+  // 날짜별 AI 정보 가져오기 (getAll API가 실패할 경우 사용)
+  const { data: allDates = [], isLoading: isLoadingDates } = useQuery<string[]>({
+    queryKey: ['all-ai-info-dates'],
+    queryFn: async () => {
+      try {
+        const response = await aiInfoAPI.getAllDates()
+        return response.data
+      } catch (error) {
+        console.log('getAllDates API도 실패:', error)
+        return []
+      }
+    },
+    enabled: getAllError !== null || allAIInfo.length === 0,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
+  // 각 날짜별 AI 정보 가져오기
+  const { data: dateBasedAIInfo = [], isLoading: isLoadingDateBased } = useQuery<AIInfoItem[]>({
+    queryKey: ['date-based-ai-info', allDates],
+    queryFn: async () => {
+      if (allDates.length === 0) return []
+      
+      const allInfo: AIInfoItem[] = []
+      
+      for (const date of allDates) {
+        try {
+          const response = await aiInfoAPI.getByDate(date)
+          const dateInfos = response.data
+          
+          dateInfos.forEach((info: { title: string; content: string; terms?: Array<{ term: string; description: string }> }, index: number) => {
+            if (info.title && info.content) {
+              allInfo.push({
+                id: `${date}_${index}`,
+                date: date,
+                title: info.title,
+                content: info.content,
+                terms: info.terms || [],
+                info_index: index
+              })
+            }
+          })
+        } catch (error) {
+          console.log(`날짜 ${date}의 AI 정보 가져오기 실패:`, error)
+        }
+      }
+      
+      return allInfo
+    },
+    enabled: allDates.length > 0 && (getAllError !== null || allAIInfo.length === 0),
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
+  // 실제 사용할 AI 정보 (getAll이 성공하면 그것을, 실패하면 날짜별 정보를 사용)
+  const actualAIInfo = allAIInfo.length > 0 ? allAIInfo : dateBasedAIInfo
+  const isLoading = isLoadingAll || (getAllError !== null && (isLoadingDates || isLoadingDateBased))
 
   // 즐겨찾기 불러오기
   useEffect(() => {
@@ -66,7 +129,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
 
   // 필터링 및 정렬된 AI 정보
   const filteredAIInfo = (() => {
-    let filtered = allAIInfo
+    let filtered = actualAIInfo
 
     // 검색 필터
     if (searchQuery) {
@@ -106,9 +169,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     }, autoPlayInterval)
 
     return () => clearInterval(interval)
-  }, [autoPlay, autoPlayInterval, filteredAIInfo.length])
+  }, [autoPlay, filteredAIInfo.length, autoPlayInterval])
 
-  // 자동재생 시작/정지
   const toggleAutoPlay = () => {
     setAutoPlay(!autoPlay)
     if (!autoPlay) {
@@ -116,27 +178,25 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     }
   }
 
-  // 속도 변경
-  const changeSpeed = (newInterval: number) => {
-    setAutoPlayInterval(newInterval)
+  const changeSpeed = (interval: number) => {
+    setAutoPlayInterval(interval)
     setShowSpeedControl(false)
   }
 
-  // 이전/다음 정보
   const goToPrevious = () => {
+    if (filteredAIInfo.length === 0) return
     setCurrentIndex(prev => (prev - 1 + filteredAIInfo.length) % filteredAIInfo.length)
   }
 
   const goToNext = () => {
+    if (filteredAIInfo.length === 0) return
     setCurrentIndex(prev => (prev + 1) % filteredAIInfo.length)
   }
 
-  // 정보 선택
   const selectInfo = (info: AIInfoItem) => {
     setSelectedInfo(info)
   }
 
-  // 정보 닫기
   const closeInfo = () => {
     setSelectedInfo(null)
   }
@@ -152,7 +212,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     )
   }
 
-  if (allAIInfo.length === 0) {
+  if (actualAIInfo.length === 0) {
     return (
       <div className="glass rounded-2xl p-8">
         <div className="text-center text-white">
@@ -239,18 +299,11 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           className={`px-6 py-3 rounded-xl font-medium transition-all flex items-center gap-2 ${
             autoPlay
               ? 'bg-red-500/30 text-red-300 border border-red-500/50'
-              : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+              : 'bg-green-500/30 text-green-300 border border-green-500/50'
           }`}
         >
           {autoPlay ? <FaPause className="w-4 h-4" /> : <FaPlay className="w-4 h-4" />}
-          {autoPlay ? '정지' : '자동재생'}
-        </button>
-
-        <button
-          onClick={() => setShowSpeedControl(!showSpeedControl)}
-          className="px-4 py-3 bg-blue-500/30 text-blue-300 rounded-xl hover:bg-blue-500/50 transition-all"
-        >
-          ⚙️
+          {autoPlay ? '일시정지' : '자동재생'}
         </button>
 
         <button
@@ -260,29 +313,35 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         >
           <FaChevronRight className="w-4 h-4" />
         </button>
-      </div>
 
-      {/* 속도 조절 드롭다운 */}
-      {showSpeedControl && (
-        <div className="flex justify-center">
-          <div className="bg-white/10 backdrop-blur-xl rounded-lg p-4 border border-white/20">
-            <div className="text-white text-sm font-medium mb-3 text-center">재생 속도</div>
-            <div className="grid grid-cols-3 gap-2">
-              {[3000, 5000, 7000, 10000, 15000, 20000].map((interval) => (
+        <div className="relative">
+          <button
+            onClick={() => setShowSpeedControl(!showSpeedControl)}
+            className="px-4 py-3 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 rounded-lg transition-all"
+          >
+            속도 조절
+          </button>
+          
+          {showSpeedControl && (
+            <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-xl rounded-xl p-3 border border-white/20 z-10">
+              <div className="text-white/70 text-sm mb-2">재생 간격</div>
+              {[3000, 5000, 10000, 15000, 20000].map((interval) => (
                 <button
                   key={interval}
                   onClick={() => changeSpeed(interval)}
-                  className={`px-3 py-2 rounded text-xs ${
-                    autoPlayInterval === interval ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
+                  className={`block w-full text-left px-3 py-2 rounded text-sm transition-all ${
+                    autoPlayInterval === interval
+                      ? 'bg-blue-500/30 text-blue-300'
+                      : 'text-white/70 hover:bg-white/10'
                   }`}
                 >
                   {interval / 1000}초
                 </button>
               ))}
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
 
       {/* AI 정보 목록 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -291,29 +350,30 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             key={info.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className={`bg-white/5 rounded-xl p-4 cursor-pointer transition-all hover:bg-white/10 active:bg-white/20 border ${
-              selectedInfo?.id === info.id
-                ? 'border-blue-400/50 bg-blue-500/10'
-                : 'border-white/10'
-            } ${index === currentIndex && autoPlay ? 'ring-2 ring-yellow-400/50' : ''}`}
+            transition={{ delay: index * 0.1 }}
+            className={`p-4 rounded-xl cursor-pointer transition-all border ${
+              index === currentIndex && autoPlay
+                ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border-blue-400/50'
+                : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10'
+            }`}
             onClick={() => selectInfo(info)}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <h3 className="font-bold text-white text-lg mb-2 line-clamp-2">{info.title}</h3>
                 <div className="flex items-center gap-2 text-white/60 text-sm mb-2">
-                  <FaCalendar className="w-4 h-4" />
+                  <FaCalendar className="w-3 h-3" />
                   <span>{info.date}</span>
                 </div>
                 <p className="text-white/70 text-sm line-clamp-3">{info.content}</p>
               </div>
+              
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   toggleFavorite(info.id)
                 }}
-                className={`p-2 rounded-lg transition-all flex-shrink-0 ${
+                className={`p-2 rounded-lg transition-all ${
                   favoriteInfos.has(info.id)
                     ? 'text-yellow-400 bg-yellow-500/20'
                     : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
