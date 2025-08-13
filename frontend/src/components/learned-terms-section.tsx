@@ -256,17 +256,19 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           <span className="hidden sm:inline">학습한 용어 모음</span>
           <span className="sm:hidden">용어 학습</span>
         </h2>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="px-3 md:px-4 py-2 md:py-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2"
+            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px] min-w-[80px] justify-center"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Filter className="w-4 h-4 md:w-5 md:h-5" />
             <span className="inline">필터</span>
           </button>
           <button
             onClick={() => setShowTermList(!showTermList)}
-            className="px-3 md:px-4 py-2 md:py-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2"
+            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px] min-w-[80px] justify-center"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Menu className="w-4 h-4 md:w-5 md:h-5" />
             <span className="inline">목록</span>
@@ -314,11 +316,12 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => { setSelectedDate(null); setCurrentTermIndex(0); }}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] ${
                       selectedDate === null
                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20'
+                        : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
                     }`}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     전체 ({learnedData.total_terms})
                   </button>
@@ -328,11 +331,12 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                       <button
                         key={date}
                         onClick={() => { setSelectedDate(date); setCurrentTermIndex(0); }}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                        className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] ${
                           selectedDate === date
                             ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
-                            : 'bg-white/10 text-white/70 hover:bg-white/20'
+                            : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
                         }`}
+                        style={{ WebkitTapHighlightColor: 'transparent' }}
                       >
                         {date} ({dateTerms.length})
                       </button>
@@ -343,11 +347,11 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             )}
             
             {/* 정렬 및 필터 옵션 */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm"
+                className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm min-h-[44px]"
               >
                 <option value="date">최신순</option>
                 <option value="alphabet">가나다순</option>
@@ -355,25 +359,28 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               </select>
               <button
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                className={`px-4 py-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 touch-manipulation select-none min-h-[44px] ${
                   showFavoritesOnly
                     ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
                 }`}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <Star className="w-4 h-4" />
                 즐겨찾기만
               </button>
               <button
                 onClick={handleShuffle}
-                className="px-3 py-2 bg-purple-500/30 text-purple-300 rounded-lg hover:bg-purple-500/50 transition-all text-sm font-medium flex items-center gap-2"
+                className="px-4 py-3 bg-purple-500/30 text-purple-300 rounded-lg hover:bg-purple-500/50 active:bg-purple-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px]"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <Shuffle className="w-4 h-4" />
                 랜덤
               </button>
               <button
                 onClick={exportTerms}
-                className="px-3 py-2 bg-green-500/30 text-green-300 rounded-lg hover:bg-green-500/50 transition-all text-sm font-medium flex items-center gap-2"
+                className="px-4 py-3 bg-green-500/30 text-green-300 rounded-lg hover:bg-green-500/50 active:bg-green-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px]"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <Download className="w-4 h-4" />
                 내보내기
@@ -415,11 +422,12 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             </div>
             <button
               onClick={() => toggleFavorite(currentTerm.term)}
-              className={`p-2 rounded-lg transition-all ${
+              className={`p-3 rounded-lg transition-all touch-manipulation select-none min-h-[44px] min-w-[44px] flex items-center justify-center ${
                 favoriteTerms.has(currentTerm.term)
                   ? 'text-yellow-400 bg-yellow-500/20'
-                  : 'text-white/50 hover:text-yellow-400 hover:bg-yellow-500/10'
+                  : 'text-white/50 hover:text-yellow-400 hover:bg-yellow-500/10 active:bg-yellow-500/20'
               }`}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <Star className="w-5 h-5" fill={favoriteTerms.has(currentTerm.term) ? 'currentColor' : 'none'} />
             </button>
@@ -452,30 +460,33 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           <div className="text-white/70 text-sm">
             {currentTermIndex + 1} / {filteredTerms.length}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               onClick={() => setAutoPlay(!autoPlay)}
-              className={`p-3 rounded-xl transition-all font-medium flex items-center gap-2 ${
+              className={`p-3 rounded-xl transition-all font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px] ${
                 autoPlay
                   ? 'bg-red-500/30 text-red-300 border border-red-500/50'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
               }`}
               disabled={filteredTerms.length === 0}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {autoPlay ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               <span className="hidden sm:inline">{autoPlay ? '정지' : '자동재생'}</span>
             </button>
             <button
               onClick={handlePrevTerm}
-              className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all font-medium"
+              className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 active:bg-white/30 transition-all font-medium touch-manipulation select-none min-h-[44px] min-w-[44px] flex items-center justify-center"
               disabled={filteredTerms.length === 0}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={handleNextTerm}
-              className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all font-medium"
+              className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 transition-all font-medium touch-manipulation select-none min-h-[44px] min-w-[44px] flex items-center justify-center"
               disabled={filteredTerms.length === 0}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -505,15 +516,16 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className={`p-3 rounded-lg cursor-pointer transition-all ${
+                    className={`p-3 rounded-lg cursor-pointer transition-all touch-manipulation select-none min-h-[44px] ${
                       index === currentTermIndex
                         ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50'
-                        : 'bg-white/5 hover:bg-white/10 border border-white/10'
+                        : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border border-white/10'
                     }`}
                     onClick={() => {
                       setCurrentTermIndex(index)
                       setShowTermList(false)
                     }}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-semibold text-white text-sm break-words">{term.term}</div>
@@ -522,11 +534,12 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                           e.stopPropagation()
                           toggleFavorite(term.term)
                         }}
-                        className={`p-1 rounded flex-shrink-0 ${
+                        className={`p-2 rounded flex-shrink-0 touch-manipulation select-none min-h-[32px] min-w-[32px] flex items-center justify-center ${
                           favoriteTerms.has(term.term)
                             ? 'text-yellow-400'
-                            : 'text-white/30 hover:text-yellow-400'
+                            : 'text-white/30 hover:text-yellow-400 active:text-yellow-300'
                         }`}
+                        style={{ WebkitTapHighlightColor: 'transparent' }}
                       >
                         <Star className="w-3 h-3" fill={favoriteTerms.has(term.term) ? 'currentColor' : 'none'} />
                       </button>
