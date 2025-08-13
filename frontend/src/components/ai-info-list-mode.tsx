@@ -397,29 +397,127 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                       </div>
                     </div>
 
-                    {/* 관련 용어 */}
+                    {/* 관련 용어 학습 섹션 */}
                     {info.terms.length > 0 && (
                       <div>
                         <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
                           <FaBookOpen className="text-emerald-400" />
                           📚 관련 용어 학습 ({info.terms.length}개)
                         </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {info.terms.map((term, termIndex) => (
-                            <div
-                              key={termIndex}
-                              className="bg-white/10 rounded-lg p-3 border border-white/20 hover:bg-white/15 transition-all"
-                            >
-                              <div className="font-bold text-white text-base mb-2 flex items-center gap-2">
-                                <span className="text-emerald-400 text-sm">#{termIndex + 1}</span>
-                                {term.term}
-                              </div>
-                              <div className="text-white/80 leading-relaxed text-sm">{term.description}</div>
+                        
+                        {/* 용어 학습 카드 */}
+                        <div className="bg-white/10 backdrop-blur-xl rounded-xl p-4 border border-white/20">
+                          {/* 진행률 표시 */}
+                          <div className="mb-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm text-white/60">학습 진행률</span>
+                              <span className="text-sm text-green-400 font-bold">
+                                {(() => {
+                                  const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
+                                  const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
+                                  return `${currentLearned.length}개 학습완료`
+                                })()}
+                              </span>
                             </div>
-                          ))}
+                            <div className="w-full bg-white/20 rounded-full h-2">
+                              <div
+                                className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300"
+                                style={{ 
+                                  width: `${(() => {
+                                    const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
+                                    const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
+                                    return info.terms.length > 0 ? (currentLearned.length / info.terms.length) * 100 : 0
+                                  })()}%` 
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* 용어 목록 */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {info.terms.map((term, termIndex) => (
+                              <div
+                                key={termIndex}
+                                className="bg-white/15 rounded-lg p-3 border border-white/20 hover:bg-white/20 transition-all cursor-pointer"
+                                onClick={() => {
+                                  // 용어 클릭 시 학습 완료 표시 (로컬 스토리지에 저장)
+                                  const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
+                                  const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
+                                  
+                                  if (!currentLearned.includes(term.term)) {
+                                    currentLearned.push(term.term)
+                                    localStorage.setItem(learnedTermsKey, JSON.stringify(currentLearned))
+                                    // 강제 리렌더링을 위해 상태 업데이트
+                                    setExpandedItems(new Set([...expandedItems]))
+                                  }
+                                }}
+                              >
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="font-bold text-white text-base flex items-center gap-2">
+                                    <span className="text-blue-400 text-sm">#{termIndex + 1}</span>
+                                    {term.term}
+                                  </div>
+                                  <div className="text-green-400">
+                                    {(() => {
+                                      const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
+                                      const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
+                                      return currentLearned.includes(term.term) ? '✅' : '⭕'
+                                    })()}
+                                  </div>
+                                </div>
+                                <div className="text-white/80 leading-relaxed text-sm">{term.description}</div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* 학습 완료 축하 메시지 */}
+                          {(() => {
+                            const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
+                            const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
+                            const isAllLearned = currentLearned.length === info.terms.length && info.terms.length > 0
+                            
+                            return isAllLearned ? (
+                              <div className="mt-4 text-center animate-bounce">
+                                <span className="inline-block bg-green-500 text-white px-4 py-2 rounded-full font-bold shadow text-sm">
+                                  🎉 모든 용어 학습 완료!
+                                </span>
+                              </div>
+                            ) : null
+                          })()}
                         </div>
                       </div>
                     )}
+
+                    {/* 학습 완료 버튼 */}
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={() => {
+                          // AI 정보 학습 완료 처리
+                          const userProgressKey = 'userProgress'
+                          const currentProgress = JSON.parse(localStorage.getItem(userProgressKey) || '{}')
+                          
+                          if (!currentProgress[sessionId]) {
+                            currentProgress[sessionId] = {}
+                          }
+                          if (!currentProgress[sessionId][info.date]) {
+                            currentProgress[sessionId][info.date] = []
+                          }
+                          
+                          if (!currentProgress[sessionId][info.date].includes(info.info_index)) {
+                            currentProgress[sessionId][info.date].push(info.info_index)
+                            localStorage.setItem(userProgressKey, JSON.stringify(currentProgress))
+                            
+                            // 진행률 업데이트 콜백 호출
+                            if (onProgressUpdate) {
+                              onProgressUpdate()
+                            }
+                          }
+                        }}
+                        className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
+                      >
+                        📚 AI 정보 학습 완료
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               )}
