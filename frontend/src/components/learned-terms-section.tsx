@@ -555,7 +555,9 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                       <div className="font-semibold text-white text-sm break-words">{term.term}</div>
                       <button
                         onTouchStart={handleWebViewTouch((e) => {
-                          e.stopPropagation()
+                          if (e) {
+                            e.stopPropagation()
+                          }
                           toggleFavorite(term.term)
                         })}
                         onClick={(e) => {
