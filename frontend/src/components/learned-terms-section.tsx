@@ -217,10 +217,10 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   }
 
   // 웹뷰 터치 이벤트 핸들러
-  const handleWebViewTouch = (callback: () => void) => (e: React.TouchEvent) => {
+  const handleWebViewTouch = (callback: (e?: React.TouchEvent) => void) => (e: React.TouchEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    callback()
+    callback(e)
   }
 
   if (isLoading) {
