@@ -133,7 +133,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     localStorage.setItem('favoriteTerms', JSON.stringify([...newFavorites]))
   }
 
-  // 자동 재생 기능 (완전히 수정)
+  // 자동 재생 기능 (완전히 다시 작성)
   useEffect(() => {
     if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) {
       setCountdown(0)
@@ -146,31 +146,40 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       return
     }
 
-    // 카운트다운 시작
+    // 첫 번째 카운트다운 시작
     setCountdown(3)
     
-    const countdownTimer = setTimeout(() => {
-      if (!autoPlay) return
-      
+    const startAutoPlay = () => {
       // 카운트다운 완료 후 자동재생 시작
       const playInterval = setInterval(() => {
         if (!autoPlay || showFilters || showTermList) {
           clearInterval(playInterval)
           return
         }
+        
+        // 다음 용어로 이동
         setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
+        
+        // 다음 용어를 위한 카운트다운 시작
+        setCountdown(3)
       }, autoPlayInterval)
       
       return () => clearInterval(playInterval)
+    }
+
+    // 3초 후 자동재생 시작
+    const initialTimer = setTimeout(() => {
+      if (!autoPlay) return
+      startAutoPlay()
     }, 3000)
 
     return () => {
-      clearTimeout(countdownTimer)
+      clearTimeout(initialTimer)
       setCountdown(0)
     }
   }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
 
-  // 카운트다운 애니메이션
+  // 카운트다운 애니메이션 (별도 처리)
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => {
@@ -588,14 +597,14 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                 onTouchStart={handleWebViewTouch(() => {
                   if (isProcessing) return
                   setIsProcessing(true)
-                  setShowSpeedControl(!showSpeedControl)
-                  setTimeout(() => setIsProcessing(false), 500)
+                  setShowSpeedControl(prev => !prev)
+                  setTimeout(() => setIsProcessing(false), 800)
                 })}
                 onClick={() => {
                   if (isProcessing) return
                   setIsProcessing(true)
-                  setShowSpeedControl(!showSpeedControl)
-                  setTimeout(() => setIsProcessing(false), 500)
+                  setShowSpeedControl(prev => !prev)
+                  setTimeout(() => setIsProcessing(false), 800)
                 }}
                 className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-blue-600 transition-colors"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
