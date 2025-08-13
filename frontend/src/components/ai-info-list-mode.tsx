@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaCalendar, FaBookOpen, FaStar, FaSearch, FaTimes, FaPlay, FaPause, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { FaRobot, FaCalendar, FaBookOpen, FaStar, FaSearch, FaTimes } from 'react-icons/fa'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 
@@ -26,10 +26,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [favoriteInfos, setFavoriteInfos] = useState<Set<string>>(new Set())
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'length'>('date')
-  const [autoPlay, setAutoPlay] = useState(false)
-  const [autoPlayInterval, setAutoPlayInterval] = useState(5000)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [showSpeedControl, setShowSpeedControl] = useState(false)
+
 
   // 모든 AI 정보 가져오기 (getAll API 시도)
   const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
@@ -160,38 +157,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     }
   })()
 
-  // 자동재생 기능
-  useEffect(() => {
-    if (!autoPlay || filteredAIInfo.length === 0) return
 
-    const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % filteredAIInfo.length)
-    }, autoPlayInterval)
-
-    return () => clearInterval(interval)
-  }, [autoPlay, filteredAIInfo.length, autoPlayInterval])
-
-  const toggleAutoPlay = () => {
-    setAutoPlay(!autoPlay)
-    if (!autoPlay) {
-      setCurrentIndex(0)
-    }
-  }
-
-  const changeSpeed = (interval: number) => {
-    setAutoPlayInterval(interval)
-    setShowSpeedControl(false)
-  }
-
-  const goToPrevious = () => {
-    if (filteredAIInfo.length === 0) return
-    setCurrentIndex(prev => (prev - 1 + filteredAIInfo.length) % filteredAIInfo.length)
-  }
-
-  const goToNext = () => {
-    if (filteredAIInfo.length === 0) return
-    setCurrentIndex(prev => (prev + 1) % filteredAIInfo.length)
-  }
 
   const selectInfo = (info: AIInfoItem) => {
     setSelectedInfo(info)
@@ -284,65 +250,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
       </div>
 
-      {/* 자동재생 컨트롤 */}
-      <div className="flex items-center justify-center gap-4">
-        <button
-          onClick={goToPrevious}
-          disabled={filteredAIInfo.length === 0}
-          className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-50"
-        >
-          <FaChevronLeft className="w-4 h-4" />
-        </button>
 
-        <button
-          onClick={toggleAutoPlay}
-          disabled={filteredAIInfo.length === 0}
-          className={`px-6 py-3 rounded-xl font-medium transition-all flex items-center gap-2 ${
-            autoPlay
-              ? 'bg-red-500/30 text-red-300 border border-red-500/50'
-              : 'bg-green-500/30 text-green-300 border border-green-500/50'
-          }`}
-        >
-          {autoPlay ? <FaPause className="w-4 h-4" /> : <FaPlay className="w-4 h-4" />}
-          {autoPlay ? '일시정지' : '자동재생'}
-        </button>
-
-        <button
-          onClick={goToNext}
-          disabled={filteredAIInfo.length === 0}
-          className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-50"
-        >
-          <FaChevronRight className="w-4 h-4" />
-        </button>
-
-        <div className="relative">
-          <button
-            onClick={() => setShowSpeedControl(!showSpeedControl)}
-            className="px-4 py-3 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 rounded-lg transition-all"
-          >
-            속도 조절
-          </button>
-          
-          {showSpeedControl && (
-            <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-xl rounded-xl p-3 border border-white/20 z-10">
-              <div className="text-white/70 text-sm mb-2">재생 간격</div>
-              {[3000, 5000, 10000, 15000, 20000].map((interval) => (
-                <button
-                  key={interval}
-                  onClick={() => changeSpeed(interval)}
-                  className={`block w-full text-left px-3 py-2 rounded text-sm transition-all ${
-                    autoPlayInterval === interval
-                      ? 'bg-blue-500/30 text-blue-300'
-                      : 'text-white/70 hover:bg-white/10'
-                  }`}
-                >
-                  {interval / 1000}초
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* AI 정보 목록 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -352,11 +260,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`p-4 rounded-xl cursor-pointer transition-all border ${
-              index === currentIndex && autoPlay
-                ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border-blue-400/50'
-                : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10'
-            }`}
+            className="p-4 rounded-xl cursor-pointer transition-all border bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10"
             onClick={() => selectInfo(info)}
           >
             <div className="flex items-start justify-between mb-3">
