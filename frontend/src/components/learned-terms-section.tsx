@@ -194,14 +194,14 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
 
   // 카운트다운 애니메이션 (별도 처리)
   useEffect(() => {
-    if (countdown > 0) {
+    if (countdown > 0 && autoPlayInterval > 1000) {
       const timer = setTimeout(() => {
         setCountdown(prev => prev > 0 ? prev - 1 : 0)
       }, 1000)
       
       return () => clearTimeout(timer)
     }
-  }, [countdown])
+  }, [countdown, autoPlayInterval])
 
   // 터치 제스처 처리
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -714,7 +714,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             </div>
             
             {/* 카운트다운 표시 */}
-            {autoPlay && countdown > 0 && (
+            {autoPlay && countdown > 0 && autoPlayInterval > 1000 && (
               <div className="flex items-center justify-center w-16 h-16 bg-red-500/50 text-red-100 rounded-xl border-2 border-red-400/50 shadow-lg">
                 <span className="text-2xl font-bold">{countdown}</span>
               </div>
