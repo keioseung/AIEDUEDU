@@ -270,6 +270,7 @@ export const aiInfoAPI = {
   delete: (date: string) => api.delete(`/api/ai-info/${date}`),
   deleteItem: (date: string, itemIndex: number) => api.delete(`/api/ai-info/${date}/item/${itemIndex}`),
   getAllDates: () => api.get('/api/ai-info/dates/all'),
+  getAll: () => api.get('/api/ai-info/all'),
   getTotalDays: () => api.get('/api/ai-info/total-days'),
 
   getTermsQuiz: (sessionId: string) => api.get(`/api/ai-info/terms-quiz/${sessionId}`),

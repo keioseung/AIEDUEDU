@@ -6,6 +6,7 @@ import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine,
 import { TrendingUp, Calendar, Trophy, Sun, Target, BarChart3, BookOpen } from 'lucide-react'
 import Sidebar from '@/components/sidebar'
 import AIInfoCard from '@/components/ai-info-card'
+import AIInfoListMode from '@/components/ai-info-list-mode'
 import TermsQuizSection from '@/components/terms-quiz-section'
 import ProgressSection from '@/components/progress-section'
 import LearnedTermsSection from '@/components/learned-terms-section'
@@ -93,6 +94,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const [activeTab, setActiveTab] = useState<'ai' | 'quiz' | 'progress' | 'term'>('ai')
+  const [aiInfoMode, setAiInfoMode] = useState<'date' | 'list'>('date')
   const [randomTerm, setRandomTerm] = useState(() => TERMS[Math.floor(Math.random() * TERMS.length)])
   
   // 타이핑 애니메이션 상태
@@ -525,34 +527,73 @@ export default function DashboardPage() {
           {/* 탭별 컨텐츠 */}
           {activeTab === 'ai' && (
             <section className="mb-8 md:mb-16">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                {aiInfoFixed.length === 0 && (
-                  <div className="glass backdrop-blur-xl rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center text-white/70 shadow-xl min-h-[180px] border border-white/10">
-                    <FaBookOpen className="w-10 h-10 md:w-12 md:h-12 mb-3 opacity-60" />
-                    <span className="text-base md:text-lg font-semibold">AI 정보가 없습니다</span>
+              {/* AI 정보 모드 선택 */}
+              <div className="flex justify-center mb-6">
+                <div className="glass backdrop-blur-xl rounded-2xl p-2 shadow-xl border border-white/10">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setAiInfoMode('date')}
+                      className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                        aiInfoMode === 'date'
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                      }`}
+                    >
+                      📅 날짜별 모드
+                    </button>
+                    <button
+                      onClick={() => setAiInfoMode('list')}
+                      className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                        aiInfoMode === 'list'
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                      }`}
+                    >
+                      📚 목록 모드
+                    </button>
                   </div>
-                )}
-                {aiInfoFixed.map((info, index) => {
-                  // 로컬 스토리지와 백엔드 데이터를 모두 확인하여 학습 상태 결정
-                  const isLearnedLocally = localProgress.includes(index)
-                  const isLearnedBackend = backendProgress.includes(index)
-                  const isLearned = isLearnedLocally || isLearnedBackend
-                  
-                  return (
-                    <AIInfoCard
-                      key={index}
-                      info={info}
-                      index={index}
-                      date={selectedDate}
-                      sessionId={sessionId}
-                      isLearned={isLearned}
-                      onProgressUpdate={handleProgressUpdate}
-                      forceUpdate={forceUpdate}
-                      setForceUpdate={setForceUpdate}
-                    />
-                  )
-                })}
+                </div>
               </div>
+
+              {/* 날짜별 모드 */}
+              {aiInfoMode === 'date' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                  {aiInfoFixed.length === 0 && (
+                    <div className="glass backdrop-blur-xl rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center text-white/70 shadow-xl min-h-[180px] border border-white/10">
+                      <FaBookOpen className="w-10 h-10 md:w-12 md:h-12 mb-3 opacity-60" />
+                      <span className="text-base md:text-lg font-semibold">AI 정보가 없습니다</span>
+                    </div>
+                  )}
+                  {aiInfoFixed.map((info, index) => {
+                    // 로컬 스토리지와 백엔드 데이터를 모두 확인하여 학습 상태 결정
+                    const isLearnedLocally = localProgress.includes(index)
+                    const isLearnedBackend = backendProgress.includes(index)
+                    const isLearned = isLearnedLocally || isLearnedBackend
+                    
+                    return (
+                      <AIInfoCard
+                        key={index}
+                        info={info}
+                        index={index}
+                        date={selectedDate}
+                        sessionId={sessionId}
+                        isLearned={isLearned}
+                        onProgressUpdate={handleProgressUpdate}
+                        forceUpdate={forceUpdate}
+                        setForceUpdate={setForceUpdate}
+                      />
+                    )
+                  })}
+                </div>
+              )}
+
+              {/* 목록 모드 */}
+              {aiInfoMode === 'list' && (
+                <AIInfoListMode
+                  sessionId={sessionId}
+                  onProgressUpdate={handleProgressUpdate}
+                />
+              )}
             </section>
           )}
           {activeTab === 'quiz' && (

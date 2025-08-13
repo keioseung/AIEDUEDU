@@ -211,6 +211,65 @@ def get_all_ai_info_dates(db: Session = Depends(get_db)):
     dates = [row.date for row in db.query(AIInfo).order_by(AIInfo.date).all()]
     return dates
 
+@router.get("/all")
+def get_all_ai_info(db: Session = Depends(get_db)):
+    """모든 AI 정보를 제목과 날짜로 반환합니다."""
+    try:
+        all_ai_info = []
+        ai_infos = db.query(AIInfo).order_by(AIInfo.date.desc()).all()
+        
+        for ai_info in ai_infos:
+            # info1
+            if ai_info.info1_title and ai_info.info1_content:
+                try:
+                    terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                except json.JSONDecodeError:
+                    terms1 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_0",
+                    "date": ai_info.date,
+                    "title": ai_info.info1_title,
+                    "content": ai_info.info1_content,
+                    "terms": terms1,
+                    "info_index": 0
+                })
+            
+            # info2
+            if ai_info.info2_title and ai_info.info2_content:
+                try:
+                    terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                except json.JSONDecodeError:
+                    terms2 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_1",
+                    "date": ai_info.date,
+                    "title": ai_info.info2_title,
+                    "content": ai_info.info2_content,
+                    "terms": terms2,
+                    "info_index": 1
+                })
+            
+            # info3
+            if ai_info.info3_title and ai_info.info3_content:
+                try:
+                    terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                except json.JSONDecodeError:
+                    terms3 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_2",
+                    "date": ai_info.date,
+                    "title": ai_info.info3_title,
+                    "content": ai_info.info3_content,
+                    "terms": terms3,
+                    "info_index": 2
+                })
+        
+        return all_ai_info
+        
+    except Exception as e:
+        print(f"Error in get_all_ai_info: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get all AI info: {str(e)}")
+
 @router.get("/total-days")
 def get_total_ai_info_days(db: Session = Depends(get_db)):
     """AI 정보가 등록된 총 일 수를 반환합니다."""
