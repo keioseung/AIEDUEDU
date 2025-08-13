@@ -40,6 +40,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   const [showSpeedControl, setShowSpeedControl] = useState(false)
   const [currentIntervalId, setCurrentIntervalId] = useState<NodeJS.Timeout | null>(null)
   const [viewedTerms, setViewedTerms] = useState<Set<string>>(new Set())
+  const [listHeight, setListHeight] = useState<'default' | 'large' | 'full'>('default')
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -315,6 +316,22 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     if (isProcessing || filteredTerms.length === 0) return
     setIsProcessing(true)
     setAutoPlay(!autoPlay)
+    setTimeout(() => setIsProcessing(false), 300)
+  }
+
+  // 목록 크기 조절 함수
+  const toggleListHeight = () => {
+    if (isProcessing) return
+    setIsProcessing(true)
+    
+    if (listHeight === 'default') {
+      setListHeight('large')
+    } else if (listHeight === 'large') {
+      setListHeight('full')
+    } else {
+      setListHeight('default')
+    }
+    
     setTimeout(() => setIsProcessing(false), 300)
   }
 
@@ -745,12 +762,36 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             exit={{ opacity: 0, height: 0 }}
             className="bg-white/5 rounded-xl p-4"
           >
-            <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-              <Target className="w-5 h-5" />
-              전체 용어 목록 ({filteredTerms.length}개)
-            </h3>
-            <div className="max-h-64 overflow-y-auto space-y-2">
-              {filteredTerms.map((term, index) => {
+                         <div className="flex items-center justify-between mb-3">
+               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                 <Target className="w-5 h-5" />
+                 전체 용어 목록 ({filteredTerms.length}개)
+               </h3>
+               <button
+                 onTouchStart={handleWebViewTouch(toggleListHeight)}
+                 onClick={toggleListHeight}
+                 className="px-2 py-1 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 rounded text-xs font-medium transition-all touch-manipulation select-none min-h-[32px] min-w-[40px] webview-button"
+                 style={{ WebkitTapHighlightColor: 'transparent' }}
+               >
+                 {listHeight === 'default' ? '🔽' : listHeight === 'large' ? '⏫' : '⏬'}
+               </button>
+             </div>
+                                      <div 
+               className={`overflow-y-auto space-y-2 ${
+                 listHeight === 'default' ? 'max-h-64' : 
+                 listHeight === 'large' ? 'max-h-96' : 
+                 'max-h-[80vh]'
+               }`}
+               onTouchStart={(e) => {
+                 // 스크롤 영역 터치 시 이벤트 전파 방지
+                 e.stopPropagation()
+               }}
+               onTouchMove={(e) => {
+                 // 스크롤 중일 때는 용어 선택 방지
+                 e.stopPropagation()
+               }}
+             >
+               {filteredTerms.map((term, index) => {
                 const termDifficulty = getDifficulty(term.term)
                 return (
                   <motion.div
