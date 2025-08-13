@@ -100,7 +100,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
 
   // 실제 사용할 AI 정보 (getAll이 성공하면 그것을, 실패하면 날짜별 정보를 사용)
   const actualAIInfo = allAIInfo.length > 0 ? allAIInfo : dateBasedAIInfo
-  const isLoading = isLoadingAll || (getAllError !== null && (isLoadingDates || isLoadingDateBased))
+  const isLoading = isLoadingAll || isLoadingDates || isLoadingDateBased
 
   // 즐겨찾기 불러오기
   useEffect(() => {
@@ -252,17 +252,21 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
 
 
 
-      {/* AI 정보 목록 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredAIInfo.map((info, index) => (
-          <motion.div
-            key={info.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="p-4 rounded-xl cursor-pointer transition-all border bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10"
-            onClick={() => selectInfo(info)}
-          >
+             {/* AI 정보 목록 */}
+       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+         {filteredAIInfo.map((info, index) => (
+           <motion.div
+             key={info.id}
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: index * 0.1 }}
+             className="p-4 rounded-xl cursor-pointer transition-all border bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10"
+             onClick={(e) => {
+               e.preventDefault()
+               e.stopPropagation()
+               selectInfo(info)
+             }}
+           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <h3 className="font-bold text-white text-lg mb-2 line-clamp-2">{info.title}</h3>
@@ -348,29 +352,35 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                 </button>
               </div>
 
-              <div className="text-white/80 text-lg leading-relaxed mb-8 whitespace-pre-line">
-                {selectedInfo.content}
-              </div>
+                             <div className="text-white/80 text-lg leading-relaxed mb-8 whitespace-pre-line bg-white/5 p-6 rounded-xl border border-white/10">
+                 <h3 className="text-xl font-bold text-white mb-4">📖 전체 내용</h3>
+                 <div className="text-white/90 leading-relaxed">
+                   {selectedInfo.content}
+                 </div>
+               </div>
 
-              {selectedInfo.terms.length > 0 && (
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-                    <FaBookOpen className="text-blue-400" />
-                    관련 용어 ({selectedInfo.terms.length}개)
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedInfo.terms.map((term, index) => (
-                      <div
-                        key={index}
-                        className="bg-white/5 rounded-xl p-4 border border-white/10"
-                      >
-                        <div className="font-bold text-white text-lg mb-2">{term.term}</div>
-                        <div className="text-white/70">{term.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                             {selectedInfo.terms.length > 0 && (
+                 <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                     <FaBookOpen className="text-blue-400" />
+                     📚 관련 용어 학습 ({selectedInfo.terms.length}개)
+                   </h3>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     {selectedInfo.terms.map((term, index) => (
+                       <div
+                         key={index}
+                         className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all"
+                       >
+                         <div className="font-bold text-white text-lg mb-3 flex items-center gap-2">
+                           <span className="text-blue-400 text-sm">#{index + 1}</span>
+                           {term.term}
+                         </div>
+                         <div className="text-white/80 leading-relaxed">{term.description}</div>
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               )}
             </motion.div>
           </motion.div>
         )}
