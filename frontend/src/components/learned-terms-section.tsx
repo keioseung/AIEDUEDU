@@ -216,6 +216,13 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     link.click()
   }
 
+  // 웹뷰 터치 이벤트 핸들러
+  const handleWebViewTouch = (callback: () => void) => (e: React.TouchEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    callback()
+  }
+
   if (isLoading) {
     return (
       <div className="glass rounded-2xl p-6 md:p-8">
@@ -258,16 +265,18 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         </h2>
         <div className="flex items-center gap-3">
           <button
+            onTouchStart={handleWebViewTouch(() => setShowFilters(!showFilters))}
             onClick={() => setShowFilters(!showFilters)}
-            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px] min-w-[80px] justify-center"
+            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Filter className="w-4 h-4 md:w-5 md:h-5" />
             <span className="inline">필터</span>
           </button>
           <button
+            onTouchStart={handleWebViewTouch(() => setShowTermList(!showTermList))}
             onClick={() => setShowTermList(!showTermList)}
-            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px] min-w-[80px] justify-center"
+            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Menu className="w-4 h-4 md:w-5 md:h-5" />
@@ -289,8 +298,10 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         />
         {searchQuery && (
           <button
+            onTouchStart={handleWebViewTouch(() => setSearchQuery(''))}
             onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white min-h-[44px] min-w-[44px] webview-button"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <X className="w-5 h-5" />
           </button>
@@ -313,10 +324,11 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                   <Calendar className="w-5 h-5" />
                   날짜별 필터
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   <button
+                    onTouchStart={handleWebViewTouch(() => { setSelectedDate(null); setCurrentTermIndex(0); })}
                     onClick={() => { setSelectedDate(null); setCurrentTermIndex(0); }}
-                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] ${
+                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[48px] webview-button ${
                       selectedDate === null
                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
                         : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
@@ -330,8 +342,9 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                     return (
                       <button
                         key={date}
+                        onTouchStart={handleWebViewTouch(() => { setSelectedDate(date); setCurrentTermIndex(0); })}
                         onClick={() => { setSelectedDate(date); setCurrentTermIndex(0); }}
-                        className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] ${
+                        className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[48px] webview-button ${
                           selectedDate === date
                             ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
                             : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
@@ -351,15 +364,16 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm min-h-[44px]"
+                className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm min-h-[48px]"
               >
                 <option value="date">최신순</option>
                 <option value="alphabet">가나다순</option>
                 <option value="length">길이순</option>
               </select>
               <button
+                onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-                className={`px-4 py-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 touch-manipulation select-none min-h-[44px] ${
+                className={`px-4 py-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button ${
                   showFavoritesOnly
                     ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50'
                     : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
@@ -370,16 +384,18 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                 즐겨찾기만
               </button>
               <button
+                onTouchStart={handleWebViewTouch(handleShuffle)}
                 onClick={handleShuffle}
-                className="px-4 py-3 bg-purple-500/30 text-purple-300 rounded-lg hover:bg-purple-500/50 active:bg-purple-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px]"
+                className="px-4 py-3 bg-purple-500/30 text-purple-300 rounded-lg hover:bg-purple-500/50 active:bg-purple-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <Shuffle className="w-4 h-4" />
                 랜덤
               </button>
               <button
+                onTouchStart={handleWebViewTouch(exportTerms)}
                 onClick={exportTerms}
-                className="px-4 py-3 bg-green-500/30 text-green-300 rounded-lg hover:bg-green-500/50 active:bg-green-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px]"
+                className="px-4 py-3 bg-green-500/30 text-green-300 rounded-lg hover:bg-green-500/50 active:bg-green-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <Download className="w-4 h-4" />
@@ -421,8 +437,9 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               {difficulty?.level}
             </div>
             <button
+              onTouchStart={handleWebViewTouch(() => toggleFavorite(currentTerm.term))}
               onClick={() => toggleFavorite(currentTerm.term)}
-              className={`p-3 rounded-lg transition-all touch-manipulation select-none min-h-[44px] min-w-[44px] flex items-center justify-center ${
+              className={`p-3 rounded-lg transition-all touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button ${
                 favoriteTerms.has(currentTerm.term)
                   ? 'text-yellow-400 bg-yellow-500/20'
                   : 'text-white/50 hover:text-yellow-400 hover:bg-yellow-500/10 active:bg-yellow-500/20'
@@ -462,8 +479,9 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           </div>
           <div className="flex gap-3">
             <button
+              onTouchStart={handleWebViewTouch(() => setAutoPlay(!autoPlay))}
               onClick={() => setAutoPlay(!autoPlay)}
-              className={`p-3 rounded-xl transition-all font-medium flex items-center gap-2 touch-manipulation select-none min-h-[44px] ${
+              className={`p-3 rounded-xl transition-all font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button ${
                 autoPlay
                   ? 'bg-red-500/30 text-red-300 border border-red-500/50'
                   : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
@@ -475,16 +493,18 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               <span className="hidden sm:inline">{autoPlay ? '정지' : '자동재생'}</span>
             </button>
             <button
+              onTouchStart={handleWebViewTouch(handlePrevTerm)}
               onClick={handlePrevTerm}
-              className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 active:bg-white/30 transition-all font-medium touch-manipulation select-none min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 active:bg-white/30 transition-all font-medium touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button"
               disabled={filteredTerms.length === 0}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
+              onTouchStart={handleWebViewTouch(handleNextTerm)}
               onClick={handleNextTerm}
-              className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 transition-all font-medium touch-manipulation select-none min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 transition-all font-medium touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button"
               disabled={filteredTerms.length === 0}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
@@ -516,11 +536,15 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className={`p-3 rounded-lg cursor-pointer transition-all touch-manipulation select-none min-h-[44px] ${
+                    className={`p-3 rounded-lg cursor-pointer transition-all touch-manipulation select-none min-h-[48px] webview-button ${
                       index === currentTermIndex
                         ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50'
                         : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border border-white/10'
                     }`}
+                    onTouchStart={handleWebViewTouch(() => {
+                      setCurrentTermIndex(index)
+                      setShowTermList(false)
+                    })}
                     onClick={() => {
                       setCurrentTermIndex(index)
                       setShowTermList(false)
@@ -530,11 +554,15 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-semibold text-white text-sm break-words">{term.term}</div>
                       <button
+                        onTouchStart={handleWebViewTouch((e) => {
+                          e.stopPropagation()
+                          toggleFavorite(term.term)
+                        })}
                         onClick={(e) => {
                           e.stopPropagation()
                           toggleFavorite(term.term)
                         }}
-                        className={`p-2 rounded flex-shrink-0 touch-manipulation select-none min-h-[32px] min-w-[32px] flex items-center justify-center ${
+                        className={`p-2 rounded flex-shrink-0 touch-manipulation select-none min-h-[40px] min-w-[40px] flex items-center justify-center webview-button ${
                           favoriteTerms.has(term.term)
                             ? 'text-yellow-400'
                             : 'text-white/30 hover:text-yellow-400 active:text-yellow-300'

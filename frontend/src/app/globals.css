@@ -118,6 +118,53 @@ button:focus, [role="button"]:focus {
   z-index: -1;
 }
 
+/* 웹뷰 전용 버튼 스타일 */
+.webview-button {
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* 웹뷰에서 터치 피드백 강화 */
+.webview-button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease-out;
+}
+
+/* 웹뷰 터치 영역 확장 (가상 터치 영역) */
+.webview-button::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
+  z-index: -1;
+}
+
+/* 웹뷰에서 포커스 제거 */
+.webview-button:focus {
+  outline: none;
+}
+
+/* 웹뷰 터치 최적화 */
+@media (hover: none) and (pointer: coarse) {
+  .webview-button {
+    min-height: 48px !important;
+    min-width: 48px !important;
+  }
+  
+  .webview-button:active {
+    transform: scale(0.98);
+    transition: transform 0.05s ease-out;
+  }
+}
+
 /* 성능 최적화 */
 * {
   box-sizing: border-box;
