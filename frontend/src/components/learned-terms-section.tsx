@@ -164,40 +164,41 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     // 첫 번째 카운트다운 시작
     setCountdown(3)
     
-    const startAutoPlay = () => {
-      // 카운트다운 완료 후 자동재생 시작
-      const playInterval = setInterval(() => {
-        if (!autoPlay || showFilters || showTermList) {
-          clearInterval(playInterval)
-          setCurrentIntervalId(null)
-          return
-        }
-        
-        // 다음 용어로 이동
-        setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
-        
-        // 다음 용어를 위한 카운트다운 시작
-        setCountdown(3)
-      }, autoPlayInterval + 3000) // 카운트다운 3초 + 설정한 시간
-      
-      setCurrentIntervalId(playInterval)
-      return () => {
-        clearInterval(playInterval)
-        setCurrentIntervalId(null)
-      }
-    }
-
-    // 3초 후 자동재생 시작
-    const initialTimer = setTimeout(() => {
+    // 카운트다운 완료 후 자동재생 시작
+    const countdownTimer = setTimeout(() => {
       if (!autoPlay) return
-      startAutoPlay()
+      
+      // 첫 번째 용어 표시 후 다음 용어를 위한 타이머 시작
+      const startNextTermTimer = () => {
+        const nextTermTimer = setTimeout(() => {
+          if (!autoPlay || showFilters || showTermList) return
+          
+          // 다음 용어로 이동
+          setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
+          
+          // 다음 용어를 위한 카운트다운 시작
+          setCountdown(3)
+          
+          // 재귀적으로 다음 타이머 시작
+          startNextTermTimer()
+        }, autoPlayInterval)
+        
+        setCurrentIntervalId(nextTermTimer)
+      }
+      
+      // 첫 번째 타이머 시작
+      startNextTermTimer()
     }, 3000)
 
     return () => {
-      clearTimeout(initialTimer)
+      clearTimeout(countdownTimer)
+      if (currentIntervalId) {
+        clearTimeout(currentIntervalId)
+        setCurrentIntervalId(null)
+      }
       setCountdown(0)
     }
-  }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList, currentIntervalId])
+  }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
 
   // 카운트다운 애니메이션 (별도 처리)
   useEffect(() => {
@@ -343,26 +344,35 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     // 자동재생 중이면 즉시 새로운 속도로 재시작
     if (autoPlay) {
       if (currentIntervalId) {
-        clearInterval(currentIntervalId)
+        clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
       }
       setCountdown(3)
       
+      // 3초 후 새로운 속도로 자동재생 시작
       const newIntervalTimer = setTimeout(() => {
         if (!autoPlay) return
         
-        const playInterval = setInterval(() => {
-          if (!autoPlay || showFilters || showTermList) {
-            clearInterval(playInterval)
-            setCurrentIntervalId(null)
-            return
-          }
+        // 첫 번째 용어 표시 후 다음 용어를 위한 타이머 시작
+        const startNextTermTimer = () => {
+          const nextTermTimer = setTimeout(() => {
+            if (!autoPlay || showFilters || showTermList) return
+            
+            // 다음 용어로 이동
+            setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
+            
+            // 다음 용어를 위한 카운트다운 시작
+            setCountdown(3)
+            
+            // 재귀적으로 다음 타이머 시작
+            startNextTermTimer()
+          }, newInterval)
           
-          setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
-          setCountdown(3)
-        }, newInterval + 3000) // 카운트다운 3초 + 설정한 시간
+          setCurrentIntervalId(nextTermTimer)
+        }
         
-        setCurrentIntervalId(playInterval)
+        // 첫 번째 타이머 시작
+        startNextTermTimer()
       }, 3000)
     }
   }
