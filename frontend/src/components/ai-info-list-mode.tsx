@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaCalendar, FaBookOpen, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash } from 'react-icons/fa'
+import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
+import AIInfoCard from './ai-info-card'
 
 interface AIInfoItem {
   id: string
@@ -28,59 +29,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'length'>('date')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [isScrolling, setIsScrolling] = useState(false)
-  const [touchStartY, setTouchStartY] = useState(0)
-  const [touchStartTime, setTouchStartTime] = useState(0)
 
-  // 웹뷰 터치 이벤트 핸들러
-  const handleWebViewTouch = (callback: (e?: React.TouchEvent) => void) => (e: React.TouchEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    callback(e)
-  }
-
-  // 스크롤 감지 함수들
-  const handleListTouchStart = (e: React.TouchEvent) => {
-    setTouchStartY(e.targetTouches[0].clientY)
-    setTouchStartTime(Date.now())
-    setIsScrolling(false)
-  }
-
-  const handleListTouchMove = (e: React.TouchEvent) => {
-    const currentY = e.targetTouches[0].clientY
-    const deltaY = Math.abs(currentY - touchStartY)
-    
-    // 수직 이동이 10px 이상이면 스크롤로 간주
-    if (deltaY > 10) {
-      setIsScrolling(true)
-    }
-  }
-
-  const handleListTouchEnd = () => {
-    // 스크롤 중이었다면 잠시 후 스크롤 상태 해제
-    if (isScrolling) {
-      setTimeout(() => setIsScrolling(false), 100)
-    }
-  }
-
-  // 항목 확장/축소 토글 (중복 클릭 방지)
-  const toggleExpanded = (infoId: string) => {
-    if (isProcessing) return
-    setIsProcessing(true)
-    
-    const newExpanded = new Set(expandedItems)
-    if (newExpanded.has(infoId)) {
-      newExpanded.delete(infoId)
-    } else {
-      newExpanded.add(infoId)
-    }
-    setExpandedItems(newExpanded)
-    
-    // 중복 클릭 방지를 위한 딜레이
-    setTimeout(() => setIsProcessing(false), 300)
-  }
 
   // 모든 AI 정보 가져오기 (getAll API 시도)
   const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
@@ -340,224 +289,21 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       </div>
 
       {/* AI 정보 목록 */}
-      <div 
-        className="space-y-4"
-        onTouchStart={handleListTouchStart}
-        onTouchMove={handleListTouchMove}
-        onTouchEnd={handleListTouchEnd}
-      >
+      <div className="space-y-4">
         {currentItems.map((info, index) => (
-          <motion.div
+          <AIInfoCard
             key={info.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className={`rounded-xl border transition-all ${
-              expandedItems.has(info.id)
-                ? 'bg-white/15 border-blue-400/50 shadow-lg shadow-blue-500/20'
-                : 'bg-white/5 border-white/10 hover:bg-white/10'
-            }`}
-          >
-            {/* 기본 정보 헤더 */}
-            <div 
-              className="p-4 cursor-pointer min-h-[60px] touch-manipulation webview-button"
-              onTouchStart={handleWebViewTouch(() => {
-                if (isScrolling) return
-                toggleExpanded(info.id)
-              })}
-              onClick={() => {
-                if (isScrolling) return
-                toggleExpanded(info.id)
-              }}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="font-bold text-white text-lg mb-2">{info.title}</h3>
-                  <div className="flex items-center gap-2 text-white/60 text-sm mb-2">
-                    <FaCalendar className="w-3 h-3" />
-                    <span>{info.date}</span>
-                  </div>
-                  <p className="text-white/70 text-sm line-clamp-2">{info.content}</p>
-                </div>
-                
-                <div className="flex items-center gap-2 ml-4">
-                  <button
-                    onTouchStart={handleWebViewTouch((e) => {
-                      e?.stopPropagation()
-                      toggleFavorite(info.id)
-                    })}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      toggleFavorite(info.id)
-                    }}
-                    className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
-                      favoriteInfos.has(info.id)
-                        ? 'text-yellow-400 bg-yellow-500/20'
-                        : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
-                    }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    <FaStar className="w-4 h-4" fill={favoriteInfos.has(info.id) ? 'currentColor' : 'none'} />
-                  </button>
-                  
-                  <div className="text-white/40">
-                    {expandedItems.has(info.id) ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 확장된 상세 내용 */}
-            <AnimatePresence>
-              {expandedItems.has(info.id) && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="px-4 pb-4 border-t border-white/10 pt-4">
-                    {/* 전체 내용 */}
-                    <div className="mb-6">
-                      <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                        <FaBookOpen className="text-blue-400" />
-                        📖 전체 내용
-                      </h4>
-                      <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                        <div className="text-white/90 leading-relaxed whitespace-pre-line">
-                          {info.content}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 관련 용어 학습 섹션 */}
-                    {info.terms.length > 0 && (
-                      <div>
-                        <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                          <FaBookOpen className="text-emerald-400" />
-                          📚 관련 용어 학습 ({info.terms.length}개)
-                        </h4>
-                        
-                        {/* 용어 학습 카드 */}
-                        <div className="bg-white/10 backdrop-blur-xl rounded-xl p-4 border border-white/20">
-                          {/* 진행률 표시 */}
-                          <div className="mb-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm text-white/60">학습 진행률</span>
-                              <span className="text-sm text-green-400 font-bold">
-                                {(() => {
-                                  const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
-                                  const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
-                                  return `${currentLearned.length}개 학습완료`
-                                })()}
-                              </span>
-                            </div>
-                            <div className="w-full bg-white/20 rounded-full h-2">
-                              <div
-                                className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300"
-                                style={{ 
-                                  width: `${(() => {
-                                    const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
-                                    const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
-                                    return info.terms.length > 0 ? (currentLearned.length / info.terms.length) * 100 : 0
-                                  })()}%` 
-                                }}
-                              />
-                            </div>
-                          </div>
-
-                          {/* 용어 목록 */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {info.terms.map((term, termIndex) => (
-                              <div
-                                key={termIndex}
-                                className="bg-white/15 rounded-lg p-3 border border-white/20 hover:bg-white/20 transition-all cursor-pointer"
-                                onClick={() => {
-                                  // 용어 클릭 시 학습 완료 표시 (로컬 스토리지에 저장)
-                                  const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
-                                  const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
-                                  
-                                  if (!currentLearned.includes(term.term)) {
-                                    currentLearned.push(term.term)
-                                    localStorage.setItem(learnedTermsKey, JSON.stringify(currentLearned))
-                                    // 강제 리렌더링을 위해 상태 업데이트
-                                    setExpandedItems(new Set([...expandedItems]))
-                                  }
-                                }}
-                              >
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="font-bold text-white text-base flex items-center gap-2">
-                                    <span className="text-blue-400 text-sm">#{termIndex + 1}</span>
-                                    {term.term}
-                                  </div>
-                                  <div className="text-green-400">
-                                    {(() => {
-                                      const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
-                                      const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
-                                      return currentLearned.includes(term.term) ? '✅' : '⭕'
-                                    })()}
-                                  </div>
-                                </div>
-                                <div className="text-white/80 leading-relaxed text-sm">{term.description}</div>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* 학습 완료 축하 메시지 */}
-                          {(() => {
-                            const learnedTermsKey = `learnedTerms_${sessionId}_${info.date}_${info.info_index}`
-                            const currentLearned = JSON.parse(localStorage.getItem(learnedTermsKey) || '[]')
-                            const isAllLearned = currentLearned.length === info.terms.length && info.terms.length > 0
-                            
-                            return isAllLearned ? (
-                              <div className="mt-4 text-center animate-bounce">
-                                <span className="inline-block bg-green-500 text-white px-4 py-2 rounded-full font-bold shadow text-sm">
-                                  🎉 모든 용어 학습 완료!
-                                </span>
-                              </div>
-                            ) : null
-                          })()}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* 학습 완료 버튼 */}
-                    <div className="mt-6 text-center">
-                      <button
-                        onClick={() => {
-                          // AI 정보 학습 완료 처리
-                          const userProgressKey = 'userProgress'
-                          const currentProgress = JSON.parse(localStorage.getItem(userProgressKey) || '{}')
-                          
-                          if (!currentProgress[sessionId]) {
-                            currentProgress[sessionId] = {}
-                          }
-                          if (!currentProgress[sessionId][info.date]) {
-                            currentProgress[sessionId][info.date] = []
-                          }
-                          
-                          if (!currentProgress[sessionId][info.date].includes(info.info_index)) {
-                            currentProgress[sessionId][info.date].push(info.info_index)
-                            localStorage.setItem(userProgressKey, JSON.stringify(currentProgress))
-                            
-                            // 진행률 업데이트 콜백 호출
-                            if (onProgressUpdate) {
-                              onProgressUpdate()
-                            }
-                          }
-                        }}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
-                      >
-                        📚 AI 정보 학습 완료
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+            info={{
+              title: info.title,
+              content: info.content,
+              terms: info.terms
+            }}
+            index={info.info_index}
+            date={info.date}
+            sessionId={sessionId}
+            isLearned={false}
+            onProgressUpdate={onProgressUpdate}
+          />
         ))}
       </div>
 
