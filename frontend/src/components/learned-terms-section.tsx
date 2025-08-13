@@ -806,7 +806,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             <button
               onTouchStart={handleWebViewTouch(handlePrevTermSafe)}
               onClick={handlePrevTermSafe}
-              className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 active:bg-white/30 transition-all font-medium touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button"
+              className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 transition-all font-medium touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button"
               disabled={filteredTerms.length === 0}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
