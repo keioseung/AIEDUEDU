@@ -41,6 +41,9 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   const [currentIntervalId, setCurrentIntervalId] = useState<NodeJS.Timeout | null>(null)
   const [viewedTerms, setViewedTerms] = useState<Set<string>>(new Set())
   const [listHeight, setListHeight] = useState<'default' | 'large' | 'full'>('default')
+  const [isScrolling, setIsScrolling] = useState(false)
+  const [touchStartY, setTouchStartY] = useState(0)
+  const [touchStartTime, setTouchStartTime] = useState(0)
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -317,6 +320,30 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     setIsProcessing(true)
     setAutoPlay(!autoPlay)
     setTimeout(() => setIsProcessing(false), 300)
+  }
+
+  // 스크롤 감지 함수들
+  const handleListTouchStart = (e: React.TouchEvent) => {
+    setTouchStartY(e.targetTouches[0].clientY)
+    setTouchStartTime(Date.now())
+    setIsScrolling(false)
+  }
+
+  const handleListTouchMove = (e: React.TouchEvent) => {
+    const currentY = e.targetTouches[0].clientY
+    const deltaY = Math.abs(currentY - touchStartY)
+    
+    // 수직 이동이 10px 이상이면 스크롤로 간주
+    if (deltaY > 10) {
+      setIsScrolling(true)
+    }
+  }
+
+  const handleListTouchEnd = () => {
+    // 스크롤 중이었다면 잠시 후 스크롤 상태 해제
+    if (isScrolling) {
+      setTimeout(() => setIsScrolling(false), 100)
+    }
   }
 
   // 목록 크기 조절 함수
@@ -813,21 +840,16 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                  {listHeight === 'default' ? '🔽' : listHeight === 'large' ? '⏫' : '⏬'}
                </button>
              </div>
-                                      <div 
-               className={`overflow-y-auto space-y-2 ${
-                 listHeight === 'default' ? 'max-h-64' : 
-                 listHeight === 'large' ? 'max-h-96' : 
-                 'max-h-[80vh]'
-               }`}
-               onTouchStart={(e) => {
-                 // 스크롤 영역 터치 시 이벤트 전파 방지
-                 e.stopPropagation()
-               }}
-               onTouchMove={(e) => {
-                 // 스크롤 중일 때는 용어 선택 방지
-                 e.stopPropagation()
-               }}
-             >
+                                                       <div 
+                   className={`overflow-y-auto space-y-2 ${
+                     listHeight === 'default' ? 'max-h-64' : 
+                     listHeight === 'large' ? 'max-h-96' : 
+                     'max-h-[80vh]'
+                   }`}
+                   onTouchStart={handleListTouchStart}
+                   onTouchMove={handleListTouchMove}
+                   onTouchEnd={handleListTouchEnd}
+                 >
                {filteredTerms.map((term, index) => {
                 const termDifficulty = getDifficulty(term.term)
                 return (
@@ -841,22 +863,28 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50'
                         : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border border-white/10'
                     }`}
-                                         onTouchStart={handleWebViewTouch(() => {
-                       // 목록에서 용어 선택 시 자동재생 일시 중단
-                       if (autoPlay) {
-                         setAutoPlay(false)
-                       }
-                       setCurrentTermIndex(index)
-                       // 목록을 닫지 않음
-                     })}
-                     onClick={() => {
-                       // 목록에서 용어 선택 시 자동재생 일시 중단
-                       if (autoPlay) {
-                         setAutoPlay(false)
-                       }
-                       setCurrentTermIndex(index)
-                       // 목록을 닫지 않음
-                     }}
+                                                              onTouchStart={handleWebViewTouch(() => {
+                        // 스크롤 중일 때는 용어 선택 방지
+                        if (isScrolling) return
+                        
+                        // 목록에서 용어 선택 시 자동재생 일시 중단
+                        if (autoPlay) {
+                          setAutoPlay(false)
+                        }
+                        setCurrentTermIndex(index)
+                        // 목록을 닫지 않음
+                      })}
+                      onClick={() => {
+                        // 스크롤 중일 때는 용어 선택 방지
+                        if (isScrolling) return
+                        
+                        // 목록에서 용어 선택 시 자동재생 일시 중단
+                        if (autoPlay) {
+                          setAutoPlay(false)
+                        }
+                        setCurrentTermIndex(index)
+                        // 목록을 닫지 않음
+                      }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     <div className="flex items-center justify-between mb-1">
