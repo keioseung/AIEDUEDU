@@ -29,12 +29,57 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [isScrolling, setIsScrolling] = useState(false)
+  const [touchStartY, setTouchStartY] = useState(0)
+  const [touchStartTime, setTouchStartTime] = useState(0)
 
   // 웹뷰 터치 이벤트 핸들러
   const handleWebViewTouch = (callback: (e?: React.TouchEvent) => void) => (e: React.TouchEvent) => {
     e.preventDefault()
     e.stopPropagation()
     callback(e)
+  }
+
+  // 스크롤 감지 함수들
+  const handleListTouchStart = (e: React.TouchEvent) => {
+    setTouchStartY(e.targetTouches[0].clientY)
+    setTouchStartTime(Date.now())
+    setIsScrolling(false)
+  }
+
+  const handleListTouchMove = (e: React.TouchEvent) => {
+    const currentY = e.targetTouches[0].clientY
+    const deltaY = Math.abs(currentY - touchStartY)
+    
+    // 수직 이동이 10px 이상이면 스크롤로 간주
+    if (deltaY > 10) {
+      setIsScrolling(true)
+    }
+  }
+
+  const handleListTouchEnd = () => {
+    // 스크롤 중이었다면 잠시 후 스크롤 상태 해제
+    if (isScrolling) {
+      setTimeout(() => setIsScrolling(false), 100)
+    }
+  }
+
+  // 항목 확장/축소 토글 (중복 클릭 방지)
+  const toggleExpanded = (infoId: string) => {
+    if (isProcessing) return
+    setIsProcessing(true)
+    
+    const newExpanded = new Set(expandedItems)
+    if (newExpanded.has(infoId)) {
+      newExpanded.delete(infoId)
+    } else {
+      newExpanded.add(infoId)
+    }
+    setExpandedItems(newExpanded)
+    
+    // 중복 클릭 방지를 위한 딜레이
+    setTimeout(() => setIsProcessing(false), 300)
   }
 
   // 모든 AI 정보 가져오기 (getAll API 시도)
@@ -133,16 +178,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
   }
 
-  // 항목 확장/축소 토글
-  const toggleExpanded = (infoId: string) => {
-    const newExpanded = new Set(expandedItems)
-    if (newExpanded.has(infoId)) {
-      newExpanded.delete(infoId)
-    } else {
-      newExpanded.add(infoId)
-    }
-    setExpandedItems(newExpanded)
-  }
+
 
   // 필터링 및 정렬된 AI 정보
   const filteredAIInfo = (() => {
@@ -249,27 +285,15 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
         
         <div className="flex gap-2">
-          <div className="flex gap-2">
-            {[
-              { value: 'date', label: '최신순' },
-              { value: 'title', label: '제목순' },
-              { value: 'length', label: '길이순' }
-            ].map((option) => (
-              <button
-                key={option.value}
-                onTouchStart={handleWebViewTouch(() => setSortBy(option.value as 'date' | 'title' | 'length'))}
-                onClick={() => setSortBy(option.value as 'date' | 'title' | 'length')}
-                className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
-                  sortBy === option.value
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg ring-2 ring-blue-400/50'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
-                }`}
-                style={{ WebkitTapHighlightColor: 'transparent' }}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'length')}
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px] touch-manipulation"
+          >
+            <option value="date">최신순</option>
+            <option value="title">제목순</option>
+            <option value="length">길이순</option>
+          </select>
           
           <button
             onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
@@ -316,7 +340,12 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       </div>
 
       {/* AI 정보 목록 */}
-      <div className="space-y-4">
+      <div 
+        className="space-y-4"
+        onTouchStart={handleListTouchStart}
+        onTouchMove={handleListTouchMove}
+        onTouchEnd={handleListTouchEnd}
+      >
         {currentItems.map((info, index) => (
           <motion.div
             key={info.id}
@@ -332,8 +361,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             {/* 기본 정보 헤더 */}
             <div 
               className="p-4 cursor-pointer min-h-[60px] touch-manipulation webview-button"
-              onTouchStart={handleWebViewTouch(() => toggleExpanded(info.id))}
-              onClick={() => toggleExpanded(info.id)}
+              onTouchStart={handleWebViewTouch(() => {
+                if (isScrolling) return
+                toggleExpanded(info.id)
+              })}
+              onClick={() => {
+                if (isScrolling) return
+                toggleExpanded(info.id)
+              }}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <div className="flex items-start justify-between">
