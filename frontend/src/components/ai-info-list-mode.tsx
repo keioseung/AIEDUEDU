@@ -234,25 +234,33 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
         
         <div className="flex gap-2">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'length')}
-            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px] touch-manipulation"
-          >
-            <option value="date">최신순</option>
-            <option value="title">제목순</option>
-            <option value="length">길이순</option>
-          </select>
+          <div className="flex gap-2">
+            {[
+              { value: 'date', label: '최신순' },
+              { value: 'title', label: '제목순' },
+              { value: 'length', label: '길이순' }
+            ].map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setSortBy(option.value as 'date' | 'title' | 'length')}
+                className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[80px] ${
+                  sortBy === option.value
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg ring-2 ring-blue-400/50'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
           
           <button
-            onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
             onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-            className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] touch-manipulation webview-button ${
+            className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] ${
               showFavoritesOnly
                 ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50'
                 : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
             }`}
-            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <FaStar className="w-4 h-4" />
             즐겨찾기만
@@ -267,20 +275,15 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           {[10, 30, 50].map((size) => (
             <button
               key={size}
-              onTouchStart={handleWebViewTouch(() => {
-                setItemsPerPage(size)
-                setCurrentPage(1)
-              })}
               onClick={() => {
                 setItemsPerPage(size)
                 setCurrentPage(1)
               }}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[60px] touch-manipulation webview-button ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[60px] ${
                 itemsPerPage === size
                   ? 'bg-blue-500 text-white'
                   : 'bg-white/10 text-white/70 hover:bg-white/20'
               }`}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {size}개
             </button>
