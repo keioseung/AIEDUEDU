@@ -147,40 +147,39 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     }
 
     // 카운트다운 시작
-    const startCountdown = () => {
-      setCountdown(3)
-      const countdownInterval = setInterval(() => {
-        setCountdown(prev => {
-          if (prev <= 1) {
-            clearInterval(countdownInterval)
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
-
+    setCountdown(3)
+    
+    const countdownTimer = setTimeout(() => {
+      if (!autoPlay) return
+      
       // 카운트다운 완료 후 자동재생 시작
-      setTimeout(() => {
-        if (autoPlay) {
-          const playInterval = setInterval(() => {
-            if (!autoPlay || showFilters || showTermList) {
-              clearInterval(playInterval)
-              return
-            }
-            setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
-          }, autoPlayInterval)
-          
-          return () => clearInterval(playInterval)
+      const playInterval = setInterval(() => {
+        if (!autoPlay || showFilters || showTermList) {
+          clearInterval(playInterval)
+          return
         }
-      }, 3000)
-    }
-
-    startCountdown()
+        setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
+      }, autoPlayInterval)
+      
+      return () => clearInterval(playInterval)
+    }, 3000)
 
     return () => {
+      clearTimeout(countdownTimer)
       setCountdown(0)
     }
   }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
+
+  // 카운트다운 애니메이션
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(prev => prev > 0 ? prev - 1 : 0)
+      }, 1000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [countdown])
 
   // 터치 제스처 처리
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -586,8 +585,18 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               
               {/* 속도 조절 버튼 */}
               <button
-                onTouchStart={handleWebViewTouch(() => setShowSpeedControl(!showSpeedControl))}
-                onClick={() => setShowSpeedControl(!showSpeedControl)}
+                onTouchStart={handleWebViewTouch(() => {
+                  if (isProcessing) return
+                  setIsProcessing(true)
+                  setShowSpeedControl(!showSpeedControl)
+                  setTimeout(() => setIsProcessing(false), 500)
+                })}
+                onClick={() => {
+                  if (isProcessing) return
+                  setIsProcessing(true)
+                  setShowSpeedControl(!showSpeedControl)
+                  setTimeout(() => setIsProcessing(false), 500)
+                }}
                 className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-blue-600 transition-colors"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
@@ -630,8 +639,15 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             
             {/* 카운트다운 표시 */}
             {autoPlay && countdown > 0 && (
-              <div className="flex items-center justify-center w-12 h-12 bg-red-500/30 text-red-300 rounded-xl border border-red-500/50">
-                <span className="text-lg font-bold">{countdown}</span>
+              <div className="flex items-center justify-center w-16 h-16 bg-red-500/50 text-red-100 rounded-xl border-2 border-red-400/50 shadow-lg">
+                <span className="text-2xl font-bold">{countdown}</span>
+              </div>
+            )}
+            
+            {/* 자동재생 상태 표시 */}
+            {autoPlay && countdown === 0 && (
+              <div className="flex items-center justify-center w-16 h-16 bg-green-500/30 text-green-300 rounded-xl border border-green-500/50">
+                <span className="text-sm font-medium">재생중</span>
               </div>
             )}
             
