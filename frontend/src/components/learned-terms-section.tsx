@@ -39,6 +39,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   const [touchEnd, setTouchEnd] = useState(0)
   const [showSpeedControl, setShowSpeedControl] = useState(false)
   const [currentIntervalId, setCurrentIntervalId] = useState<NodeJS.Timeout | null>(null)
+  const [viewedTerms, setViewedTerms] = useState<Set<string>>(new Set())
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -120,6 +121,13 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       }
     }
   }, [])
+
+  // 현재 용어를 볼 때마다 viewedTerms에 추가
+  useEffect(() => {
+    if (currentTerm && currentTerm.term) {
+      setViewedTerms(prev => new Set([...prev, currentTerm.term]))
+    }
+  }, [currentTerm])
 
   // 즐겨찾기 저장
   const toggleFavorite = (term: string) => {
@@ -535,12 +543,12 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-white/60">{currentTermIndex + 1} / {filteredTerms.length}</span>
-              <span className="text-sm text-green-400 font-bold">{currentTermIndex + 1}개 학습완료</span>
+              <span className="text-sm text-green-400 font-bold">{viewedTerms.size}개 학습완료</span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
               <div
                 className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300"
-                style={{ width: `${((currentTermIndex + 1) / filteredTerms.length) * 100}%` }}
+                style={{ width: `${(viewedTerms.size / filteredTerms.length) * 100}%` }}
               />
             </div>
           </div>
@@ -843,9 +851,23 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-yellow-300" />
             <div>
               <div className="text-white font-semibold text-sm md:text-base">
-                {Math.round((filteredTerms.length / learnedData.total_terms) * 100)}%
+                {Math.round((viewedTerms.size / filteredTerms.length) * 100)}%
               </div>
-              <div className="text-white/60 text-xs md:text-sm">진행률</div>
+              <div className="text-white/60 text-xs md:text-sm">학습진행률</div>
+            </div>
+          </div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
+        >
+          <div className="flex items-center gap-2 md:gap-3">
+            <Brain className="w-5 h-5 md:w-6 md:h-6 text-emerald-300" />
+            <div>
+              <div className="text-white font-semibold text-sm md:text-base">{viewedTerms.size}</div>
+              <div className="text-white/60 text-xs md:text-sm">학습완료</div>
             </div>
           </div>
         </motion.div>
