@@ -122,12 +122,15 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     }
   }, [])
 
-  // 현재 용어를 볼 때마다 viewedTerms에 추가
+  // 현재 용어 인덱스가 변경될 때마다 viewedTerms에 추가
   useEffect(() => {
-    if (currentTerm && currentTerm.term) {
-      setViewedTerms(prev => new Set([...prev, currentTerm.term]))
+    if (filteredTerms.length > 0 && currentTermIndex < filteredTerms.length) {
+      const currentTerm = filteredTerms[currentTermIndex]
+      if (currentTerm && currentTerm.term) {
+        setViewedTerms(prev => new Set([...prev, currentTerm.term]))
+      }
     }
-  }, [currentTerm])
+  }, [currentTermIndex, filteredTerms])
 
   // 즐겨찾기 저장
   const toggleFavorite = (term: string) => {
