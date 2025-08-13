@@ -39,6 +39,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   const [touchEnd, setTouchEnd] = useState(0)
   const [countdown, setCountdown] = useState(0)
   const [showSpeedControl, setShowSpeedControl] = useState(false)
+  const [currentIntervalId, setCurrentIntervalId] = useState<NodeJS.Timeout | null>(null)
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -137,13 +138,27 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   useEffect(() => {
     if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) {
       setCountdown(0)
+      if (currentIntervalId) {
+        clearInterval(currentIntervalId)
+        setCurrentIntervalId(null)
+      }
       return
     }
     
     // 필터나 목록이 열려있으면 자동재생 중단
     if (showFilters || showTermList) {
       setCountdown(0)
+      if (currentIntervalId) {
+        clearInterval(currentIntervalId)
+        setCurrentIntervalId(null)
+      }
       return
+    }
+
+    // 기존 interval 정리
+    if (currentIntervalId) {
+      clearInterval(currentIntervalId)
+      setCurrentIntervalId(null)
     }
 
     // 첫 번째 카운트다운 시작
@@ -154,6 +169,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       const playInterval = setInterval(() => {
         if (!autoPlay || showFilters || showTermList) {
           clearInterval(playInterval)
+          setCurrentIntervalId(null)
           return
         }
         
@@ -164,7 +180,11 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         setCountdown(3)
       }, autoPlayInterval)
       
-      return () => clearInterval(playInterval)
+      setCurrentIntervalId(playInterval)
+      return () => {
+        clearInterval(playInterval)
+        setCurrentIntervalId(null)
+      }
     }
 
     // 3초 후 자동재생 시작
@@ -177,7 +197,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       clearTimeout(initialTimer)
       setCountdown(0)
     }
-  }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
+  }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList, currentIntervalId])
 
   // 카운트다운 애니메이션 (별도 처리)
   useEffect(() => {
@@ -319,6 +339,32 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   const changeSpeed = (newInterval: number) => {
     setAutoPlayInterval(newInterval)
     setShowSpeedControl(false)
+    
+    // 자동재생 중이면 즉시 새로운 속도로 재시작
+    if (autoPlay) {
+      if (currentIntervalId) {
+        clearInterval(currentIntervalId)
+        setCurrentIntervalId(null)
+      }
+      setCountdown(3)
+      
+      const newIntervalTimer = setTimeout(() => {
+        if (!autoPlay) return
+        
+        const playInterval = setInterval(() => {
+          if (!autoPlay || showFilters || showTermList) {
+            clearInterval(playInterval)
+            setCurrentIntervalId(null)
+            return
+          }
+          
+          setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
+          setCountdown(3)
+        }, newInterval)
+        
+        setCurrentIntervalId(playInterval)
+      }, 3000)
+    }
   }
 
   if (isLoading) {
@@ -614,7 +660,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               
               {/* 속도 조절 드롭다운 */}
               {showSpeedControl && (
-                <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-xl rounded-lg p-3 border border-white/20 z-10 min-w-[120px]">
+                <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-xl rounded-lg p-3 border border-white/20 z-10 min-w-[140px]">
                   <div className="text-white text-sm font-medium mb-2">재생 속도</div>
                   <div className="space-y-2">
                     <button
@@ -624,6 +670,14 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                       }`}
                     >
                       빠름 (1초)
+                    </button>
+                    <button
+                      onClick={() => changeSpeed(2000)}
+                      className={`w-full text-left px-2 py-1 rounded text-xs ${
+                        autoPlayInterval === 2000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
+                      }`}
+                    >
+                      빠름+ (2초)
                     </button>
                     <button
                       onClick={() => changeSpeed(3000)}
@@ -640,6 +694,22 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                       }`}
                     >
                       느림 (5초)
+                    </button>
+                    <button
+                      onClick={() => changeSpeed(7000)}
+                      className={`w-full text-left px-2 py-1 rounded text-xs ${
+                        autoPlayInterval === 7000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
+                      }`}
+                    >
+                      느림+ (7초)
+                    </button>
+                    <button
+                      onClick={() => changeSpeed(10000)}
+                      className={`w-full text-left px-2 py-1 rounded text-xs ${
+                        autoPlayInterval === 10000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
+                      }`}
+                    >
+                      매우 느림 (10초)
                     </button>
                   </div>
                 </div>
