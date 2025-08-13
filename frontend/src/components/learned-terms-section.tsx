@@ -449,13 +449,13 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                   <Calendar className="w-5 h-5" />
                   날짜별 필터
                 </h3>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onTouchStart={handleWebViewTouch(() => { setSelectedDate(null); setCurrentTermIndex(0); })}
                     onClick={() => { setSelectedDate(null); setCurrentTermIndex(0); }}
-                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[48px] webview-button ${
+                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[60px] webview-button ${
                       selectedDate === null
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
                         : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
                     }`}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -464,19 +464,26 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                   </button>
                   {learnedData.learned_dates.map((date) => {
                     const dateTerms = learnedData.terms_by_date[date] || []
+                    const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
+                      month: 'short',
+                      day: 'numeric'
+                    })
                     return (
                       <button
                         key={date}
                         onTouchStart={handleWebViewTouch(() => { setSelectedDate(date); setCurrentTermIndex(0); })}
                         onClick={() => { setSelectedDate(date); setCurrentTermIndex(0); }}
-                        className={`px-4 py-3 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[48px] webview-button ${
+                        className={`px-3 py-2 rounded-lg text-xs font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[50px] webview-button ${
                           selectedDate === date
-                            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
                             : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
                         }`}
                         style={{ WebkitTapHighlightColor: 'transparent' }}
                       >
-                        {date} ({dateTerms.length})
+                        <div className="flex flex-col items-center">
+                          <span className="text-xs font-bold">{formattedDate}</span>
+                          <span className="text-xs opacity-80">({dateTerms.length})</span>
+                        </div>
                       </button>
                     )
                   })}
