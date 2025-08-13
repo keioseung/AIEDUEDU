@@ -37,7 +37,6 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   const [showTermList, setShowTermList] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
-  const [countdown, setCountdown] = useState(0)
   const [showSpeedControl, setShowSpeedControl] = useState(false)
   const [currentIntervalId, setCurrentIntervalId] = useState<NodeJS.Timeout | null>(null)
 
@@ -137,7 +136,6 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
   // 자동 재생 기능 (단순화)
   useEffect(() => {
     if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) {
-      setCountdown(0)
       if (currentIntervalId) {
         clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
@@ -147,7 +145,6 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     
     // 필터나 목록이 열려있으면 자동재생 중단
     if (showFilters || showTermList) {
-      setCountdown(0)
       if (currentIntervalId) {
         clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
@@ -161,26 +158,20 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       setCurrentIntervalId(null)
     }
 
-    // 즉시 카운트다운 시작
-    setCountdown(autoPlayInterval / 1000)
-    
-    // 카운트다운 완료 후 다음 용어로 이동하는 함수
-    const moveToNextTerm = () => {
+    // 자동재생 시작
+    const startAutoPlay = () => {
       if (!autoPlay || showFilters || showTermList) return
       
       // 다음 용어로 이동
       setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
       
-      // 다음 용어를 위한 카운트다운 시작
-      setCountdown(autoPlayInterval / 1000)
-      
       // 다음 타이머 설정
-      const nextTimer = setTimeout(moveToNextTerm, autoPlayInterval)
+      const nextTimer = setTimeout(startAutoPlay, autoPlayInterval)
       setCurrentIntervalId(nextTimer)
     }
     
     // 첫 번째 타이머 시작
-    const firstTimer = setTimeout(moveToNextTerm, autoPlayInterval)
+    const firstTimer = setTimeout(startAutoPlay, autoPlayInterval)
     setCurrentIntervalId(firstTimer)
 
     return () => {
@@ -188,20 +179,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
       }
-      setCountdown(0)
     }
   }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
-
-  // 카운트다운 애니메이션 (별도 처리)
-  useEffect(() => {
-    if (countdown > 0 && autoPlayInterval > 1000) {
-      const timer = setTimeout(() => {
-        setCountdown(prev => prev > 0 ? prev - 1 : 0)
-      }, 1000)
-      
-      return () => clearTimeout(timer)
-    }
-  }, [countdown, autoPlayInterval])
 
   // 터치 제스처 처리
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -340,26 +319,20 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         setCurrentIntervalId(null)
       }
       
-      // 즉시 카운트다운 시작
-      setCountdown(newInterval / 1000)
-      
-      // 카운트다운 완료 후 다음 용어로 이동하는 함수
-      const moveToNextTerm = () => {
+      // 자동재생 시작
+      const startAutoPlay = () => {
         if (!autoPlay || showFilters || showTermList) return
         
         // 다음 용어로 이동
         setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
         
-        // 다음 용어를 위한 카운트다운 시작
-        setCountdown(newInterval / 1000)
-        
         // 다음 타이머 설정
-        const nextTimer = setTimeout(moveToNextTerm, newInterval)
+        const nextTimer = setTimeout(startAutoPlay, newInterval)
         setCurrentIntervalId(nextTimer)
       }
       
       // 첫 번째 타이머 시작
-      const firstTimer = setTimeout(moveToNextTerm, newInterval)
+      const firstTimer = setTimeout(startAutoPlay, newInterval)
       setCurrentIntervalId(firstTimer)
     }
   }
@@ -713,10 +686,10 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               )}
             </div>
             
-            {/* 카운트다운 표시 */}
-            {autoPlay && countdown > 0 && autoPlayInterval > 1000 && (
-              <div className="flex items-center justify-center w-16 h-16 bg-red-500/50 text-red-100 rounded-xl border-2 border-red-400/50 shadow-lg">
-                <span className="text-2xl font-bold">{countdown}</span>
+            {/* 자동재생 상태 표시 */}
+            {autoPlay && (
+              <div className="flex items-center justify-center w-16 h-16 bg-green-500/30 text-green-300 rounded-xl border border-green-500/50">
+                <span className="text-sm font-medium">재생중</span>
               </div>
             )}
             
