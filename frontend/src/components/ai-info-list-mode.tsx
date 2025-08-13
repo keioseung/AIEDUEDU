@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaCalendar, FaBookOpen, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { FaRobot, FaCalendar, FaBookOpen, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 
@@ -28,6 +28,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'length'>('date')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
   // 모든 AI 정보 가져오기 (getAll API 시도)
   const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
@@ -125,6 +126,17 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
   }
 
+  // 항목 확장/축소 토글
+  const toggleExpanded = (infoId: string) => {
+    const newExpanded = new Set(expandedItems)
+    if (newExpanded.has(infoId)) {
+      newExpanded.delete(infoId)
+    } else {
+      newExpanded.add(infoId)
+    }
+    setExpandedItems(newExpanded)
+  }
+
   // 필터링 및 정렬된 AI 정보
   const filteredAIInfo = (() => {
     let filtered = actualAIInfo
@@ -217,7 +229,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white"
+              className="p-2 text-white/50 hover:text-white transition-colors"
             >
               <FaTimes className="w-5 h-5" />
             </button>
@@ -227,7 +239,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         <div className="flex gap-2">
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'length')}
             className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
             <option value="date">최신순</option>
@@ -237,7 +249,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           
           <button
             onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-            className={`px-4 py-3 rounded-lg font-medium transition flex items-center gap-2 ${
+            className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
               showFavoritesOnly
                 ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50'
                 : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
@@ -273,59 +285,108 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       </div>
 
       {/* AI 정보 목록 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="space-y-4">
         {currentItems.map((info, index) => (
-          <div
+          <motion.div
             key={info.id}
-            className="p-4 rounded-xl cursor-pointer transition-all border bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10"
-            onClick={() => selectInfo(info)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className={`rounded-xl border transition-all ${
+              expandedItems.has(info.id)
+                ? 'bg-white/15 border-blue-400/50 shadow-lg shadow-blue-500/20'
+                : 'bg-white/5 border-white/10 hover:bg-white/10'
+            }`}
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <h3 className="font-bold text-white text-lg mb-2 line-clamp-2">{info.title}</h3>
-                <div className="flex items-center gap-2 text-white/60 text-sm mb-2">
-                  <FaCalendar className="w-3 h-3" />
-                  <span>{info.date}</span>
+            {/* 기본 정보 헤더 */}
+            <div 
+              className="p-4 cursor-pointer"
+              onClick={() => toggleExpanded(info.id)}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <h3 className="font-bold text-white text-lg mb-2">{info.title}</h3>
+                  <div className="flex items-center gap-2 text-white/60 text-sm mb-2">
+                    <FaCalendar className="w-3 h-3" />
+                    <span>{info.date}</span>
+                  </div>
+                  <p className="text-white/70 text-sm line-clamp-2">{info.content}</p>
                 </div>
-                <p className="text-white/70 text-sm line-clamp-3">{info.content}</p>
+                
+                <div className="flex items-center gap-2 ml-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toggleFavorite(info.id)
+                    }}
+                    className={`p-2 rounded-lg transition-all ${
+                      favoriteInfos.has(info.id)
+                        ? 'text-yellow-400 bg-yellow-500/20'
+                        : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
+                    }`}
+                  >
+                    <FaStar className="w-4 h-4" fill={favoriteInfos.has(info.id) ? 'currentColor' : 'none'} />
+                  </button>
+                  
+                  <div className="text-white/40">
+                    {expandedItems.has(info.id) ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                  </div>
+                </div>
               </div>
-              
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  toggleFavorite(info.id)
-                }}
-                className={`p-2 rounded-lg transition-all ${
-                  favoriteInfos.has(info.id)
-                    ? 'text-yellow-400 bg-yellow-500/20'
-                    : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
-                }`}
-              >
-                <FaStar className="w-4 h-4" fill={favoriteInfos.has(info.id) ? 'currentColor' : 'none'} />
-              </button>
             </div>
-            
-            {info.terms.length > 0 && (
-              <div className="mt-3">
-                <div className="text-white/60 text-xs mb-2">관련 용어 ({info.terms.length}개)</div>
-                <div className="flex flex-wrap gap-1">
-                  {info.terms.slice(0, 3).map((term, termIndex) => (
-                    <span
-                      key={termIndex}
-                      className="px-2 py-1 bg-white/10 text-white/70 text-xs rounded"
-                    >
-                      {term.term}
-                    </span>
-                  ))}
-                  {info.terms.length > 3 && (
-                    <span className="px-2 py-1 bg-white/10 text-white/50 text-xs rounded">
-                      +{info.terms.length - 3}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+
+            {/* 확장된 상세 내용 */}
+            <AnimatePresence>
+              {expandedItems.has(info.id) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-4 pb-4 border-t border-white/10 pt-4">
+                    {/* 전체 내용 */}
+                    <div className="mb-6">
+                      <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                        <FaBookOpen className="text-blue-400" />
+                        📖 전체 내용
+                      </h4>
+                      <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                        <div className="text-white/90 leading-relaxed whitespace-pre-line">
+                          {info.content}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 관련 용어 */}
+                    {info.terms.length > 0 && (
+                      <div>
+                        <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                          <FaBookOpen className="text-emerald-400" />
+                          📚 관련 용어 학습 ({info.terms.length}개)
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {info.terms.map((term, termIndex) => (
+                            <div
+                              key={termIndex}
+                              className="bg-white/10 rounded-lg p-3 border border-white/20 hover:bg-white/15 transition-all"
+                            >
+                              <div className="font-bold text-white text-base mb-2 flex items-center gap-2">
+                                <span className="text-emerald-400 text-sm">#{termIndex + 1}</span>
+                                {term.term}
+                              </div>
+                              <div className="text-white/80 leading-relaxed text-sm">{term.description}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         ))}
       </div>
 
@@ -386,76 +447,6 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           </button>
         </div>
       )}
-
-      {/* 선택된 정보 상세 보기 */}
-      <AnimatePresence>
-        {selectedInfo && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={closeInfo}
-          >
-            <motion.div
-              className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/20"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex-1">
-                  <h2 className="text-3xl font-bold text-white mb-3">{selectedInfo.title}</h2>
-                  <div className="flex items-center gap-4 text-white/60">
-                    <div className="flex items-center gap-2">
-                      <FaCalendar className="w-4 h-4" />
-                      <span>{selectedInfo.date}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FaBookOpen className="w-4 h-4" />
-                      <span>정보 {selectedInfo.info_index + 1}</span>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={closeInfo}
-                  className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-                >
-                  <FaTimes className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="text-white/80 text-lg leading-relaxed mb-8 whitespace-pre-line bg-white/5 p-6 rounded-xl border border-white/10">
-                <h3 className="text-xl font-bold text-white mb-4">📖 전체 내용</h3>
-                <div className="text-white/90 leading-relaxed">
-                  {selectedInfo.content}
-                </div>
-              </div>
-
-              {selectedInfo.terms.length > 0 && (
-                <div className="bg-white/5 p-6 rounded-xl border border-white/10">
-                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <FaBookOpen className="text-blue-400" />
-                    📚 관련 용어 학습 ({selectedInfo.terms.length}개)
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedInfo.terms.map((term, index) => (
-                      <div
-                        key={index}
-                        className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all"
-                      >
-                        <div className="font-bold text-white text-lg mb-3 flex items-center gap-2">
-                          <span className="text-blue-400 text-sm">#{index + 1}</span>
-                          {term.term}
-                        </div>
-                        <div className="text-white/80 leading-relaxed">{term.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
