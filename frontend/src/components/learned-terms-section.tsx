@@ -562,7 +562,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-white/60">{currentTermIndex + 1} / {filteredTerms.length}</span>
-              <span className="text-sm text-green-400 font-bold">{favoriteTerms.size}개 학습완료</span>
+              <span className="text-sm text-green-400 font-bold">{currentTermIndex + 1}개 학습완료</span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
               <div
