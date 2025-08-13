@@ -444,7 +444,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
              style={{ WebkitTapHighlightColor: 'transparent' }}
            >
              <Filter className={`w-4 h-4 md:w-5 md:h-5 ${showFilters ? 'text-white' : 'text-white/80'}`} />
-             <span className="inline">{showFilters ? '필터 열림' : '필터'}</span>
+                           <span className="inline">필터</span>
            </button>
            <button
              onTouchStart={handleWebViewTouch(toggleTermList)}
@@ -457,7 +457,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
              style={{ WebkitTapHighlightColor: 'transparent' }}
            >
              <Menu className={`w-4 h-4 md:w-5 md:h-5 ${showTermList ? 'text-white' : 'text-white/80'}`} />
-             <span className="inline">{showTermList ? '목록 열림' : '목록'}</span>
+                           <span className="inline">목록</span>
            </button>
         </div>
       </div>
