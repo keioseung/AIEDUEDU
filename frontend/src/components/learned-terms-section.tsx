@@ -733,13 +733,6 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               </div>
             )}
             
-            {/* 자동재생 상태 표시 */}
-            {autoPlay && countdown === 0 && (
-              <div className="flex items-center justify-center w-16 h-16 bg-green-500/30 text-green-300 rounded-xl border border-green-500/50">
-                <span className="text-sm font-medium">재생중</span>
-              </div>
-            )}
-            
             <button
               onTouchStart={handleWebViewTouch(handlePrevTermSafe)}
               onClick={handlePrevTermSafe}
