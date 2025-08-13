@@ -139,7 +139,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) {
       setCountdown(0)
       if (currentIntervalId) {
-        clearInterval(currentIntervalId)
+        clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
       }
       return
@@ -149,7 +149,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     if (showFilters || showTermList) {
       setCountdown(0)
       if (currentIntervalId) {
-        clearInterval(currentIntervalId)
+        clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
       }
       return
@@ -157,12 +157,12 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
 
     // 기존 interval 정리
     if (currentIntervalId) {
-      clearInterval(currentIntervalId)
+      clearTimeout(currentIntervalId)
       setCurrentIntervalId(null)
     }
 
-    // 첫 번째 카운트다운 시작
-    setCountdown(3)
+    // 설정한 시간부터 카운트다운 시작
+    setCountdown(autoPlayInterval / 1000)
     
     // 카운트다운 완료 후 자동재생 시작
     const countdownTimer = setTimeout(() => {
@@ -176,8 +176,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           // 다음 용어로 이동
           setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
           
-          // 다음 용어를 위한 카운트다운 시작
-          setCountdown(3)
+          // 다음 용어를 위한 카운트다운 시작 (설정한 시간부터)
+          setCountdown(autoPlayInterval / 1000)
           
           // 재귀적으로 다음 타이머 시작
           startNextTermTimer()
@@ -188,7 +188,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
       
       // 첫 번째 타이머 시작
       startNextTermTimer()
-    }, 3000)
+    }, autoPlayInterval)
 
     return () => {
       clearTimeout(countdownTimer)
@@ -347,9 +347,9 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
       }
-      setCountdown(3)
+      setCountdown(newInterval / 1000)
       
-      // 3초 후 새로운 속도로 자동재생 시작
+      // 설정한 시간 후 새로운 속도로 자동재생 시작
       const newIntervalTimer = setTimeout(() => {
         if (!autoPlay) return
         
@@ -361,8 +361,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             // 다음 용어로 이동
             setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
             
-            // 다음 용어를 위한 카운트다운 시작
-            setCountdown(3)
+            // 다음 용어를 위한 카운트다운 시작 (설정한 시간부터)
+            setCountdown(newInterval / 1000)
             
             // 재귀적으로 다음 타이머 시작
             startNextTermTimer()
@@ -373,7 +373,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         
         // 첫 번째 타이머 시작
         startNextTermTimer()
-      }, 3000)
+      }, newInterval)
     }
   }
 
@@ -679,7 +679,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         autoPlayInterval === 1000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      빠름 (1초)
+                      1초
                     </button>
                     <button
                       onClick={() => changeSpeed(2000)}
@@ -687,7 +687,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         autoPlayInterval === 2000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      빠름+ (2초)
+                      2초
                     </button>
                     <button
                       onClick={() => changeSpeed(3000)}
@@ -695,7 +695,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         autoPlayInterval === 3000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      보통 (3초)
+                      3초
                     </button>
                     <button
                       onClick={() => changeSpeed(5000)}
@@ -703,7 +703,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         autoPlayInterval === 5000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      느림 (5초)
+                      5초
                     </button>
                     <button
                       onClick={() => changeSpeed(7000)}
@@ -711,7 +711,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         autoPlayInterval === 7000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      느림+ (7초)
+                      7초
                     </button>
                     <button
                       onClick={() => changeSpeed(10000)}
@@ -719,7 +719,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         autoPlayInterval === 10000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      매우 느림 (10초)
+                      10초
                     </button>
                   </div>
                 </div>
