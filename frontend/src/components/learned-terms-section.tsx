@@ -394,7 +394,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
 
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-6 md:p-8">
+      <div className="glass rounded-2xl p-6 md:p-8 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <p className="text-white/70">학습한 용어를 불러오는 중...</p>
@@ -405,7 +405,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
 
   if (!learnedData?.terms || learnedData.terms.length === 0) {
     return (
-      <div className="glass rounded-2xl p-6 md:p-8">
+      <div className="glass rounded-2xl p-6 md:p-8 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
           <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-60" />
           <h3 className="text-xl font-semibold mb-2">학습한 용어가 없습니다</h3>
