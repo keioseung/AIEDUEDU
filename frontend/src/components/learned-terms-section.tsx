@@ -433,24 +433,32 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           <span className="sm:hidden">용어 학습</span>
         </h2>
         <div className="flex items-center gap-3">
-          <button
-            onTouchStart={handleWebViewTouch(toggleFilters)}
-            onClick={toggleFilters}
-            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button"
-            style={{ WebkitTapHighlightColor: 'transparent' }}
-          >
-            <Filter className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="inline">필터</span>
-          </button>
-          <button
-            onTouchStart={handleWebViewTouch(toggleTermList)}
-            onClick={toggleTermList}
-            className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button"
-            style={{ WebkitTapHighlightColor: 'transparent' }}
-          >
-            <Menu className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="inline">목록</span>
-          </button>
+                     <button
+             onTouchStart={handleWebViewTouch(toggleFilters)}
+             onClick={toggleFilters}
+             className={`px-4 md:px-5 py-3 md:py-4 rounded-xl transition-all text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button ${
+               showFilters
+                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg ring-2 ring-blue-400/50 border border-blue-300/30'
+                 : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
+             }`}
+             style={{ WebkitTapHighlightColor: 'transparent' }}
+           >
+             <Filter className={`w-4 h-4 md:w-5 md:h-5 ${showFilters ? 'text-white' : 'text-white/80'}`} />
+             <span className="inline">{showFilters ? '필터 열림' : '필터'}</span>
+           </button>
+           <button
+             onTouchStart={handleWebViewTouch(toggleTermList)}
+             onClick={toggleTermList}
+             className={`px-4 md:px-5 py-3 md:py-4 rounded-xl transition-all text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button ${
+               showTermList
+                 ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg ring-2 ring-emerald-400/50 border border-emerald-300/30'
+                 : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
+             }`}
+             style={{ WebkitTapHighlightColor: 'transparent' }}
+           >
+             <Menu className={`w-4 h-4 md:w-5 md:h-5 ${showTermList ? 'text-white' : 'text-white/80'}`} />
+             <span className="inline">{showTermList ? '목록 열림' : '목록'}</span>
+           </button>
         </div>
       </div>
 
