@@ -249,7 +249,11 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           
           <button
             onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-            className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
+            onTouchStart={(e) => {
+              e.preventDefault()
+              setShowFavoritesOnly(!showFavoritesOnly)
+            }}
+            className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] touch-manipulation ${
               showFavoritesOnly
                 ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50'
                 : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
@@ -272,7 +276,12 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                 setItemsPerPage(size)
                 setCurrentPage(1)
               }}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+              onTouchStart={(e) => {
+                e.preventDefault()
+                setItemsPerPage(size)
+                setCurrentPage(1)
+              }}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[60px] touch-manipulation ${
                 itemsPerPage === size
                   ? 'bg-blue-500 text-white'
                   : 'bg-white/10 text-white/70 hover:bg-white/20'
@@ -300,8 +309,12 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           >
             {/* 기본 정보 헤더 */}
             <div 
-              className="p-4 cursor-pointer"
+              className="p-4 cursor-pointer min-h-[60px] touch-manipulation"
               onClick={() => toggleExpanded(info.id)}
+              onTouchStart={(e) => {
+                e.preventDefault()
+                toggleExpanded(info.id)
+              }}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -319,7 +332,12 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                       e.stopPropagation()
                       toggleFavorite(info.id)
                     }}
-                    className={`p-2 rounded-lg transition-all ${
+                    onTouchStart={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      toggleFavorite(info.id)
+                    }}
+                    className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation ${
                       favoriteInfos.has(info.id)
                         ? 'text-yellow-400 bg-yellow-500/20'
                         : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
