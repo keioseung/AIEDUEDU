@@ -29,6 +29,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'length'>('date')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // 웹뷰 터치 이벤트 핸들러
   const handleWebViewTouch = (callback: (e?: React.TouchEvent) => void) => (e: React.TouchEvent) => {
@@ -244,7 +245,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'length')}
-            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px]"
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px] touch-manipulation"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <option value="date">최신순</option>
             <option value="title">제목순</option>
@@ -252,8 +254,18 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           </select>
           
           <button
-            onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
-            onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+            onTouchStart={handleWebViewTouch(() => {
+              if (isProcessing) return
+              setIsProcessing(true)
+              setShowFavoritesOnly(!showFavoritesOnly)
+              setTimeout(() => setIsProcessing(false), 300)
+            })}
+            onClick={() => {
+              if (isProcessing) return
+              setIsProcessing(true)
+              setShowFavoritesOnly(!showFavoritesOnly)
+              setTimeout(() => setIsProcessing(false), 300)
+            }}
             className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] touch-manipulation webview-button ${
               showFavoritesOnly
                 ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50'

@@ -31,6 +31,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   const [showRelearnButton, setShowRelearnButton] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [isFavorite, setIsFavorite] = useState(false)
   const queryClient = useQueryClient()
   const updateProgressMutation = useUpdateUserProgress()
   const checkAchievementsMutation = useCheckAchievements()
@@ -54,6 +55,17 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       } catch {}
     }
   }, [sessionId, date, index])
+
+  // 즐겨찾기 상태 불러오기
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const favorites = JSON.parse(localStorage.getItem('favoriteAIInfos') || '[]')
+        const favoriteKey = `${date}_${index}`
+        setIsFavorite(favorites.includes(favoriteKey))
+      } catch {}
+    }
+  }, [date, index])
   
   // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
   const actualLearnedTerms = new Set<string>()
@@ -96,6 +108,26 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
 
     setTouchStart(null)
     setTouchEnd(null)
+  }
+
+  // 즐겨찾기 토글
+  const toggleFavorite = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const favorites = JSON.parse(localStorage.getItem('favoriteAIInfos') || '[]')
+        const favoriteKey = `${date}_${index}`
+        
+        if (isFavorite) {
+          const newFavorites = favorites.filter((key: string) => key !== favoriteKey)
+          localStorage.setItem('favoriteAIInfos', JSON.stringify(newFavorites))
+          setIsFavorite(false)
+        } else {
+          favorites.push(favoriteKey)
+          localStorage.setItem('favoriteAIInfos', JSON.stringify(favorites))
+          setIsFavorite(true)
+        }
+      } catch {}
+    }
   }
   
   // prop이 바뀌거나 forceUpdate, selectedDate가 바뀌면 동기화
@@ -257,6 +289,18 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
               {isLearned ? '학습 완료' : '학습 필요'}
             </p>
           </div>
+        </div>
+        <div className="flex-shrink-0">
+          <button
+            onClick={toggleFavorite}
+            className={`p-2 rounded-lg transition-all ${
+              isFavorite
+                ? 'text-yellow-400 bg-yellow-500/20'
+                : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
+            }`}
+          >
+            <Star className="w-4 h-4" fill={isFavorite ? 'currentColor' : 'none'} />
+          </button>
         </div>
       </div>
       
