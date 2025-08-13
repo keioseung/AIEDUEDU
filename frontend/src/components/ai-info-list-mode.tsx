@@ -206,13 +206,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       <div className="glass rounded-2xl p-8">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white/70">AI 정보를 불러오는 중...</p>
+          <p className="text-white/70 text-lg mb-2">AI 정보를 불러오는 중...</p>
+          <p className="text-white/50 text-sm">잠시만 기다려주세요</p>
         </div>
       </div>
     )
   }
 
-  if (actualAIInfo.length === 0) {
+  if (actualAIInfo.length === 0 && !isLoading) {
     return (
       <div className="glass rounded-2xl p-8">
         <div className="text-center text-white">
@@ -230,7 +231,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
           <FaRobot className="text-blue-400" />
-          AI 정보 목록 모드
+          AI 정보 전체 목록 모드
         </h2>
         <div className="text-white/60 text-sm">
           총 {filteredAIInfo.length}개 정보
