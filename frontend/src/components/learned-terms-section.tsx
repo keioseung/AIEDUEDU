@@ -760,14 +760,22 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                         ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50'
                         : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border border-white/10'
                     }`}
-                    onTouchStart={handleWebViewTouch(() => {
-                      setCurrentTermIndex(index)
-                      // 목록을 닫지 않음
-                    })}
-                    onClick={() => {
-                      setCurrentTermIndex(index)
-                      // 목록을 닫지 않음
-                    }}
+                                         onTouchStart={handleWebViewTouch(() => {
+                       // 목록에서 용어 선택 시 자동재생 일시 중단
+                       if (autoPlay) {
+                         setAutoPlay(false)
+                       }
+                       setCurrentTermIndex(index)
+                       // 목록을 닫지 않음
+                     })}
+                     onClick={() => {
+                       // 목록에서 용어 선택 시 자동재생 일시 중단
+                       if (autoPlay) {
+                         setAutoPlay(false)
+                       }
+                       setCurrentTermIndex(index)
+                       // 목록을 닫지 않음
+                     }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     <div className="flex items-center justify-between mb-1">
