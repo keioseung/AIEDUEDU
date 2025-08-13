@@ -459,18 +459,20 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             exit={{ opacity: 0, height: 0 }}
             className="bg-white/5 rounded-xl p-4 space-y-4"
           >
-            {/* 날짜별 필터 */}
-            {learnedData.learned_dates.length > 1 && (
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  날짜별 필터
-                </h3>
-                                 <div className="flex flex-wrap gap-1.5">
+                         {/* 날짜별 필터 */}
+             {learnedData.learned_dates.length > 1 && (
+               <div>
+                 <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                   <Calendar className="w-5 h-5" />
+                   날짜별 필터
+                 </h3>
+                 
+                 {/* 전체 버튼 - 제일 위에 배치 */}
+                 <div className="mb-4">
                    <button
                      onTouchStart={handleWebViewTouch(() => { setSelectedDate(null); setCurrentTermIndex(0); })}
                      onClick={() => { setSelectedDate(null); setCurrentTermIndex(0); }}
-                     className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all touch-manipulation select-none min-h-[36px] min-w-[52px] webview-button ${
+                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button ${
                        selectedDate === null
                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md ring-2 ring-blue-400/30'
                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
@@ -478,38 +480,73 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
                      style={{ WebkitTapHighlightColor: 'transparent' }}
                    >
                      <div className="flex flex-col items-center">
-                       <span className="text-xs font-bold">전체</span>
+                       <span className="text-sm font-bold">전체</span>
                        <span className="text-xs opacity-90">({learnedData.total_terms})</span>
                      </div>
                    </button>
-                   {learnedData.learned_dates.map((date) => {
-                     const dateTerms = learnedData.terms_by_date[date] || []
-                     const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
-                       month: 'short',
-                       day: 'numeric'
-                     })
-                     return (
-                       <button
-                         key={date}
-                         onTouchStart={handleWebViewTouch(() => { setSelectedDate(date); setCurrentTermIndex(0); })}
-                         onClick={() => { setSelectedDate(date); setCurrentTermIndex(0); }}
-                         className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all touch-manipulation select-none min-h-[36px] min-w-[44px] webview-button ${
-                           selectedDate === date
-                             ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md ring-2 ring-green-400/30'
-                             : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
-                         }`}
-                         style={{ WebkitTapHighlightColor: 'transparent' }}
-                       >
-                         <div className="flex flex-col items-center">
-                           <span className="text-xs font-bold leading-tight">{formattedDate}</span>
-                           <span className="text-xs opacity-90 leading-tight">({dateTerms.length})</span>
-                         </div>
-                       </button>
-                     )
-                   })}
                  </div>
-              </div>
-            )}
+                 
+                 {/* 월별 구분된 날짜 필터 */}
+                 {(() => {
+                   // 날짜를 월별로 그룹화
+                   const monthlyGroups = new Map<string, { month: string, dates: string[], totalTerms: number }>()
+                   
+                   learnedData.learned_dates.forEach(date => {
+                     const dateObj = new Date(date)
+                     const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`
+                     const monthLabel = dateObj.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })
+                     
+                     if (!monthlyGroups.has(monthKey)) {
+                       monthlyGroups.set(monthKey, { month: monthLabel, dates: [], totalTerms: 0 })
+                     }
+                     
+                     const group = monthlyGroups.get(monthKey)!
+                     group.dates.push(date)
+                     group.totalTerms += (learnedData.terms_by_date[date] || []).length
+                   })
+                   
+                   // 월별로 정렬 (최신순)
+                   const sortedMonths = Array.from(monthlyGroups.entries()).sort((a, b) => b[0].localeCompare(a[0]))
+                   
+                   return sortedMonths.map(([monthKey, group]) => (
+                     <div key={monthKey} className="mb-4">
+                       <div className="flex items-center gap-2 mb-2">
+                         <div className="w-2 h-2 bg-white/30 rounded-full"></div>
+                         <span className="text-sm font-medium text-white/80">{group.month}</span>
+                         <span className="text-xs text-white/50">({group.totalTerms}개)</span>
+                       </div>
+                       <div className="flex flex-wrap gap-1.5 ml-4">
+                         {group.dates.map((date) => {
+                           const dateTerms = learnedData.terms_by_date[date] || []
+                           const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
+                             month: 'short',
+                             day: 'numeric'
+                           })
+                           return (
+                             <button
+                               key={date}
+                               onTouchStart={handleWebViewTouch(() => { setSelectedDate(date); setCurrentTermIndex(0); })}
+                               onClick={() => { setSelectedDate(date); setCurrentTermIndex(0); }}
+                               className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all touch-manipulation select-none min-h-[36px] min-w-[44px] webview-button ${
+                                 selectedDate === date
+                                   ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md ring-2 ring-green-400/30'
+                                   : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
+                               }`}
+                               style={{ WebkitTapHighlightColor: 'transparent' }}
+                             >
+                               <div className="flex flex-col items-center">
+                                 <span className="text-xs font-bold leading-tight">{formattedDate}</span>
+                                 <span className="text-xs opacity-90 leading-tight">({dateTerms.length})</span>
+                               </div>
+                             </button>
+                           )
+                         })}
+                       </div>
+                     </div>
+                   ))
+                 })()}
+               </div>
+             )}
             
             {/* 정렬 및 필터 옵션 */}
             <div className="flex flex-wrap gap-3">
