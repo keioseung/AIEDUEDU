@@ -430,9 +430,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           <span className="hidden sm:inline">{isLearned ? '학습완료' : '학습완료'}</span>
           <span className="sm:hidden">{isLearned ? '완료' : '학습'}</span>
         </button>
-        <button className="p-2.5 md:p-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all touch-optimized mobile-touch-target">
-          <ExternalLink className="w-4 h-4" />
-        </button>
       </div>
 
       {/* 학습 완료 알림 */}
