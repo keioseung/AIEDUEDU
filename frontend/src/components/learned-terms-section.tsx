@@ -133,14 +133,17 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
 
   // 자동 재생 기능
   useEffect(() => {
-    if (!autoPlay || !learnedData?.terms) return
+    if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) return
+    
+    // 필터나 목록이 열려있으면 자동재생 중단
+    if (showFilters || showTermList) return
 
     const interval = setInterval(() => {
       setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
     }, autoPlayInterval)
 
     return () => clearInterval(interval)
-  }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length])
+  }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
 
   // 터치 제스처 처리
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -223,6 +226,50 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     callback(e)
   }
 
+  // 버튼 중복 클릭 방지
+  const [isProcessing, setIsProcessing] = useState(false)
+  
+  // 필터 토글 함수
+  const toggleFilters = () => {
+    if (isProcessing) return
+    setIsProcessing(true)
+    setShowFilters(!showFilters)
+    // 중복 클릭 방지를 위한 딜레이
+    setTimeout(() => setIsProcessing(false), 300)
+  }
+  
+  // 목록 토글 함수
+  const toggleTermList = () => {
+    if (isProcessing) return
+    setIsProcessing(true)
+    setShowTermList(!showTermList)
+    // 중복 클릭 방지를 위한 딜레이
+    setTimeout(() => setIsProcessing(false), 300)
+  }
+  
+  // 이전/다음 용어 이동 함수 (중복 방지)
+  const handlePrevTermSafe = () => {
+    if (isProcessing || filteredTerms.length === 0) return
+    setIsProcessing(true)
+    handlePrevTerm()
+    setTimeout(() => setIsProcessing(false), 200)
+  }
+  
+  const handleNextTermSafe = () => {
+    if (isProcessing || filteredTerms.length === 0) return
+    setIsProcessing(true)
+    handleNextTerm()
+    setTimeout(() => setIsProcessing(false), 200)
+  }
+  
+  // 자동재생 토글 함수 (중복 방지)
+  const toggleAutoPlaySafe = () => {
+    if (isProcessing || filteredTerms.length === 0) return
+    setIsProcessing(true)
+    setAutoPlay(!autoPlay)
+    setTimeout(() => setIsProcessing(false), 300)
+  }
+
   if (isLoading) {
     return (
       <div className="glass rounded-2xl p-6 md:p-8">
@@ -265,8 +312,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         </h2>
         <div className="flex items-center gap-3">
           <button
-            onTouchStart={handleWebViewTouch(() => setShowFilters(!showFilters))}
-            onClick={() => setShowFilters(!showFilters)}
+            onTouchStart={handleWebViewTouch(toggleFilters)}
+            onClick={toggleFilters}
             className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
@@ -274,8 +321,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
             <span className="inline">필터</span>
           </button>
           <button
-            onTouchStart={handleWebViewTouch(() => setShowTermList(!showTermList))}
-            onClick={() => setShowTermList(!showTermList)}
+            onTouchStart={handleWebViewTouch(toggleTermList)}
+            onClick={toggleTermList}
             className="px-4 md:px-5 py-3 md:py-4 bg-white/10 rounded-xl hover:bg-white/20 active:bg-white/30 transition-all text-white text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
@@ -479,8 +526,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           </div>
           <div className="flex gap-3">
             <button
-              onTouchStart={handleWebViewTouch(() => setAutoPlay(!autoPlay))}
-              onClick={() => setAutoPlay(!autoPlay)}
+              onTouchStart={handleWebViewTouch(toggleAutoPlaySafe)}
+              onClick={toggleAutoPlaySafe}
               className={`p-3 rounded-xl transition-all font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button ${
                 autoPlay
                   ? 'bg-red-500/30 text-red-300 border border-red-500/50'
@@ -493,8 +540,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               <span className="hidden sm:inline">{autoPlay ? '정지' : '자동재생'}</span>
             </button>
             <button
-              onTouchStart={handleWebViewTouch(handlePrevTerm)}
-              onClick={handlePrevTerm}
+              onTouchStart={handleWebViewTouch(handlePrevTermSafe)}
+              onClick={handlePrevTermSafe}
               className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 active:bg-white/30 transition-all font-medium touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button"
               disabled={filteredTerms.length === 0}
               style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -502,8 +549,8 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
-              onTouchStart={handleWebViewTouch(handleNextTerm)}
-              onClick={handleNextTerm}
+              onTouchStart={handleWebViewTouch(handleNextTermSafe)}
+              onClick={handleNextTermSafe}
               className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 transition-all font-medium touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button"
               disabled={filteredTerms.length === 0}
               style={{ WebkitTapHighlightColor: 'transparent' }}
