@@ -178,7 +178,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
         
         // 다음 용어를 위한 카운트다운 시작
         setCountdown(3)
-      }, autoPlayInterval)
+      }, autoPlayInterval + 3000) // 카운트다운 3초 + 설정한 시간
       
       setCurrentIntervalId(playInterval)
       return () => {
@@ -360,7 +360,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
           
           setCurrentTermIndex(prev => (prev + 1) % filteredTerms.length)
           setCountdown(3)
-        }, newInterval)
+        }, newInterval + 3000) // 카운트다운 3초 + 설정한 시간
         
         setCurrentIntervalId(playInterval)
       }, 3000)
