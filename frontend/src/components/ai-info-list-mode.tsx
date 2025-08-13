@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaCalendar, FaBookOpen, FaStar, FaSearch, FaTimes } from 'react-icons/fa'
+import { FaRobot, FaCalendar, FaBookOpen, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 
@@ -26,7 +26,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [favoriteInfos, setFavoriteInfos] = useState<Set<string>>(new Set())
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'length'>('date')
-
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   // 모든 AI 정보 가져오기 (getAll API 시도)
   const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
@@ -157,7 +158,16 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     }
   })()
 
+  // 페이지네이션 계산
+  const totalPages = Math.ceil(filteredAIInfo.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentItems = filteredAIInfo.slice(startIndex, endIndex)
 
+  // 페이지 변경 시 상단으로 스크롤
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, showFavoritesOnly, sortBy])
 
   const selectInfo = (info: AIInfoItem) => {
     setSelectedInfo(info)
@@ -167,7 +177,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     setSelectedInfo(null)
   }
 
-  if (isLoading) {
+  // 로딩 중이거나 데이터가 아직 없는 경우 계속 로딩 표시
+  if (isLoading || actualAIInfo.length === 0) {
     return (
       <div className="glass rounded-2xl p-8">
         <div className="text-center text-white">
@@ -179,25 +190,13 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     )
   }
 
-  if (actualAIInfo.length === 0 && !isLoading) {
-    return (
-      <div className="glass rounded-2xl p-8">
-        <div className="text-center text-white">
-          <FaBookOpen className="w-16 h-16 mx-auto mb-4 opacity-60" />
-          <h3 className="text-xl font-semibold mb-2">등록된 AI 정보가 없습니다</h3>
-          <p className="text-white/70">관리자가 AI 정보를 등록한 후 이용할 수 있습니다.</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="glass rounded-2xl p-6 flex flex-col gap-6">
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
           <FaRobot className="text-blue-400" />
-          AI 정보 전체 목록 모드
+          AI 정보 목록 모드
         </h2>
         <div className="text-white/60 text-sm">
           총 {filteredAIInfo.length}개 정보
@@ -250,23 +249,37 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
       </div>
 
+      {/* 페이지당 항목 수 선택 */}
+      <div className="flex items-center gap-4">
+        <span className="text-white/70 text-sm">페이지당 항목:</span>
+        <div className="flex gap-2">
+          {[10, 30, 50].map((size) => (
+            <button
+              key={size}
+              onClick={() => {
+                setItemsPerPage(size)
+                setCurrentPage(1)
+              }}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                itemsPerPage === size
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+              }`}
+            >
+              {size}개
+            </button>
+          ))}
+        </div>
+      </div>
 
-
-             {/* AI 정보 목록 */}
-       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-         {filteredAIInfo.map((info, index) => (
-           <motion.div
-             key={info.id}
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: index * 0.1 }}
-             className="p-4 rounded-xl cursor-pointer transition-all border bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10"
-             onClick={(e) => {
-               e.preventDefault()
-               e.stopPropagation()
-               selectInfo(info)
-             }}
-           >
+      {/* AI 정보 목록 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {currentItems.map((info, index) => (
+          <div
+            key={info.id}
+            className="p-4 rounded-xl cursor-pointer transition-all border bg-white/5 hover:bg-white/10 active:bg-white/20 border-white/10"
+            onClick={() => selectInfo(info)}
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <h3 className="font-bold text-white text-lg mb-2 line-clamp-2">{info.title}</h3>
@@ -312,9 +325,67 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         ))}
       </div>
+
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4">
+          <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className={`p-2 rounded-lg transition-all ${
+              currentPage === 1
+                ? 'text-white/30 cursor-not-allowed'
+                : 'text-white/70 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <FaChevronLeft className="w-5 h-5" />
+          </button>
+          
+          <div className="flex gap-2">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum
+              if (totalPages <= 5) {
+                pageNum = i + 1
+              } else if (currentPage <= 3) {
+                pageNum = i + 1
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i
+              } else {
+                pageNum = currentPage - 2 + i
+              }
+              
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    currentPage === pageNum
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              )
+            })}
+          </div>
+          
+          <button
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className={`p-2 rounded-lg transition-all ${
+              currentPage === totalPages
+                ? 'text-white/30 cursor-not-allowed'
+                : 'text-white/70 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <FaChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       {/* 선택된 정보 상세 보기 */}
       <AnimatePresence>
@@ -352,35 +423,35 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                 </button>
               </div>
 
-                             <div className="text-white/80 text-lg leading-relaxed mb-8 whitespace-pre-line bg-white/5 p-6 rounded-xl border border-white/10">
-                 <h3 className="text-xl font-bold text-white mb-4">📖 전체 내용</h3>
-                 <div className="text-white/90 leading-relaxed">
-                   {selectedInfo.content}
-                 </div>
-               </div>
+              <div className="text-white/80 text-lg leading-relaxed mb-8 whitespace-pre-line bg-white/5 p-6 rounded-xl border border-white/10">
+                <h3 className="text-xl font-bold text-white mb-4">📖 전체 내용</h3>
+                <div className="text-white/90 leading-relaxed">
+                  {selectedInfo.content}
+                </div>
+              </div>
 
-                             {selectedInfo.terms.length > 0 && (
-                 <div className="bg-white/5 p-6 rounded-xl border border-white/10">
-                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                     <FaBookOpen className="text-blue-400" />
-                     📚 관련 용어 학습 ({selectedInfo.terms.length}개)
-                   </h3>
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     {selectedInfo.terms.map((term, index) => (
-                       <div
-                         key={index}
-                         className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all"
-                       >
-                         <div className="font-bold text-white text-lg mb-3 flex items-center gap-2">
-                           <span className="text-blue-400 text-sm">#{index + 1}</span>
-                           {term.term}
-                         </div>
-                         <div className="text-white/80 leading-relaxed">{term.description}</div>
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-               )}
+              {selectedInfo.terms.length > 0 && (
+                <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <FaBookOpen className="text-blue-400" />
+                    📚 관련 용어 학습 ({selectedInfo.terms.length}개)
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedInfo.terms.map((term, index) => (
+                      <div
+                        key={index}
+                        className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all"
+                      >
+                        <div className="font-bold text-white text-lg mb-3 flex items-center gap-2">
+                          <span className="text-blue-400 text-sm">#{index + 1}</span>
+                          {term.term}
+                        </div>
+                        <div className="text-white/80 leading-relaxed">{term.description}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}
