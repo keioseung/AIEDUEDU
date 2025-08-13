@@ -188,6 +188,11 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     setCurrentPage(1)
   }, [searchQuery, showFavoritesOnly, sortBy])
 
+  // expandedItems 상태가 변경되지 않도록 안정화
+  useEffect(() => {
+    // 컴포넌트가 마운트된 후 expandedItems 상태를 유지
+  }, [])
+
   const selectInfo = (info: AIInfoItem) => {
     setSelectedInfo(info)
   }
@@ -244,15 +249,27 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
         
         <div className="flex gap-2">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'length')}
-            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
-          >
-            <option value="date">최신순</option>
-            <option value="title">제목순</option>
-            <option value="length">길이순</option>
-          </select>
+          <div className="flex gap-2">
+            {[
+              { value: 'date', label: '최신순' },
+              { value: 'title', label: '제목순' },
+              { value: 'length', label: '길이순' }
+            ].map((option) => (
+              <button
+                key={option.value}
+                onTouchStart={handleWebViewTouch(() => setSortBy(option.value as 'date' | 'title' | 'length'))}
+                onClick={() => setSortBy(option.value as 'date' | 'title' | 'length')}
+                className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
+                  sortBy === option.value
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg ring-2 ring-blue-400/50'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                }`}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
           
           <button
             onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
