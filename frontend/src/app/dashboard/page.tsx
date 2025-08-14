@@ -391,7 +391,7 @@ export default function DashboardPage() {
       {/* 헤더 섹션 */}
       <div className="relative z-10 flex flex-col items-center justify-center pt-8 md:pt-12 pb-6">
         {/* 상단 로그아웃 버튼 */}
-        <div className="absolute top-4 right-4 md:top-6 md:right-6">
+        <div className="absolute top-4 left-4 md:top-6 md:left-6">
           <button
             onClick={logout}
             className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
