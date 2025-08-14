@@ -189,19 +189,19 @@ export default function IntroPage() {
             { 
               icon: FaBrain, 
               title: "AI 정보 학습", 
-              desc: "매일 새로운 AI 정보를 제공합니다. 각 정보에는 관련 용어들이 포함되어 있어 AI 개념을 체계적으로 학습할 수 있습니다.", 
+              desc: "매일 새로운 AI 정보를 제공합니다. 각 정보에는<br className='hidden sm:block' />관련 용어들이 포함되어 있어 AI 개념을 체계적으로 학습할 수 있습니다.", 
               color: "from-blue-500 to-cyan-500"
             },
             { 
               icon: FaRocket, 
               title: "용어 퀴즈", 
-              desc: "학습한 AI 정보의 관련 용어들을 퀴즈로 점검합니다. 다양한 난이도의 문제로 지식 이해도를 확인하고 실력을 향상시켜보세요.", 
+              desc: "학습한 AI 정보의 관련 용어들을 퀴즈로 점검합니다. 다양한 난이도의 문제로 지식 이해도를 확인하고<br className='hidden sm:block' />실력을 향상시켜보세요.", 
               color: "from-purple-500 to-pink-500"
             },
             { 
               icon: FaChartLine, 
               title: "학습 진행률", 
-              desc: "개인별 학습 진행 상황을 상세한 통계로 추적합니다. 일별, 주별, 월별 학습 현황을 확인하고 목표를 설정해보세요.", 
+              desc: "개인별 학습 진행 상황을 상세한 통계로 추적합니다. 일별, 주별, 월별 학습 현황을 확인하고 목표를<br className='hidden sm:block' />설정해보세요.", 
               color: "from-green-500 to-emerald-500"
             }
           ].map((feature, index) => (
@@ -217,7 +217,7 @@ export default function IntroPage() {
                   <feature.icon className="text-white text-xl md:text-2xl" />
                 </div>
                 <h3 className="text-white font-bold text-xl md:text-2xl mb-3 md:mb-4 mobile-text text-center">{feature.title}</h3>
-                <p className="text-gray-300 text-sm md:text-base leading-relaxed mobile-text text-center">{feature.desc}</p>
+                <p className="text-gray-300 text-sm md:text-base leading-relaxed mobile-text text-center" dangerouslySetInnerHTML={{ __html: feature.desc }}></p>
               </div>
             </div>
           ))}
