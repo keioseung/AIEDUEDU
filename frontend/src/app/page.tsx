@@ -164,7 +164,7 @@ export default function IntroPage() {
                 실전 퀴즈로 지식을 점검
               </span>
             </h2>
-            <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-4xl mx-auto mobile-text text-center">
+            <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-4xl mx-auto mobile-text text-center" style={{ wordBreak: 'keep-all' }}>
               최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br className="hidden sm:block" />
               실전 문제를 통해 확실한 이해를 확인하세요
             </p>
