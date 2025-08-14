@@ -244,8 +244,16 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         <div className="flex gap-2">
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'length')}
-            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px] touch-manipulation"
+            onChange={(e) => {
+              const value = e.target.value
+              if (value === 'date' || value === 'title' || value === 'length') {
+                setSortBy(value)
+              }
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation()
+            }}
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px] touch-manipulation cursor-pointer hover:bg-white/20 active:bg-white/30 transition-all"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <option value="date">최신순</option>
