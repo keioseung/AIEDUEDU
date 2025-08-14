@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar, FaArrowLeft } from 'react-icons/fa'
+import { FaRobot, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar, FaArrowLeft } from 'react-icons/fa'
 import { logout } from '@/lib/api'
 
 const adminMenus = [
@@ -247,11 +247,11 @@ export default function AdminPage() {
                       </p>
                     )}
                     
-                    {/* 액션 버튼 */}
-                    <div className="flex items-center gap-2 mt-auto text-purple-300 group-hover:text-purple-200 transition-colors duration-300">
-                      <span className="text-xs sm:text-sm md:text-base font-semibold">관리하기</span>
-                      <FaArrowRight className="text-xs sm:text-sm md:text-base group-hover:translate-x-2 transition-transform duration-300" />
-                    </div>
+                                         {/* 액션 버튼 */}
+                     <div className="flex items-center gap-2 mt-auto text-purple-300 group-hover:text-purple-200 transition-colors duration-300">
+                       <span className="text-xs sm:text-sm md:text-base font-semibold">관리하기</span>
+                       <FaArrowLeft className="text-xs sm:text-sm md:text-base group-hover:-translate-x-2 transition-transform duration-300" />
+                     </div>
                   </div>
 
                   {/* 호버 시 빛나는 효과 */}
