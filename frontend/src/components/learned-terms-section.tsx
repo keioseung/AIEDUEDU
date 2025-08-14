@@ -64,6 +64,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
       onDateChange(date)
     }
   }
+
+  // selectedDate가 변경될 때마다 currentTermIndex를 0으로 리셋
+  useEffect(() => {
+    setCurrentTermIndex(0)
+  }, [selectedDate])
   
   const { data: learnedData, isLoading } = useQuery<LearnedTermsResponse>({
     queryKey: ['learned-terms', sessionId],
@@ -106,6 +111,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
         }
       })
       terms = Array.from(uniqueTerms.values())
+    }
+
+    // 날짜가 선택된 경우 해당 날짜의 용어만 표시
+    if (selectedDate) {
+      terms = terms.filter(term => term.learned_date === selectedDate)
     }
 
     // 검색 필터
@@ -604,7 +614,12 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             <div className="flex flex-wrap gap-3">
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === 'date' || value === 'length' || value === 'alphabet') {
+                    setSortBy(value)
+                  }
+                }}
                 className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm min-h-[48px]"
               >
                 <option value="date">최신순</option>
@@ -612,7 +627,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                 <option value="length">길이순</option>
               </select>
               <button
-                onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className={`px-4 py-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button ${
                   showFavoritesOnly
@@ -625,7 +639,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                 즐겨찾기만
               </button>
               <button
-                onTouchStart={handleWebViewTouch(handleShuffle)}
                 onClick={handleShuffle}
                 className="px-4 py-3 bg-purple-500/30 text-purple-300 rounded-lg hover:bg-purple-500/50 active:bg-purple-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -634,7 +647,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                 랜덤
               </button>
               <button
-                onTouchStart={handleWebViewTouch(exportTerms)}
                 onClick={exportTerms}
                 className="px-4 py-3 bg-green-500/30 text-green-300 rounded-lg hover:bg-green-500/50 active:bg-green-500/70 transition-all text-sm font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -678,7 +690,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
               {difficulty?.level}
             </div>
             <button
-              onTouchStart={handleWebViewTouch(() => toggleFavorite(currentTerm.term))}
               onClick={() => toggleFavorite(currentTerm.term)}
               className={`p-3 rounded-lg transition-all touch-manipulation select-none min-h-[48px] min-w-[48px] flex items-center justify-center webview-button ${
                 favoriteTerms.has(currentTerm.term)
@@ -915,12 +926,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-semibold text-white text-sm break-words">{term.term}</div>
                       <button
-                        onTouchStart={handleWebViewTouch((e) => {
-                          if (e) {
-                            e.stopPropagation()
-                          }
-                          toggleFavorite(term.term)
-                        })}
                         onClick={(e) => {
                           e.stopPropagation()
                           toggleFavorite(term.term)
