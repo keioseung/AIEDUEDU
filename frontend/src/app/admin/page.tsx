@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar, FaSignOutAlt } from 'react-icons/fa'
+import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar, FaArrowLeft } from 'react-icons/fa'
 import { logout } from '@/lib/api'
 
 const adminMenus = [
@@ -162,7 +162,7 @@ export default function AdminPage() {
               onClick={logout}
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
             >
-              <FaSignOutAlt className="text-sm" />
+              <FaArrowLeft className="text-sm" />
               <span className="hidden sm:inline">로그아웃</span>
             </button>
           </div>
