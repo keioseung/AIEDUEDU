@@ -610,22 +610,33 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                </div>
              )}
             
-            {/* 정렬 및 필터 옵션 */}
-            <div className="flex flex-wrap gap-3">
-              <select
-                value={sortBy}
-                onChange={(e) => {
-                  const value = e.target.value
-                  if (value === 'date' || value === 'length' || value === 'alphabet') {
-                    setSortBy(value)
-                  }
-                }}
-                className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm min-h-[48px]"
-              >
-                <option value="date">최신순</option>
-                <option value="alphabet">가나다순</option>
-                <option value="length">길이순</option>
-              </select>
+                         {/* 정렬 및 필터 옵션 */}
+             <div className="flex flex-wrap gap-3">
+               <div className="flex bg-white/10 rounded-lg p-1">
+                 {[
+                   { value: 'date', label: '최신순', icon: '🕒' },
+                   { value: 'alphabet', label: '가나다순', icon: '🔤' },
+                   { value: 'length', label: '길이순', icon: '📏' }
+                 ].map((option) => (
+                   <button
+                     key={option.value}
+                     onClick={() => {
+                       if (option.value === 'date' || option.value === 'length' || option.value === 'alphabet') {
+                         setSortBy(option.value as 'date' | 'length' | 'alphabet')
+                       }
+                     }}
+                     className={`px-3 py-2 rounded-md text-sm font-medium transition-all min-h-[40px] min-w-[80px] touch-manipulation webview-button ${
+                       sortBy === option.value
+                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                         : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
+                     }`}
+                     style={{ WebkitTapHighlightColor: 'transparent' }}
+                   >
+                     <span className="mr-1">{option.icon}</span>
+                     {option.label}
+                   </button>
+                 ))}
+               </div>
               <button
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className={`px-4 py-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 touch-manipulation select-none min-h-[48px] webview-button ${
@@ -674,12 +685,29 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-white/60">{currentTermIndex + 1} / {filteredTerms.length}</span>
-              <span className="text-sm text-green-400 font-bold">{viewedTerms.size}개 학습완료</span>
+              <span className="text-sm text-green-400 font-bold">
+                {(() => {
+                  // 즐겨찾기 필터가 활성화된 경우, 즐겨찾기 중에서만 학습한 개수 계산
+                  if (showFavoritesOnly) {
+                    const favoriteViewedTerms = Array.from(viewedTerms).filter(term => favoriteTerms.has(term))
+                    return `${favoriteViewedTerms.length}개 학습완료`
+                  }
+                  return `${viewedTerms.size}개 학습완료`
+                })()}
+              </span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
               <div
                 className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300"
-                style={{ width: `${(viewedTerms.size / filteredTerms.length) * 100}%` }}
+                style={{ 
+                  width: `${(() => {
+                    if (showFavoritesOnly) {
+                      const favoriteViewedTerms = Array.from(viewedTerms).filter(term => favoriteTerms.has(term))
+                      return filteredTerms.length > 0 ? (favoriteViewedTerms.length / filteredTerms.length) * 100 : 0
+                    }
+                    return filteredTerms.length > 0 ? (viewedTerms.size / filteredTerms.length) * 100 : 0
+                  })()}%` 
+                }}
               />
             </div>
           </div>
