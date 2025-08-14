@@ -311,7 +311,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-white/80 text-sm font-medium ml-2 md:ml-4">기간:</span>
+            <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
             <div className="flex bg-white/10 rounded-lg p-1 relative z-20">
               <button
                 type="button"
@@ -638,7 +638,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       {/* 기간별 추이 그래프 - 기본 bar chart 복원 */}
       <div className="space-y-6 px-4 md:px-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-white font-semibold text-lg ml-2 md:ml-4">기간별 학습 추이</h3>
+          <h3 className="text-white font-semibold text-lg ml-1 md:ml-2">기간별 학습 추이</h3>
           <div className="text-white/60 text-sm mr-2 md:mr-4">
             {periodStats?.start_date} ~ {periodStats?.end_date}
           </div>
