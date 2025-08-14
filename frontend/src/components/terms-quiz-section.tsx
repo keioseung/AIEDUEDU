@@ -151,23 +151,23 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
   return (
     <section className="mb-8 relative">
-      {/* 날짜 선택기 - 모바일 최적화 */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 md:mb-6 gap-3 px-2 md:px-4">
-        <div className="text-white/70 text-sm mobile-text ml-1 md:ml-2">
+      {/* 날짜 선택기 - 상단에 배치 */}
+      <div className="flex items-center justify-between mb-4 md:mb-6 px-2 md:px-4">
+        <div className="text-white/70 text-sm mobile-text">
           {isLoading ? '퀴즈를 생성하고 있습니다...' : 
            quizData?.quizzes && quizData.quizzes.length > 0 ? `총 ${quizData.total_terms}개 용어 중 ${quizData.quizzes.length}개 출제` : 
            ''}
         </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <label htmlFor="quiz-date-select" className="text-white/80 text-sm font-medium whitespace-nowrap ml-1 md:ml-2">
-            퀴즈 날짜:
+        <div className="flex items-center gap-2">
+          <label htmlFor="quiz-date-select" className="text-white/80 text-sm font-medium whitespace-nowrap">
+            날짜:
           </label>
           <input
             id="quiz-date-select"
             type="date"
             value={selectedDate}
             onChange={(e) => onDateChange?.(e.target.value)}
-            className="flex-1 sm:flex-none bg-white/10 border border-white/20 rounded-lg px-3 py-2 md:py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-optimized mobile-touch-target"
+            className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-optimized mobile-touch-target"
           />
         </div>
       </div>
