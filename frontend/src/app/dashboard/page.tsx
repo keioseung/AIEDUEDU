@@ -552,7 +552,7 @@ export default function DashboardPage() {
                           : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
                       }`}
                     >
-                      📚 목록 모드
+                      📚 전체 목록 모드
                     </button>
                   </div>
                 </div>
