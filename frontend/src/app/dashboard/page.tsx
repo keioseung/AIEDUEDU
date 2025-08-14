@@ -423,8 +423,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 날짜 선택 (AI 정보 탭과 진행률 탭에서 표시) */}
-      {(activeTab === 'ai' || activeTab === 'progress') && (
+      {/* 날짜 선택 (AI 정보 탭, 용어 퀴즈 탭, 진행률 탭에서 표시) */}
+      {(activeTab === 'ai' || activeTab === 'progress' || activeTab === 'quiz') && (
         <div className="flex justify-center mb-6 md:mb-8">
           <div className="glass backdrop-blur-xl rounded-2xl px-4 md:px-8 py-3 md:py-4 flex items-center gap-4 md:gap-6 shadow-xl border border-white/10">
             <FaCalendar className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
