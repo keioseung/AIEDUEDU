@@ -127,6 +127,19 @@ export default function AuthPage() {
       {/* 메인 컨텐츠 */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 md:py-32">
         <div className="w-full max-w-md">
+          {/* 뒤로 가기 버튼 */}
+          <div className="absolute top-4 left-4 z-20">
+            <button
+              onClick={() => router.push('/')}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              뒤로 가기
+            </button>
+          </div>
+
           {/* 로고 및 제목 */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-6">
