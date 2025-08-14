@@ -142,7 +142,7 @@ export default function AuthPage() {
             <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-2">
               AI Mastery Hub
             </h1>
-            <p className="text-purple-300 font-medium">지금 시작하고 AI 세계를 탐험하세요</p>
+            <p className="text-purple-300 font-medium">지금 시작하고 AI 세계를 탐험하세요.</p>
           </div>
 
           {/* 인증 카드 */}

@@ -14,10 +14,10 @@ export default function IntroPage() {
   
   const fullText = "AI Mastery Hub"
   const taglines = [
-    "매일 새로운 AI 정보로 지식을 쌓아보세요",
-    "실전 퀴즈로 학습한 내용을 점검하세요",
-    "개인별 학습 진행률을 체계적으로 관리하세요",
-    "AI 세계의 핵심 개념을 쉽게 이해하세요"
+    "매일 새로운 AI 정보로 지식을 쌓아보세요.",
+    "실전 퀴즈로 학습한 내용을 점검하세요.",
+    "개인별 학습 진행률을 체계적으로 관리하세요.",
+    "AI 세계의 핵심 개념을 쉽게 이해하세요."
   ]
   const [currentTagline, setCurrentTagline] = useState(0)
 
@@ -166,7 +166,7 @@ export default function IntroPage() {
             </h2>
             <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-4xl mx-auto mobile-text text-center" style={{ wordBreak: 'keep-all' }}>
               최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br className="hidden sm:block" />
-              실전 문제를 통해 확실한 이해를 확인하세요
+              실전 문제를 통해 확실한 이해를 확인하세요.
             </p>
           </div>
 
