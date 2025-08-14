@@ -241,32 +241,21 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           )}
         </div>
         
-        <div className="flex gap-2">
-          <div className="flex bg-white/10 rounded-lg p-1">
-            {[
-              { value: 'date', label: '최신순', icon: '🕒' },
-              { value: 'title', label: '제목순', icon: '📝' },
-              { value: 'length', label: '길이순', icon: '📏' }
-            ].map((option) => (
-              <button
-                key={option.value}
-                onClick={() => {
-                  if (option.value === 'date' || option.value === 'title' || option.value === 'length') {
-                    setSortBy(option.value as 'date' | 'title' | 'length')
-                  }
-                }}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-all min-h-[40px] min-w-[80px] touch-manipulation webview-button ${
-                  sortBy === option.value
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                    : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
-                }`}
-                style={{ WebkitTapHighlightColor: 'transparent' }}
-              >
-                <span className="mr-1">{option.icon}</span>
-                {option.label}
-              </button>
-            ))}
-          </div>
+                 <div className="flex gap-2">
+           <select
+             value={sortBy}
+             onChange={(e) => {
+               const value = e.target.value
+               if (value === 'date' || value === 'title' || value === 'length') {
+                 setSortBy(value as 'date' | 'title' | 'length')
+               }
+             }}
+             className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px] cursor-pointer hover:bg-white/20 active:bg-white/30 transition-all"
+           >
+             <option value="date">🕒 최신순</option>
+             <option value="title">📝 제목순</option>
+             <option value="length">📏 길이순</option>
+           </select>
           
           <button
             onTouchStart={handleWebViewTouch(() => {
