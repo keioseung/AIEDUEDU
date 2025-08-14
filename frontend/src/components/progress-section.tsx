@@ -643,7 +643,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             {periodStats?.start_date} ~ {periodStats?.end_date}
           </div>
         </div>
-        <div className="glass rounded-2xl p-6">
+        <div className="glass rounded-2xl p-2 md:p-4">
           {periodStatsLoading ? (
             <div className="text-center text-white/60 py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
@@ -673,8 +673,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32 relative" style={{ minWidth: getContainerMinWidth() }}>
+                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                  <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
@@ -744,8 +744,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32 relative" style={{ minWidth: getContainerMinWidth() }}>
+                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                  <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
@@ -815,8 +815,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: {maxQuiz}%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16">
-                  <div className="flex flex-row items-end h-32 relative" style={{ minWidth: getContainerMinWidth() }}>
+                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                  <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
