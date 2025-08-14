@@ -160,10 +160,9 @@ export default function AdminPage() {
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
             <button
               onClick={logout}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
+              className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 hover:scale-110 active:scale-95 flex items-center justify-center"
             >
-              <FaArrowLeft className="text-sm" />
-              <span className="hidden sm:inline">로그아웃</span>
+              <FaArrowLeft className="w-5 h-5" />
             </button>
           </div>
 
