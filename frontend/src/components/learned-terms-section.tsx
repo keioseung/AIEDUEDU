@@ -8,6 +8,8 @@ import { aiInfoAPI } from '@/lib/api'
 
 interface LearnedTermsSectionProps {
   sessionId: string
+  selectedDate?: string
+  onDateChange?: (date: string) => void
 }
 
 interface Term {
@@ -24,8 +26,8 @@ interface LearnedTermsResponse {
   terms_by_date: Record<string, Term[]>
 }
 
-function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDateChange }: LearnedTermsSectionProps) {
+  const [selectedDate, setSelectedDate] = useState<string | null>(propSelectedDate || null)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'date' | 'length' | 'alphabet'>('date')
@@ -47,6 +49,21 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
+  
+  // propSelectedDate가 변경될 때 selectedDate 동기화
+  useEffect(() => {
+    if (propSelectedDate !== undefined) {
+      setSelectedDate(propSelectedDate)
+    }
+  }, [propSelectedDate])
+  
+  // selectedDate 변경 시 부모 컴포넌트에 알림
+  const handleDateChange = (date: string | null) => {
+    setSelectedDate(date)
+    if (onDateChange && date) {
+      onDateChange(date)
+    }
+  }
   
   const { data: learnedData, isLoading } = useQuery<LearnedTermsResponse>({
     queryKey: ['learned-terms', sessionId],
