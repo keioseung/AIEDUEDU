@@ -166,6 +166,7 @@ export default function IntroPage() {
             </h2>
             <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-4xl mx-auto mobile-text text-center">
               최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br className="hidden sm:block" />
+              <br className="hidden sm:block" />
               실전 문제를 통해 확실한 이해를 확인하세요
             </p>
           </div>
@@ -189,7 +190,7 @@ export default function IntroPage() {
             { 
               icon: FaBrain, 
               title: "AI 정보 학습", 
-              desc: "매일 새로운 AI 정보를 제공합니다. 각 정보에는<br className='hidden sm:block' />관련 용어들이 포함되어 있어 AI 개념을 체계적으로 학습할 수 있습니다.", 
+              desc: "매일 새로운 AI 정보를 제공합니다. 각 정보에는<br className='hidden sm:block' />관련 용어들이 포함되어 있어 AI 개념을<br className='hidden sm:block' />체계적으로 학습할 수 있습니다.", 
               color: "from-blue-500 to-cyan-500"
             },
             { 
