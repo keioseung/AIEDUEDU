@@ -125,7 +125,7 @@ export default function IntroPage() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-6 md:py-8">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-6 md:py-8">
         {/* 헤더 섹션 */}
         <div className="text-center mb-12 md:mb-16 lg:mb-20 w-full max-w-6xl mx-auto">
           {/* 로고 및 제목 */}
@@ -152,7 +152,7 @@ export default function IntroPage() {
           </div>
 
           {/* 메인 텍스트 */}
-          <div className="text-center mb-8 md:mb-12 lg:mb-16 max-w-5xl mx-auto px-4">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 max-w-5xl mx-auto px-1">
             <h2 className="text-xl md:text-2xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight mobile-text text-center">
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent block mb-2 md:mb-3">
                 매일 업데이트되는 AI 정보
@@ -184,7 +184,7 @@ export default function IntroPage() {
         </div>
 
         {/* 기능 카드들 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-6xl mb-16 md:mb-20 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-6xl mb-16 md:mb-20 px-1">
           {[
             { 
               icon: FaBrain, 
