@@ -174,14 +174,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
       {/* 로딩 상태 */}
       {isLoading && (
-        <div className="glass rounded-2xl p-6 md:p-8 min-h-[80vh] flex items-center justify-center">
+        <div className="glass rounded-2xl p-20 md:p-32 min-h-[80vh] flex items-center justify-center">
           <div className="text-white text-base md:text-lg mobile-text">퀴즈를 생성하고 있습니다...</div>
         </div>
       )}
 
       {/* 데이터가 없을 때 */}
       {!isLoading && (!quizData?.quizzes || quizData.quizzes.length === 0) && (
-        <div className="glass rounded-2xl p-6 md:p-8 min-h-[80vh] flex items-center justify-center">
+        <div className="glass rounded-2xl p-20 md:p-32 min-h-[80vh] flex items-center justify-center">
           <div className="text-center text-white">
             <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-60" />
             <h3 className="text-lg md:text-xl font-semibold mb-2 mobile-text">등록된 용어가 없습니다</h3>
