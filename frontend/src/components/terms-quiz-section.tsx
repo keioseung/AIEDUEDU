@@ -152,14 +152,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   return (
     <section className="mb-8 relative">
       {/* 날짜 선택기 - 모바일 최적화 */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 md:mb-6 gap-3">
-        <div className="text-white/70 text-sm mobile-text">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 md:mb-6 gap-3 px-4 md:px-6">
+        <div className="text-white/70 text-sm mobile-text ml-2 md:ml-4">
           {isLoading ? '퀴즈를 생성하고 있습니다...' : 
            quizData?.quizzes && quizData.quizzes.length > 0 ? `총 ${quizData.total_terms}개 용어 중 ${quizData.quizzes.length}개 출제` : 
            ''}
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <label htmlFor="quiz-date-select" className="text-white/80 text-sm font-medium whitespace-nowrap">
+          <label htmlFor="quiz-date-select" className="text-white/80 text-sm font-medium whitespace-nowrap ml-2 md:ml-4">
             퀴즈 날짜:
           </label>
           <input
