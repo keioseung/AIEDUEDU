@@ -163,8 +163,8 @@ export default function IntroPage() {
         ))}
       </div>
 
-      {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-4 md:py-6">
+             {/* 메인 컨텐츠 */}
+       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-16 md:py-24">
         {/* 헤더 섹션 */}
         <div className="text-center mb-8 md:mb-12 lg:mb-16 w-full max-w-6xl mx-auto">
           {/* 로고 및 제목 */}
@@ -226,8 +226,8 @@ export default function IntroPage() {
 
         
 
-        {/* 하단 통계 섹션 */}
-        <div className="w-full max-w-5xl mb-16 md:mb-20">
+                 {/* 하단 통계 섹션 */}
+         <div className="w-full max-w-5xl mb-24 md:mb-32">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl px-4">
             {[
               { label: "매일 새로운", value: "AI 정보", icon: FaBrain, desc: "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다." },
@@ -267,12 +267,12 @@ export default function IntroPage() {
                   <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
                 )}
                 
-                {/* Info box - 위쪽에 표시 */}
-                {clickedStat === index && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-6 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-2 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20 z-20">
-                    <p className="font-medium">{stat.desc}</p>
-                  </div>
-                )}
+                                 {/* Info box - 위쪽에 표시 */}
+                 {clickedStat === index && (
+                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-8 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-3 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20 z-20">
+                     <p className="font-medium leading-relaxed">{stat.desc}</p>
+                   </div>
+                 )}
                 
                 {/* Icon */}
                 <div className={`relative z-10 transition-all duration-300 ${
