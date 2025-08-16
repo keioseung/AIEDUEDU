@@ -70,6 +70,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   useEffect(() => {
     setCurrentTermIndex(0)
   }, [selectedDate])
+
+  // 컴포넌트 마운트 시 필터를 전체로 설정
+  useEffect(() => {
+    setSelectedDate(null)
+    setShowFavoritesOnly(false)
+    setSearchQuery('')
+    setSortBy('date')
+  }, [])
   
   const { data: learnedData, isLoading } = useQuery<LearnedTermsResponse>({
     queryKey: ['learned-terms', sessionId],
@@ -447,7 +455,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-64 md:p-80 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-32 md:p-48 min-h-[60vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
           <div className="space-y-3">
@@ -480,7 +488,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const difficulty = currentTerm ? getDifficulty(currentTerm.term) : null
 
   return (
-    <div className="glass rounded-2xl p-3 md:p-4 flex flex-col gap-2 md:gap-3">
+    <div className="glass rounded-2xl p-2 md:p-3 flex flex-col gap-1 md:gap-2">
       {/* 모바일 최적화 헤더 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
