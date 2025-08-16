@@ -129,7 +129,7 @@ export default function AuthPage() {
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-48 md:py-64 lg:py-80">
         <div className="w-full max-w-sm">
           {/* 뒤로 가기 버튼 */}
-          <div className="absolute top-12 left-12 z-20">
+          <div className="absolute top-3 left-3 md:top-4 md:left-4 z-20">
             <button
               onClick={() => router.push('/')}
               className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 flex items-center justify-center hover:scale-110 active:scale-95"
