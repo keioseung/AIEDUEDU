@@ -12,6 +12,7 @@ export default function IntroPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isMobile, setIsMobile] = useState(false)
   const [clickedCard, setClickedCard] = useState<number | null>(null)
+  const [clickedStat, setClickedStat] = useState<number | null>(null)
   
   const fullText = "AI Mastery Hub"
   const taglines = [
@@ -85,6 +86,22 @@ export default function IntroPage() {
   // 카드 확장/축소 토글 (제거 - 단순 클릭으로 변경)
   const toggleCard = (index: number) => {
     handleCardClick(index)
+  }
+
+  // 통계 아이콘 클릭 효과
+  const handleStatClick = (index: number) => {
+    // 이미 클릭된 통계라면 상태 종료
+    if (clickedStat === index) {
+      setClickedStat(null)
+      return
+    }
+    
+    // 다른 통계 클릭 시 이전 상태 종료 후 새 상태 시작
+    if (clickedStat !== null) {
+      setClickedStat(null)
+    }
+    
+    setClickedStat(index)
   }
 
   return (
@@ -294,16 +311,75 @@ export default function IntroPage() {
         {/* 하단 통계 */}
         <div className="grid grid-cols-3 gap-4 md:gap-8 lg:gap-12 w-full max-w-5xl px-4">
           {[
-            { label: "매일 새로운", value: "AI 정보", icon: FaBrain },
-            { label: "핵심 개념", value: "관련 용어", icon: FaRocket },
-            { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine }
+            { label: "매일 새로운", value: "AI 정보", icon: FaBrain, desc: "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다." },
+            { label: "핵심 개념", value: "관련 용어", icon: FaRocket, desc: "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다." },
+            { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, desc: "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다." }
           ].map((stat, index) => (
-            <div key={index} className="text-center animate-stat-fade-in" style={{ animationDelay: `${index * 0.3}s` }}>
-              <div className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2 md:mb-3 animate-stat-glow">
-                <stat.icon className="text-purple-400 text-lg md:text-xl lg:text-2xl" />
+            <div 
+              key={index} 
+              className={`text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-105 relative ${
+                clickedStat === index ? 'scale-110' : ''
+              }`} 
+              style={{ animationDelay: `${index * 0.3}s` }}
+              onClick={() => handleStatClick(index)}
+            >
+              {/* 클릭 시 배경 효과 */}
+              {clickedStat === index && (
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-3xl animate-stat-aura" />
+              )}
+              
+              {/* 클릭 시 파티클 효과 */}
+              {clickedStat === index && (
+                <div className="absolute inset-0">
+                  {[...Array(8)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-1 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-stat-particle"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        transform: `translate(-50%, -50%)`,
+                        animationDelay: `${i * 0.1}s`
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+              
+              <div className={`w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2 md:mb-3 animate-stat-glow relative z-10 transition-all duration-300 ${
+                clickedStat === index ? 'scale-125 bg-gradient-to-r from-purple-500/40 to-pink-500/40 shadow-2xl' : ''
+              }`}>
+                <stat.icon className={`text-purple-400 text-lg md:text-xl lg:text-2xl transition-all duration-300 ${
+                  clickedStat === index ? 'text-white scale-110 animate-bounce' : ''
+                }`} />
+                
+                {/* 클릭 시 빛나는 효과 */}
+                {clickedStat === index && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-transparent to-white/30 rounded-2xl animate-stat-shine" />
+                )}
               </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 mobile-text text-center">{stat.value}</div>
-              <div className="text-white/60 text-xs md:text-sm mobile-text text-center">{stat.label}</div>
+              
+              <div className={`text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 mobile-text text-center transition-all duration-300 ${
+                clickedStat === index ? 'text-purple-200 scale-105' : ''
+              }`}>{stat.value}</div>
+              
+              <div className={`text-white/60 text-xs md:text-sm mobile-text text-center transition-all duration-300 ${
+                clickedStat === index ? 'text-purple-300 scale-105' : ''
+              }`}>{stat.label}</div>
+              
+              {/* 클릭 시 추가 설명 표시 */}
+              {clickedStat === index && (
+                <div className="mt-3 p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 animate-stat-info-slide">
+                  <p className="text-white/90 text-xs font-medium leading-relaxed">
+                    {stat.desc}
+                  </p>
+                </div>
+              )}
+              
+              {/* 클릭 시 테두리 효과 */}
+              {clickedStat === index && (
+                <div className="absolute inset-0 rounded-3xl border-2 border-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-stat-border-glow" />
+              )}
             </div>
           ))}
         </div>
@@ -554,6 +630,73 @@ export default function IntroPage() {
         }
         .animate-border-glow {
           animation: border-glow 2s ease-in-out infinite;
+        }
+        
+        /* 통계 아이콘 클릭 효과 애니메이션 */
+        @keyframes stat-aura {
+          0%, 100% { 
+            opacity: 0.2; 
+            transform: scale(1);
+            filter: blur(0px);
+          }
+          50% { 
+            opacity: 0.4; 
+            transform: scale(1.05);
+            filter: blur(1px);
+          }
+        }
+        .animate-stat-aura {
+          animation: stat-aura 2s ease-in-out infinite;
+        }
+        
+        @keyframes stat-particle {
+          0% { 
+            opacity: 1; 
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% { 
+            opacity: 0; 
+            transform: translate(-50%, -50%) scale(0) translate(var(--x, 20px), var(--y, -20px));
+          }
+        }
+        .animate-stat-particle {
+          animation: stat-particle 1.5s ease-out forwards;
+        }
+        
+        @keyframes stat-shine {
+          0% { transform: translateX(-100%) skewX(-15deg); }
+          100% { transform: translateX(200%) skewX(-15deg); }
+        }
+        .animate-stat-shine {
+          animation: stat-shine 1s ease-out;
+        }
+        
+        @keyframes stat-info-slide {
+          0% { 
+            opacity: 0; 
+            transform: translateY(10px) scale(0.95);
+          }
+          100% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+          }
+        }
+        .animate-stat-info-slide {
+          animation: stat-info-slide 0.4s ease-out;
+        }
+        
+        @keyframes stat-border-glow {
+          0%, 100% { 
+            border-color: rgba(147, 51, 234, 0.4);
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.3);
+          }
+          50% { 
+            border-color: rgba(236, 72, 153, 0.6);
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+          }
+        }
+        .animate-stat-border-glow {
+          animation: stat-border-glow 2s ease-in-out infinite;
         }
         
         /* 모바일 최적화 */
