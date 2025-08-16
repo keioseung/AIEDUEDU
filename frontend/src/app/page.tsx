@@ -11,6 +11,8 @@ export default function IntroPage() {
   const [isTyping, setIsTyping] = useState(true)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isMobile, setIsMobile] = useState(false)
+  const [clickedCard, setClickedCard] = useState<number | null>(null)
+  const [cardParticles, setCardParticles] = useState<Array<{id: number, x: number, y: number, color: string}>>([])
   
   const fullText = "AI Mastery Hub"
   const taglines = [
@@ -64,6 +66,39 @@ export default function IntroPage() {
       return () => window.removeEventListener('mousemove', handleMouseMove)
     }
   }, [isMobile])
+
+  // 카드 클릭 효과
+  const handleCardClick = (index: number) => {
+    setClickedCard(index)
+    
+    // 파티클 효과 생성
+    const particles = []
+    for (let i = 0; i < 20; i++) {
+      particles.push({
+        id: Date.now() + i,
+        x: Math.random() * 200 - 100,
+        y: Math.random() * 200 - 100,
+        color: `hsl(${Math.random() * 360}, 70%, 60%)`
+      })
+    }
+    setCardParticles(particles)
+    
+    // 3초 후 효과 제거
+    setTimeout(() => {
+      setClickedCard(null)
+      setCardParticles([])
+    }, 3000)
+  }
+
+  // 카드 확장/축소 토글
+  const toggleCard = (index: number) => {
+    if (clickedCard === index) {
+      setClickedCard(null)
+      setCardParticles([])
+    } else {
+      handleCardClick(index)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
@@ -212,17 +247,63 @@ export default function IntroPage() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="group bg-white/5 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized text-center"
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className={`group bg-white/5 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized text-center cursor-pointer transform-gpu ${
+                clickedCard === index ? 'scale-110 bg-white/20 border-white/40 shadow-2xl' : ''
+              }`}
+              style={{ 
+                animationDelay: `${index * 0.2}s`,
+                transform: clickedCard === index ? 'scale(1.1) rotate(2deg)' : 'scale(1) rotate(0deg)'
+              }}
+              onClick={() => toggleCard(index)}
             >
+              {/* 클릭 시 파티클 효과 */}
+              {clickedCard === index && cardParticles.map((particle) => (
+                <div
+                  key={particle.id}
+                  className="absolute w-2 h-2 rounded-full animate-particle-explosion pointer-events-none"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    backgroundColor: particle.color,
+                    transform: `translate(${particle.x}px, ${particle.y}px)`,
+                    animationDelay: `${Math.random() * 0.5}s`
+                  }}
+                />
+              ))}
+              
+              {/* 클릭 시 빛나는 효과 */}
+              {clickedCard === index && (
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 animate-shine" />
+              )}
+              
+              {/* 클릭 시 맥동 효과 */}
+              {clickedCard === index && (
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-3xl animate-pulse-scale" />
+              )}
+              
               <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10 flex flex-col items-center">
-                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300 animate-icon-glow`}>
+                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300 animate-icon-glow shadow-2xl group-hover:shadow-3xl ${
+                  clickedCard === index ? 'animate-bounce-scale' : ''
+                }`}>
                   <feature.icon className="text-white text-xl md:text-2xl" />
                 </div>
-                <h3 className="text-white font-bold text-xl md:text-2xl mb-3 md:mb-4 mobile-text text-center">{feature.title}</h3>
+                <h3 className={`text-white font-bold text-xl md:text-2xl mb-3 md:mb-4 mobile-text text-center ${
+                  clickedCard === index ? 'animate-text-glow' : ''
+                }`}>{feature.title}</h3>
                 <p className="text-gray-300 text-sm md:text-base leading-relaxed mobile-text text-center" dangerouslySetInnerHTML={{ __html: feature.desc }}></p>
+                
+                {/* 클릭 시 추가 정보 표시 */}
+                {clickedCard === index && (
+                  <div className="mt-4 p-3 bg-white/10 rounded-2xl border border-white/20 animate-slide-up">
+                    <p className="text-white/80 text-sm font-medium">
+                      {index === 0 && "🚀 매일 새로운 AI 트렌드와 최신 정보를 제공합니다!"}
+                      {index === 1 && "🎯 다양한 난이도의 퀴즈로 지식을 점검하세요!"}
+                      {index === 2 && "📊 상세한 통계로 학습 진행 상황을 추적하세요!"}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -377,6 +458,53 @@ export default function IntroPage() {
         }
         .animate-tagline-fade {
           animation: tagline-fade 3s ease-in-out;
+        }
+        
+        /* 카드 클릭 효과 애니메이션 */
+        @keyframes particle-explosion {
+          0% { 
+            opacity: 1; 
+            transform: translate(0, 0) scale(1);
+          }
+          100% { 
+            opacity: 0; 
+            transform: translate(var(--x), var(--y)) scale(0);
+          }
+        }
+        .animate-particle-explosion {
+          animation: particle-explosion 1s ease-out forwards;
+        }
+        
+        @keyframes shine {
+          0% { transform: translateX(-100%) skewX(-15deg); }
+          100% { transform: translateX(200%) skewX(-15deg); }
+        }
+        .animate-shine {
+          animation: shine 0.8s ease-out;
+        }
+        
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); opacity: 0.3; }
+          50% { transform: scale(1.05); opacity: 0.6; }
+        }
+        .animate-pulse-scale {
+          animation: pulse-scale 1s ease-in-out infinite;
+        }
+        
+        @keyframes bounce-scale {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+        }
+        .animate-bounce-scale {
+          animation: bounce-scale 0.6s ease-in-out infinite;
+        }
+        
+        @keyframes slide-up {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-up {
+          animation: slide-up 0.5s ease-out;
         }
         
         /* 모바일 최적화 */
