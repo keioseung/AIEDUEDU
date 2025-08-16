@@ -451,8 +451,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <div className="space-y-2">
-            <p className="text-white/80 text-lg font-medium">학습한 용어를 불러오는 중...</p>
-            <p className="text-white/50 text-sm">잠시만 기다려주세요</p>
+            <p className="text-white/80 text-lg font-medium" style={{ writingMode: 'horizontal-tb', textOrientation: 'mixed' }}>학습한 용어를 불러오는 중...</p>
+            <p className="text-white/50 text-sm" style={{ writingMode: 'horizontal-tb', textOrientation: 'mixed' }}>잠시만 기다려주세요</p>
           </div>
         </div>
       </div>
