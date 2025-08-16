@@ -232,14 +232,14 @@ export default function IntroPage() {
              {/* 중앙 텍스트 표시 영역 */}
              {clickedStat !== null && (
                <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                 <div className="bg-white/15 backdrop-blur-lg rounded-lg p-4 text-white text-center max-w-md shadow-lg border border-white/20 animate-slide-up">
-                   <p className="font-medium leading-relaxed text-sm md:text-base">
+                 <div className="bg-gradient-to-r from-blue-500/90 to-purple-500/90 backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/30 shadow-2xl w-40 md:w-48 h-24 md:h-28 flex items-center justify-center">
+                   <p className="text-white text-xs md:text-sm font-medium leading-relaxed px-2 text-center">
                      {[
                        "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다.",
                        "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다.",
                        "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다.",
                        "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다."
-                     ][clickedStat]}
+                   ][clickedStat]}
                    </p>
                  </div>
                </div>
