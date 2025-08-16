@@ -203,7 +203,12 @@ export default function AuthPage() {
                       style={{
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
-                        appearance: 'none'
+                        appearance: 'none',
+                        WebkitTapHighlightColor: 'transparent',
+                        WebkitTouchCallout: 'none',
+                        WebkitUserSelect: 'none',
+                        userSelect: 'none',
+                        fontSize: '16px'
                       }}
                     />
                   </div>
@@ -222,7 +227,12 @@ export default function AuthPage() {
                         style={{
                           WebkitAppearance: 'none',
                           MozAppearance: 'none',
-                          appearance: 'none'
+                          appearance: 'none',
+                          WebkitTapHighlightColor: 'transparent',
+                          WebkitTouchCallout: 'none',
+                          WebkitUserSelect: 'none',
+                          userSelect: 'none',
+                          fontSize: '16px'
                         }}
                       />
                       <button
@@ -263,7 +273,12 @@ export default function AuthPage() {
                       style={{
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
-                        appearance: 'none'
+                        appearance: 'none',
+                        WebkitTapHighlightColor: 'transparent',
+                        WebkitTouchCallout: 'none',
+                        WebkitUserSelect: 'none',
+                        userSelect: 'none',
+                        fontSize: '16px'
                       }}
                     />
                   </div>
@@ -282,7 +297,12 @@ export default function AuthPage() {
                         style={{
                           WebkitAppearance: 'none',
                           MozAppearance: 'none',
-                          appearance: 'none'
+                          appearance: 'none',
+                          WebkitTapHighlightColor: 'transparent',
+                          WebkitTouchCallout: 'none',
+                          WebkitUserSelect: 'none',
+                          userSelect: 'none',
+                          fontSize: '16px'
                         }}
                       />
                       <button
@@ -344,6 +364,34 @@ export default function AuthPage() {
         }
         .animate-glow {
           animation: glow 3s ease-in-out infinite;
+        }
+        
+        /* 모바일 최적화 스타일 */
+        @media (max-width: 768px) {
+          input[type="text"], input[type="password"] {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            font-size: 16px !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+          }
+          
+          /* 모바일에서 포커스 시 레이아웃 안정화 */
+          input[type="text"]:focus, input[type="password"]:focus {
+            transform: translateZ(0);
+            outline: none;
+            -webkit-appearance: none;
+            border-radius: 8px;
+          }
+          
+          /* 모바일 터치 최적화 */
+          * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+          }
         }
       `}</style>
     </div>
