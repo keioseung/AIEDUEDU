@@ -449,8 +449,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
     return (
       <div className="glass rounded-2xl p-48 md:p-64 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white mx-auto mb-3"></div>
-          <p className="text-white/70 text-sm">학습한 용어를 불러오는 중...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <div className="space-y-2">
+            <p className="text-white/80 text-lg font-medium">학습한 용어를 불러오는 중...</p>
+            <p className="text-white/50 text-sm">잠시만 기다려주세요</p>
+          </div>
         </div>
       </div>
     )
