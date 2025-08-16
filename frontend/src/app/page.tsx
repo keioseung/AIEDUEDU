@@ -467,7 +467,7 @@ export default function IntroPage() {
 
                {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 */}
                {clickedStat !== null && (
-                 <div className="absolute inset-0 flex items-center justify-center z-20">
+                 <div className="absolute inset-0 flex items-center justify-center z-20" style={{ transform: 'translateY(-20px)' }}>
                    <div className="relative group">
                      {/* 메인 텍스트 상자 */}
                      <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-48 md:w-56 h-28 md:h-32 flex items-center justify-center relative overflow-hidden">

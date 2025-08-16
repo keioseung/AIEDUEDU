@@ -455,7 +455,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-32 md:p-48 min-h-[50vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
@@ -487,7 +487,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   return (
     <div className="glass rounded-2xl p-0 md:p-0 flex flex-col gap-1 md:gap-2">
       {/* 모바일 최적화 헤더 */}
-      <div className="flex items-center justify-between px-2 md:px-3 pt-2 md:pt-3">
+      <div className="flex items-center justify-between px-2 md:px-3 pt-0 md:pt-0">
         <div className="flex items-center gap-2">
           <button
             onTouchStart={handleWebViewTouch(toggleFilters)}
