@@ -228,10 +228,10 @@ export default function IntroPage() {
         
 
                                                                        {/* 하단 통계 섹션 */}
-           <div className="w-full max-w-5xl mb-12 md:mb-16">
-            <div className="relative" onClick={handleBackgroundClick}>
-             {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
-             <div className="relative h-64 md:h-80">
+                       <div className="w-full max-w-5xl mb-12 md:mb-16">
+             <div className="relative">
+              {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
+              <div className="relative h-64 md:h-80">
                {/* 첫 번째 행 */}
                <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
                  {/* 첫 번째 아이콘 - AI 정보 */}
@@ -503,10 +503,19 @@ export default function IntroPage() {
                    </div>
                  </div>
                )}
-             </div>
-           </div>
-         </div>
-      </div>
+                           </div>
+              
+              {/* 배경 클릭 영역 - 아이콘들이 펼쳐진 상태에서만 표시 */}
+              {clickedStat !== null && (
+                <div 
+                  className="absolute inset-0 -z-10 cursor-pointer"
+                  onClick={handleBackgroundClick}
+                  style={{ background: 'transparent' }}
+                />
+              )}
+            </div>
+          </div>
+       </div>
 
       <style jsx global>{`
         @keyframes float {
