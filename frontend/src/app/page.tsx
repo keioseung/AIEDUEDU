@@ -144,8 +144,13 @@ export default function IntroPage() {
                 {isTyping && <span className="animate-blink">|</span>}
               </h1>
               <div className="h-8 md:h-10 lg:h-12 flex items-center justify-center">
-                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-purple-300 font-medium animate-fade-in-out mobile-text text-center max-w-3xl mx-auto leading-relaxed">
-                  {taglines[currentTagline]}
+                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-purple-300 font-medium mobile-text text-center max-w-3xl mx-auto leading-relaxed">
+                  <span 
+                    key={currentTagline}
+                    className="inline-block animate-tagline-fade"
+                  >
+                    {taglines[currentTagline]}
+                  </span>
                 </p>
               </div>
             </div>
@@ -349,6 +354,29 @@ export default function IntroPage() {
         }
         .animate-stat-glow {
           animation: stat-glow 3s ease-in-out infinite;
+        }
+        
+        /* 태그라인 애니메이션 */
+        @keyframes tagline-fade {
+          0% { 
+            opacity: 0; 
+            transform: translateY(20px) scale(0.95);
+          }
+          20% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+          }
+          80% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+          }
+          100% { 
+            opacity: 0; 
+            transform: translateY(-20px) scale(0.95);
+          }
+        }
+        .animate-tagline-fade {
+          animation: tagline-fade 3s ease-in-out;
         }
         
         /* 모바일 최적화 */
