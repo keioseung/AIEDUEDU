@@ -27,7 +27,7 @@ interface LearnedTermsResponse {
 }
 
 function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDateChange }: LearnedTermsSectionProps) {
-  const [selectedDate, setSelectedDate] = useState<string | null>(propSelectedDate || null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'date' | 'length' | 'alphabet'>('date')
