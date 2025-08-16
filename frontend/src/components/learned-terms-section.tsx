@@ -458,7 +458,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
       <div className="glass rounded-2xl p-32 md:p-48 min-h-[50vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만기다려주세요.</p>
+          <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
         </div>
       </div>
     )
