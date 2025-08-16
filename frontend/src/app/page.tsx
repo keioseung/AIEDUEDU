@@ -277,10 +277,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                     <div className={`w-12 h-12 md:w-16 md:h-16 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
                        clickedStat === 0 ? 'animate-stat-glow' : ''
                      }`}>
-                       <FaBrain className="text-purple-300 text-lg md:text-xl" />
+                       <FaBrain className="text-purple-300 text-xl md:text-3xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -339,10 +339,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                     <div className={`w-12 h-12 md:w-16 md:h-16 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
                        clickedStat === 1 ? 'animate-stat-glow' : ''
                      }`}>
-                       <FaRocket className="text-purple-300 text-lg md:text-xl" />
+                       <FaRocket className="text-purple-300 text-xl md:text-3xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -404,10 +404,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                     <div className={`w-12 h-12 md:w-16 md:h-16 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
                        clickedStat === 2 ? 'animate-stat-glow' : ''
                      }`}>
-                       <FaChartLine className="text-purple-300 text-lg md:text-xl" />
+                       <FaChartLine className="text-purple-300 text-xl md:text-3xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -466,10 +466,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                     <div className={`w-12 h-12 md:w-16 md:h-16 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
                        clickedStat === 3 ? 'animate-stat-glow' : ''
                      }`}>
-                       <FaTrophy className="text-purple-300 text-lg md:text-xl" />
+                       <FaTrophy className="text-purple-300 text-xl md:text-3xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
