@@ -46,6 +46,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const [isScrolling, setIsScrolling] = useState(false)
   const [touchStartY, setTouchStartY] = useState(0)
   const [touchStartTime, setTouchStartTime] = useState(0)
+  const [scrollMode, setScrollMode] = useState(false)
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -379,6 +380,12 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   // 용어 선택 핸들러 (스크롤 상태 확인)
   const handleTermSelect = (index: number) => {
+    // 스크롤 모드일 때는 용어 선택 방지
+    if (scrollMode) {
+      console.log('스크롤 모드 - 용어 선택 방지')
+      return
+    }
+    
     // 스크롤 중일 때는 용어 선택 방지
     if (isScrolling) {
       console.log('스크롤 중 - 용어 선택 방지')
@@ -899,19 +906,33 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             className="bg-white/5 rounded-xl p-4"
           >
                          <div className="flex items-center justify-between mb-3">
-               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                 <Target className="w-5 h-5" />
-                 전체 용어 목록 ({filteredTerms.length}개)
-               </h3>
-               <button
-                 onTouchStart={handleWebViewTouch(toggleListHeight)}
-                 onClick={toggleListHeight}
-                 className="px-2 py-1 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 rounded text-xs font-medium transition-all touch-manipulation select-none min-h-[32px] min-w-[40px] webview-button"
-                 style={{ WebkitTapHighlightColor: 'transparent' }}
-               >
-                 {listHeight === 'default' ? '🔽' : listHeight === 'large' ? '⏫' : '⏬'}
-               </button>
-             </div>
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <Target className="w-5 h-5" />
+                  전체 용어 목록 ({filteredTerms.length}개)
+                </h3>
+                <div className="flex items-center gap-2">
+                  <button
+                    onTouchStart={handleWebViewTouch(() => setScrollMode(!scrollMode))}
+                    onClick={() => setScrollMode(!scrollMode)}
+                    className={`px-2 py-1 rounded text-xs font-medium transition-all touch-manipulation select-none min-h-[32px] min-w-[60px] webview-button ${
+                      scrollMode
+                        ? 'bg-blue-500/30 text-blue-300 border border-blue-500/50'
+                        : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                    }`}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                  >
+                    {scrollMode ? '📱 스크롤' : '👆 선택'}
+                  </button>
+                  <button
+                    onTouchStart={handleWebViewTouch(toggleListHeight)}
+                    onClick={toggleListHeight}
+                    className="px-2 py-1 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 rounded text-xs font-medium transition-all touch-manipulation select-none min-h-[32px] min-w-[40px] webview-button"
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                  >
+                    {listHeight === 'default' ? '🔽' : listHeight === 'large' ? '⏫' : '⏬'}
+                  </button>
+                </div>
+              </div>
                                                        <div 
                    className={`overflow-y-auto space-y-2 ${
                      listHeight === 'default' ? 'max-h-64' : 
