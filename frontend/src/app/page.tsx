@@ -307,14 +307,6 @@ export default function IntroPage() {
 
         {/* 하단 통계 섹션 */}
         <div className="w-full max-w-5xl mb-8 md:mb-12">
-          <div className="text-center mb-6 md:mb-8">
-            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-3 md:mb-4">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                AI Mastery Hub
-              </span>
-            </h3>
-          </div>
-          
           <div className="grid grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl px-4">
             {[
               { label: "매일 새로운", value: "AI 정보", icon: FaBrain, desc: "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다." },
