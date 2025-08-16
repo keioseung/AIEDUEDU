@@ -364,8 +364,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
     const currentTime = Date.now()
     const timeDiff = currentTime - touchStartTime
     
-    // 수직 이동이 8px 이상이고 수평 이동이 적고, 빠른 움직임이면 스크롤로 간주
-    if (deltaY > 8 && deltaX < 12 && timeDiff < 200) {
+    // 수직 이동이 5px 이상이고 수평 이동이 적고, 빠른 움직임이면 스크롤로 간주 (더 민감하게)
+    if (deltaY > 5 && deltaX < 10 && timeDiff < 300) {
       setIsScrolling(true)
     }
   }
@@ -373,7 +373,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const handleListTouchEnd = () => {
     // 스크롤 중이었다면 더 긴 시간 후 스크롤 상태 해제
     if (isScrolling) {
-      setTimeout(() => setIsScrolling(false), 800)
+      setTimeout(() => setIsScrolling(false), 1000)
     }
   }
 
@@ -1004,20 +1004,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
-        >
-          <div className="flex items-center gap-2 md:gap-3">
-            <Calendar className="w-5 h-5 md:w-6 md:h-6 text-purple-300" />
-            <div>
-              <div className="text-white font-semibold text-sm md:text-base">{learnedData.learned_dates.length}</div>
-              <div className="text-white/60 text-xs md:text-sm">학습일수</div>
-            </div>
-          </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
           className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
         >
           <div className="flex items-center gap-2 md:gap-3">
@@ -1033,7 +1019,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.3 }}
           className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
         >
           <div className="flex items-center gap-2 md:gap-3">
