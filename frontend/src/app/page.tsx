@@ -345,9 +345,16 @@ export default function IntroPage() {
                   <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
                 )}
                 
+                {/* Info box - 위쪽에 표시 */}
+                {clickedStat === index && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-2 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20 z-20">
+                    <p className="font-medium">{stat.desc}</p>
+                  </div>
+                )}
+                
                 {/* Icon */}
                 <div className={`relative z-10 transition-all duration-300 ${
-                  clickedStat === index ? 'mb-1 md:mb-2 -translate-y-2' : 'mb-2 md:mb-3'
+                  clickedStat === index ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                 }`}>
                   <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
                     clickedStat === index ? 'animate-stat-glow' : ''
@@ -365,13 +372,6 @@ export default function IntroPage() {
                     {stat.value}
                   </div>
                 </div>
-                
-                {/* Info box */}
-                {clickedStat === index && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-2 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20">
-                    <p className="font-medium">{stat.desc}</p>
-                  </div>
-                )}
               </div>
             ))}
           </div>
