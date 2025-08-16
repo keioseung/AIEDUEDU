@@ -224,94 +224,16 @@ export default function IntroPage() {
           </div>
         </div>
 
-        {/* 기능 카드들 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full max-w-6xl mb-12 md:mb-16 px-1">
-          {[
-            { 
-              icon: FaBrain, 
-              title: "AI 정보 학습", 
-              desc: "매일 새로운 AI 정보를 제공합니다.<br/>AI 개념을 체계적으로 학습할 수 있습니다.", 
-              color: "from-blue-500 to-cyan-500"
-            },
-            { 
-              icon: FaRocket, 
-              title: "용어 퀴즈", 
-              desc: "학습한 AI 정보의 관련 용어들을<br/>퀴즈로 점검하여 실력을 향상시켜보세요.", 
-              color: "from-purple-500 to-pink-500"
-            },
-            { 
-              icon: FaChartLine, 
-              title: "학습 진행률", 
-              desc: "개인별 학습 진행 상황을<br/>상세한 통계로 추적하고 목표를 설정해보세요.", 
-              color: "from-green-500 to-emerald-500"
-            }
-          ].map((feature, index) => (
-            <div
-              key={index}
-              className={`group bg-white/5 backdrop-blur-xl rounded-2xl p-4 md:p-6 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized text-center cursor-pointer transform-gpu ${
-                clickedCard === index ? 'scale-110 bg-white/20 border-white/40 shadow-2xl' : ''
-              }`}
-              style={{ 
-                animationDelay: `${index * 0.2}s`,
-                transform: clickedCard === index ? 'scale(1.1) rotate(2deg)' : 'scale(1) rotate(0deg)'
-              }}
-              onClick={() => toggleCard(index)}
-            >
-               {/* 클릭 시 고급스러운 오라 효과 */}
-               {clickedCard === index && (
-                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-2xl animate-aura-glow" />
-               )}
-               
-               {/* 클릭 시 그라데이션 웨이브 효과 */}
-               {clickedCard === index && (
-                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/15 via-purple-500/15 to-pink-500/15 rounded-2xl animate-gradient-wave" />
-               )}
-               
-               {/* 클릭 시 부드러운 확장 효과 */}
-               {clickedCard === index && (
-                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 rounded-2xl animate-smooth-expand" />
-               )}
-               
-               {/* 클릭 시 빛나는 테두리 효과 */}
-               {clickedCard === index && (
-                 <div className="absolute inset-0 rounded-2xl border-2 border-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-border-glow" />
-               )}
-               
-               <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10 flex flex-col items-center">
-                <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300 animate-icon-glow shadow-2xl group-hover:shadow-3xl ${
-                  clickedCard === index ? 'animate-bounce-scale' : ''
-                }`}>
-                  <feature.icon className="text-white text-lg md:text-xl" />
-                </div>
-                <h3 className={`text-white font-bold text-lg md:text-xl mb-2 md:mb-3 mobile-text text-center ${
-                  clickedCard === index ? 'animate-text-glow' : ''
-                }`}>{feature.title}</h3>
-                <p className="text-gray-300 text-xs md:text-sm leading-relaxed mobile-text text-center" dangerouslySetInnerHTML={{ __html: feature.desc }}></p>
-                
-                {/* 클릭 시 추가 정보 표시 */}
-                {clickedCard === index && (
-                  <div className="mt-3 p-2 bg-white/10 rounded-xl border border-white/20 animate-slide-up">
-                    <p className="text-white/80 text-xs font-medium">
-                      {index === 0 && "🚀 매일 새로운 AI 트렌드와 최신 정보를 제공합니다!"}
-                      {index === 1 && "🎯 다양한 난이도의 퀴즈로 지식을 점검하세요!"}
-                      {index === 2 && "📊 체계적인 학습 진행률 관리로 목표를 달성하세요!"}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        
 
         {/* 하단 통계 섹션 */}
         <div className="w-full max-w-5xl mb-16 md:mb-20">
-          <div className="grid grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl px-4">
             {[
               { label: "매일 새로운", value: "AI 정보", icon: FaBrain, desc: "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다." },
               { label: "핵심 개념", value: "관련 용어", icon: FaRocket, desc: "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다." },
-              { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, desc: "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다." }
+              { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, desc: "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다." },
+              { label: "학습 현황", value: "진행률", icon: FaTrophy, desc: "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다." }
             ].map((stat, index) => (
               <div
                 key={index}
