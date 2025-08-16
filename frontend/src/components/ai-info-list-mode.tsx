@@ -197,7 +197,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 로딩 중인 경우
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-64 md:p-80 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
           <div className="space-y-3">
@@ -212,7 +212,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
     return (
-      <div className="glass rounded-2xl p-64 md:p-80 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="w-16 h-16 mx-auto mb-4 opacity-60">
             <FaRobot className="w-full h-full text-blue-400" />
