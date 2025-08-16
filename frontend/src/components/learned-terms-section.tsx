@@ -925,15 +925,15 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                       }`}
                       style={{ WebkitTapHighlightColor: 'transparent' }}
                     >
-                      {scrollMode ? '📱 스크롤' : '스크롤 고정\n(1초 이상 클릭)'}
+                      {scrollMode ? '📱 스크롤' : (
+                        <div className="text-center leading-tight">
+                          <div>스크롤 고정</div>
+                          <div className="text-[10px] opacity-80">(1초 이상 클릭)</div>
+                        </div>
+                      )}
                     </button>
                     
-                    {/* 1초 이상 클릭 안내 문구 */}
-                    {!scrollMode && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-2 py-1 bg-gradient-to-r from-blue-500/80 to-purple-500/80 backdrop-blur-sm rounded-md text-white text-xs font-medium shadow-lg border border-blue-300/50 z-20 animate-fade-in">
-                        1초이상 클릭
-                      </div>
-                    )}
+                    {/* 1초 이상 클릭 안내 문구 제거 */}
                   </div>
                   <button
                     onTouchStart={handleWebViewTouch(toggleListHeight)}

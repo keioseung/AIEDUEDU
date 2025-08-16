@@ -389,9 +389,9 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        style={{
                          left: '50%',
                          transform: 'translateX(-50%)',
-                         width: 'calc(100vw - 2rem)',
-                         maxWidth: '320px',
-                         minWidth: '280px'
+                         width: 'calc(100vw - 3rem)',
+                         maxWidth: '300px',
+                         minWidth: '260px'
                        }}
                      >
                        <div className="text-center mb-2">
@@ -411,13 +411,13 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        
                        {/* AI 정보 목록 */}
                        {!isLoadingAIInfo && (
-                         <div className="space-y-1 max-h-36 overflow-y-auto custom-scrollbar">
+                         <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
                            {actualAIInfo.length > 0 ? (
                              actualAIInfo.map((info, index) => (
                                <button
                                  key={info.title}
                                  onClick={() => handleQuizTitleChange(info.title)}
-                                 className="w-full text-left p-1 rounded-lg bg-gradient-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-200 group"
+                                 className="w-full text-left p-1.5 rounded-lg bg-gradient-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-200 group"
                                >
                                  <div className="flex items-center justify-between">
                                    <div className="flex-1 min-w-0">
