@@ -153,12 +153,12 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     <section className="mb-8 relative">
       {/* 로딩 상태 */}
               {isLoading && (
-          <div className="glass rounded-2xl p-64 md:p-80 min-h-[80vh] flex items-center justify-center">
+          <div className="glass rounded-2xl p-16 md:p-24 min-h-[50vh] flex items-center justify-center">
             <div className="text-center text-white">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
-              <div className="space-y-3">
-                <p className="text-white/80 text-xl font-medium">퀴즈를 생성하고 있습니다...</p>
-                <p className="text-white/50 text-base">잠시만 기다려주세요</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-white/80 text-lg font-medium">퀴즈를 생성하고 있습니다...</p>
+                <span className="text-white/50 text-sm">잠시만 기다려주세요</span>
               </div>
             </div>
           </div>
