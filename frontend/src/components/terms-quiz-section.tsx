@@ -153,21 +153,21 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     <section className="mb-8 relative">
       {/* 로딩 상태 */}
       {isLoading && (
-        <div className="glass rounded-2xl p-32 md:p-48 min-h-[80vh] flex items-center justify-center">
-          <div className="text-white text-base md:text-lg mobile-text">퀴즈를 생성하고 있습니다...</div>
+        <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
+          <div className="text-white text-sm mobile-text">퀴즈를 생성하고 있습니다...</div>
         </div>
       )}
 
       {/* 데이터가 없을 때 */}
       {!isLoading && (!quizData?.quizzes || quizData.quizzes.length === 0) && (
-        <div className="glass rounded-2xl p-32 md:p-48 min-h-[80vh] flex items-center justify-center">
+        <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
           <div className="text-center text-white">
-            <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-60" />
-            <h3 className="text-lg md:text-xl font-semibold mb-2 mobile-text">등록된 용어가 없습니다</h3>
-            <p className="text-white/70 mb-4 text-sm md:text-base mobile-text">
+            <BookOpen className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 opacity-60" />
+            <h3 className="text-base md:text-lg font-semibold mb-2 mobile-text">등록된 용어가 없습니다</h3>
+            <p className="text-white/70 mb-3 text-sm mobile-text">
               {quizData?.message || `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`}
             </p>
-            <div className="text-xs md:text-sm text-white/50 mobile-text">
+            <div className="text-xs text-white/50 mobile-text">
               선택한 날짜: {selectedDate}
             </div>
           </div>
@@ -176,20 +176,20 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
       {/* 퀴즈 내용 - 데이터가 있을 때만 표시 */}
       {!isLoading && quizData?.quizzes && quizData.quizzes.length > 0 && (
-        <div className="glass rounded-2xl p-4 md:p-8">
+        <div className="glass rounded-2xl p-3 md:p-6">
           {/* 퀴즈 진행상황 */}
-          <div className="mb-4 md:mb-6">
-            <div className="flex items-center justify-between mb-3 md:mb-4">
-              <span className="text-white/70 text-sm md:text-base mobile-text">
+          <div className="mb-3 md:mb-4">
+            <div className="flex items-center justify-between mb-2 md:mb-3">
+              <span className="text-white/70 text-sm mobile-text">
                 {currentQuizIndex + 1} / {quizData.quizzes.length}
               </span>
-              <span className="text-white font-semibold text-sm md:text-base mobile-text">
+              <span className="text-white font-semibold text-sm mobile-text">
                 점수: {score} / {quizData.quizzes.length}
               </span>
             </div>
-            <div className="w-full bg-white/10 rounded-full h-2">
+            <div className="w-full bg-white/10 rounded-full h-1.5">
               <div
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all"
                 style={{ width: `${((currentQuizIndex + 1) / quizData.quizzes.length) * 100}%` }}
               />
             </div>
@@ -197,29 +197,29 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
           {/* 퀴즈 내용 */}
           {currentQuiz && !quizCompleted && (
-            <div className="space-y-4 md:space-y-6">
+            <div className="space-y-3 md:space-y-4">
               <div>
-                <h3 className="text-lg md:text-xl font-semibold text-white mb-3 md:mb-4 mobile-text leading-tight">
+                <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 mobile-text leading-tight">
                   {currentQuiz.question}
                 </h3>
               </div>
 
-              <div className="space-y-2 md:space-y-3">
+              <div className="space-y-2">
                 {[currentQuiz.option1, currentQuiz.option2, currentQuiz.option3, currentQuiz.option4].map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     disabled={showResult}
-                    className={`w-full p-3 md:p-4 text-left rounded-lg border-2 transition-all touch-optimized mobile-touch-target ${getOptionClass(index)}`}
+                    className={`w-full p-2.5 md:p-3 text-left rounded-lg border-2 transition-all touch-optimized mobile-touch-target ${getOptionClass(index)}`}
                   >
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <span className="font-semibold text-sm md:text-base">{String.fromCharCode(65 + index)}.</span>
-                      <span className="text-sm md:text-base mobile-text flex-1">{option}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-sm">{String.fromCharCode(65 + index)}.</span>
+                      <span className="text-sm mobile-text flex-1">{option}</span>
                       {showResult && index === currentQuiz.correct && (
-                        <CheckCircle className="w-4 h-4 md:w-5 md:h-5 ml-auto flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 ml-auto flex-shrink-0" />
                       )}
                       {showResult && selectedAnswer === index && index !== currentQuiz.correct && (
-                        <XCircle className="w-4 h-4 md:w-5 md:h-5 ml-auto flex-shrink-0" />
+                        <XCircle className="w-4 h-4 ml-auto flex-shrink-0" />
                       )}
                     </div>
                   </button>
@@ -233,23 +233,23 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20"
+                    className="p-3 rounded-lg bg-white/10 border border-white/20"
                   >
-                    <h4 className="text-base md:text-lg font-semibold text-white mb-2 mobile-text">
+                    <h4 className="text-base font-semibold text-white mb-2 mobile-text">
                       {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
                     </h4>
-                    <p className="text-white/80 text-sm md:text-base mobile-text">{currentQuiz.explanation}</p>
+                    <p className="text-white/80 text-sm mobile-text">{currentQuiz.explanation}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* 액션 버튼 */}
-              <div className="flex flex-col sm:flex-row gap-2 md:gap-4">
+              <div className="flex flex-col sm:flex-row gap-2">
                 {!showResult ? (
                   <button
                     onClick={handleSubmitAnswer}
                     disabled={selectedAnswer === null}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 md:py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed touch-optimized mobile-touch-target text-sm md:text-base"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2.5 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed touch-optimized mobile-touch-target text-sm"
                   >
                     답안 제출
                   </button>
@@ -258,21 +258,21 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                     {currentQuizIndex < quizData.quizzes.length - 1 ? (
                       <button
                         onClick={handleNextQuiz}
-                        className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 md:py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600 touch-optimized mobile-touch-target text-sm md:text-base"
+                        className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white py-2.5 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600 touch-optimized mobile-touch-target text-sm"
                       >
                         다음 문제
                       </button>
                     ) : (
                       <button
                         onClick={handleNextQuiz}
-                        className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-3 md:py-3 rounded-lg font-semibold hover:from-yellow-600 hover:to-orange-600 touch-optimized mobile-touch-target text-sm md:text-base"
+                        className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2.5 rounded-lg font-semibold hover:from-yellow-600 hover:to-orange-600 touch-optimized mobile-touch-target text-sm"
                       >
                         퀴즈 완료하기
                       </button>
                     )}
                     <button
                       onClick={handleResetQuiz}
-                      className="px-4 md:px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 flex items-center justify-center gap-2 touch-optimized mobile-touch-target text-sm md:text-base"
+                      className="px-4 py-2.5 bg-white/10 text-white rounded-lg hover:bg-white/20 flex items-center justify-center gap-2 touch-optimized mobile-touch-target text-sm"
                     >
                       <RotateCcw className="w-4 h-4" />
                       <span className="hidden sm:inline">다시 시작</span>
@@ -289,10 +289,10 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center space-y-4 md:space-y-6"
+              className="text-center space-y-3 md:space-y-4"
             >
-              <div className="space-y-3 md:space-y-4">
-                <div className="text-4xl md:text-6xl mb-3 md:mb-4">
+              <div className="space-y-2 md:space-y-3">
+                <div className="text-3xl md:text-5xl mb-2 md:mb-3">
                   {finalScore.percentage >= 90 ? '🏆' : 
                    finalScore.percentage >= 80 ? '🥇' : 
                    finalScore.percentage >= 70 ? '🥈' : 

@@ -447,10 +447,10 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-32 md:p-48 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white/70">학습한 용어를 불러오는 중...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white mx-auto mb-3"></div>
+          <p className="text-white/70 text-sm">학습한 용어를 불러오는 중...</p>
         </div>
       </div>
     )
@@ -458,14 +458,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   if (!learnedData?.terms || learnedData.terms.length === 0) {
     return (
-      <div className="glass rounded-2xl p-32 md:p-48 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
         <div className="text-center text-white">
-          <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-60" />
-          <h3 className="text-xl font-semibold mb-2">학습한 용어가 없습니다</h3>
-          <p className="text-white/70 mb-4">
+          <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-60" />
+          <h3 className="text-lg font-semibold mb-2">학습한 용어가 없습니다</h3>
+          <p className="text-white/70 mb-3 text-sm">
             AI 정보를 학습하고 용어를 등록한 후 여기서 확인해보세요!
           </p>
-          <div className="text-sm text-white/50">
+          <div className="text-xs text-white/50">
             총 학습 가능한 용어: 0개
           </div>
         </div>
@@ -477,63 +477,63 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const difficulty = currentTerm ? getDifficulty(currentTerm.term) : null
 
   return (
-    <div className="glass rounded-2xl p-4 md:p-6 flex flex-col gap-4 md:gap-6">
+    <div className="glass rounded-2xl p-3 md:p-4 flex flex-col gap-3 md:gap-4">
       {/* 모바일 최적화 헤더 */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2 md:gap-3">
-          <Brain className="w-6 h-6 md:w-8 md:h-8" />
+        <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+          <Brain className="w-5 h-5 md:w-6 md:h-6" />
           <span className="hidden sm:inline">학습한 용어 모음</span>
           <span className="sm:hidden">용어 학습</span>
         </h2>
-        <div className="flex items-center gap-3">
-                     <button
-             onTouchStart={handleWebViewTouch(toggleFilters)}
-             onClick={toggleFilters}
-             className={`px-4 md:px-5 py-3 md:py-4 rounded-xl transition-all text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button ${
-               showFilters
-                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg ring-2 ring-blue-400/50 border border-blue-300/30'
-                 : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
-             }`}
-             style={{ WebkitTapHighlightColor: 'transparent' }}
-           >
-             <Filter className={`w-4 h-4 md:w-5 md:h-5 ${showFilters ? 'text-white' : 'text-white/80'}`} />
-                           <span className="inline">필터</span>
-           </button>
-           <button
-             onTouchStart={handleWebViewTouch(toggleTermList)}
-             onClick={toggleTermList}
-             className={`px-4 md:px-5 py-3 md:py-4 rounded-xl transition-all text-sm md:text-base font-medium flex items-center gap-2 touch-manipulation select-none min-h-[48px] min-w-[88px] justify-center webview-button ${
-               showTermList
-                 ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg ring-2 ring-emerald-400/50 border border-emerald-300/30'
-                 : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
-             }`}
-             style={{ WebkitTapHighlightColor: 'transparent' }}
-           >
-             <Menu className={`w-4 h-4 md:w-5 md:h-5 ${showTermList ? 'text-white' : 'text-white/80'}`} />
-                           <span className="inline">목록</span>
-           </button>
+        <div className="flex items-center gap-2">
+          <button
+            onTouchStart={handleWebViewTouch(toggleFilters)}
+            onClick={toggleFilters}
+            className={`px-3 py-2 rounded-lg transition-all text-sm font-medium flex items-center gap-1.5 touch-manipulation select-none min-h-[40px] min-w-[70px] justify-center webview-button ${
+              showFilters
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg ring-2 ring-blue-400/50 border border-blue-300/30'
+                : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
+            }`}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <Filter className={`w-4 h-4 ${showFilters ? 'text-white' : 'text-white/80'}`} />
+            <span className="inline">필터</span>
+          </button>
+          <button
+            onTouchStart={handleWebViewTouch(toggleTermList)}
+            onClick={toggleTermList}
+            className={`px-3 py-2 rounded-lg transition-all text-sm font-medium flex items-center gap-1.5 touch-manipulation select-none min-h-[40px] min-w-[70px] justify-center webview-button ${
+              showTermList
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg ring-2 ring-emerald-400/50 border border-emerald-300/30'
+                : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
+            }`}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <Menu className={`w-4 h-4 ${showTermList ? 'text-white' : 'text-white/80'}`} />
+            <span className="inline">목록</span>
+          </button>
         </div>
       </div>
 
       {/* 모바일 최적화 검색바 */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
         <input
           ref={searchInputRef}
           type="text"
           placeholder="용어나 설명으로 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 md:py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-base"
+          className="w-full pl-9 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm"
         />
         {searchQuery && (
           <button
             onTouchStart={handleWebViewTouch(() => setSearchQuery(''))}
             onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white min-h-[44px] min-w-[44px] webview-button"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white min-h-[36px] min-w-[36px] webview-button"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         )}
       </div>
@@ -545,15 +545,15 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-white/5 rounded-xl p-4 space-y-4"
+            className="bg-white/5 rounded-lg p-3 space-y-3"
           >
-                         {/* 날짜별 필터 */}
-             {learnedData.learned_dates.length > 1 && (
-               <div>
-                 <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                   <Calendar className="w-5 h-5" />
-                   날짜별 필터
-                 </h3>
+            {/* 날짜별 필터 */}
+            {learnedData.learned_dates.length > 1 && (
+              <div>
+                <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  날짜별 필터
+                </h3>
                  
                  {/* 전체 버튼 - 제일 위에 배치 */}
                  <div className="mb-4">

@@ -636,14 +636,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       </div>
 
       {/* 기간별 추이 그래프 - 기본 bar chart 복원 */}
-      <div className="space-y-6 px-4 md:px-6">
+      <div className="space-y-4 px-3 md:px-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-white font-semibold text-lg ml-1 md:ml-2">기간별 학습 추이</h3>
-          <div className="text-white/60 text-sm mr-2 md:mr-4">
+          <h3 className="text-white font-semibold text-base ml-1">기간별 학습 추이</h3>
+          <div className="text-white/60 text-xs mr-2">
             {periodStats?.start_date} ~ {periodStats?.end_date}
           </div>
         </div>
-        <div className="glass rounded-2xl p-2 md:p-4">
+        <div className="glass rounded-xl p-2 md:p-3">
           {periodStatsLoading ? (
             <div className="text-center text-white/60 py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
@@ -655,21 +655,21 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             
             return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
           })() ? (
-            <div className="space-y-8">
+            <div className="space-y-5">
               {/* AI 정보 추이 */}
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-white/90 font-semibold">AI 정보 학습</span>
-                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 rounded-full">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
+                    <span className="text-white/90 font-semibold text-sm">AI 정보 학습</span>
+                    <div className="flex items-center gap-1 px-1.5 py-0.5 bg-blue-500/20 rounded-full">
                       <span className="text-blue-300 text-xs">평균</span>
-                      <span className="text-blue-200 font-bold text-sm">
+                      <span className="text-blue-200 font-bold text-xs">
                         {calculateAverage(uniqueChartData, 'ai_info')}%
                       </span>
                     </div>
                   </div>
-                  <span className="text-white/60 text-sm">
+                  <span className="text-white/60 text-xs">
                     최대: 100%
                   </span>
                 </div>
@@ -683,11 +683,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     </div>
 
                     {/* bar + 날짜 */}
-                    <div className={`flex items-end h-32 ${getBarGap()}`}>
+                    <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 128;
+                        const barMaxHeight = 96;
                         const effectiveMaxAI = maxAI > 0 ? maxAI : 3;
-                        const aiHeight = Math.min(Math.max((data.ai_info / effectiveMaxAI) * barMaxHeight, data.ai_info > 0 ? 4 : 0), barMaxHeight);
+                        const aiHeight = Math.min(Math.max((data.ai_info / effectiveMaxAI) * barMaxHeight, data.ai_info > 0 ? 3 : 0), barMaxHeight);
                         const isFullAI = data.ai_info >= effectiveMaxAI;
                         const percent = Math.min(Math.round((data.ai_info / effectiveMaxAI) * 100), 100);
                         return (
@@ -701,22 +701,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 }
                                 style={{
                                   height: aiHeight,
-                                  minHeight: data.ai_info > 0 ? 4 : 0,
+                                  minHeight: data.ai_info > 0 ? 3 : 0,
                                   width: "100%"
                                 }}
                               />
                               {/* bar 위에 % */}
                               {data.ai_info > 0 && shouldShowPercentage() && (
-                                <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
+                                <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
                                   percent === 100 
-                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
-                                    : 'bg-gradient-to-r from-blue-400 to-cyan-300 text-white shadow-lg shadow-blue-500/30 px-1.5 py-0.5 rounded-md'
+                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
+                                    : 'bg-gradient-to-r from-blue-400 to-cyan-300 text-white shadow-lg shadow-blue-500/30 px-1 py-0.5 rounded-md'
                                 }`}>
                                   {percent}%
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px', minHeight: '16px'}}>
+                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                               {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
                             </div>
                           </div>
@@ -729,36 +729,36 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
               {/* 용어 학습 추이 */}
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                    <span className="text-white/90 font-semibold">용어 학습</span>
-                    <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/20 rounded-full">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 bg-purple-500 rounded-full"></div>
+                    <span className="text-white/90 font-semibold text-sm">용어 학습</span>
+                    <div className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 rounded-full">
                       <span className="text-purple-300 text-xs">평균</span>
-                      <span className="text-purple-200 font-bold text-sm">
+                      <span className="text-purple-200 font-bold text-xs">
                         {calculateAverage(uniqueChartData, 'terms')}%
                       </span>
                     </div>
                   </div>
-                  <span className="text-white/60 text-sm">
+                  <span className="text-white/60 text-xs">
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
-                  <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
+                <div className="overflow-x-auto pt-12 -mx-2 md:-mx-3">
+                  <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 96}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 128/5}}>{v}%</div>
+                        <div key={v} style={{height: 96/5}}>{v}%</div>
                       ))}
                     </div>
 
                     {/* bar + 날짜 */}
-                    <div className={`flex items-end h-32 ${getBarGap()}`}>
+                    <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 128;
+                        const barMaxHeight = 96;
                         const effectiveMaxTerms = maxTerms > 0 ? maxTerms : 60;
-                        const termsHeight = Math.min(Math.max((data.terms / effectiveMaxTerms) * barMaxHeight, data.terms > 0 ? 4 : 0), barMaxHeight);
+                        const termsHeight = Math.min(Math.max((data.terms / effectiveMaxTerms) * barMaxHeight, data.terms > 0 ? 3 : 0), barMaxHeight);
                         const isFullTerms = data.terms >= effectiveMaxTerms;
                         const percent = Math.min(Math.round((data.terms / effectiveMaxTerms) * 100), 100);
                         return (
@@ -772,22 +772,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 }
                                 style={{
                                   height: termsHeight,
-                                  minHeight: data.terms > 0 ? 4 : 0,
+                                  minHeight: data.terms > 0 ? 3 : 0,
                                   width: "100%"
                                 }}
                               />
                               {/* bar 위에 % */}
                               {data.terms > 0 && shouldShowPercentage() && (
-                                <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
+                                <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
                                   percent === 100 
-                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
-                                    : 'bg-gradient-to-r from-purple-400 to-pink-300 text-white shadow-lg shadow-purple-500/30 px-1.5 py-0.0.5 rounded-md'
+                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
+                                    : 'bg-gradient-to-r from-purple-400 to-pink-300 text-white shadow-lg shadow-purple-500/30 px-1 py-0.5 rounded-md'
                                 }`}>
                                   {percent}%
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px', minHeight: '16px'}}>
+                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                               {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
                             </div>
                           </div>
@@ -800,35 +800,35 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
               {/* 퀴즈 점수 추이 */}
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-white/90 font-semibold">퀴즈 점수</span>
-                    <div className="flex items-center gap-1 px-2 py-1 bg-green-500/20 rounded-full">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                    <span className="text-white/90 font-semibold text-sm">퀴즈 점수</span>
+                    <div className="flex items-center gap-1 px-1.5 py-0.5 bg-green-500/20 rounded-full">
                       <span className="text-green-300 text-xs">평균</span>
-                      <span className="text-green-200 font-bold text-sm">
+                      <span className="text-green-200 font-bold text-xs">
                         {calculateAverage(uniqueChartData, 'quiz_score')}%
                       </span>
                     </div>
                   </div>
-                  <span className="text-white/60 text-sm">
+                  <span className="text-white/60 text-xs">
                     최대: {maxQuiz}%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
-                  <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
+                <div className="overflow-x-auto pt-12 -mx-2 md:-mx-3">
+                  <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 96}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 128/5}}>{v}%</div>
+                        <div key={v} style={{height: 96/5}}>{v}%</div>
                       ))}
                     </div>
 
                     {/* bar + 날짜 */}
-                    <div className={`flex items-end h-32 ${getBarGap()}`}>
+                    <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 128;
-                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuiz) * barMaxHeight, data.quiz_score > 0 ? 4 : 0), barMaxHeight);
+                        const barMaxHeight = 96;
+                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuiz) * barMaxHeight, data.quiz_score > 0 ? 3 : 0), barMaxHeight);
                         const isFullQuiz = data.quiz_score >= maxQuiz;
                         const percent = Math.min(Math.round((data.quiz_score / maxQuiz) * 100), 100);
                         return (
@@ -842,22 +842,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 }
                                 style={{
                                   height: quizHeight,
-                                  minHeight: data.quiz_score > 0 ? 4 : 0,
+                                  minHeight: data.quiz_score > 0 ? 3 : 0,
                                   width: "100%"
                                 }}
                               />
                               {/* bar 위에 % */}
                               {data.quiz_score > 0 && shouldShowPercentage() && (
-                                <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
+                                <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
                                   percent === 100 
-                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
-                                    : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-1.5 py-0.5 rounded-md'
+                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
+                                    : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-1 py-0.5 rounded-md'
                                 }`}>
                                   {percent}%
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-2 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'10px', minHeight: '16px'}}>
+                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                               {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
                             </div>
                           </div>
