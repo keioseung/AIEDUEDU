@@ -126,10 +126,10 @@ export default function AuthPage() {
       <div className="absolute top-1/2 left-1/2 w-[140%] h-[140%] bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 md:py-12">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-32 md:py-48 lg:py-64">
         <div className="w-full max-w-sm">
           {/* 뒤로 가기 버튼 */}
-          <div className="absolute top-6 left-6 z-20">
+          <div className="absolute top-12 left-12 z-20">
             <button
               onClick={() => router.push('/')}
               className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 flex items-center justify-center hover:scale-110 active:scale-95"

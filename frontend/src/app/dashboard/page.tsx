@@ -461,7 +461,6 @@ export default function DashboardPage() {
                 label: 'AI 정보', 
                 gradient: 'from-blue-600 via-purple-600 to-indigo-600',
                 hoverGradient: 'from-blue-500 via-purple-500 to-indigo-500',
-                icon: '🤖',
                 description: 'AI 정보 학습'
               },
               { 
@@ -469,7 +468,6 @@ export default function DashboardPage() {
                 label: '용어 퀴즈', 
                 gradient: 'from-purple-600 via-pink-600 to-rose-600',
                 hoverGradient: 'from-purple-500 via-pink-500 to-rose-500',
-                icon: '🎯',
                 description: '용어 퀴즈 풀기'
               },
               { 
@@ -477,7 +475,6 @@ export default function DashboardPage() {
                 label: '진행률', 
                 gradient: 'from-emerald-600 via-teal-600 to-cyan-600',
                 hoverGradient: 'from-emerald-500 via-teal-500 to-cyan-500',
-                icon: '📊',
                 description: '학습 진행 상황'
               },
               { 
@@ -485,7 +482,6 @@ export default function DashboardPage() {
                 label: '용어 학습', 
                 gradient: 'from-amber-600 via-orange-600 to-red-600',
                 hoverGradient: 'from-amber-500 via-orange-500 to-red-500',
-                icon: '📚',
                 description: '용어 카드 학습'
               }
             ].map((tab) => (
@@ -509,11 +505,8 @@ export default function DashboardPage() {
                 )}
                 
                 <div className="relative z-10 flex flex-col items-center gap-1">
-                  {/* 아이콘과 라벨 */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg md:text-xl">{tab.icon}</span>
-                    <span className="font-bold tracking-wide drop-shadow-sm text-sm md:text-base">{tab.label}</span>
-                  </div>
+                  {/* 라벨만 표시 */}
+                  <span className="font-bold tracking-wide drop-shadow-sm text-sm md:text-base">{tab.label}</span>
                   
                   {/* 설명 (데스크톱에서만 표시) */}
                   <span className="hidden lg:block text-xs opacity-80 font-medium tracking-wide">
