@@ -239,8 +239,6 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
-                       : clickedStat === 0
-                       ? 'transform scale-110'
                        : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
                    }`}
                    onClick={() => handleStatClick(0)}
@@ -259,29 +257,43 @@ export default function IntroPage() {
                      <div className="text-white font-bold text-sm md:text-base mb-1">AI 정보</div>
                    </div>
                    
-                   {/* Click effects */}
-                   {clickedStat === 0 && (
-                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                   )}
-                   {clickedStat === 0 && [...Array(8)].map((_, i) => (
-                     <div
-                       key={i}
-                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                       style={{
-                         left: '50%',
-                         top: '50%',
-                         transform: 'translate(-50%, -50%)',
-                         '--angle': `${i * 45}deg`,
-                         '--distance': '20px'
-                       } as React.CSSProperties}
-                     />
-                   ))}
-                   {clickedStat === 0 && (
-                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                   )}
-                   {clickedStat === 0 && (
-                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                   )}
+                                       {/* 고급스러운 선택 효과 */}
+                    {clickedStat === 0 && (
+                      <>
+                        {/* 메인 선택 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 animate-stat-aura" />
+                        
+                        {/* 빛나는 테두리 */}
+                        <div className="absolute inset-0 rounded-full border-2 border-purple-400/60 animate-stat-border-glow" />
+                        
+                        {/* 중앙 빛나는 원 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400/20 to-pink-400/20 animate-pulse-scale" />
+                        
+                        {/* 파티클 효과 */}
+                        {[...Array(12)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-stat-particle"
+                            style={{
+                              left: '50%',
+                              top: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              '--angle': `${i * 30}deg`,
+                              '--distance': '25px'
+                            } as React.CSSProperties}
+                          />
+                        ))}
+                        
+                        {/* 빛나는 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        
+                        {/* 상단 장식 */}
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        
+                        {/* 하단 장식 */}
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent rounded-full animate-decoration-slide-up" />
+                      </>
+                    )}
                  </div>
 
                  {/* 두 번째 아이콘 - 관련 용어 */}
@@ -289,8 +301,6 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
-                       : clickedStat === 1
-                       ? 'transform scale-110'
                        : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
                    }`}
                    onClick={() => handleStatClick(1)}
@@ -309,29 +319,43 @@ export default function IntroPage() {
                      <div className="text-white font-bold text-sm md:text-base mb-1">관련 용어</div>
                    </div>
                    
-                   {/* Click effects */}
-                   {clickedStat === 1 && (
-                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                   )}
-                   {clickedStat === 1 && [...Array(8)].map((_, i) => (
-                     <div
-                       key={i}
-                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                       style={{
-                         left: '50%',
-                         top: '50%',
-                         transform: 'translate(-50%, -50%)',
-                         '--angle': `${i * 45}deg`,
-                         '--distance': '20px'
-                       } as React.CSSProperties}
-                     />
-                   ))}
-                   {clickedStat === 1 && (
-                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                   )}
-                   {clickedStat === 1 && (
-                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                   )}
+                                       {/* 고급스러운 선택 효과 */}
+                    {clickedStat === 1 && (
+                      <>
+                        {/* 메인 선택 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 animate-stat-aura" />
+                        
+                        {/* 빛나는 테두리 */}
+                        <div className="absolute inset-0 rounded-full border-2 border-blue-400/60 animate-stat-border-glow" />
+                        
+                        {/* 중앙 빛나는 원 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-cyan-400/20 animate-pulse-scale" />
+                        
+                        {/* 파티클 효과 */}
+                        {[...Array(12)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full animate-stat-particle"
+                            style={{
+                              left: '50%',
+                              top: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              '--angle': `${i * 30}deg`,
+                              '--distance': '25px'
+                            } as React.CSSProperties}
+                          />
+                        ))}
+                        
+                        {/* 빛나는 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        
+                        {/* 상단 장식 */}
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        
+                        {/* 하단 장식 */}
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full animate-decoration-slide-up" />
+                      </>
+                    )}
                  </div>
                </div>
 
@@ -342,8 +366,6 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
-                       : clickedStat === 2
-                       ? 'transform scale-110'
                        : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[80px] md:translate-y-[120px] scale-90'
                    }`}
                    onClick={() => handleStatClick(2)}
@@ -362,29 +384,43 @@ export default function IntroPage() {
                      <div className="text-white font-bold text-sm md:text-base mb-1">실전 퀴즈</div>
                    </div>
                    
-                   {/* Click effects */}
-                   {clickedStat === 2 && (
-                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                   )}
-                   {clickedStat === 2 && [...Array(8)].map((_, i) => (
-                     <div
-                       key={i}
-                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                       style={{
-                         left: '50%',
-                         top: '50%',
-                         transform: 'translate(-50%, -50%)',
-                         '--angle': `${i * 45}deg`,
-                         '--distance': '20px'
-                       } as React.CSSProperties}
-                     />
-                   ))}
-                   {clickedStat === 2 && (
-                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                   )}
-                   {clickedStat === 2 && (
-                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                   )}
+                                       {/* 고급스러운 선택 효과 */}
+                    {clickedStat === 2 && (
+                      <>
+                        {/* 메인 선택 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/30 via-emerald-500/30 to-teal-500/30 animate-stat-aura" />
+                        
+                        {/* 빛나는 테두리 */}
+                        <div className="absolute inset-0 rounded-full border-2 border-green-400/60 animate-stat-border-glow" />
+                        
+                        {/* 중앙 빛나는 원 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 animate-pulse-scale" />
+                        
+                        {/* 파티클 효과 */}
+                        {[...Array(12)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full animate-stat-particle"
+                            style={{
+                              left: '50%',
+                              top: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              '--angle': `${i * 30}deg`,
+                              '--distance': '25px'
+                            } as React.CSSProperties}
+                          />
+                        ))}
+                        
+                        {/* 빛나는 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        
+                        {/* 상단 장식 */}
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        
+                        {/* 하단 장식 */}
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full animate-decoration-slide-up" />
+                      </>
+                    )}
                  </div>
 
                  {/* 네 번째 아이콘 - 학습 진행률 */}
@@ -392,8 +428,6 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
-                       : clickedStat === 3
-                       ? 'transform scale-110'
                        : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[80px] md:translate-y-[120px] scale-90'
                    }`}
                    onClick={() => handleStatClick(3)}
@@ -412,29 +446,43 @@ export default function IntroPage() {
                      <div className="text-white font-bold text-sm md:text-base mb-1">진행률</div>
                    </div>
                    
-                   {/* Click effects */}
-                   {clickedStat === 3 && (
-                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                   )}
-                   {clickedStat === 3 && [...Array(8)].map((_, i) => (
-                     <div
-                       key={i}
-                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                       style={{
-                         left: '50%',
-                         top: '50%',
-                         transform: 'translate(-50%, -50%)',
-                         '--angle': `${i * 45}deg`,
-                         '--distance': '20px'
-                       } as React.CSSProperties}
-                     />
-                   ))}
-                   {clickedStat === 3 && (
-                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                   )}
-                   {clickedStat === 3 && (
-                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                   )}
+                                       {/* 고급스러운 선택 효과 */}
+                    {clickedStat === 3 && (
+                      <>
+                        {/* 메인 선택 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-500/30 via-orange-500/30 to-amber-500/30 animate-stat-aura" />
+                        
+                        {/* 빛나는 테두리 */}
+                        <div className="absolute inset-0 rounded-full border-2 border-yellow-400/60 animate-stat-border-glow" />
+                        
+                        {/* 중앙 빛나는 원 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400/20 to-orange-400/20 animate-pulse-scale" />
+                        
+                        {/* 파티클 효과 */}
+                        {[...Array(12)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-stat-particle"
+                            style={{
+                              left: '50%',
+                              top: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              '--angle': `${i * 30}deg`,
+                              '--distance': '25px'
+                            } as React.CSSProperties}
+                          />
+                        ))}
+                        
+                        {/* 빛나는 효과 */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        
+                        {/* 상단 장식 */}
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        
+                        {/* 하단 장식 */}
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full animate-decoration-slide-up" />
+                      </>
+                    )}
                  </div>
                </div>
 
@@ -781,19 +829,64 @@ export default function IntroPage() {
           animation: stat-aura 2s ease-in-out infinite;
         }
         
-        @keyframes stat-particle {
-          0% { 
-            opacity: 1; 
-            transform: translate(-50%, -50%) scale(1);
-          }
-          100% { 
-            opacity: 0; 
-            transform: translate(-50%, -50%) scale(0) translate(var(--x, 20px), var(--y, -20px));
-          }
-        }
-        .animate-stat-particle {
-          animation: stat-particle 1.5s ease-out forwards;
-        }
+                 @keyframes stat-particle {
+           0% { 
+             opacity: 1; 
+             transform: translate(-50%, -50%) scale(1);
+           }
+           100% { 
+             opacity: 0; 
+             transform: translate(-50%, -50%) scale(0) translate(var(--x, 25px), var(--y, -25px));
+           }
+         }
+         .animate-stat-particle {
+           animation: stat-particle 2s ease-out forwards;
+         }
+         
+         /* 고급스러운 선택 효과 애니메이션 */
+         @keyframes stat-selection-glow {
+           0%, 100% { 
+             opacity: 0.3; 
+             transform: scale(1);
+             filter: blur(0px);
+           }
+           50% { 
+             opacity: 0.6; 
+             transform: scale(1.1);
+             filter: blur(1px);
+           }
+         }
+         .animate-stat-selection-glow {
+           animation: stat-selection-glow 2.5s ease-in-out infinite;
+         }
+         
+         @keyframes stat-selection-border {
+           0%, 100% { 
+             border-color: rgba(147, 51, 234, 0.6);
+             box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
+           }
+           50% { 
+             border-color: rgba(236, 72, 153, 0.8);
+             box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+           }
+         }
+         .animate-stat-selection-border {
+           animation: stat-selection-border 2s ease-in-out infinite;
+         }
+         
+         @keyframes stat-selection-particle {
+           0% { 
+             opacity: 1; 
+             transform: translate(-50%, -50%) scale(1) rotate(0deg);
+           }
+           100% { 
+             opacity: 0; 
+             transform: translate(-50%, -50%) scale(0) rotate(360deg) translate(var(--x, 30px), var(--y, -30px));
+           }
+         }
+         .animate-stat-selection-particle {
+           animation: stat-selection-particle 2.5s ease-out forwards;
+         }
         
         @keyframes stat-shine {
           0% { transform: translateX(-100%) skewX(-15deg); }
