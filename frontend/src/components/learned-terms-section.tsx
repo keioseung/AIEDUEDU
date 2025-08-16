@@ -914,14 +914,13 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                   <button
                     onTouchStart={handleWebViewTouch(() => setScrollMode(!scrollMode))}
                     onClick={() => setScrollMode(!scrollMode)}
-                    className={`px-2 py-1 rounded text-xs font-medium transition-all touch-manipulation select-none min-h-[32px] min-w-[60px] webview-button ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 select-none min-h-[32px] min-w-[70px] ${
                       scrollMode
-                        ? 'bg-blue-500/30 text-blue-300 border border-blue-500/50'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                        ? 'bg-blue-500/40 text-blue-200 border border-blue-400/60 shadow-lg shadow-blue-500/20'
+                        : 'bg-white/15 text-white/80 border border-white/20 hover:bg-white/20 hover:border-white/30'
                     }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
-                    {scrollMode ? '📱 스크롤' : '👆 선택'}
+                    {scrollMode ? '스크롤 모드' : '선택 모드'}
                   </button>
                   <button
                     onTouchStart={handleWebViewTouch(toggleListHeight)}
