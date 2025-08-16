@@ -447,12 +447,12 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-48 md:p-64 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-64 md:p-80 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <div className="space-y-2">
-            <p className="text-white/80 text-lg font-medium" style={{ writingMode: 'horizontal-tb', textOrientation: 'mixed' }}>학습한 용어를 불러오는 중...</p>
-            <p className="text-white/50 text-sm" style={{ writingMode: 'horizontal-tb', textOrientation: 'mixed' }}>잠시만 기다려주세요</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
+          <div className="space-y-3">
+            <p className="text-white/80 text-xl font-medium">학습한 용어를 불러오는 중...</p>
+            <p className="text-white/50 text-base">잠시만 기다려주세요</p>
           </div>
         </div>
       </div>
@@ -480,7 +480,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const difficulty = currentTerm ? getDifficulty(currentTerm.term) : null
 
   return (
-    <div className="glass rounded-2xl p-3 md:p-4 flex flex-col gap-3 md:gap-4">
+    <div className="glass rounded-2xl p-3 md:p-4 flex flex-col gap-2 md:gap-3">
       {/* 모바일 최적화 헤더 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
