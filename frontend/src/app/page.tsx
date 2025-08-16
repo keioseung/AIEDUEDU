@@ -12,7 +12,6 @@ export default function IntroPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isMobile, setIsMobile] = useState(false)
   const [clickedCard, setClickedCard] = useState<number | null>(null)
-  const [cardParticles, setCardParticles] = useState<Array<{id: number, x: number, y: number, color: string}>>([])
   
   const fullText = "AI Mastery Hub"
   const taglines = [
@@ -72,29 +71,15 @@ export default function IntroPage() {
     // 이미 클릭된 카드라면 상태 종료
     if (clickedCard === index) {
       setClickedCard(null)
-      setCardParticles([])
       return
     }
     
     // 다른 카드 클릭 시 이전 상태 종료 후 새 상태 시작
     if (clickedCard !== null) {
       setClickedCard(null)
-      setCardParticles([])
     }
     
     setClickedCard(index)
-    
-    // 파티클 효과 생성
-    const particles = []
-    for (let i = 0; i < 20; i++) {
-      particles.push({
-        id: Date.now() + i,
-        x: Math.random() * 200 - 100,
-        y: Math.random() * 200 - 100,
-        color: `hsl(${Math.random() * 360}, 70%, 60%)`
-      })
-    }
-    setCardParticles(particles)
   }
 
   // 카드 확장/축소 토글 (제거 - 단순 클릭으로 변경)
@@ -258,32 +243,27 @@ export default function IntroPage() {
               }}
               onClick={() => toggleCard(index)}
             >
-              {/* 클릭 시 파티클 효과 */}
-              {clickedCard === index && cardParticles.map((particle) => (
-                <div
-                  key={particle.id}
-                  className="absolute w-2 h-2 rounded-full animate-particle-explosion pointer-events-none"
-                  style={{
-                    left: '50%',
-                    top: '50%',
-                    backgroundColor: particle.color,
-                    transform: `translate(${particle.x}px, ${particle.y}px)`,
-                    animationDelay: `${Math.random() * 0.5}s`
-                  }}
-                />
-              ))}
-              
-              {/* 클릭 시 빛나는 효과 */}
-              {clickedCard === index && (
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 animate-shine" />
-              )}
-              
-              {/* 클릭 시 맥동 효과 */}
-              {clickedCard === index && (
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-3xl animate-pulse-scale" />
-              )}
-              
-              <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+               {/* 클릭 시 고급스러운 오라 효과 */}
+               {clickedCard === index && (
+                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-3xl animate-aura-glow" />
+               )}
+               
+               {/* 클릭 시 그라데이션 웨이브 효과 */}
+               {clickedCard === index && (
+                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/15 via-purple-500/15 to-pink-500/15 rounded-3xl animate-gradient-wave" />
+               )}
+               
+               {/* 클릭 시 부드러운 확장 효과 */}
+               {clickedCard === index && (
+                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 rounded-3xl animate-smooth-expand" />
+               )}
+               
+               {/* 클릭 시 빛나는 테두리 효과 */}
+               {clickedCard === index && (
+                 <div className="absolute inset-0 rounded-3xl border-2 border-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-border-glow" />
+               )}
+               
+               <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10 flex flex-col items-center">
                 <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300 animate-icon-glow shadow-2xl group-hover:shadow-3xl ${
@@ -507,6 +487,73 @@ export default function IntroPage() {
         }
         .animate-slide-up {
           animation: slide-up 0.5s ease-out;
+        }
+        
+        /* 새로운 고급스러운 효과 애니메이션 */
+        @keyframes aura-glow {
+          0%, 100% { 
+            opacity: 0.2; 
+            transform: scale(1);
+            filter: blur(0px);
+          }
+          50% { 
+            opacity: 0.4; 
+            transform: scale(1.02);
+            filter: blur(1px);
+          }
+        }
+        .animate-aura-glow {
+          animation: aura-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes gradient-wave {
+          0%, 100% { 
+            opacity: 0.15; 
+            transform: scale(1) rotate(0deg);
+          }
+          25% { 
+            opacity: 0.25; 
+            transform: scale(1.01) rotate(1deg);
+          }
+          50% { 
+            opacity: 0.2; 
+            transform: scale(1.02) rotate(0deg);
+          }
+          75% { 
+            opacity: 0.25; 
+            transform: scale(1.01) rotate(-1deg);
+          }
+        }
+        .animate-gradient-wave {
+          animation: gradient-wave 3s ease-in-out infinite;
+        }
+        
+        @keyframes smooth-expand {
+          0% { 
+            opacity: 0; 
+            transform: scale(0.95);
+          }
+          100% { 
+            opacity: 1; 
+            transform: scale(1);
+          }
+        }
+        .animate-smooth-expand {
+          animation: smooth-expand 0.6s ease-out;
+        }
+        
+        @keyframes border-glow {
+          0%, 100% { 
+            border-color: rgba(147, 51, 234, 0.4);
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+          }
+          50% { 
+            border-color: rgba(236, 72, 153, 0.6);
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
+          }
+        }
+        .animate-border-glow {
+          animation: border-glow 2s ease-in-out infinite;
         }
         
         /* 모바일 최적화 */
