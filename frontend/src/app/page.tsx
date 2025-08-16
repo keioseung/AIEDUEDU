@@ -228,7 +228,7 @@ export default function IntroPage() {
         </div>
 
         {/* 기능 카드들 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-6xl mb-16 md:mb-20 px-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full max-w-6xl mb-12 md:mb-16 px-1">
           {[
             { 
               icon: FaBrain, 
@@ -251,7 +251,7 @@ export default function IntroPage() {
           ].map((feature, index) => (
             <div
               key={index}
-              className={`group bg-white/5 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized text-center cursor-pointer transform-gpu ${
+              className={`group bg-white/5 backdrop-blur-xl rounded-2xl p-4 md:p-6 border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:bg-white/10 relative overflow-hidden animate-card-float touch-optimized text-center cursor-pointer transform-gpu ${
                 clickedCard === index ? 'scale-110 bg-white/20 border-white/40 shadow-2xl' : ''
               }`}
               style={{ 
@@ -262,44 +262,44 @@ export default function IntroPage() {
             >
                {/* 클릭 시 고급스러운 오라 효과 */}
                {clickedCard === index && (
-                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-3xl animate-aura-glow" />
+                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-2xl animate-aura-glow" />
                )}
                
                {/* 클릭 시 그라데이션 웨이브 효과 */}
                {clickedCard === index && (
-                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/15 via-purple-500/15 to-pink-500/15 rounded-3xl animate-gradient-wave" />
+                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/15 via-purple-500/15 to-pink-500/15 rounded-2xl animate-gradient-wave" />
                )}
                
                {/* 클릭 시 부드러운 확장 효과 */}
                {clickedCard === index && (
-                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 rounded-3xl animate-smooth-expand" />
+                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 rounded-2xl animate-smooth-expand" />
                )}
                
                {/* 클릭 시 빛나는 테두리 효과 */}
                {clickedCard === index && (
-                 <div className="absolute inset-0 rounded-3xl border-2 border-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-border-glow" />
+                 <div className="absolute inset-0 rounded-2xl border-2 border-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-border-glow" />
                )}
                
                <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10 flex flex-col items-center">
-                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300 animate-icon-glow shadow-2xl group-hover:shadow-3xl ${
+                <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300 animate-icon-glow shadow-2xl group-hover:shadow-3xl ${
                   clickedCard === index ? 'animate-bounce-scale' : ''
                 }`}>
-                  <feature.icon className="text-white text-xl md:text-2xl" />
+                  <feature.icon className="text-white text-lg md:text-xl" />
                 </div>
-                <h3 className={`text-white font-bold text-xl md:text-2xl mb-3 md:mb-4 mobile-text text-center ${
+                <h3 className={`text-white font-bold text-lg md:text-xl mb-2 md:mb-3 mobile-text text-center ${
                   clickedCard === index ? 'animate-text-glow' : ''
                 }`}>{feature.title}</h3>
-                <p className="text-gray-300 text-sm md:text-base leading-relaxed mobile-text text-center" dangerouslySetInnerHTML={{ __html: feature.desc }}></p>
+                <p className="text-gray-300 text-xs md:text-sm leading-relaxed mobile-text text-center" dangerouslySetInnerHTML={{ __html: feature.desc }}></p>
                 
                 {/* 클릭 시 추가 정보 표시 */}
                 {clickedCard === index && (
-                  <div className="mt-4 p-3 bg-white/10 rounded-2xl border border-white/20 animate-slide-up">
-                    <p className="text-white/80 text-sm font-medium">
+                  <div className="mt-3 p-2 bg-white/10 rounded-xl border border-white/20 animate-slide-up">
+                    <p className="text-white/80 text-xs font-medium">
                       {index === 0 && "🚀 매일 새로운 AI 트렌드와 최신 정보를 제공합니다!"}
                       {index === 1 && "🎯 다양한 난이도의 퀴즈로 지식을 점검하세요!"}
-                      {index === 2 && "📊 상세한 통계로 학습 진행 상황을 추적하세요!"}
+                      {index === 2 && "📊 체계적인 학습 진행률 관리로 목표를 달성하세요!"}
                     </p>
                   </div>
                 )}
@@ -308,80 +308,85 @@ export default function IntroPage() {
           ))}
         </div>
 
-        {/* 하단 통계 */}
-        <div className="grid grid-cols-3 gap-4 md:gap-8 lg:gap-12 w-full max-w-5xl px-4">
-          {[
-            { label: "매일 새로운", value: "AI 정보", icon: FaBrain, desc: "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다." },
-            { label: "핵심 개념", value: "관련 용어", icon: FaRocket, desc: "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다." },
-            { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, desc: "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다." }
-          ].map((stat, index) => (
-            <div 
-              key={index} 
-              className={`text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-105 relative ${
-                clickedStat === index ? 'scale-110' : ''
-              }`} 
-              style={{ animationDelay: `${index * 0.3}s` }}
-              onClick={() => handleStatClick(index)}
-            >
-              {/* 클릭 시 배경 효과 */}
-              {clickedStat === index && (
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-3xl animate-stat-aura" />
-              )}
-              
-              {/* 클릭 시 파티클 효과 */}
-              {clickedStat === index && (
-                <div className="absolute inset-0">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-1 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-stat-particle"
-                      style={{
-                        left: '50%',
-                        top: '50%',
-                        transform: `translate(-50%, -50%)`,
-                        animationDelay: `${i * 0.1}s`
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-              
-              <div className={`w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2 md:mb-3 animate-stat-glow relative z-10 transition-all duration-300 ${
-                clickedStat === index ? 'scale-125 bg-gradient-to-r from-purple-500/40 to-pink-500/40 shadow-2xl' : ''
-              }`}>
-                <stat.icon className={`text-purple-400 text-lg md:text-xl lg:text-2xl transition-all duration-300 ${
-                  clickedStat === index ? 'text-white scale-110 animate-bounce' : ''
-                }`} />
-                
-                {/* 클릭 시 빛나는 효과 */}
+        {/* 하단 통계 섹션 */}
+        <div className="w-full max-w-5xl mb-8 md:mb-12">
+          <div className="text-center mb-6 md:mb-8">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-3 md:mb-4">
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                AI Mastery Hub
+              </span>
+              <span className="text-white/90 block text-sm md:text-base font-normal mt-1">
+                지금까지의 학습 현황을 한눈에 확인하세요
+              </span>
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl px-4">
+            {[
+              { label: "매일 새로운", value: "AI 정보", icon: FaBrain, desc: "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다." },
+              { label: "핵심 개념", value: "관련 용어", icon: FaRocket, desc: "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다." },
+              { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, desc: "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다." }
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className={`text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-105 relative ${
+                  clickedStat === index ? 'scale-110' : ''
+                }`}
+                style={{ animationDelay: `${index * 0.3}s` }}
+                onClick={() => handleStatClick(index)}
+              >
+                {/* Click effects */}
                 {clickedStat === index && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-transparent to-white/30 rounded-2xl animate-stat-shine" />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                )}
+                {clickedStat === index && [...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                    style={{
+                      left: '50%',
+                      top: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      '--angle': `${i * 45}deg`,
+                      '--distance': '20px'
+                    } as React.CSSProperties}
+                  />
+                ))}
+                {clickedStat === index && (
+                  <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                )}
+                {clickedStat === index && (
+                  <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                )}
+                
+                {/* Icon */}
+                <div className="relative z-10 mb-2 md:mb-3">
+                  <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                    clickedStat === index ? 'animate-stat-glow' : ''
+                  }`}>
+                    <stat.icon className="text-purple-300 text-lg md:text-xl" />
+                  </div>
+                </div>
+                
+                {/* Text */}
+                <div className="relative z-10">
+                  <div className="text-white/70 text-xs md:text-sm font-medium mb-1">
+                    {stat.label}
+                  </div>
+                  <div className="text-white font-bold text-sm md:text-base mb-1">
+                    {stat.value}
+                  </div>
+                </div>
+                
+                {/* Info box */}
+                {clickedStat === index && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-2 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20">
+                    <p className="font-medium">{stat.desc}</p>
+                  </div>
                 )}
               </div>
-              
-              <div className={`text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 mobile-text text-center transition-all duration-300 ${
-                clickedStat === index ? 'text-purple-200 scale-105' : ''
-              }`}>{stat.value}</div>
-              
-              <div className={`text-white/60 text-xs md:text-sm mobile-text text-center transition-all duration-300 ${
-                clickedStat === index ? 'text-purple-300 scale-105' : ''
-              }`}>{stat.label}</div>
-              
-              {/* 클릭 시 추가 설명 표시 */}
-              {clickedStat === index && (
-                <div className="mt-3 p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 animate-stat-info-slide">
-                  <p className="text-white/90 text-xs font-medium leading-relaxed">
-                    {stat.desc}
-                  </p>
-                </div>
-              )}
-              
-              {/* 클릭 시 테두리 효과 */}
-              {clickedStat === index && (
-                <div className="absolute inset-0 rounded-3xl border-2 border-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-stat-border-glow" />
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
