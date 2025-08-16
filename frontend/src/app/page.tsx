@@ -88,20 +88,24 @@ export default function IntroPage() {
     handleCardClick(index)
   }
 
-  // 통계 아이콘 클릭 효과
+  // 통계 아이콘 클릭 효과 - 개선된 버전
   const handleStatClick = (index: number) => {
-    // 이미 클릭된 통계라면 상태 종료
+    // 같은 아이콘을 다시 클릭하면 상태 종료 (아이콘들이 뭉침)
     if (clickedStat === index) {
       setClickedStat(null)
       return
     }
     
-    // 다른 통계 클릭 시 이전 상태 종료 후 새 상태 시작
-    if (clickedStat !== null) {
+    // 다른 아이콘을 클릭하면 해당 아이콘의 설명 표시
+    setClickedStat(index)
+  }
+
+  // 배경 클릭 시 아이콘들이 뭉치도록 하는 함수
+  const handleBackgroundClick = (e: React.MouseEvent) => {
+    // 클릭된 요소가 아이콘이나 텍스트 박스가 아닌 경우에만 실행
+    if (e.target === e.currentTarget) {
       setClickedStat(null)
     }
-    
-    setClickedStat(index)
   }
 
   return (
@@ -228,7 +232,7 @@ export default function IntroPage() {
 
                                    {/* 하단 통계 섹션 */}
           <div className="w-full max-w-5xl mb-12 md:mb-16">
-           <div className="relative">
+           <div className="relative" onClick={handleBackgroundClick}>
              {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
              <div className="relative h-64 md:h-80">
                {/* 첫 번째 행 */}
@@ -238,6 +242,8 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
+                       : clickedStat === 0
+                       ? 'transform scale-110'
                        : 'transform translate-x-[-60px] md:translate-x-[-80px] translate-y-[-40px] md:translate-y-[-60px] scale-90'
                    }`}
                    onClick={() => handleStatClick(0)}
@@ -286,6 +292,8 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
+                       : clickedStat === 1
+                       ? 'transform scale-110'
                        : 'transform translate-x-[60px] md:translate-x-[80px] translate-y-[-40px] md:translate-y-[-60px] scale-90'
                    }`}
                    onClick={() => handleStatClick(1)}
@@ -337,6 +345,8 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
+                       : clickedStat === 2
+                       ? 'transform scale-110'
                        : 'transform translate-x-[-60px] md:translate-x-[-80px] translate-y-[40px] md:translate-y-[60px] scale-90'
                    }`}
                    onClick={() => handleStatClick(2)}
@@ -385,6 +395,8 @@ export default function IntroPage() {
                    className={`text-center cursor-pointer transition-all duration-700 ease-out ${
                      clickedStat === null 
                        ? 'transform scale-100' 
+                       : clickedStat === 3
+                       ? 'transform scale-110'
                        : 'transform translate-x-[60px] md:translate-x-[80px] translate-y-[40px] md:translate-y-[60px] scale-90'
                    }`}
                    onClick={() => handleStatClick(3)}
