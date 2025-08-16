@@ -388,20 +388,20 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                            {/* 오늘의 주제 옵션 추가 */}
                            <button
                              onClick={() => handleQuizTitleChange('오늘의 주제')}
-                             className="w-full text-left p-3 rounded-2xl bg-gradient-to-r from-emerald-400/20 via-emerald-500/20 to-emerald-600/20 hover:from-emerald-400/30 hover:via-emerald-500/30 hover:to-emerald-600/30 transition-all duration-300 group border border-emerald-300/30 hover:border-emerald-300/50"
+                             className="w-full text-left p-3 rounded-2xl bg-gradient-to-r from-emerald-400/30 via-emerald-500/30 to-emerald-600/30 hover:from-emerald-400/50 hover:via-emerald-500/50 hover:to-emerald-600/50 transition-all duration-300 group border border-emerald-300/50 hover:border-emerald-300/70"
                            >
                              <div className="flex items-center justify-between">
                                <div className="flex-1 min-w-0">
-                                 <div className="text-emerald-300 font-semibold text-sm truncate group-hover:text-emerald-200 transition-colors leading-tight flex items-center gap-2">
+                                 <div className="text-emerald-200 font-semibold text-sm group-hover:text-emerald-100 transition-colors leading-tight flex items-center gap-2">
                                    <Zap className="w-4 h-4" />
                                    오늘의 주제
                                  </div>
-                                 <div className="text-emerald-300/70 text-xs mt-1 leading-tight">
+                                 <div className="text-emerald-200/80 text-xs mt-1 leading-tight">
                                    날짜별 퀴즈
                                  </div>
                                </div>
                                <div className="ml-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                 <ChevronRight className="w-4 h-4 text-emerald-400" />
+                                 <ChevronRight className="w-4 h-4 text-emerald-300" />
                                </div>
                              </div>
                            </button>
@@ -411,26 +411,26 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                                <button
                                  key={info.title}
                                  onClick={() => handleQuizTitleChange(info.title)}
-                                 className="w-full text-left p-3 rounded-2xl bg-gradient-to-r from-purple-800/20 via-purple-700/25 to-purple-800/20 hover:from-purple-700/30 hover:via-purple-600/35 hover:to-purple-700/30 transition-all duration-300 group border border-purple-400/25 hover:border-purple-400/40"
+                                 className="w-full text-left p-3 rounded-2xl bg-gradient-to-r from-purple-800/40 via-purple-700/45 to-purple-800/40 hover:from-purple-700/60 hover:via-purple-600/65 hover:to-purple-700/60 transition-all duration-300 group border border-purple-400/40 hover:border-purple-400/60"
                                >
-                                 <div className="flex items-center justify-between">
+                                 <div className="flex items-start justify-between">
                                    <div className="flex-1 min-w-0">
-                                     <div className="text-white font-semibold text-sm truncate group-hover:text-purple-300 transition-colors leading-tight">
+                                     <div className="text-white font-semibold text-sm group-hover:text-purple-200 transition-colors leading-tight break-words">
                                        {info.title}
                                      </div>
-                                     <div className="text-white/70 text-xs mt-1 leading-tight">
+                                     <div className="text-white/80 text-xs mt-1 leading-tight">
                                        {info.terms?.length || 0}개 용어
                                      </div>
                                    </div>
-                                   <div className="ml-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                     <ChevronRight className="w-4 h-4 text-purple-400" />
+                                   <div className="ml-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 flex-shrink-0 mt-0.5">
+                                     <ChevronRight className="w-4 h-4 text-purple-300" />
                                    </div>
                                  </div>
                                </button>
                              ))
                            ) : (
                              <div className="text-center py-6">
-                               <div className="text-white/60 text-sm font-medium">사용 가능한 주제가 없습니다</div>
+                               <div className="text-white/70 text-sm font-medium">사용 가능한 주제가 없습니다</div>
                              </div>
                            )}
                          </div>
