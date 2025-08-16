@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { FaRobot, FaArrowRight, FaBrain, FaRocket, FaChartLine } from 'react-icons/fa'
+import { FaRobot, FaArrowRight, FaBrain, FaRocket, FaChartLine, FaTrophy } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 
 export default function IntroPage() {
