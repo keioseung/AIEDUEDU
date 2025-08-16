@@ -31,6 +31,15 @@ interface TermsQuizResponse {
   message?: string
 }
 
+interface AIInfoItem {
+  id: string
+  date: string
+  title: string
+  content: string
+  terms: Array<{ term: string; description: string }>
+  info_index: number
+}
+
 function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateChange }: TermsQuizSectionProps) {
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -45,39 +54,90 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const updateQuizScoreMutation = useUpdateQuizScore()
   const checkAchievementsMutation = useCheckAchievements()
 
-  // 퀴즈 주제 옵션들 (실제 API에서 받아올 수 있음)
-  const quizTitleOptions = [
-    '전체',
-    'AI 기초 개념',
-    '머신러닝',
-    '딥러닝',
-    '자연어처리',
-    '컴퓨터비전',
-    '강화학습',
-    'AI 윤리',
-    'AI 응용',
-    'AI 도구'
-  ]
-
-  const { data: quizData, isLoading, refetch } = useQuery<TermsQuizResponse>({
-    queryKey: ['terms-quiz', selectedDate, selectedQuizTitle],
+  // AI 정보 전체목록 가져오기
+  const { data: allAIInfo = [], isLoading: isLoadingAIInfo } = useQuery<AIInfoItem[]>({
+    queryKey: ['all-ai-info'],
     queryFn: async () => {
-      const response = await aiInfoAPI.getTermsQuizByDate(selectedDate)
-      // 선택된 주제에 따라 퀴즈 필터링 (전체인 경우 모든 퀴즈)
-      let filteredQuizzes = response.data.quizzes
-      
-      if (selectedQuizTitle !== '전체') {
-        // 실제 API에서는 주제별 필터링 로직이 필요
-        // 여기서는 예시로 랜덤하게 선택
-        filteredQuizzes = response.data.quizzes.sort(() => Math.random() - 0.5).slice(0, 15)
-      }
-      
-      return {
-        ...response.data,
-        quizzes: filteredQuizzes
+      try {
+        const response = await aiInfoAPI.getAll()
+        return response.data
+      } catch (error) {
+        console.log('getAll API 실패:', error)
+        return []
       }
     },
-    enabled: !!selectedDate,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
+  // 퀴즈 주제 옵션들 (AI 정보 제목들)
+  const quizTitleOptions = ['전체', ...allAIInfo.map(info => info.title)]
+
+  // 선택된 제목에 해당하는 AI 정보 찾기
+  const selectedAIInfo = selectedQuizTitle !== '전체' 
+    ? allAIInfo.find(info => info.title === selectedQuizTitle)
+    : null
+
+  // 퀴즈 데이터 가져오기 (선택된 제목이 있으면 해당 내용의 용어로, 없으면 날짜별로)
+  const { data: quizData, isLoading, refetch } = useQuery<TermsQuizResponse>({
+    queryKey: ['terms-quiz', selectedDate, selectedQuizTitle, selectedAIInfo?.id],
+    queryFn: async () => {
+      if (selectedQuizTitle !== '전체' && selectedAIInfo) {
+        // 선택된 제목의 용어로 퀴즈 생성
+        const terms = selectedAIInfo.terms || []
+        if (terms.length === 0) {
+          return { quizzes: [], total_terms: 0, message: "선택된 주제에 등록된 용어가 없습니다." }
+        }
+
+        // 용어로부터 퀴즈 생성 (최대 5개)
+        const shuffledTerms = terms.sort(() => Math.random() - 0.5).slice(0, Math.min(5, terms.length))
+        const quizzes = shuffledTerms.map((term, index) => {
+          // 다른 용어들의 설명을 오답 옵션으로 사용
+          const otherTerms = terms.filter(t => t.term !== term.term)
+          const wrongOptions = otherTerms
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(t => t.description)
+          
+          // 오답 옵션이 부족한 경우 기본 오답 생성
+          while (wrongOptions.length < 3) {
+            wrongOptions.push(`"${term.term}"과 관련이 없는 설명입니다.`)
+          }
+          
+          // 옵션들을 섞어서 정답 위치를 랜덤하게 설정
+          const allOptions = [term.description, ...wrongOptions]
+          const correctIndex = Math.floor(Math.random() * 4)
+          const shuffledOptions = [...allOptions]
+          if (correctIndex !== 0) {
+            const temp = shuffledOptions[0]
+            shuffledOptions[0] = shuffledOptions[correctIndex]
+            shuffledOptions[correctIndex] = temp
+          }
+          
+          return {
+            id: index + 1,
+            question: `"${term.term}"의 의미로 가장 적절한 것은?`,
+            option1: shuffledOptions[0],
+            option2: shuffledOptions[1],
+            option3: shuffledOptions[2],
+            option4: shuffledOptions[3],
+            correct: correctIndex,
+            explanation: `${term.term}의 정확한 의미는: ${term.description}`
+          }
+        })
+
+        return {
+          quizzes,
+          total_terms: terms.length,
+          message: `${selectedAIInfo.title} 주제의 용어로 퀴즈를 생성했습니다.`
+        }
+      } else {
+        // 기존 방식: 날짜별 퀴즈
+        const response = await aiInfoAPI.getTermsQuizByDate(selectedDate)
+        return response.data
+      }
+    },
+    enabled: !!selectedDate && (selectedQuizTitle === '전체' || !!selectedAIInfo),
   })
 
   const currentQuiz = quizData?.quizzes?.[currentQuizIndex]
@@ -163,7 +223,11 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     setScore(0)
     setQuizCompleted(false)
     setFinalScore(null)
-    refetch()
+    
+    // AI 정보가 로딩 중이 아닐 때만 refetch 실행
+    if (!isLoadingAIInfo) {
+      refetch()
+    }
   }
 
   const getOptionClass = (index: number) => {
@@ -205,8 +269,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        <div className="absolute -top-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
                      </div>
                      <div>
-                       <h2 className="text-lg md:text-xl font-bold text-white mb-1">용어 퀴즈 설정</h2>
-                       <p className="text-white/70 text-sm">주제를 선택하고 도전해보세요!</p>
+                       <h2 className="text-lg md:text-xl font-bold text-white mb-1">AI 정보 주제별 퀴즈</h2>
+                       <p className="text-white/70 text-sm">AI 정보 주제를 선택하고 도전해보세요!</p>
                      </div>
                    </div>
 
@@ -217,7 +281,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
                      >
                        <Settings className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-180 transition-transform duration-300" />
-                       <span className="hidden sm:inline">퀴즈 주제</span>
+                       <span className="hidden sm:inline">AI 정보 주제</span>
                        <span className="sm:hidden">주제</span>
                        <span className="bg-white/20 px-2 py-1 rounded-lg text-sm font-bold">
                          {selectedQuizTitle}
@@ -234,49 +298,65 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                            className="absolute top-full right-0 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-3 border border-white/20 shadow-2xl min-w-[250px]"
                          >
                            <div className="text-center mb-3">
-                             <div className="text-white/80 text-sm font-medium mb-2">퀴즈 주제 선택</div>
+                             <div className="text-white/80 text-sm font-medium mb-2">AI 정보 주제 선택</div>
                              <div className="w-full bg-white/10 rounded-full h-1">
                                <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1 rounded-full transition-all" />
                              </div>
                            </div>
                            
                            <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto">
-                             {quizTitleOptions.map((title) => (
-                               <button
-                                 key={title}
-                                 onClick={() => handleQuizTitleChange(title)}
-                                 className={`relative group p-3 rounded-xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 text-left ${
-                                   selectedQuizTitle === title
-                                     ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-400 text-white shadow-lg'
-                                     : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:text-white'
-                                 }`}
-                               >
-                                 {/* 선택된 경우 빛나는 효과 */}
-                                 {selectedQuizTitle === title && (
-                                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/20 to-purple-400/20 animate-pulse" />
-                                 )}
-                                 
-                                 <div className="relative z-10">
-                                   <div className="text-sm md:text-base font-medium">{title}</div>
-                                 </div>
-                                 
-                                 {/* 선택된 경우 체크 아이콘 */}
-                                 {selectedQuizTitle === title && (
-                                   <div className="absolute top-2 right-2">
-                                     <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
-                                       <CheckCircle className="w-3 h-3 text-blue-600" />
-                                     </div>
+                             {isLoadingAIInfo ? (
+                               <div className="text-center py-4">
+                                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mx-auto mb-2"></div>
+                                 <div className="text-white/60 text-sm">AI 정보를 불러오는 중...</div>
+                               </div>
+                             ) : quizTitleOptions.length === 0 ? (
+                               <div className="text-center py-4 text-white/60 text-sm">
+                                 등록된 AI 정보가 없습니다
+                               </div>
+                             ) : (
+                               quizTitleOptions.map((title) => (
+                                 <button
+                                   key={title}
+                                   onClick={() => handleQuizTitleChange(title)}
+                                   className={`relative group p-3 rounded-xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 text-left ${
+                                     selectedQuizTitle === title
+                                       ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-400 text-white shadow-lg'
+                                       : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:text-white'
+                                   }`}
+                                 >
+                                   {/* 선택된 경우 빛나는 효과 */}
+                                   {selectedQuizTitle === title && (
+                                     <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/20 to-purple-400/20 animate-pulse" />
+                                   )}
+                                   
+                                   <div className="relative z-10">
+                                     <div className="text-sm md:text-base font-medium">{title}</div>
+                                     {title !== '전체' && (
+                                       <div className="text-xs text-white/60 mt-1">
+                                         {allAIInfo.find(info => info.title === title)?.terms?.length || 0}개 용어
+                                       </div>
+                                     )}
                                    </div>
-                                 )}
-                               </button>
-                             ))}
+                                   
+                                   {/* 선택된 경우 체크 아이콘 */}
+                                   {selectedQuizTitle === title && (
+                                     <div className="absolute top-2 right-2">
+                                       <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
+                                         <CheckCircle className="w-3 h-3 text-blue-600" />
+                                       </div>
+                                     </div>
+                                   )}
+                                 </button>
+                               ))
+                             )}
                            </div>
                            
                            {/* 추가 정보 */}
                            <div className="mt-3 pt-3 border-t border-white/20">
                              <div className="flex items-center justify-center gap-2 text-white/60 text-xs">
                                <Zap className="w-3 h-3" />
-                               <span>주제별 맞춤 퀴즈로 학습하세요</span>
+                               <span>AI 정보 주제별 맞춤 퀴즈로 학습하세요</span>
                              </div>
                            </div>
                          </motion.div>
@@ -290,7 +370,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                    <div className="flex items-center justify-between">
                      <div className="flex items-center gap-2 text-white/70 text-sm">
                        <Target className="w-4 h-4" />
-                       <span>선택된 주제: <span className="text-white font-semibold">{selectedQuizTitle}</span></span>
+                       <span>선택된 AI 정보: <span className="text-white font-semibold">{selectedQuizTitle}</span></span>
                      </div>
                      <div className="flex items-center gap-2 text-white/70 text-sm">
                        <Star className="w-4 h-4" />
@@ -316,12 +396,19 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
           <div className="text-center text-white">
             <BookOpen className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 opacity-60" />
-            <h3 className="text-base md:text-lg font-semibold mb-2 mobile-text">등록된 용어가 없습니다</h3>
+            <h3 className="text-base md:text-lg font-semibold mb-2 mobile-text">
+              {selectedQuizTitle === '전체' ? '등록된 용어가 없습니다' : '선택된 주제에 용어가 없습니다'}
+            </h3>
             <p className="text-white/70 mb-3 text-sm mobile-text">
-              {quizData?.message || `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`}
+              {quizData?.message || 
+                (selectedQuizTitle === '전체' 
+                  ? `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
+                  : `"${selectedQuizTitle}" 주제에 등록된 용어가 없습니다. 다른 주제를 선택하거나 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
+                )
+              }
             </p>
             <div className="text-xs text-white/50 mobile-text">
-              선택한 날짜: {selectedDate}
+              {selectedQuizTitle === '전체' ? `선택한 날짜: ${selectedDate}` : `선택한 주제: ${selectedQuizTitle}`}
             </div>
           </div>
         </div>
