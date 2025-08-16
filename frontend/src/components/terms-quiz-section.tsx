@@ -93,12 +93,12 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       
       // 퀴즈 모드에 따라 필터링
       if (quizMode === 'wrong') {
-        const wrongQuizIds = wrongAnswerNotes.map(note => note.quizId)
-        filteredQuizzes = response.data.quizzes.filter(quiz => 
+        const wrongQuizIds = wrongAnswerNotes.map((note: WrongAnswerNote) => note.quizId)
+        filteredQuizzes = response.data.quizzes.filter((quiz: TermsQuiz) => 
           wrongQuizIds.includes(quiz.id)
         )
       } else if (quizMode === 'unattempted') {
-        filteredQuizzes = response.data.quizzes.filter(quiz => 
+        filteredQuizzes = response.data.quizzes.filter((quiz: TermsQuiz) => 
           !solvedQuizIds.has(quiz.id)
         )
       }
@@ -125,7 +125,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       attempts: 1
     }
     
-    const existingNoteIndex = wrongAnswerNotes.findIndex(note => note.quizId === quiz.id)
+    const existingNoteIndex = wrongAnswerNotes.findIndex((note: WrongAnswerNote) => note.quizId === quiz.id)
     if (existingNoteIndex >= 0) {
       // 기존 오답 노트가 있으면 시도 횟수 증가
       const updatedNotes = [...wrongAnswerNotes]
