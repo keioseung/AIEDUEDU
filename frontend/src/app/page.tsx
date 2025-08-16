@@ -230,7 +230,7 @@ export default function IntroPage() {
             { 
               icon: FaBrain, 
               title: "AI 정보 학습", 
-              desc: "매일 새로운 AI 정보를 제공합니다.<br className='hidden sm:block' />각 정보에는 관련 용어들이 포함되어 있어 AI 개념을<br className='hidden sm:block' />체계적으로 학습할 수 있습니다.", 
+              desc: "매일 새로운 AI 정보를 제공합니다.<br className='hidden sm:block' />각 정보에는 관련 용어들이 포함되어 있어<br className='hidden sm:block' />AI 개념을 체계적으로 학습할 수 있습니다.", 
               color: "from-blue-500 to-cyan-500"
             },
             { 
@@ -242,7 +242,7 @@ export default function IntroPage() {
             { 
               icon: FaChartLine, 
               title: "학습 진행률", 
-              desc: "개인별 학습 진행 상황을 상세한 통계로 추적합니다.<br className='hidden sm:block' />일별, 주별, 월별 학습 현황을 확인하고 목표를<br className='hidden sm:block' />설정해보세요.", 
+              desc: "개인별 학습 진행 상황을 상세한 통계로 추적합니다.<br className='hidden sm:block' />일별, 주별, 월별 학습 현황을 확인하고<br className='hidden sm:block' />목표를 설정해보세요.", 
               color: "from-green-500 to-emerald-500"
             }
           ].map((feature, index) => (
