@@ -54,15 +54,15 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const updateQuizScoreMutation = useUpdateQuizScore()
   const checkAchievementsMutation = useCheckAchievements()
 
-  // AI 정보 전체목록 가져오기
-  const { data: allAIInfo = [], isLoading: isLoadingAIInfo } = useQuery<AIInfoItem[]>({
+  // AI 정보 전체목록 가져오기 (getAll API 시도)
+  const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
     queryKey: ['all-ai-info'],
     queryFn: async () => {
       try {
         const response = await aiInfoAPI.getAll()
         return response.data
       } catch (error) {
-        console.log('getAll API 실패:', error)
+        console.log('getAll API 실패, getAllDates API 사용:', error)
         return []
       }
     },
@@ -70,12 +70,80 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     refetchIntervalInBackground: true,
   })
 
+  // 날짜별 AI 정보 가져오기 (getAll API가 실패할 경우 사용)
+  const { data: allDates = [], isLoading: isLoadingDates } = useQuery<string[]>({
+    queryKey: ['all-ai-info-dates'],
+    queryFn: async () => {
+      try {
+        const response = await aiInfoAPI.getAllDates()
+        return response.data
+      } catch (error) {
+        console.log('getAllDates API도 실패:', error)
+        return []
+      }
+    },
+    enabled: getAllError !== null || allAIInfo.length === 0,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
+  // 각 날짜별 AI 정보 가져오기
+  const { data: dateBasedAIInfo = [], isLoading: isLoadingDateBased } = useQuery<AIInfoItem[]>({
+    queryKey: ['date-based-ai-info', allDates],
+    queryFn: async () => {
+      if (allDates.length === 0) return []
+      
+      const allInfo: AIInfoItem[] = []
+      
+      for (const date of allDates) {
+        try {
+          const response = await aiInfoAPI.getByDate(date)
+          const dateInfos = response.data
+          
+          dateInfos.forEach((info: { title: string; content: string; terms?: Array<{ term: string; description: string }> }, index: number) => {
+            if (info.title && info.content) {
+              allInfo.push({
+                id: `${date}_${index}`,
+                date: date,
+                title: info.title,
+                content: info.content,
+                terms: info.terms || [],
+                info_index: index
+              })
+            }
+          })
+        } catch (error) {
+          console.log(`날짜 ${date}의 AI 정보 가져오기 실패:`, error)
+        }
+      }
+      
+      return allInfo
+    },
+    enabled: allDates.length > 0 && (getAllError !== null || allAIInfo.length === 0),
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
+  // 실제 사용할 AI 정보 (getAll이 성공하면 그것을, 실패하면 날짜별 정보를 사용)
+  const actualAIInfo = allAIInfo.length > 0 ? allAIInfo : dateBasedAIInfo
+  const isLoadingAIInfo = isLoadingAll || isLoadingDates || isLoadingDateBased
+
   // 퀴즈 주제 옵션들 (AI 정보 제목들)
-  const quizTitleOptions = ['전체', ...allAIInfo.map(info => info.title)]
+  const quizTitleOptions = ['전체', ...actualAIInfo.map(info => info.title)]
+
+  // 디버깅을 위한 로그
+  console.log('AI 정보 상태:', { 
+    allAIInfo: allAIInfo.length, 
+    dateBasedAIInfo: dateBasedAIInfo.length, 
+    actualAIInfo: actualAIInfo.length,
+    isLoading: isLoadingAIInfo, 
+    error: getAllError 
+  })
+  console.log('quizTitleOptions:', quizTitleOptions)
 
   // 선택된 제목에 해당하는 AI 정보 찾기
   const selectedAIInfo = selectedQuizTitle !== '전체' 
-    ? allAIInfo.find(info => info.title === selectedQuizTitle)
+    ? actualAIInfo.find(info => info.title === selectedQuizTitle)
     : null
 
   // 퀴즈 데이터 가져오기 (선택된 제목이 있으면 해당 내용의 용어로, 없으면 날짜별로)
@@ -334,7 +402,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                                      <div className="text-sm md:text-base font-medium">{title}</div>
                                      {title !== '전체' && (
                                        <div className="text-xs text-white/60 mt-1">
-                                         {allAIInfo.find(info => info.title === title)?.terms?.length || 0}개 용어
+                                         {actualAIInfo.find(info => info.title === title)?.terms?.length || 0}개 용어
                                        </div>
                                      )}
                                    </div>
