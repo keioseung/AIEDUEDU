@@ -431,22 +431,22 @@ export default function DashboardPage() {
 
       {/* 날짜 선택 (AI 정보 탭, 용어 퀴즈 탭, 진행률 탭, 용어학습 탭에서 표시) */}
       {(activeTab === 'ai' || activeTab === 'progress' || activeTab === 'quiz' || activeTab === 'term') && (
-        <div className="flex justify-center mb-6 md:mb-8">
-          <div className="glass backdrop-blur-xl rounded-2xl px-4 md:px-8 py-3 md:py-4 flex items-center gap-4 md:gap-6 shadow-xl border border-white/10">
-            <FaCalendar className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
-            <div className="flex flex-col items-center">
-              <span className="text-white/80 text-xs md:text-sm font-medium mb-1">기준 날짜</span>
+        <div className="flex justify-center mb-4 md:mb-6">
+          <div className="glass backdrop-blur-xl rounded-xl px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-3 shadow-lg border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl">
+            <FaCalendar className="w-4 h-4 md:w-5 md:h-5 text-blue-400 flex-shrink-0" />
+            <div className="flex items-center gap-2">
+              <span className="text-white/70 text-xs font-medium hidden sm:inline">기준:</span>
               <input 
                 type="date" 
                 value={selectedDate} 
                 onChange={e => setSelectedDate(e.target.value)} 
-                className="p-2 md:p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm md:text-lg font-semibold shadow" 
-                style={{ minWidth: 140, maxWidth: 180 }} 
+                className="p-1.5 md:p-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm font-medium shadow-sm transition-all duration-200 hover:bg-white/15 focus:bg-white/20" 
+                style={{ minWidth: 120, maxWidth: 140 }} 
               />
             </div>
-            <span className="px-2 md:px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-xs md:text-sm shadow">
-              {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : selectedDate}
-            </span>
+            <div className="px-2 py-1 rounded-full bg-gradient-to-r from-blue-500/80 to-purple-500/80 text-white font-bold text-xs shadow-sm border border-white/20">
+              {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : new Date(selectedDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+            </div>
           </div>
         </div>
       )}
