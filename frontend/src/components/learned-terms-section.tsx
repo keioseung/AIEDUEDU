@@ -281,9 +281,9 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   // 용어 난이도 계산 (용어 길이 기반)
   const getDifficulty = (term: string) => {
-    if (term.length <= 3) return { level: '쉬움', color: 'text-green-400', bg: 'bg-green-500/20' }
-    if (term.length <= 6) return { level: '보통', color: 'text-yellow-400', bg: 'bg-yellow-500/20' }
-    return { level: '어려움', color: 'text-red-400', bg: 'bg-red-500/20' }
+    if (term.length <= 3) return { level: '초급', color: 'text-green-400', bg: 'bg-green-500/20' }
+    if (term.length <= 6) return { level: '중급', color: 'text-yellow-400', bg: 'bg-yellow-500/20' }
+    return { level: '고급', color: 'text-red-400', bg: 'bg-red-500/20' }
   }
 
   // 용어 목록 내보내기
@@ -968,42 +968,109 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                 return (
                   <motion.div
                     key={`${term.term}_${term.learned_date}_${term.info_index}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className={`p-3 rounded-lg cursor-pointer transition-all touch-manipulation select-none min-h-[48px] webview-button ${
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: index * 0.05, type: "spring", stiffness: 300, damping: 25 }}
+                    className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 touch-manipulation select-none min-h-[80px] webview-button ${
                       index === currentTermIndex
-                        ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50'
-                        : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border border-white/10'
+                        ? 'bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-blue-600/20 border-2 border-blue-400/50 shadow-lg shadow-blue-500/25 scale-105'
+                        : 'bg-gradient-to-br from-white/5 via-white/8 to-white/5 hover:from-white/10 hover:via-white/15 hover:to-white/10 active:from-white/20 active:via-white/25 active:to-white/20 border border-white/20 hover:border-white/30 hover:shadow-lg hover:shadow-white/10'
                     }`}
-                                                              onTouchStart={handleWebViewTouch(() => handleTermSelect(index))}
+                    onTouchStart={handleWebViewTouch(() => handleTermSelect(index))}
                     onClick={() => handleTermSelect(index)}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="font-semibold text-white text-sm break-words">{term.term}</div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          toggleFavorite(term.term)
-                        }}
-                        className={`p-2 rounded flex-shrink-0 touch-manipulation select-none min-h-[40px] min-w-[40px] flex items-center justify-center webview-button ${
-                          favoriteTerms.has(term.term)
-                            ? 'text-yellow-400'
-                            : 'text-white/30 hover:text-yellow-400 active:text-yellow-300'
-                        }`}
-                        style={{ WebkitTapHighlightColor: 'transparent' }}
-                      >
-                        <Star className="w-3 h-3" fill={favoriteTerms.has(term.term) ? 'currentColor' : 'none'} />
-                      </button>
-                    </div>
-                    <div className="text-white/60 text-xs line-clamp-2 mb-1 break-words">{term.description}</div>
-                    <div className="flex items-center justify-between">
-                      <div className={`text-xs px-1 py-0.5 rounded ${termDifficulty.bg} ${termDifficulty.color}`}>
-                        {termDifficulty.level}
+                    {/* 배경 그라데이션 효과 */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${
+                      index === currentTermIndex
+                        ? 'from-blue-500/10 via-purple-500/10 to-blue-600/10'
+                        : 'from-transparent via-transparent to-transparent'
+                    } opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                    
+                    {/* 선택된 경우 빛나는 효과 */}
+                    {index === currentTermIndex && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-blue-400/20 animate-pulse rounded-xl" />
+                    )}
+                    
+                    {/* 카드 내용 */}
+                    <div className="relative z-10 p-3 h-full flex flex-col justify-between">
+                      {/* 상단: 용어명과 즐겨찾기 */}
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            {/* 용어 아이콘 */}
+                            <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              termDifficulty.level === '초급' ? 'bg-green-500/20 text-green-400' :
+                              termDifficulty.level === '중급' ? 'bg-yellow-500/20 text-yellow-400' :
+                              'bg-red-500/20 text-red-400'
+                            }`}>
+                              <Brain className="w-3 h-3" />
+                            </div>
+                            
+                            {/* 용어명 */}
+                            <h3 className="font-bold text-white text-sm leading-tight break-words line-clamp-1">
+                              {term.term}
+                            </h3>
+                          </div>
+                          
+                          {/* 난이도 배지 */}
+                          <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            termDifficulty.level === '초급' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                            termDifficulty.level === '중급' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30' :
+                            'bg-red-500/20 text-red-300 border border-red-400/30'
+                          }`}>
+                            <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
+                              termDifficulty.level === '초급' ? 'bg-green-400' :
+                              termDifficulty.level === '중급' ? 'bg-yellow-400' :
+                              'bg-red-400'
+                            }`} />
+                            {termDifficulty.level}
+                          </div>
+                        </div>
+                        
+                        {/* 즐겨찾기 버튼 */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            toggleFavorite(term.term)
+                          }}
+                          className={`p-2 rounded-lg flex-shrink-0 touch-manipulation select-none min-h-[36px] min-w-[36px] flex items-center justify-center webview-button transition-all duration-200 ${
+                            favoriteTerms.has(term.term)
+                              ? 'text-yellow-400 bg-yellow-500/20 border border-yellow-400/30'
+                              : 'text-white/40 hover:text-yellow-400 hover:bg-yellow-500/10 border border-transparent hover:border-yellow-400/20'
+                          }`}
+                          style={{ WebkitTapHighlightColor: 'transparent' }}
+                        >
+                          <Star className="w-4 h-4" fill={favoriteTerms.has(term.term) ? 'currentColor' : 'none'} />
+                        </button>
                       </div>
-                      <div className="text-white/40 text-xs">{term.learned_date}</div>
+                      
+                      {/* 중간: 설명 */}
+                      <div className="mb-2">
+                        <p className="text-white/70 text-xs leading-relaxed line-clamp-2 break-words">
+                          {term.description}
+                        </p>
+                      </div>
+                      
+                      {/* 하단: 메타데이터 */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-white/50 text-xs">
+                          <Calendar className="w-3 h-3" />
+                          <span>{term.learned_date}</span>
+                        </div>
+                        
+                        {/* 선택된 경우 진행 표시기 */}
+                        {index === currentTermIndex && (
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+                            <span className="text-blue-300 text-xs font-medium">현재</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
+                    
+                    {/* 호버 시 추가 효과 */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%]" />
                   </motion.div>
                 )
               })}
