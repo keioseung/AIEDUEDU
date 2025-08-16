@@ -483,11 +483,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
     <div className="glass rounded-2xl p-3 md:p-4 flex flex-col gap-3 md:gap-4">
       {/* 모바일 최적화 헤더 */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-          <Brain className="w-5 h-5 md:w-6 md:h-6" />
-          <span className="hidden sm:inline">학습한 용어 모음</span>
-          <span className="sm:hidden">용어 학습</span>
-        </h2>
         <div className="flex items-center gap-2">
           <button
             onTouchStart={handleWebViewTouch(toggleFilters)}

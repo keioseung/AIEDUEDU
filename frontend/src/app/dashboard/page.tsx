@@ -601,10 +601,6 @@ export default function DashboardPage() {
           )}
           {activeTab === 'quiz' && (
             <section className="mb-8 md:mb-16">
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-6 md:mb-8 flex items-center gap-3 md:gap-4 drop-shadow px-2 md:px-4">
-                <Target className="w-6 h-6 md:w-8 md:h-8 ml-1 md:ml-2" />
-                용어 퀴즈
-              </h2>
               <TermsQuizSection 
                 sessionId={sessionId} 
                 selectedDate={selectedDate} 
@@ -615,10 +611,6 @@ export default function DashboardPage() {
           )}
           {activeTab === 'progress' && (
             <section className="mb-8 md:mb-16">
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-6 md:mb-8 flex items-center gap-3 md:gap-4 drop-shadow px-2 md:px-4">
-                <TrendingUp className="w-6 h-6 md:w-8 md:h-8 ml-1 md:ml-2" />
-                나의 학습 성장도
-              </h2>
               <ProgressSection 
                 sessionId={sessionId} 
                 selectedDate={selectedDate}
