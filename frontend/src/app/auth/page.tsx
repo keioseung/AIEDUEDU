@@ -126,7 +126,7 @@ export default function AuthPage() {
       <div className="absolute top-1/2 left-1/2 w-[140%] h-[140%] bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-48 md:py-64 lg:py-80">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-16 md:py-24 lg:py-32">
         <div className="w-full max-w-sm">
           {/* 뒤로 가기 버튼 */}
           <div className="absolute top-3 left-3 md:top-4 md:left-4 z-20">

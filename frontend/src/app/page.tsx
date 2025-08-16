@@ -164,7 +164,7 @@ export default function IntroPage() {
       </div>
 
              {/* 메인 컨텐츠 */}
-       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-16 md:py-24">
+       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-8 md:py-12">
         {/* 헤더 섹션 */}
         <div className="text-center mb-8 md:mb-12 lg:mb-16 w-full max-w-6xl mx-auto">
           {/* 로고 및 제목 */}
@@ -227,7 +227,7 @@ export default function IntroPage() {
         
 
                                    {/* 하단 통계 섹션 */}
-          <div className="w-full max-w-5xl mb-24 md:mb-32">
+          <div className="w-full max-w-5xl mb-12 md:mb-16">
            <div className="relative">
              {/* 중앙 텍스트 표시 영역 */}
              {clickedStat !== null && (
