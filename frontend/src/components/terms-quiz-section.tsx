@@ -361,8 +361,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                  <span className="relative z-10 flex items-center gap-2">
                    <Zap className="w-4 h-4 md:w-5 md:h-5" />
-                   <span className="hidden sm:inline">오늘의 주제</span>
-                   <span className="sm:hidden">오늘</span>
+                   <span>오늘의 주제</span>
                  </span>
                </button>
 
@@ -375,8 +374,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                    <span className="relative z-10 flex items-center gap-2">
                      <Settings className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-180 transition-transform duration-300" />
-                     <span className="hidden sm:inline">선택 주제</span>
-                     <span className="sm:hidden">주제</span>
+                     <span>선택 주제</span>
                    </span>
                  </button>
 
@@ -387,12 +385,13 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
                        animate={{ opacity: 1, y: 0, scale: 1 }}
                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                       className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-2 border border-white/20 shadow-2xl min-w-[240px] max-w-[280px] sm:min-w-[240px] sm:max-w-[280px]"
+                       className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-2 border border-white/20 shadow-2xl"
                        style={{
                          left: '50%',
                          transform: 'translateX(-50%)',
-                         maxWidth: 'calc(100vw - 2rem)',
-                         minWidth: '240px'
+                         width: 'calc(100vw - 2rem)',
+                         maxWidth: '320px',
+                         minWidth: '280px'
                        }}
                      >
                        <div className="text-center mb-2">
