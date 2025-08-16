@@ -389,34 +389,34 @@ export default function DashboardPage() {
       </AnimatePresence>
 
       {/* 헤더 섹션 */}
-      <div className="relative z-10 flex flex-col items-center justify-center pt-8 md:pt-12 pb-6">
+      <div className="relative z-10 flex flex-col items-center justify-center pt-6 md:pt-8 pb-4">
         {/* 상단 로그아웃 버튼 */}
-        <div className="absolute top-4 left-4 md:top-6 md:left-6">
+        <div className="absolute top-3 left-3 md:top-4 md:left-4">
           <button
             onClick={logout}
-            className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 hover:scale-110 active:scale-95 flex items-center justify-center"
+            className="w-8 h-8 md:w-10 md:h-10 bg-white/10 backdrop-blur-sm rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 hover:scale-110 active:scale-95 flex items-center justify-center"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
         </div>
 
         {/* 상단 아이콘과 제목 */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-6 md:mb-8 text-center md:text-left">
+        <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4 mb-4 md:mb-6 text-center md:text-left">
           <div className="relative">
-            <span className="text-5xl md:text-6xl text-purple-400 drop-shadow-2xl animate-bounce-slow">
+            <span className="text-4xl md:text-5xl text-purple-400 drop-shadow-2xl animate-bounce-slow">
               <FaRobot />
             </span>
-            <div className="absolute -top-2 -right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-pulse" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-pulse" />
           </div>
           <div className="flex flex-col items-center md:items-start">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight">
               {typedText}
               {isTyping && <span className="animate-blink">|</span>}
             </h1>
-            <div className="h-6 md:h-8 mt-2">
-              <p className="text-lg md:text-xl lg:text-2xl text-purple-300 font-medium">
+            <div className="h-4 md:h-6 mt-1">
+              <p className="text-base md:text-lg lg:text-xl text-purple-300 font-medium">
                 <span 
                   key={currentWelcome}
                   className="inline-block animate-tagline-fade"
