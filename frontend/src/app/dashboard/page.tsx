@@ -520,7 +520,7 @@ export default function DashboardPage() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <main className="flex-1 py-8 md:py-12">
+      <main className="flex-1 py-2 md:py-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
