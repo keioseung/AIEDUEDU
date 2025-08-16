@@ -452,7 +452,7 @@ export default function DashboardPage() {
       )}
 
       {/* 세련된 고급스러운 탭 메뉴 */}
-      <div className="flex justify-center mb-6 md:mb-8">
+      <div className="flex justify-center mb-4 md:mb-6">
         <div className="w-full max-w-4xl md:max-w-5xl">
           <div className="grid grid-cols-4 bg-white/5 backdrop-blur-2xl rounded-2xl p-1.5 md:p-2 shadow-2xl border border-white/20 overflow-hidden">
             {[
