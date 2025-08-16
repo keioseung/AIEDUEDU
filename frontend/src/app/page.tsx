@@ -208,10 +208,7 @@ export default function IntroPage() {
                 실전 퀴즈로 지식을 점검
               </span>
             </h2>
-            <p className="text-white/70 text-sm md:text-base lg:text-lg leading-relaxed max-w-4xl mx-auto mobile-text text-center" style={{ wordBreak: 'keep-all' }}>
-              학습하고<br />
-              실전 문제를 통해 확실한 이해를 확인하세요.
-            </p>
+
           </div>
 
           {/* CTA 버튼 */}
