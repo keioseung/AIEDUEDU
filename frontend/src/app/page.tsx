@@ -105,6 +105,12 @@ export default function IntroPage() {
     setClickedStat(null)
   }
 
+  // 아이콘 클릭 이벤트 핸들러 - 이벤트 전파 방지
+  const handleIconClick = (index: number, event: React.MouseEvent) => {
+    event.stopPropagation() // 이벤트 전파 방지
+    handleStatClick(index)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
       {/* 고급스러운 배경 효과 */}
@@ -236,12 +242,12 @@ export default function IntroPage() {
                <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
                  {/* 첫 번째 아이콘 - AI 정보 */}
                  <div 
-                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
                      clickedStat === null 
                        ? 'transform scale-100' 
                        : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
                    }`}
-                   onClick={() => handleStatClick(0)}
+                   onClick={(event) => handleIconClick(0, event)}
                  >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
@@ -298,12 +304,12 @@ export default function IntroPage() {
 
                                    {/* 두 번째 아이콘 - 관련 용어 */}
                   <div 
-                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
                         : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
                     }`}
-                    onClick={() => handleStatClick(1)}
+                    onClick={(event) => handleIconClick(1, event)}
                   >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
@@ -363,12 +369,12 @@ export default function IntroPage() {
                <div className="flex items-center justify-center gap-4 md:gap-6">
                                    {/* 세 번째 아이콘 - 실전 퀴즈 */}
                   <div 
-                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
                         : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[80px] md:translate-y-[120px] scale-90'
                     }`}
-                    onClick={() => handleStatClick(2)}
+                    onClick={(event) => handleIconClick(2, event)}
                   >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
@@ -425,12 +431,12 @@ export default function IntroPage() {
 
                                    {/* 네 번째 아이콘 - 학습 진행률 */}
                   <div 
-                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
                         : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[80px] md:translate-y-[120px] scale-90'
                     }`}
-                    onClick={() => handleStatClick(3)}
+                    onClick={(event) => handleIconClick(3, event)}
                   >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
