@@ -358,19 +358,33 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   const handleListTouchMove = (e: React.TouchEvent) => {
     const currentY = e.targetTouches[0].clientY
+    const currentX = e.targetTouches[0].clientX
     const deltaY = Math.abs(currentY - touchStartY)
+    const deltaX = Math.abs(currentX - (e.targetTouches[0].clientX - (currentY - touchStartY)))
     
-    // 수직 이동이 10px 이상이면 스크롤로 간주
-    if (deltaY > 10) {
+    // 수직 이동이 15px 이상이고 수평 이동이 적으면 스크롤로 간주
+    if (deltaY > 15 && deltaX < 20) {
       setIsScrolling(true)
     }
   }
 
   const handleListTouchEnd = () => {
-    // 스크롤 중이었다면 잠시 후 스크롤 상태 해제
+    // 스크롤 중이었다면 더 긴 시간 후 스크롤 상태 해제
     if (isScrolling) {
-      setTimeout(() => setIsScrolling(false), 100)
+      setTimeout(() => setIsScrolling(false), 300)
     }
+  }
+
+  // 용어 선택 핸들러 (스크롤 상태 확인)
+  const handleTermSelect = (index: number) => {
+    // 스크롤 중일 때는 용어 선택 방지
+    if (isScrolling) return
+    
+    // 목록에서 용어 선택 시 자동재생 일시 중단
+    if (autoPlay) {
+      setAutoPlay(false)
+    }
+    setCurrentTermIndex(index)
   }
 
   // 목록 크기 조절 함수
@@ -916,28 +930,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-400/50'
                         : 'bg-white/5 hover:bg-white/10 active:bg-white/20 border border-white/10'
                     }`}
-                                                              onTouchStart={handleWebViewTouch(() => {
-                        // 스크롤 중일 때는 용어 선택 방지
-                        if (isScrolling) return
-                        
-                        // 목록에서 용어 선택 시 자동재생 일시 중단
-                        if (autoPlay) {
-                          setAutoPlay(false)
-                        }
-                        setCurrentTermIndex(index)
-                        // 목록을 닫지 않음
-                      })}
-                      onClick={() => {
-                        // 스크롤 중일 때는 용어 선택 방지
-                        if (isScrolling) return
-                        
-                        // 목록에서 용어 선택 시 자동재생 일시 중단
-                        if (autoPlay) {
-                          setAutoPlay(false)
-                        }
-                        setCurrentTermIndex(index)
-                        // 목록을 닫지 않음
-                      }}
+                                                              onTouchStart={handleWebViewTouch(() => handleTermSelect(index))}
+                    onClick={() => handleTermSelect(index)}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     <div className="flex items-center justify-between mb-1">
