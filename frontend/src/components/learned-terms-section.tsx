@@ -920,7 +920,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         : 'bg-white/15 text-white/80 border border-white/20 hover:bg-white/20 hover:border-white/30'
                     }`}
                   >
-                    {scrollMode ? '스크롤 모드' : '선택 모드'}
+                    {scrollMode ? '스크롤 모드' : '스크롤'}
                   </button>
                   <button
                     onTouchStart={handleWebViewTouch(toggleListHeight)}
