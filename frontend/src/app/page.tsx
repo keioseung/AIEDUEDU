@@ -226,78 +226,90 @@ export default function IntroPage() {
 
         
 
-                 {/* 하단 통계 섹션 */}
-         <div className="w-full max-w-5xl mb-24 md:mb-32">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl px-4">
-            {[
-              { label: "매일 새로운", value: "AI 정보", icon: FaBrain, desc: "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다." },
-              { label: "핵심 개념", value: "관련 용어", icon: FaRocket, desc: "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다." },
-              { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, desc: "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다." },
-              { label: "학습 현황", value: "진행률", icon: FaTrophy, desc: "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다." }
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className={`text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-105 relative ${
-                  clickedStat === index ? 'scale-110' : ''
-                }`}
-                style={{ animationDelay: `${index * 0.3}s` }}
-                onClick={() => handleStatClick(index)}
-              >
-                {/* Click effects */}
-                {clickedStat === index && (
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                )}
-                {clickedStat === index && [...Array(8)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                    style={{
-                      left: '50%',
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      '--angle': `${i * 45}deg`,
-                      '--distance': '20px'
-                    } as React.CSSProperties}
-                  />
-                ))}
-                {clickedStat === index && (
-                  <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                )}
-                {clickedStat === index && (
-                  <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                )}
-                
-                                 {/* Info box - 위쪽에 표시 */}
-                 {clickedStat === index && (
-                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-8 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-3 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20 z-20">
-                     <p className="font-medium leading-relaxed">{stat.desc}</p>
+                                   {/* 하단 통계 섹션 */}
+          <div className="w-full max-w-5xl mb-24 md:mb-32">
+           <div className="relative">
+             {/* 중앙 텍스트 표시 영역 */}
+             {clickedStat !== null && (
+               <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                 <div className="bg-white/15 backdrop-blur-lg rounded-lg p-4 text-white text-center max-w-md shadow-lg border border-white/20 animate-slide-up">
+                   <p className="font-medium leading-relaxed text-sm md:text-base">
+                     {[
+                       "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다.",
+                       "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다.",
+                       "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다.",
+                       "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다."
+                     ][clickedStat]}
+                   </p>
+                 </div>
+               </div>
+             )}
+             
+             {/* 4개 아이콘을 사방으로 배치 */}
+             <div className="relative w-full h-64 md:h-80">
+               {[
+                 { label: "매일 새로운", value: "AI 정보", icon: FaBrain, position: "top-0 left-1/2 -translate-x-1/2" },
+                 { label: "핵심 개념", value: "관련 용어", icon: FaRocket, position: "top-1/2 right-0 translate-x-1/2 -translate-y-1/2" },
+                 { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, position: "bottom-0 left-1/2 -translate-x-1/2" },
+                 { label: "학습 현황", value: "진행률", icon: FaTrophy, position: "top-1/2 left-0 -translate-x-1/2 -translate-y-1/2" }
+               ].map((stat, index) => (
+                 <div
+                   key={index}
+                   className={`absolute ${stat.position} text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-105 ${
+                     clickedStat === index ? 'scale-110' : ''
+                   }`}
+                   style={{ animationDelay: `${index * 0.3}s` }}
+                   onClick={() => handleStatClick(index)}
+                 >
+                   {/* Click effects */}
+                   {clickedStat === index && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === index && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
+                     />
+                   ))}
+                   {clickedStat === index && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === index && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
+                   
+                   {/* Icon */}
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === index ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
+                   }`}>
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === index ? 'animate-stat-glow' : ''
+                     }`}>
+                       <stat.icon className="text-purple-300 text-lg md:text-xl" />
+                     </div>
                    </div>
-                 )}
-                
-                {/* Icon */}
-                <div className={`relative z-10 transition-all duration-300 ${
-                  clickedStat === index ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
-                }`}>
-                  <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                    clickedStat === index ? 'animate-stat-glow' : ''
-                  }`}>
-                    <stat.icon className="text-purple-300 text-lg md:text-xl" />
-                  </div>
-                </div>
-                
-                {/* Text */}
-                <div className="relative z-10">
-                  <div className="text-white/70 text-xs md:text-sm font-medium mb-1">
-                    {stat.label}
-                  </div>
-                  <div className="text-white font-bold text-sm md:text-base mb-1">
-                    {stat.value}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                   
+                   {/* Text */}
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">
+                       {stat.label}
+                     </div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">
+                       {stat.value}
+                     </div>
+                   </div>
+                 </div>
+               ))}
+             </div>
+           </div>
+         </div>
       </div>
 
       <style jsx global>{`
