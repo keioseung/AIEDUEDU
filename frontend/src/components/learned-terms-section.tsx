@@ -361,9 +361,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
     const currentX = e.targetTouches[0].clientX
     const deltaY = Math.abs(currentY - touchStartY)
     const deltaX = Math.abs(currentX - (e.targetTouches[0].clientX - (currentY - touchStartY)))
+    const currentTime = Date.now()
+    const timeDiff = currentTime - touchStartTime
     
-    // 수직 이동이 15px 이상이고 수평 이동이 적으면 스크롤로 간주
-    if (deltaY > 15 && deltaX < 20) {
+    // 수직 이동이 8px 이상이고 수평 이동이 적고, 빠른 움직임이면 스크롤로 간주
+    if (deltaY > 8 && deltaX < 12 && timeDiff < 200) {
       setIsScrolling(true)
     }
   }
@@ -371,14 +373,17 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const handleListTouchEnd = () => {
     // 스크롤 중이었다면 더 긴 시간 후 스크롤 상태 해제
     if (isScrolling) {
-      setTimeout(() => setIsScrolling(false), 300)
+      setTimeout(() => setIsScrolling(false), 800)
     }
   }
 
   // 용어 선택 핸들러 (스크롤 상태 확인)
   const handleTermSelect = (index: number) => {
     // 스크롤 중일 때는 용어 선택 방지
-    if (isScrolling) return
+    if (isScrolling) {
+      console.log('스크롤 중 - 용어 선택 방지')
+      return
+    }
     
     // 목록에서 용어 선택 시 자동재생 일시 중단
     if (autoPlay) {
