@@ -69,6 +69,19 @@ export default function IntroPage() {
 
   // 카드 클릭 효과
   const handleCardClick = (index: number) => {
+    // 이미 클릭된 카드라면 상태 종료
+    if (clickedCard === index) {
+      setClickedCard(null)
+      setCardParticles([])
+      return
+    }
+    
+    // 다른 카드 클릭 시 이전 상태 종료 후 새 상태 시작
+    if (clickedCard !== null) {
+      setClickedCard(null)
+      setCardParticles([])
+    }
+    
     setClickedCard(index)
     
     // 파티클 효과 생성
@@ -82,22 +95,11 @@ export default function IntroPage() {
       })
     }
     setCardParticles(particles)
-    
-    // 3초 후 효과 제거
-    setTimeout(() => {
-      setClickedCard(null)
-      setCardParticles([])
-    }, 3000)
   }
 
-  // 카드 확장/축소 토글
+  // 카드 확장/축소 토글 (제거 - 단순 클릭으로 변경)
   const toggleCard = (index: number) => {
-    if (clickedCard === index) {
-      setClickedCard(null)
-      setCardParticles([])
-    } else {
-      handleCardClick(index)
-    }
+    handleCardClick(index)
   }
 
   return (
