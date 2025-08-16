@@ -485,9 +485,9 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const difficulty = currentTerm ? getDifficulty(currentTerm.term) : null
 
   return (
-    <div className="glass rounded-2xl p-2 md:p-3 flex flex-col gap-1 md:gap-2">
+    <div className="glass rounded-2xl p-0 md:p-0 flex flex-col gap-1 md:gap-2">
       {/* 모바일 최적화 헤더 */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-2 md:px-3 pt-2 md:pt-3">
         <div className="flex items-center gap-2">
           <button
             onTouchStart={handleWebViewTouch(toggleFilters)}
