@@ -194,14 +194,39 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     setSelectedInfo(null)
   }
 
-  // 로딩 중이거나 데이터가 아직 없는 경우 계속 로딩 표시
-  if (isLoading || actualAIInfo.length === 0) {
+  // 로딩 중인 경우
+  if (isLoading) {
     return (
       <div className="glass rounded-2xl p-48 md:p-64 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white/70 text-lg mb-2">AI 정보를 불러오는 중...</p>
-          <p className="text-white/50 text-sm">잠시만 기다려주세요</p>
+          <div className="space-y-2">
+            <p className="text-white/80 text-lg font-medium">AI 정보를 불러오는 중...</p>
+            <p className="text-white/50 text-sm">잠시만 기다려주세요</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // 데이터가 없는 경우
+  if (actualAIInfo.length === 0) {
+    return (
+      <div className="glass rounded-2xl p-48 md:p-64 min-h-[80vh] flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="w-16 h-16 mx-auto mb-4 opacity-60">
+            <FaRobot className="w-full h-full text-blue-400" />
+          </div>
+          <div className="space-y-3">
+            <h3 className="text-xl font-semibold text-white">AI 정보가 없습니다</h3>
+            <p className="text-white/70 text-base">
+              아직 등록된 AI 정보가 없습니다.<br/>
+              관리자가 AI 정보를 등록한 후 이용해주세요!
+            </p>
+            <div className="text-sm text-white/50">
+              새로운 AI 정보를 기다리고 있습니다
+            </div>
+          </div>
         </div>
       </div>
     )
