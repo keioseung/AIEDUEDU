@@ -387,7 +387,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute top-full right-0 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-2 border border-white/20 shadow-2xl min-w-[260px] max-w-[300px]"
+                      className="absolute top-full right-0 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-2 border border-white/20 shadow-2xl min-w-[240px] max-w-[280px]"
                     >
                       <div className="text-center mb-2">
                         <div className="text-white/80 text-xs font-medium mb-1">주제 선택</div>
@@ -395,12 +395,12 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                           <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-0.5 rounded-full transition-all" />
                         </div>
                       </div>
-                      <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                      <div className="space-y-1 max-h-36 overflow-y-auto custom-scrollbar">
                         {actualAIInfo.map((info, index) => (
                           <button
                             key={info.title}
                             onClick={() => handleQuizTitleChange(info.title)}
-                            className="w-full text-left p-1.5 rounded-lg bg-gradient-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-200 group"
+                            className="w-full text-left p-1 rounded-lg bg-gradient-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-200 group"
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex-1 min-w-0">

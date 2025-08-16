@@ -519,7 +519,7 @@ export default function IntroPage() {
 
                                                {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 (위치 조정 및 애니메이션 개선) */}
                  {clickedStat !== null && (
-                   <div className="absolute inset-0 flex items-center justify-center z-40" style={{ transform: 'translateY(-40px)' }}>
+                   <div className="absolute inset-0 flex items-center justify-center z-40" style={{ transform: 'translateY(40px)' }}>
                      {/* 메인 텍스트 상자 */}
                      <div className="relative group">
                       {/* 메인 텍스트 상자 - 더 멋진 애니메이션 효과 추가 */}
@@ -530,14 +530,14 @@ export default function IntroPage() {
                        {/* 빛나는 테두리 효과 */}
                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 p-[1px]">
                          <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 rounded-3xl h-full w-full flex items-center justify-center">
-                           <p className="text-white/90 text-sm md:text-base font-medium leading-relaxed px-4 text-center relative z-10 animate-text-fade-in">
+                           <div className="text-white/90 text-sm md:text-base font-medium leading-relaxed px-4 text-center relative z-10 animate-text-fade-in">
                              {[
-                               "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다.",
-                               "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다.",
-                               "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다.",
-                               "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다."
+                               "최신 AI 트렌드와\n기술 동향을 매일 업데이트하여 제공합니다.",
+                               "AI 학습에 필수적인\n핵심 용어들을 체계적으로 정리했습니다.",
+                               "학습한 내용을 다양한\n퀴즈로 점검하여 확실한 이해를 확인합니다.",
+                               "개인별 학습 진행 상황을\n체계적으로 추적하고 목표를 달성합니다."
                              ][clickedStat]}
-                           </p>
+                           </div>
                          </div>
                        </div>
                        
