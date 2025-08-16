@@ -341,31 +341,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
             {/* 오른쪽: 퀴즈 주제 선택 버튼 */}
             <div className="flex items-center gap-4">
-               {/* 오늘의 퀴즈 버튼 */}
-               <button
-                 onClick={() => {
-                   const today = new Date().toISOString().split('T')[0]
-                   if (onDateChange) {
-                     onDateChange(today)
-                   }
-                   setSelectedQuizTitle('오늘의 주제')
-                   setCurrentQuizIndex(0)
-                   setSelectedAnswer(null)
-                   setShowResult(false)
-                   setScore(0)
-                   setQuizCompleted(false)
-                   setFinalScore(null)
-                 }}
-                 className="group relative overflow-hidden bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600 hover:from-emerald-500 hover:via-teal-600 hover:to-emerald-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-500 flex items-center gap-3 hover:scale-105 active:scale-95 border border-emerald-300/30"
-               >
-                 <div className="absolute inset-0 bg-gradient-to-r from-white/25 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                 <span className="relative z-10 flex items-center gap-3">
-                   <Zap className="w-5 h-5 md:w-6 md:h-6" />
-                   <span className="text-sm md:text-base">오늘의 주제</span>
-                 </span>
-               </button>
-
-               {/* AI 정보 주제 선택 버튼 */}
+               {/* 주제 선택 버튼 */}
                <div className="relative">
                  <button
                    onClick={() => setShowQuizTitleSelector(!showQuizTitleSelector)}
@@ -374,7 +350,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                    <div className="absolute inset-0 bg-gradient-to-r from-white/25 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                    <span className="relative z-10 flex items-center gap-3">
                      <Settings className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-180 transition-transform duration-500" />
-                     <span className="text-sm md:text-base">선택 주제</span>
+                     <span className="text-sm md:text-base">주제 선택</span>
                    </span>
                  </button>
 
@@ -411,6 +387,27 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        {/* AI 정보 목록 */}
                        {!isLoadingAIInfo && (
                          <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+                           {/* 오늘의 주제 옵션 추가 */}
+                           <button
+                             onClick={() => handleQuizTitleChange('오늘의 주제')}
+                             className="w-full text-left p-3 rounded-2xl bg-gradient-to-r from-emerald-400/20 via-emerald-500/20 to-emerald-600/20 hover:from-emerald-400/30 hover:via-emerald-500/30 hover:to-emerald-600/30 transition-all duration-300 group border border-emerald-300/30 hover:border-emerald-300/50"
+                           >
+                             <div className="flex items-center justify-between">
+                               <div className="flex-1 min-w-0">
+                                 <div className="text-emerald-300 font-semibold text-sm truncate group-hover:text-emerald-200 transition-colors leading-tight flex items-center gap-2">
+                                   <Zap className="w-4 h-4" />
+                                   오늘의 주제
+                                 </div>
+                                 <div className="text-emerald-300/70 text-xs mt-1 leading-tight">
+                                   날짜별 퀴즈
+                                 </div>
+                               </div>
+                               <div className="ml-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                 <ChevronRight className="w-4 h-4 text-emerald-400" />
+                               </div>
+                             </div>
+                           </button>
+                           
                            {actualAIInfo.length > 0 ? (
                              actualAIInfo.map((info, index) => (
                                <button
