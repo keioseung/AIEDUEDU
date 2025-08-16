@@ -925,21 +925,13 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                       }`}
                       style={{ WebkitTapHighlightColor: 'transparent' }}
                     >
-                      {scrollMode ? '📱 스크롤' : '👆 선택'}
+                      {scrollMode ? '📱 스크롤' : '스크롤 고정\n(1초 이상 클릭)'}
                     </button>
                     
-                    {/* 1초 이상 누르기 안내 툴팁 */}
+                    {/* 1초 이상 클릭 안내 문구 */}
                     {!scrollMode && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 bg-gradient-to-r from-blue-500/95 to-purple-500/95 backdrop-blur-xl rounded-lg p-3 text-white text-xs shadow-2xl border border-blue-300/50 z-20 animate-fade-in">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                          <span className="font-semibold">모드 전환 방법</span>
-                        </div>
-                        <p className="text-white/90 leading-relaxed">
-                          버튼을 <span className="font-bold text-yellow-300">1초 이상</span> 길게 누르면<br/>
-                          스크롤 모드로 전환됩니다
-                        </p>
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-blue-500/95"></div>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-2 py-1 bg-gradient-to-r from-blue-500/80 to-purple-500/80 backdrop-blur-sm rounded-md text-white text-xs font-medium shadow-lg border border-blue-300/50 z-20 animate-fade-in">
+                        1초이상 클릭
                       </div>
                     )}
                   </div>
@@ -976,7 +968,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         ? 'bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-indigo-500/20 border border-blue-400/50 shadow-lg shadow-blue-500/20 scale-[1.02] ring-1 ring-blue-400/30'
                         : 'bg-gradient-to-br from-white/5 via-white/8 to-white/5 hover:from-white/10 hover:via-white/15 hover:to-white/10 active:from-white/20 active:via-white/25 active:to-white/20 border border-white/20 hover:border-white/30 hover:shadow-lg hover:shadow-white/10 hover:scale-[1.01]'
                     }`}
-                    onTouchStart={handleWebViewTouch(() => handleTermSelect(index))}
+                                                              onTouchStart={handleWebViewTouch(() => handleTermSelect(index))}
                     onClick={() => handleTermSelect(index)}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
@@ -1029,21 +1021,21 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         </div>
                         
                         {/* 즐겨찾기 버튼 */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            toggleFavorite(term.term)
-                          }}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleFavorite(term.term)
+                        }}
                           className={`p-1 rounded-lg flex-shrink-0 touch-manipulation select-none min-h-[28px] min-w-[28px] flex items-center justify-center webview-button transition-all duration-200 shadow-sm ${
-                            favoriteTerms.has(term.term)
+                          favoriteTerms.has(term.term)
                               ? 'text-yellow-300 bg-gradient-to-br from-yellow-500/25 to-amber-500/25 border border-yellow-400/40 shadow-md shadow-yellow-500/20'
                               : 'text-white/50 hover:text-yellow-300 hover:bg-gradient-to-br hover:from-yellow-500/10 hover:to-amber-500/10 border border-transparent hover:border-yellow-400/25 hover:shadow-sm'
-                          }`}
-                          style={{ WebkitTapHighlightColor: 'transparent' }}
-                        >
-                          <Star className="w-3 h-3" fill={favoriteTerms.has(term.term) ? 'currentColor' : 'none'} />
-                        </button>
-                      </div>
+                        }`}
+                        style={{ WebkitTapHighlightColor: 'transparent' }}
+                      >
+                        <Star className="w-3 h-3" fill={favoriteTerms.has(term.term) ? 'currentColor' : 'none'} />
+                      </button>
+                    </div>
                       
                       {/* 중간: 설명 */}
                       <div className="mb-1">
@@ -1053,18 +1045,18 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                       </div>
                       
                       {/* 하단: 메타데이터 */}
-                      <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 text-white/50 text-xs">
                           <Calendar className="w-2.5 h-2.5" />
                           <span className="font-medium">{term.learned_date}</span>
-                        </div>
+                      </div>
                         
                         {/* 선택된 경우 진행 표시기 */}
                         {index === currentTermIndex && (
                           <div className="flex items-center gap-1">
                             <div className="w-1.5 h-1.5 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse shadow-sm" />
                             <span className="text-blue-200 text-xs font-semibold">현재</span>
-                          </div>
+                    </div>
                         )}
                       </div>
                     </div>
