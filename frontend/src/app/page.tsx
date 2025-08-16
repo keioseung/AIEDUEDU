@@ -366,7 +366,7 @@ export default function IntroPage() {
                 
                 {/* Info box */}
                 {clickedStat === index && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-2 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-full max-w-xs bg-white/15 backdrop-blur-lg rounded-lg p-2 text-white text-xs md:text-sm shadow-lg animate-slide-up border border-white/20">
                     <p className="font-medium">{stat.desc}</p>
                   </div>
                 )}
