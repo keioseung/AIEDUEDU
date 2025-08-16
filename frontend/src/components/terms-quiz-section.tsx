@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HelpCircle, CheckCircle, XCircle, RotateCcw, BookOpen, Target, Trophy, Star, Sparkles, Award, ChevronLeft, ChevronRight, Brain, Zap, Clock, CheckSquare, XSquare, Bookmark, TrendingUp, AlertCircle, Lightbulb } from 'lucide-react'
+import { HelpCircle, CheckCircle, XCircle, RotateCcw, BookOpen, Target, Trophy, Star, Sparkles, Award, ChevronLeft, ChevronRight, Brain, Zap, Clock, CheckSquare, XSquare, Bookmark, TrendingUp, AlertCircle, Lightbulb, Heart, Save, List } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import { useUpdateQuizScore, useCheckAchievements } from '@/hooks/use-user-progress'
@@ -41,6 +41,13 @@ interface WrongAnswerNote {
   attempts: number
 }
 
+interface SavedQuiz {
+  quizId: number
+  question: string
+  timestamp: Date
+  reason: string
+}
+
 function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateChange }: TermsQuizSectionProps) {
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -51,16 +58,22 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const [showAchievement, setShowAchievement] = useState(false)
   const [finalScore, setFinalScore] = useState<{score: number, total: number, percentage: number} | null>(null)
   const [wrongAnswerNotes, setWrongAnswerNotes] = useState<WrongAnswerNote[]>([])
+  const [savedQuizzes, setSavedQuizzes] = useState<SavedQuiz[]>([])
   const [showWrongAnswerNotes, setShowWrongAnswerNotes] = useState(false)
-  const [quizMode, setQuizMode] = useState<'all' | 'wrong'>('all')
+  const [showSavedQuizzes, setShowSavedQuizzes] = useState(false)
+  const [quizMode, setQuizMode] = useState<'all' | 'wrong' | 'saved'>('all')
   const [solvedQuizIds, setSolvedQuizIds] = useState<Set<number>>(new Set())
+  const [showSaveModal, setShowSaveModal] = useState(false)
+  const [currentQuizToSave, setCurrentQuizToSave] = useState<TermsQuiz | null>(null)
+  const [saveReason, setSaveReason] = useState('')
   
   const updateQuizScoreMutation = useUpdateQuizScore()
   const checkAchievementsMutation = useCheckAchievements()
 
-  // 로컬 스토리지에서 오답 노트와 풀이 상태 불러오기
+  // 로컬 스토리지에서 오답 노트, 저장된 퀴즈, 풀이 상태 불러오기
   useEffect(() => {
     const savedWrongNotes = localStorage.getItem(`wrong-notes-${sessionId}`)
+    const savedQuizzes = localStorage.getItem(`saved-quizzes-${sessionId}`)
     const savedSolvedQuizzes = localStorage.getItem(`solved-quizzes-${sessionId}`)
     
     if (savedWrongNotes) {
@@ -72,6 +85,18 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         })))
       } catch (e) {
         console.error('Failed to parse wrong answer notes:', e)
+      }
+    }
+    
+    if (savedQuizzes) {
+      try {
+        const parsed = JSON.parse(savedQuizzes)
+        setSavedQuizzes(parsed.map((quiz: any) => ({
+          ...quiz,
+          timestamp: new Date(quiz.timestamp)
+        })))
+      } catch (e) {
+        console.error('Failed to parse saved quizzes:', e)
       }
     }
     
@@ -96,6 +121,11 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         const wrongQuizIds = wrongAnswerNotes.map((note: WrongAnswerNote) => note.quizId)
         filteredQuizzes = response.data.quizzes.filter((quiz: TermsQuiz) => 
           wrongQuizIds.includes(quiz.id)
+        )
+      } else if (quizMode === 'saved') {
+        const savedQuizIds = savedQuizzes.map((quiz: SavedQuiz) => quiz.quizId)
+        filteredQuizzes = response.data.quizzes.filter((quiz: TermsQuiz) => 
+          savedQuizIds.includes(quiz.id)
         )
       }
       
@@ -135,6 +165,34 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       setWrongAnswerNotes(newNotes)
       localStorage.setItem(`wrong-notes-${sessionId}`, JSON.stringify(newNotes))
     }
+  }
+
+  // 퀴즈 저장
+  const saveQuiz = (quiz: TermsQuiz, reason: string) => {
+    const savedQuiz: SavedQuiz = {
+      quizId: quiz.id,
+      question: quiz.question,
+      timestamp: new Date(),
+      reason
+    }
+    
+    const existingIndex = savedQuizzes.findIndex((saved: SavedQuiz) => saved.quizId === quiz.id)
+    if (existingIndex >= 0) {
+      // 기존 저장된 퀴즈가 있으면 업데이트
+      const updated = [...savedQuizzes]
+      updated[existingIndex] = savedQuiz
+      setSavedQuizzes(updated)
+      localStorage.setItem(`saved-quizzes-${sessionId}`, JSON.stringify(updated))
+    } else {
+      // 새로운 퀴즈 저장
+      const newSaved = [...savedQuizzes, savedQuiz]
+      setSavedQuizzes(newSaved)
+      localStorage.setItem(`saved-quizzes-${sessionId}`, JSON.stringify(newSaved))
+    }
+    
+    setShowSaveModal(false)
+    setCurrentQuizToSave(null)
+    setSaveReason('')
   }
 
   // 풀이 완료 상태 저장
@@ -193,7 +251,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     refetch()
   }
 
-  const handleQuizModeChange = (mode: 'all' | 'wrong') => {
+  const handleQuizModeChange = (mode: 'all' | 'wrong' | 'saved') => {
     setQuizMode(mode)
     setCurrentQuizIndex(0)
     setSelectedAnswer(null)
@@ -204,12 +262,18 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     setFinalScore(null)
   }
 
+  const handleSaveQuiz = (quiz: TermsQuiz) => {
+    setCurrentQuizToSave(quiz)
+    setShowSaveModal(true)
+  }
+
   const getQuizModeStats = () => {
     const totalQuizzes = quizData?.quizzes?.length || 0
     const wrongCount = wrongAnswerNotes.length
+    const savedCount = savedQuizzes.length
     const solvedCount = solvedQuizIds.size
     
-    return { totalQuizzes, wrongCount, solvedCount }
+    return { totalQuizzes, wrongCount, savedCount, solvedCount }
   }
 
   const stats = getQuizModeStats()
@@ -252,7 +316,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleQuizModeChange('all')}
-                className={`relative group px-4 py-2 rounded-xl border transition-all duration-300 ${
+                className={`relative group px-3 py-2 rounded-xl border transition-all duration-300 ${
                   quizMode === 'all'
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 border-purple-400 text-white shadow-lg'
                     : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:text-white'
@@ -273,7 +337,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleQuizModeChange('wrong')}
-                className={`relative group px-4 py-2 rounded-xl border transition-all duration-300 ${
+                className={`relative group px-3 py-2 rounded-xl border transition-all duration-300 ${
                   quizMode === 'wrong'
                     ? 'bg-gradient-to-r from-red-500 to-orange-500 border-red-400 text-white shadow-lg'
                     : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:text-white'
@@ -288,26 +352,55 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                   <span className="text-xs bg-white/20 px-2 py-1 rounded-lg">{stats.wrongCount}</span>
                 </div>
               </motion.button>
+
+              {/* 저장된 퀴즈 모드 */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleQuizModeChange('saved')}
+                className={`relative group px-3 py-2 rounded-xl border transition-all duration-300 ${
+                  quizMode === 'saved'
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 border-blue-400 text-white shadow-lg'
+                    : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:text-white'
+                }`}
+              >
+                {quizMode === 'saved' && (
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/20 to-cyan-400/20 animate-pulse" />
+                )}
+                <div className="relative z-10 flex items-center gap-2">
+                  <Heart className="w-4 h-4" />
+                  <span className="text-sm font-medium">저장</span>
+                  <span className="text-xs bg-white/20 px-2 py-1 rounded-lg">{stats.savedCount}</span>
+                </div>
+              </motion.button>
             </div>
           </div>
 
           {/* 간단한 통계 정보 */}
           <div className="mt-3 pt-3 border-t border-white/10">
-            <div className="flex items-center justify-center gap-6 text-center">
+            <div className="flex items-center justify-center gap-4 text-center">
               <div className="flex flex-col items-center">
-                <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-1">
+                <div className="w-5 h-5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-1">
                   <CheckSquare className="w-3 h-3 text-white" />
                 </div>
                 <div className="text-white/70 text-xs">풀이완료</div>
-                <div className="text-white font-bold text-sm">{stats.solvedCount}</div>
+                <div className="text-white font-bold text-xs">{stats.solvedCount}</div>
               </div>
               
               <div className="flex flex-col items-center">
-                <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center mb-1">
+                <div className="w-5 h-5 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center mb-1">
                   <XSquare className="w-3 h-3 text-white" />
                 </div>
                 <div className="text-white/70 text-xs">오답</div>
-                <div className="text-white font-bold text-sm">{stats.wrongCount}</div>
+                <div className="text-white font-bold text-xs">{stats.wrongCount}</div>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-1">
+                  <Heart className="w-3 h-3 text-white" />
+                </div>
+                <div className="text-white/70 text-xs">저장</div>
+                <div className="text-white font-bold text-xs">{stats.savedCount}</div>
               </div>
             </div>
           </div>
@@ -321,10 +414,12 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             <Lightbulb className="w-10 h-10 text-purple-400" />
           </div>
           <h3 className="text-xl font-bold text-white mb-2">
-            {quizMode === 'wrong' ? '오답 노트가 비어있습니다' : '퀴즈가 없습니다'}
+            {quizMode === 'wrong' ? '오답 노트가 비어있습니다' : 
+             quizMode === 'saved' ? '저장된 퀴즈가 없습니다' : '퀴즈가 없습니다'}
           </h3>
           <p className="text-white/70 mb-4">
-            {quizMode === 'wrong' ? '틀린 문제가 없어요! 훌륭합니다!' : '다른 날짜를 선택해보세요'}
+            {quizMode === 'wrong' ? '틀린 문제가 없어요! 훌륭합니다!' : 
+             quizMode === 'saved' ? '마음에 드는 문제를 저장해보세요!' : '다른 날짜를 선택해보세요'}
           </p>
           {quizMode !== 'all' && (
             <button
@@ -366,8 +461,17 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
           {/* 문제 - 메인으로 크게 배치 */}
           <div className="mb-8">
-            <div className="bg-white/5 rounded-3xl p-8 border border-white/10 mb-6">
-              <h3 className="text-xl font-semibold text-white mb-6 leading-relaxed text-center">
+            <div className="bg-white/5 rounded-3xl p-8 border border-white/10 mb-6 relative">
+              {/* 저장 버튼 - 우상단에 */}
+              <button
+                onClick={() => handleSaveQuiz(currentQuiz!)}
+                className="absolute top-4 right-4 p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all group"
+                title="이 문제 저장하기"
+              >
+                <Heart className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+              </button>
+
+              <h3 className="text-xl font-semibold text-white mb-6 leading-relaxed text-center pr-16">
                 {currentQuiz?.question}
               </h3>
               
@@ -521,9 +625,71 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             >
               오답 노트 보기
             </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowSavedQuizzes(true)}
+              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-cyan-600 shadow-lg"
+            >
+              저장된 퀴즈 보기
+            </motion.button>
           </div>
         </motion.div>
       )}
+
+      {/* 퀴즈 저장 모달 */}
+      <AnimatePresence>
+        {showSaveModal && currentQuizToSave && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSaveModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-gradient-to-br from-slate-800 via-blue-900 to-slate-800 rounded-3xl p-6 max-w-md w-full border border-white/20 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Heart className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">퀴즈 저장</h2>
+                <p className="text-white/70">이 문제를 저장할 이유를 입력하세요</p>
+              </div>
+
+              <div className="mb-6">
+                <textarea
+                  value={saveReason}
+                  onChange={(e) => setSaveReason(e.target.value)}
+                  placeholder="예: 중요한 개념, 자주 헷갈리는 내용, 복습이 필요한 부분..."
+                  className="w-full p-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 resize-none h-24 focus:outline-none focus:border-blue-400"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowSaveModal(false)}
+                  className="flex-1 px-4 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={() => saveQuiz(currentQuizToSave, saveReason)}
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all"
+                >
+                  저장
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 오답 노트 모달 */}
       <AnimatePresence>
@@ -539,12 +705,12 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-gradient-to-br from-slate-800 via-purple-900 to-slate-800 rounded-3xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto border border-white/20 shadow-2xl"
+              className="bg-gradient-to-br from-slate-800 via-red-900 to-slate-800 rounded-3xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto border border-white/20 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <Bookmark className="w-6 h-6 text-red-400" />
+                  <AlertCircle className="w-6 h-6 text-red-400" />
                   오답 노트
                 </h2>
                 <button
@@ -608,6 +774,85 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                       <div className="bg-white/5 rounded-xl p-3">
                         <div className="text-white/70 text-sm mb-1">해설:</div>
                         <div className="text-white text-sm">{note.explanation}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 저장된 퀴즈 모달 */}
+      <AnimatePresence>
+        {showSavedQuizzes && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSavedQuizzes(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-gradient-to-br from-slate-800 via-blue-900 to-slate-800 rounded-3xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto border border-white/20 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Heart className="w-6 h-6 text-blue-400" />
+                  저장된 퀴즈
+                </h2>
+                <button
+                  onClick={() => setShowSavedQuizzes(false)}
+                  className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:bg-white/20 hover:text-white transition-all"
+                >
+                  ×
+                </button>
+              </div>
+
+              {savedQuizzes.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Heart className="w-8 h-8 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">저장된 퀴즈가 없습니다!</h3>
+                  <p className="text-white/70">마음에 드는 문제를 저장해보세요!</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {savedQuizzes.map((saved, index) => (
+                    <motion.div
+                      key={saved.quizId}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-white/5 rounded-2xl p-4 border border-white/10"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white/70 text-sm">#{index + 1}</span>
+                          <span className="text-white/70 text-sm">
+                            {saved.timestamp.toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
+                            저장됨
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="mb-3">
+                        <h4 className="text-white font-medium mb-2">{saved.question}</h4>
+                      </div>
+                      
+                      <div className="bg-white/5 rounded-xl p-3">
+                        <div className="text-white/70 text-sm mb-1">저장 이유:</div>
+                        <div className="text-white text-sm">{saved.reason}</div>
                       </div>
                     </motion.div>
                   ))}

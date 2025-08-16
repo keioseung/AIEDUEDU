@@ -96,7 +96,7 @@ export default function IntroPage() {
       return
     }
     
-    // 다른 아이콘을 클릭하면 해당 아이콘의 설명 표시
+    // 다른 아이콘을 클릭하면 해당 아이콘의 설명 표시 (기존 상태 종료 후 새 상태 시작)
     setClickedStat(index)
   }
 
@@ -559,7 +559,12 @@ export default function IntroPage() {
                   className="fixed inset-0 z-30 cursor-pointer"
                   onClick={handleBackgroundClick}
                   style={{ 
-                    background: 'transparent'
+                    background: 'transparent',
+                    // 텍스트 상자 기준으로 위쪽과 양옆 공간까지 확장
+                    top: '-20vh',
+                    left: '-20vw',
+                    right: '-20vw',
+                    bottom: '-20vh'
                   }}
                 />
               )}
