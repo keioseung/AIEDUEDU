@@ -40,23 +40,41 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const [showQuizComplete, setShowQuizComplete] = useState(false)
   const [showAchievement, setShowAchievement] = useState(false)
   const [finalScore, setFinalScore] = useState<{score: number, total: number, percentage: number} | null>(null)
-  const [selectedQuizCount, setSelectedQuizCount] = useState(10) // 기본값 10개
-  const [showQuizCountSelector, setShowQuizCountSelector] = useState(false)
+  const [selectedQuizTitle, setSelectedQuizTitle] = useState('전체') // 기본값 전체
+  const [showQuizTitleSelector, setShowQuizTitleSelector] = useState(false)
   const updateQuizScoreMutation = useUpdateQuizScore()
   const checkAchievementsMutation = useCheckAchievements()
 
-  // 퀴즈 수 옵션들
-  const quizCountOptions = [5, 10, 15, 20, 25, 30]
+  // 퀴즈 주제 옵션들 (실제 API에서 받아올 수 있음)
+  const quizTitleOptions = [
+    '전체',
+    'AI 기초 개념',
+    '머신러닝',
+    '딥러닝',
+    '자연어처리',
+    '컴퓨터비전',
+    '강화학습',
+    'AI 윤리',
+    'AI 응용',
+    'AI 도구'
+  ]
 
   const { data: quizData, isLoading, refetch } = useQuery<TermsQuizResponse>({
-    queryKey: ['terms-quiz', selectedDate, selectedQuizCount],
+    queryKey: ['terms-quiz', selectedDate, selectedQuizTitle],
     queryFn: async () => {
       const response = await aiInfoAPI.getTermsQuizByDate(selectedDate)
-      // 선택된 퀴즈 수만큼 랜덤하게 선택
-      const shuffledQuizzes = response.data.quizzes.sort(() => Math.random() - 0.5)
+      // 선택된 주제에 따라 퀴즈 필터링 (전체인 경우 모든 퀴즈)
+      let filteredQuizzes = response.data.quizzes
+      
+      if (selectedQuizTitle !== '전체') {
+        // 실제 API에서는 주제별 필터링 로직이 필요
+        // 여기서는 예시로 랜덤하게 선택
+        filteredQuizzes = response.data.quizzes.sort(() => Math.random() - 0.5).slice(0, 15)
+      }
+      
       return {
         ...response.data,
-        quizzes: shuffledQuizzes.slice(0, Math.min(selectedQuizCount, response.data.quizzes.length))
+        quizzes: filteredQuizzes
       }
     },
     enabled: !!selectedDate,
@@ -135,10 +153,10 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     refetch()
   }
 
-  const handleQuizCountChange = (count: number) => {
-    setSelectedQuizCount(count)
-    setShowQuizCountSelector(false)
-    // 퀴즈 수가 변경되면 퀴즈 재시작
+  const handleQuizTitleChange = (title: string) => {
+    setSelectedQuizTitle(title)
+    setShowQuizTitleSelector(false)
+    // 주제가 변경되면 퀴즈 재시작
     setCurrentQuizIndex(0)
     setSelectedAnswer(null)
     setShowResult(false)
@@ -179,108 +197,107 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         <div className="glass rounded-2xl p-4 md:p-6 border border-white/20">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* 왼쪽: 제목과 설명 */}
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Brain className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
-              </div>
-              <div>
-                <h2 className="text-lg md:text-xl font-bold text-white mb-1">용어 퀴즈 설정</h2>
-                <p className="text-white/70 text-sm">퀴즈 수를 선택하고 도전해보세요!</p>
-              </div>
-            </div>
+                               <div className="flex items-center gap-3">
+                     <div className="relative">
+                       <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                         <Brain className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                       </div>
+                       <div className="absolute -top-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
+                     </div>
+                     <div>
+                       <h2 className="text-lg md:text-xl font-bold text-white mb-1">용어 퀴즈 설정</h2>
+                       <p className="text-white/70 text-sm">주제를 선택하고 도전해보세요!</p>
+                     </div>
+                   </div>
 
-            {/* 오른쪽: 퀴즈 수 선택 버튼 */}
-            <div className="relative">
-              <button
-                onClick={() => setShowQuizCountSelector(!showQuizCountSelector)}
-                className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
-              >
-                <Settings className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-180 transition-transform duration-300" />
-                <span className="hidden sm:inline">퀴즈 수</span>
-                <span className="sm:hidden">설정</span>
-                <span className="bg-white/20 px-2 py-1 rounded-lg text-sm font-bold">
-                  {selectedQuizCount}개
-                </span>
-              </button>
+                               {/* 오른쪽: 퀴즈 주제 선택 버튼 */}
+                   <div className="relative">
+                     <button
+                       onClick={() => setShowQuizTitleSelector(!showQuizTitleSelector)}
+                       className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
+                     >
+                       <Settings className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-180 transition-transform duration-300" />
+                       <span className="hidden sm:inline">퀴즈 주제</span>
+                       <span className="sm:hidden">주제</span>
+                       <span className="bg-white/20 px-2 py-1 rounded-lg text-sm font-bold">
+                         {selectedQuizTitle}
+                       </span>
+                     </button>
 
-              {/* 퀴즈 수 선택 드롭다운 */}
-              <AnimatePresence>
-                {showQuizCountSelector && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute top-full right-0 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-3 border border-white/20 shadow-2xl min-w-[200px]"
-                  >
-                    <div className="text-center mb-3">
-                      <div className="text-white/80 text-sm font-medium mb-2">퀴즈 수 선택</div>
-                      <div className="w-full bg-white/10 rounded-full h-1">
-                        <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1 rounded-full transition-all" />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-2">
-                      {quizCountOptions.map((count) => (
-                        <button
-                          key={count}
-                          onClick={() => handleQuizCountChange(count)}
-                          className={`relative group p-3 rounded-xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 ${
-                            selectedQuizCount === count
-                              ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-400 text-white shadow-lg'
-                              : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:text-white'
-                          }`}
-                        >
-                          {/* 선택된 경우 빛나는 효과 */}
-                          {selectedQuizCount === count && (
-                            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/20 to-purple-400/20 animate-pulse" />
-                          )}
-                          
-                          <div className="relative z-10">
-                            <div className="text-lg md:text-xl font-bold mb-1">{count}</div>
-                            <div className="text-xs opacity-80">문제</div>
-                          </div>
-                          
-                          {/* 선택된 경우 체크 아이콘 */}
-                          {selectedQuizCount === count && (
-                            <div className="absolute top-2 right-2">
-                              <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
-                                <CheckCircle className="w-3 h-3 text-blue-600" />
-                              </div>
-                            </div>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                    
-                    {/* 추가 정보 */}
-                    <div className="mt-3 pt-3 border-t border-white/20">
-                      <div className="flex items-center justify-center gap-2 text-white/60 text-xs">
-                        <Zap className="w-3 h-3" />
-                        <span>더 많은 문제 = 더 높은 점수</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* 현재 선택된 퀴즈 수 정보 */}
-          <div className="mt-4 pt-4 border-t border-white/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white/70 text-sm">
-                <Target className="w-4 h-4" />
-                <span>선택된 퀴즈 수: <span className="text-white font-semibold">{selectedQuizCount}개</span></span>
-              </div>
-              <div className="flex items-center gap-2 text-white/70 text-sm">
-                <Star className="w-4 h-4" />
-                <span>가능한 최대: <span className="text-white font-semibold">{quizData?.total_terms || 0}개</span></span>
-              </div>
+                                   {/* 퀴즈 주제 선택 드롭다운 */}
+                     <AnimatePresence>
+                       {showQuizTitleSelector && (
+                         <motion.div
+                           initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                           animate={{ opacity: 1, y: 0, scale: 1 }}
+                           exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                           className="absolute top-full right-0 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-3 border border-white/20 shadow-2xl min-w-[250px]"
+                         >
+                           <div className="text-center mb-3">
+                             <div className="text-white/80 text-sm font-medium mb-2">퀴즈 주제 선택</div>
+                             <div className="w-full bg-white/10 rounded-full h-1">
+                               <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1 rounded-full transition-all" />
+                             </div>
+                           </div>
+                           
+                           <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto">
+                             {quizTitleOptions.map((title) => (
+                               <button
+                                 key={title}
+                                 onClick={() => handleQuizTitleChange(title)}
+                                 className={`relative group p-3 rounded-xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 text-left ${
+                                   selectedQuizTitle === title
+                                     ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-400 text-white shadow-lg'
+                                     : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:text-white'
+                                 }`}
+                               >
+                                 {/* 선택된 경우 빛나는 효과 */}
+                                 {selectedQuizTitle === title && (
+                                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/20 to-purple-400/20 animate-pulse" />
+                                 )}
+                                 
+                                 <div className="relative z-10">
+                                   <div className="text-sm md:text-base font-medium">{title}</div>
+                                 </div>
+                                 
+                                 {/* 선택된 경우 체크 아이콘 */}
+                                 {selectedQuizTitle === title && (
+                                   <div className="absolute top-2 right-2">
+                                     <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
+                                       <CheckCircle className="w-3 h-3 text-blue-600" />
+                                     </div>
+                                   </div>
+                                 )}
+                               </button>
+                             ))}
+                           </div>
+                           
+                           {/* 추가 정보 */}
+                           <div className="mt-3 pt-3 border-t border-white/20">
+                             <div className="flex items-center justify-center gap-2 text-white/60 text-xs">
+                               <Zap className="w-3 h-3" />
+                               <span>주제별 맞춤 퀴즈로 학습하세요</span>
+                             </div>
+                           </div>
+                         </motion.div>
+                       )}
+                     </AnimatePresence>
             </div>
           </div>
+
+                           {/* 현재 선택된 퀴즈 주제 정보 */}
+                 <div className="mt-4 pt-4 border-t border-white/20">
+                   <div className="flex items-center justify-between">
+                     <div className="flex items-center gap-2 text-white/70 text-sm">
+                       <Target className="w-4 h-4" />
+                       <span>선택된 주제: <span className="text-white font-semibold">{selectedQuizTitle}</span></span>
+                     </div>
+                     <div className="flex items-center gap-2 text-white/70 text-sm">
+                       <Star className="w-4 h-4" />
+                       <span>퀴즈 수: <span className="text-white font-semibold">{quizData?.quizzes?.length || 0}개</span></span>
+                     </div>
+                   </div>
+                 </div>
         </div>
       </div>
 
