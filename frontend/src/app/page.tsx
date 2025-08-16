@@ -265,198 +265,204 @@ export default function IntroPage() {
                </div>
              )}
              
-             {/* 4개 아이콘을 처음에는 뭉쳐있다가 클릭하면 펼쳐지는 애니메이션 */}
-             <div className="relative h-64 md:h-80 flex items-center justify-center">
-               {/* 첫 번째 아이콘 - AI 정보 */}
-               <div 
-                 className={`absolute text-center cursor-pointer transition-all duration-700 ease-out ${
-                   clickedStat === null 
-                     ? 'transform translate-x-0 translate-y-0 scale-100' 
-                     : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
-                 }`}
-                 onClick={() => handleStatClick(0)}
-               >
-                 <div className={`relative z-10 transition-all duration-300 ${
-                   clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
-                 }`}>
-                   <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                     clickedStat === 0 ? 'animate-stat-glow' : ''
+             {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
+             <div className="relative h-64 md:h-80">
+               {/* 첫 번째 행 */}
+               <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
+                 {/* 첫 번째 아이콘 - AI 정보 */}
+                 <div 
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out ${
+                     clickedStat === null 
+                       ? 'transform scale-100' 
+                       : 'transform translate-x-[-60px] md:translate-x-[-80px] translate-y-[-40px] md:translate-y-[-60px] scale-90'
+                   }`}
+                   onClick={() => handleStatClick(0)}
+                 >
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <FaBrain className="text-purple-300 text-lg md:text-xl" />
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === 0 ? 'animate-stat-glow' : ''
+                     }`}>
+                       <FaBrain className="text-purple-300 text-lg md:text-xl" />
+                     </div>
                    </div>
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">매일 새로운</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">AI 정보</div>
+                   </div>
+                   
+                   {/* Click effects */}
+                   {clickedStat === 0 && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === 0 && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
+                     />
+                   ))}
+                   {clickedStat === 0 && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === 0 && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
                  </div>
-                 <div className="relative z-10">
-                   <div className="text-white/70 text-xs md:text-sm font-medium mb-1">매일 새로운</div>
-                   <div className="text-white font-bold text-sm md:text-base mb-1">AI 정보</div>
-                 </div>
-                 
-                 {/* Click effects */}
-                 {clickedStat === 0 && (
-                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                 )}
-                 {clickedStat === 0 && [...Array(8)].map((_, i) => (
-                   <div
-                     key={i}
-                     className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                     style={{
-                       left: '50%',
-                       top: '50%',
-                       transform: 'translate(-50%, -50%)',
-                       '--angle': `${i * 45}deg`,
-                       '--distance': '20px'
-                     } as React.CSSProperties}
+
+                 {/* 두 번째 아이콘 - 관련 용어 */}
+                 <div 
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out ${
+                     clickedStat === null 
+                       ? 'transform scale-100' 
+                       : 'transform translate-x-[60px] md:translate-x-[80px] translate-y-[-40px] md:translate-y-[-60px] scale-90'
+                   }`}
+                   onClick={() => handleStatClick(1)}
+                 >
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
+                   }`}>
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === 1 ? 'animate-stat-glow' : ''
+                     }`}>
+                       <FaRocket className="text-purple-300 text-lg md:text-xl" />
+                     </div>
+                   </div>
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">핵심 개념</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">관련 용어</div>
+                   </div>
+                   
+                   {/* Click effects */}
+                   {clickedStat === 1 && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === 1 && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
                    />
-                 ))}
-                 {clickedStat === 0 && (
-                   <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                 )}
-                 {clickedStat === 0 && (
-                   <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                 )}
+                   ))}
+                   {clickedStat === 1 && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === 1 && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
+                 </div>
                </div>
 
-               {/* 두 번째 아이콘 - 관련 용어 */}
-               <div 
-                 className={`absolute text-center cursor-pointer transition-all duration-700 ease-out ${
-                   clickedStat === null 
-                     ? 'transform translate-x-0 translate-y-0 scale-100' 
-                     : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
-                 }`}
-                 onClick={() => handleStatClick(1)}
-               >
-                 <div className={`relative z-10 transition-all duration-300 ${
-                   clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
-                 }`}>
-                   <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                     clickedStat === 1 ? 'animate-stat-glow' : ''
+               {/* 두 번째 행 */}
+               <div className="flex items-center justify-center gap-4 md:gap-6">
+                 {/* 세 번째 아이콘 - 실전 퀴즈 */}
+                 <div 
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out ${
+                     clickedStat === null 
+                       ? 'transform scale-100' 
+                       : 'transform translate-x-[-60px] md:translate-x-[-80px] translate-y-[40px] md:translate-y-[60px] scale-90'
+                   }`}
+                   onClick={() => handleStatClick(2)}
+                 >
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <FaRocket className="text-purple-300 text-lg md:text-xl" />
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === 2 ? 'animate-stat-glow' : ''
+                     }`}>
+                       <FaChartLine className="text-purple-300 text-lg md:text-xl" />
+                     </div>
                    </div>
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">지식 점검</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">실전 퀴즈</div>
+                   </div>
+                   
+                   {/* Click effects */}
+                   {clickedStat === 2 && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === 2 && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
+                     />
+                   ))}
+                   {clickedStat === 2 && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === 2 && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
                  </div>
-                 <div className="relative z-10">
-                   <div className="text-white/70 text-xs md:text-sm font-medium mb-1">핵심 개념</div>
-                   <div className="text-white font-bold text-sm md:text-base mb-1">관련 용어</div>
-                 </div>
-                 
-                 {/* Click effects */}
-                 {clickedStat === 1 && (
-                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                 )}
-                 {clickedStat === 1 && [...Array(8)].map((_, i) => (
-                   <div
-                     key={i}
-                     className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                     style={{
-                       left: '50%',
-                       top: '50%',
-                       transform: 'translate(-50%, -50%)',
-                       '--angle': `${i * 45}deg`,
-                       '--distance': '20px'
-                     } as React.CSSProperties}
-                   />
-                 ))}
-                 {clickedStat === 1 && (
-                   <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                 )}
-                 {clickedStat === 1 && (
-                   <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                 )}
-               </div>
 
-               {/* 세 번째 아이콘 - 실전 퀴즈 */}
-               <div 
-                 className={`absolute text-center cursor-pointer transition-all duration-700 ease-out ${
-                   clickedStat === null 
-                     ? 'transform translate-x-0 translate-y-0 scale-100' 
-                     : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[80px] md:translate-y-[120px] scale-90'
-                 }`}
-                 onClick={() => handleStatClick(2)}
-               >
-                 <div className={`relative z-10 transition-all duration-300 ${
-                   clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
-                 }`}>
-                   <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                     clickedStat === 2 ? 'animate-stat-glow' : ''
+                 {/* 네 번째 아이콘 - 학습 진행률 */}
+                 <div 
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out ${
+                     clickedStat === null 
+                       ? 'transform scale-100' 
+                       : 'transform translate-x-[60px] md:translate-x-[80px] translate-y-[40px] md:translate-y-[60px] scale-90'
+                   }`}
+                   onClick={() => handleStatClick(3)}
+                 >
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <FaChartLine className="text-purple-300 text-lg md:text-xl" />
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === 3 ? 'animate-stat-glow' : ''
+                     }`}>
+                       <FaTrophy className="text-purple-300 text-lg md:text-xl" />
+                     </div>
                    </div>
-                 </div>
-                 <div className="relative z-10">
-                   <div className="text-white/70 text-xs md:text-sm font-medium mb-1">지식 점검</div>
-                   <div className="text-white font-bold text-sm md:text-base mb-1">실전 퀴즈</div>
-                 </div>
-                 
-                 {/* Click effects */}
-                 {clickedStat === 2 && (
-                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                 )}
-                 {clickedStat === 2 && [...Array(8)].map((_, i) => (
-                   <div
-                     key={i}
-                     className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                     style={{
-                       left: '50%',
-                       top: '50%',
-                       transform: 'translate(-50%, -50%)',
-                       '--angle': `${i * 45}deg`,
-                       '--distance': '20px'
-                     } as React.CSSProperties}
-                   />
-                 ))}
-                 {clickedStat === 2 && (
-                   <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                 )}
-                 {clickedStat === 2 && (
-                   <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                 )}
-               </div>
-
-               {/* 네 번째 아이콘 - 학습 진행률 */}
-               <div 
-                 className={`absolute text-center cursor-pointer transition-all duration-700 ease-out ${
-                   clickedStat === null 
-                     ? 'transform translate-x-0 translate-y-0 scale-100' 
-                     : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[80px] md:translate-y-[120px] scale-90'
-                 }`}
-                 onClick={() => handleStatClick(3)}
-               >
-                 <div className={`relative z-10 transition-all duration-300 ${
-                   clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
-                 }`}>
-                   <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                     clickedStat === 3 ? 'animate-stat-glow' : ''
-                   }`}>
-                     <FaTrophy className="text-purple-300 text-lg md:text-xl" />
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">학습 현황</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">진행률</div>
                    </div>
+                   
+                   {/* Click effects */}
+                   {clickedStat === 3 && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === 3 && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
+                     />
+                   ))}
+                   {clickedStat === 3 && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === 3 && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
                  </div>
-                 <div className="relative z-10">
-                   <div className="text-white/70 text-xs md:text-sm font-medium mb-1">학습 현황</div>
-                   <div className="text-white font-bold text-sm md:text-base mb-1">진행률</div>
-                 </div>
-                 
-                 {/* Click effects */}
-                 {clickedStat === 3 && (
-                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
-                 )}
-                 {clickedStat === 3 && [...Array(8)].map((_, i) => (
-                   <div
-                     key={i}
-                     className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
-                     style={{
-                       left: '50%',
-                       top: '50%',
-                       transform: 'translate(-50%, -50%)',
-                       '--angle': `${i * 45}deg`,
-                       '--distance': '20px'
-                     } as React.CSSProperties}
-                   />
-                 ))}
-                 {clickedStat === 3 && (
-                   <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
-                 )}
-                 {clickedStat === 3 && (
-                   <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
-                 )}
                </div>
              </div>
            </div>
