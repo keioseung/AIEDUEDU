@@ -343,18 +343,42 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                    </div>
 
                                {/* 오른쪽: 퀴즈 주제 선택 버튼 */}
-                   <div className="relative">
-                     <button
-                       onClick={() => setShowQuizTitleSelector(!showQuizTitleSelector)}
-                       className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
-                     >
-                       <Settings className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-180 transition-transform duration-300" />
-                       <span className="hidden sm:inline">AI 정보 주제</span>
-                       <span className="sm:hidden">주제</span>
-                       <span className="bg-white/20 px-2 py-1 rounded-lg text-sm font-bold">
-                         {selectedQuizTitle}
-                       </span>
-                     </button>
+                    <div className="flex items-center gap-3">
+                      {/* 오늘의 퀴즈 버튼 */}
+                      <button
+                        onClick={() => {
+                          const today = new Date().toISOString().split('T')[0]
+                          if (onDateChange) {
+                            onDateChange(today)
+                          }
+                          setSelectedQuizTitle('전체')
+                          setCurrentQuizIndex(0)
+                          setSelectedAnswer(null)
+                          setShowResult(false)
+                          setScore(0)
+                          setQuizCompleted(false)
+                          setFinalScore(null)
+                        }}
+                        className="group bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
+                      >
+                        <BookOpen className="w-4 h-4 md:w-5 md:h-5" />
+                        <span className="hidden sm:inline">오늘의 퀴즈</span>
+                        <span className="sm:hidden">오늘</span>
+                      </button>
+
+                      {/* AI 정보 주제 선택 버튼 */}
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowQuizTitleSelector(!showQuizTitleSelector)}
+                          className="group bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
+                        >
+                          <Settings className="w-4 h-4 md:w-5 md:w-5 group-hover:rotate-180 transition-transform duration-300" />
+                          <span className="hidden sm:inline">AI 정보 주제</span>
+                          <span className="sm:hidden">주제</span>
+                          <span className="bg-white/20 px-2 py-1 rounded-lg text-sm font-bold">
+                            {selectedQuizTitle}
+                          </span>
+                        </button>
 
                                    {/* 퀴즈 주제 선택 드롭다운 */}
                      <AnimatePresence>
@@ -426,12 +450,13 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                                <Zap className="w-3 h-3" />
                                <span>AI 정보 주제별 맞춤 퀴즈로 학습하세요</span>
                              </div>
-                           </div>
+                                                      </div>
                          </motion.div>
                        )}
                      </AnimatePresence>
-            </div>
-          </div>
+                       </div>
+                     </div>
+                   </div>
 
                            {/* 현재 선택된 퀴즈 주제 정보 */}
                  <div className="mt-4 pt-4 border-t border-white/20">
