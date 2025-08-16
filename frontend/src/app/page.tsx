@@ -96,7 +96,7 @@ export default function IntroPage() {
       return
     }
     
-    // 다른 아이콘을 클릭하면 해당 아이콘의 설명 표시 (기존 상태 종료 후 새 상태 시작)
+    // 다른 아이콘을 클릭하면 해당 아이콘의 설명 표시 (기존 상태 유지하면서 새 아이콘 선택)
     setClickedStat(index)
   }
 
@@ -236,7 +236,7 @@ export default function IntroPage() {
                <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
                  {/* 첫 번째 아이콘 - AI 정보 */}
                  <div 
-                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-20 ${
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
                      clickedStat === null 
                        ? 'transform scale-100' 
                        : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
@@ -296,15 +296,15 @@ export default function IntroPage() {
                     )}
                  </div>
 
-                 {/* 두 번째 아이콘 - 관련 용어 */}
-                 <div 
-                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-20 ${
-                     clickedStat === null 
-                       ? 'transform scale-100' 
-                       : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
-                   }`}
-                   onClick={() => handleStatClick(1)}
-                 >
+                                   {/* 두 번째 아이콘 - 관련 용어 */}
+                  <div 
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
+                      clickedStat === null 
+                        ? 'transform scale-100' 
+                        : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
+                    }`}
+                    onClick={() => handleStatClick(1)}
+                  >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
@@ -361,15 +361,15 @@ export default function IntroPage() {
 
                {/* 두 번째 행 */}
                <div className="flex items-center justify-center gap-4 md:gap-6">
-                 {/* 세 번째 아이콘 - 실전 퀴즈 */}
-                 <div 
-                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-20 ${
-                     clickedStat === null 
-                       ? 'transform scale-100' 
-                       : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[80px] md:translate-y-[120px] scale-90'
-                   }`}
-                   onClick={() => handleStatClick(2)}
-                 >
+                                   {/* 세 번째 아이콘 - 실전 퀴즈 */}
+                  <div 
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
+                      clickedStat === null 
+                        ? 'transform scale-100' 
+                        : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[80px] md:translate-y-[120px] scale-90'
+                    }`}
+                    onClick={() => handleStatClick(2)}
+                  >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
@@ -423,15 +423,15 @@ export default function IntroPage() {
                     )}
                  </div>
 
-                 {/* 네 번째 아이콘 - 학습 진행률 */}
-                 <div 
-                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-20 ${
-                     clickedStat === null 
-                       ? 'transform scale-100' 
-                       : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[80px] md:translate-y-[120px] scale-90'
-                   }`}
-                   onClick={() => handleStatClick(3)}
-                 >
+                                   {/* 네 번째 아이콘 - 학습 진행률 */}
+                  <div 
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-10 ${
+                      clickedStat === null 
+                        ? 'transform scale-100' 
+                        : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[80px] md:translate-y-[120px] scale-90'
+                    }`}
+                    onClick={() => handleStatClick(3)}
+                  >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
@@ -556,15 +556,10 @@ export default function IntroPage() {
               {/* 배경 클릭 영역 - 아이콘들이 펼쳐진 상태에서만 표시 */}
               {clickedStat !== null && (
                 <div 
-                  className="fixed inset-0 z-30 cursor-pointer"
+                  className="fixed inset-0 z-50 cursor-pointer"
                   onClick={handleBackgroundClick}
                   style={{ 
-                    background: 'transparent',
-                    // 텍스트 상자 기준으로 위쪽과 양옆 공간까지 확장
-                    top: '-20vh',
-                    left: '-20vw',
-                    right: '-20vw',
-                    bottom: '-20vh'
+                    background: 'transparent'
                   }}
                 />
               )}
