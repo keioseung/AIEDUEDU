@@ -164,26 +164,26 @@ export default function IntroPage() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-6 md:py-8">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-4 md:py-6">
         {/* 헤더 섹션 */}
-        <div className="text-center mb-12 md:mb-16 lg:mb-20 w-full max-w-6xl mx-auto">
+        <div className="text-center mb-8 md:mb-12 lg:mb-16 w-full max-w-6xl mx-auto">
           {/* 로고 및 제목 */}
-          <div className="flex flex-col items-center gap-6 md:gap-8 mb-8 md:mb-12">
+          <div className="flex flex-col items-center gap-4 md:gap-6 mb-6 md:mb-8">
             <div className="relative">
-              <div className="w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center shadow-2xl animate-glow">
-                <FaRobot className="text-3xl md:text-4xl lg:text-5xl text-white" />
+              <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl animate-glow">
+                <FaRobot className="text-2xl md:text-3xl lg:text-4xl text-white" />
               </div>
-              <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
+              <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
               {/* 빛나는 효과 */}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-3xl blur-xl animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-2xl blur-xl animate-pulse" />
             </div>
             <div className="text-center max-w-4xl mx-auto">
-              <h1 className="text-3xl md:text-5xl lg:text-7xl xl:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-4 md:mb-6 animate-text-glow mobile-text text-center">
+              <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-3 md:mb-4 animate-text-glow mobile-text text-center">
                 {typedText}
                 {isTyping && <span className="animate-blink">|</span>}
               </h1>
-              <div className="h-8 md:h-10 lg:h-12 flex items-center justify-center">
-                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-purple-300 font-medium mobile-text text-center max-w-3xl mx-auto leading-relaxed">
+              <div className="h-6 md:h-8 lg:h-10 flex items-center justify-center">
+                <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-purple-300 font-medium mobile-text text-center max-w-3xl mx-auto leading-relaxed">
                   <span 
                     key={currentTagline}
                     className="inline-block animate-tagline-fade"
@@ -196,8 +196,8 @@ export default function IntroPage() {
           </div>
 
           {/* 메인 텍스트 */}
-          <div className="text-center mb-8 md:mb-12 lg:mb-16 max-w-5xl mx-auto px-1">
-            <h2 className="text-xl md:text-2xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight mobile-text text-center">
+          <div className="text-center mb-6 md:mb-8 lg:mb-12 max-w-5xl mx-auto px-1">
+            <h2 className="text-lg md:text-xl lg:text-3xl xl:text-4xl font-bold text-white mb-3 md:mb-4 leading-tight mobile-text text-center">
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent block mb-2 md:mb-3">
                 매일 업데이트되는 AI 정보
               </span>
@@ -208,16 +208,16 @@ export default function IntroPage() {
                 실전 퀴즈로 지식을 점검
               </span>
             </h2>
-            <p className="text-white/70 text-base md:text-lg lg:text-xl leading-relaxed max-w-4xl mx-auto mobile-text text-center" style={{ wordBreak: 'keep-all' }}>
+            <p className="text-white/70 text-sm md:text-base lg:text-lg leading-relaxed max-w-4xl mx-auto mobile-text text-center" style={{ wordBreak: 'keep-all' }}>
               최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br className="hidden sm:block" />
               실전 문제를 통해 확실한 이해를 확인하세요.
             </p>
           </div>
 
           {/* CTA 버튼 */}
-          <div className="flex justify-center mb-8 md:mb-12">
+          <div className="flex justify-center mb-6 md:mb-8">
             <button
-              className="group px-8 md:px-12 lg:px-16 py-4 md:py-5 lg:py-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-lg md:text-xl lg:text-2xl rounded-2xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-3 md:gap-4 animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow touch-optimized mobile-touch-target"
+              className="group px-6 md:px-10 lg:px-12 py-3 md:py-4 lg:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-base md:text-lg lg:text-xl rounded-xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-2 md:gap-3 animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow touch-optimized mobile-touch-target"
               onClick={() => router.push('/auth')}
             >
               <span className="relative z-10">지금 시작하기</span>
