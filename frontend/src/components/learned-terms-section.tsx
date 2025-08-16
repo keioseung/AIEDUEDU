@@ -971,10 +971,10 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ delay: index * 0.05, type: "spring", stiffness: 300, damping: 25 }}
-                    className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 touch-manipulation select-none min-h-[80px] webview-button ${
+                    className={`group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 touch-manipulation select-none min-h-[70px] webview-button ${
                       index === currentTermIndex
-                        ? 'bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-blue-600/20 border-2 border-blue-400/50 shadow-lg shadow-blue-500/25 scale-105'
-                        : 'bg-gradient-to-br from-white/5 via-white/8 to-white/5 hover:from-white/10 hover:via-white/15 hover:to-white/10 active:from-white/20 active:via-white/25 active:to-white/20 border border-white/20 hover:border-white/30 hover:shadow-lg hover:shadow-white/10'
+                        ? 'bg-gradient-to-br from-blue-500/25 via-purple-500/25 to-indigo-500/25 border-2 border-blue-400/60 shadow-xl shadow-blue-500/30 scale-105 ring-2 ring-blue-400/20'
+                        : 'bg-gradient-to-br from-white/8 via-white/12 to-white/8 hover:from-white/15 hover:via-white/20 hover:to-white/15 active:from-white/25 active:via-white/30 active:to-white/25 border border-white/25 hover:border-white/40 hover:shadow-xl hover:shadow-white/15 hover:scale-[1.02]'
                     }`}
                     onTouchStart={handleWebViewTouch(() => handleTermSelect(index))}
                     onClick={() => handleTermSelect(index)}
@@ -983,28 +983,28 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                     {/* 배경 그라데이션 효과 */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${
                       index === currentTermIndex
-                        ? 'from-blue-500/10 via-purple-500/10 to-blue-600/10'
+                        ? 'from-blue-500/15 via-purple-500/15 to-indigo-500/15'
                         : 'from-transparent via-transparent to-transparent'
                     } opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                     
                     {/* 선택된 경우 빛나는 효과 */}
                     {index === currentTermIndex && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-blue-400/20 animate-pulse rounded-xl" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/25 via-purple-400/25 to-indigo-400/25 animate-pulse rounded-2xl" />
                     )}
                     
                     {/* 카드 내용 */}
                     <div className="relative z-10 p-3 h-full flex flex-col justify-between">
                       {/* 상단: 용어명과 즐겨찾기 */}
-                      <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-start justify-between mb-1.5">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
+                          <div className="flex items-center gap-2 mb-1.5">
                             {/* 용어 아이콘 */}
-                            <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                              termDifficulty.level === '초급' ? 'bg-green-500/20 text-green-400' :
-                              termDifficulty.level === '중급' ? 'bg-yellow-500/20 text-yellow-400' :
-                              'bg-red-500/20 text-red-400'
+                            <div className={`w-5 h-5 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ${
+                              termDifficulty.level === '초급' ? 'bg-gradient-to-br from-green-500/30 to-emerald-500/30 text-green-300 border border-green-400/40' :
+                              termDifficulty.level === '중급' ? 'bg-gradient-to-br from-yellow-500/30 to-amber-500/30 text-yellow-300 border border-yellow-400/40' :
+                              'bg-gradient-to-br from-red-500/30 to-pink-500/30 text-red-300 border border-red-400/40'
                             }`}>
-                              <Brain className="w-3 h-3" />
+                              <Brain className="w-2.5 h-2.5" />
                             </div>
                             
                             {/* 용어명 */}
@@ -1014,15 +1014,15 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                           </div>
                           
                           {/* 난이도 배지 */}
-                          <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            termDifficulty.level === '초급' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
-                            termDifficulty.level === '중급' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30' :
-                            'bg-red-500/20 text-red-300 border border-red-400/30'
+                          <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold shadow-sm ${
+                            termDifficulty.level === '초급' ? 'bg-gradient-to-r from-green-500/25 to-emerald-500/25 text-green-200 border border-green-400/40' :
+                            termDifficulty.level === '중급' ? 'bg-gradient-to-r from-yellow-500/25 to-amber-500/25 text-yellow-200 border border-yellow-400/40' :
+                            'bg-gradient-to-r from-red-500/25 to-pink-500/25 text-red-200 border border-red-400/40'
                           }`}>
-                            <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                              termDifficulty.level === '초급' ? 'bg-green-400' :
-                              termDifficulty.level === '중급' ? 'bg-yellow-400' :
-                              'bg-red-400'
+                            <div className={`w-1.5 h-1.5 rounded-full mr-1.5 shadow-sm ${
+                              termDifficulty.level === '초급' ? 'bg-green-300' :
+                              termDifficulty.level === '중급' ? 'bg-yellow-300' :
+                              'bg-red-300'
                             }`} />
                             {termDifficulty.level}
                           </div>
@@ -1034,43 +1034,48 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                             e.stopPropagation()
                             toggleFavorite(term.term)
                           }}
-                          className={`p-2 rounded-lg flex-shrink-0 touch-manipulation select-none min-h-[36px] min-w-[36px] flex items-center justify-center webview-button transition-all duration-200 ${
+                          className={`p-1.5 rounded-xl flex-shrink-0 touch-manipulation select-none min-h-[32px] min-w-[32px] flex items-center justify-center webview-button transition-all duration-200 shadow-sm ${
                             favoriteTerms.has(term.term)
-                              ? 'text-yellow-400 bg-yellow-500/20 border border-yellow-400/30'
-                              : 'text-white/40 hover:text-yellow-400 hover:bg-yellow-500/10 border border-transparent hover:border-yellow-400/20'
+                              ? 'text-yellow-300 bg-gradient-to-br from-yellow-500/30 to-amber-500/30 border border-yellow-400/50 shadow-lg shadow-yellow-500/25'
+                              : 'text-white/50 hover:text-yellow-300 hover:bg-gradient-to-br hover:from-yellow-500/15 hover:to-amber-500/15 border border-transparent hover:border-yellow-400/30 hover:shadow-md'
                           }`}
                           style={{ WebkitTapHighlightColor: 'transparent' }}
                         >
-                          <Star className="w-4 h-4" fill={favoriteTerms.has(term.term) ? 'currentColor' : 'none'} />
+                          <Star className="w-3.5 h-3.5" fill={favoriteTerms.has(term.term) ? 'currentColor' : 'none'} />
                         </button>
                       </div>
                       
                       {/* 중간: 설명 */}
-                      <div className="mb-2">
-                        <p className="text-white/70 text-xs leading-relaxed line-clamp-2 break-words">
+                      <div className="mb-1.5">
+                        <p className="text-white/75 text-xs leading-relaxed line-clamp-2 break-words">
                           {term.description}
                         </p>
                       </div>
                       
                       {/* 하단: 메타데이터 */}
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-white/50 text-xs">
+                        <div className="flex items-center gap-1.5 text-white/60 text-xs">
                           <Calendar className="w-3 h-3" />
-                          <span>{term.learned_date}</span>
+                          <span className="font-medium">{term.learned_date}</span>
                         </div>
                         
                         {/* 선택된 경우 진행 표시기 */}
                         {index === currentTermIndex && (
-                          <div className="flex items-center gap-1">
-                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-                            <span className="text-blue-300 text-xs font-medium">현재</span>
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse shadow-sm" />
+                            <span className="text-blue-200 text-xs font-semibold">현재</span>
                           </div>
                         )}
                       </div>
                     </div>
                     
                     {/* 호버 시 추가 효과 */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%]" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%]" />
+                    
+                    {/* 선택된 경우 상단 표시기 */}
+                    {index === currentTermIndex && (
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-indigo-400 rounded-t-2xl" />
+                    )}
                   </motion.div>
                 )
               })}
