@@ -229,42 +229,6 @@ export default function IntroPage() {
                                    {/* 하단 통계 섹션 */}
           <div className="w-full max-w-5xl mb-12 md:mb-16">
            <div className="relative">
-             {/* 중앙 텍스트 표시 영역 */}
-             {clickedStat !== null && (
-               <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                 <div className="relative group">
-                   {/* 메인 텍스트 상자 */}
-                   <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-48 md:w-56 h-28 md:h-32 flex items-center justify-center relative overflow-hidden">
-                     {/* 내부 그라데이션 오버레이 */}
-                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 rounded-3xl" />
-                     
-                     {/* 빛나는 테두리 효과 */}
-                     <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 p-[1px]">
-                       <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 rounded-3xl h-full w-full flex items-center justify-center">
-                         <p className="text-white/90 text-xs md:text-sm font-medium leading-relaxed px-3 text-center relative z-10">
-                           {[
-                             "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다.",
-                             "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다.",
-                             "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다.",
-                             "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다."
-                         ][clickedStat]}
-                         </p>
-                       </div>
-                     </div>
-                     
-                     {/* 상단 장식 요소 */}
-                     <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-60" />
-                     
-                     {/* 하단 장식 요소 */}
-                     <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-40" />
-                   </div>
-                   
-                   {/* 주변 빛나는 효과 */}
-                   <div className="absolute inset-0 -m-4 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                 </div>
-               </div>
-             )}
-             
              {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
              <div className="relative h-64 md:h-80">
                {/* 첫 번째 행 */}
@@ -355,7 +319,7 @@ export default function IntroPage() {
                          '--angle': `${i * 45}deg`,
                          '--distance': '20px'
                        } as React.CSSProperties}
-                   />
+                     />
                    ))}
                    {clickedStat === 1 && (
                      <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
@@ -465,19 +429,19 @@ export default function IntroPage() {
                  </div>
                </div>
 
-               {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 */}
+               {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 (위치 조정 및 애니메이션 개선) */}
                {clickedStat !== null && (
-                 <div className="absolute inset-0 flex items-center justify-center z-20" style={{ transform: 'translateY(-20px)' }}>
+                 <div className="absolute inset-0 flex items-center justify-center z-20" style={{ transform: 'translateY(-40px)' }}>
                    <div className="relative group">
-                     {/* 메인 텍스트 상자 */}
-                     <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-48 md:w-56 h-28 md:h-32 flex items-center justify-center relative overflow-hidden">
+                     {/* 메인 텍스트 상자 - 더 멋진 애니메이션 효과 추가 */}
+                     <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-52 md:w-60 h-32 md:h-36 flex items-center justify-center relative overflow-hidden animate-text-box-appear">
                        {/* 내부 그라데이션 오버레이 */}
                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 rounded-3xl" />
                        
                        {/* 빛나는 테두리 효과 */}
                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 p-[1px]">
                          <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 rounded-3xl h-full w-full flex items-center justify-center">
-                           <p className="text-white/90 text-xs md:text-sm font-medium leading-relaxed px-3 text-center relative z-10">
+                           <p className="text-white/90 text-sm md:text-base font-medium leading-relaxed px-4 text-center relative z-10 animate-text-fade-in">
                              {[
                                "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다.",
                                "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다.",
@@ -488,15 +452,44 @@ export default function IntroPage() {
                          </div>
                        </div>
                        
-                       {/* 상단 장식 요소 */}
-                       <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-60" />
+                       {/* 상단 장식 요소 - 애니메이션 추가 */}
+                       <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-60 animate-decoration-slide-down" />
                        
-                       {/* 하단 장식 요소 */}
-                       <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-40" />
+                       {/* 하단 장식 요소 - 애니메이션 추가 */}
+                       <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-40 animate-decoration-slide-up" />
+                       
+                       {/* 추가 빛나는 효과 */}
+                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shine-effect" />
+                       
+                       {/* 입체감을 위한 그림자 효과 */}
+                       <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-transparent rounded-3xl" />
                      </div>
                      
-                     {/* 주변 빛나는 효과 */}
-                     <div className="absolute inset-0 -m-4 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                     {/* 주변 빛나는 효과 - 더 강화 */}
+                     <div className="absolute inset-0 -m-4 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-surround-glow" />
+                     
+                     {/* 추가 파티클 효과 - 더 멋진 애니메이션 */}
+                     {[...Array(8)].map((_, i) => (
+                       <div
+                         key={i}
+                         className="absolute w-1 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-floating-particle"
+                         style={{
+                           left: `${15 + i * 12}%`,
+                           top: `${25 + (i % 3) * 25}%`,
+                           animationDelay: `${i * 0.15}s`,
+                           animationDuration: `${2.5 + i * 0.5}s`
+                         }}
+                       />
+                     ))}
+                     
+                     {/* 추가 빛나는 원형 효과 */}
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/10 via-transparent to-pink-500/10 animate-pulse-scale" />
+                     
+                     {/* 상단 빛나는 선 효과 */}
+                     <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-20 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-40 animate-decoration-slide-down" />
+                     
+                     {/* 하단 빛나는 선 효과 */}
+                     <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-30 animate-decoration-slide-up" />
                    </div>
                  </div>
                )}
@@ -819,6 +812,108 @@ export default function IntroPage() {
           animation: stat-border-glow 2s ease-in-out infinite;
         }
         
+        /* 새로운 텍스트 박스 애니메이션 */
+        @keyframes text-box-appear {
+          0% { 
+            opacity: 0; 
+            transform: scale(0.8) translateY(20px);
+            filter: blur(4px);
+          }
+          50% { 
+            opacity: 0.8; 
+            transform: scale(1.05) translateY(-5px);
+            filter: blur(1px);
+          }
+          100% { 
+            opacity: 1; 
+            transform: scale(1) translateY(0);
+            filter: blur(0px);
+          }
+        }
+        .animate-text-box-appear {
+          animation: text-box-appear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        @keyframes text-fade-in {
+          0% { 
+            opacity: 0; 
+            transform: translateY(10px) scale(0.95);
+          }
+          100% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+          }
+        }
+        .animate-text-fade-in {
+          animation: text-fade-in 0.6s ease-out 0.3s forwards;
+        }
+        
+        @keyframes decoration-slide-down {
+          0% { 
+            opacity: 0; 
+            transform: translateY(-10px) scaleX(0);
+          }
+          100% { 
+            opacity: 0.6; 
+            transform: translateY(0) scaleX(1);
+          }
+        }
+        .animate-decoration-slide-down {
+          animation: decoration-slide-down 0.8s ease-out 0.4s forwards;
+        }
+        
+        @keyframes decoration-slide-up {
+          0% { 
+            opacity: 0; 
+            transform: translateY(10px) scaleX(0);
+          }
+          100% { 
+            opacity: 0.4; 
+            transform: translateY(0) scaleX(1);
+          }
+        }
+        .animate-decoration-slide-up {
+          animation: decoration-slide-up 0.8s ease-out 0.5s forwards;
+        }
+        
+        @keyframes shine-effect {
+          0% { transform: translateX(-100%) skewX(-15deg); }
+          100% { transform: translateX(200%) skewX(-15deg); }
+        }
+        .animate-shine-effect {
+          animation: shine-effect 2s ease-out 0.6s forwards;
+        }
+        
+        @keyframes surround-glow {
+          0% { 
+            opacity: 0; 
+            transform: scale(0.8);
+            filter: blur(8px);
+          }
+          100% { 
+            opacity: 1; 
+            transform: scale(1);
+            filter: blur(4px);
+          }
+        }
+        .animate-surround-glow {
+          animation: surround-glow 1s ease-out 0.7s forwards;
+        }
+        
+        @keyframes floating-particle {
+          0%, 100% { 
+            opacity: 0.4; 
+            transform: translateY(0) scale(1);
+          }
+          50% { 
+            opacity: 0.8; 
+            transform: translateY(-8px) scale(1.2);
+          }
+        }
+        .animate-floating-particle {
+          animation: floating-particle 3s ease-in-out infinite;
+        }
+        
         /* 모바일 최적화 */
         @media (max-width: 768px) {
           .animate-float {
@@ -832,6 +927,12 @@ export default function IntroPage() {
           }
           .animate-card-float {
             animation-duration: 6s;
+          }
+          .animate-text-box-appear {
+            animation-duration: 0.6s;
+          }
+          .animate-text-fade-in {
+            animation-duration: 0.4s;
           }
         }
       `}</style>
