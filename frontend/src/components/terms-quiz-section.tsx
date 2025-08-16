@@ -308,7 +308,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     if (!showResult) {
       return selectedAnswer === index
         ? 'bg-gradient-to-r from-purple-600 to-violet-700 border-purple-500 text-white shadow-lg shadow-purple-600/40'
-        : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 border-purple-500/40 text-white/95 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 hover:border-purple-500/60 hover:shadow-lg hover:shadow-purple-600/30 transition-all duration-300'
+        : 'bg-gradient-to-br from-purple-700 via-purple-600 to-purple-700 border-purple-500/60 text-white shadow-md shadow-purple-900/20 hover:from-purple-600 hover:via-purple-500 hover:to-purple-600 hover:border-purple-400/80 hover:shadow-lg hover:shadow-purple-600/30 transition-all duration-300'
     }
 
     if (index === currentQuiz?.correct) {
@@ -317,7 +317,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     if (selectedAnswer === index && index !== currentQuiz?.correct) {
       return 'bg-gradient-to-r from-rose-500 to-red-600 border-rose-400 text-white shadow-lg shadow-rose-500/30'
     }
-    return 'bg-gradient-to-br from-purple-800/30 via-purple-700/40 to-purple-800/30 border-purple-500/30 text-white/60'
+    return 'bg-gradient-to-br from-purple-700 via-purple-600 to-purple-700 border-purple-500/50 text-white/80 shadow-sm shadow-purple-900/10'
   }
 
   const getScoreMessage = (percentage: number) => {
@@ -332,7 +332,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     <section className="mb-8 relative">
       {/* 퀴즈 수 선택기 - 상단에 멋진 디자인으로 배치 */}
       <div className="mb-6">
-        <div className="glass rounded-2xl p-4 md:p-6 border border-white/20 shadow-xl shadow-black/20 bg-gradient-to-br from-white/8 via-white/12 to-white/8 backdrop-blur-2xl">
+        <div className="glass rounded-2xl p-4 md:p-6 border border-purple-500/30 shadow-xl shadow-purple-900/30 bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 backdrop-blur-2xl">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* 왼쪽: 제목과 설명 */}
             <div className="flex items-center gap-3">
@@ -361,15 +361,15 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
                        animate={{ opacity: 1, y: 0, scale: 1 }}
                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                       className="absolute top-full mt-2 z-20 bg-gradient-to-br from-purple-950/98 via-violet-900/98 to-purple-950/98 backdrop-blur-2xl rounded-2xl p-3 border border-purple-400/30 shadow-xl shadow-purple-900/40 w-full min-w-[280px] md:min-w-[350px]"
+                       className="absolute top-full mt-2 z-20 bg-gradient-to-br from-black/95 via-slate-900/98 to-black/95 backdrop-blur-2xl rounded-2xl p-3 border border-purple-500/40 shadow-xl shadow-black/60 w-full min-w-[280px] md:min-w-[350px]"
                        style={{
                          left: '0',
                          right: '0'
                        }}
                      >
                        <div className="text-center mb-2">
-                         <div className="text-white/90 text-xs font-semibold mb-1">주제 선택</div>
-                         <div className="w-full bg-white/15 rounded-full h-0.5">
+                         <div className="text-white/95 text-xs font-semibold mb-1">주제 선택</div>
+                         <div className="w-full bg-white/20 rounded-full h-0.5">
                            <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
                          </div>
                        </div>
@@ -378,7 +378,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        {isLoadingAIInfo && (
                          <div className="text-center py-4">
                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400 mx-auto mb-2"></div>
-                           <div className="text-white/80 text-xs font-medium">AI 정보 로딩 중...</div>
+                           <div className="text-white/90 text-xs font-medium">AI 정보 로딩 중...</div>
                          </div>
                        )}
                        
@@ -388,20 +388,20 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                            {/* 오늘의 주제 옵션 추가 */}
                            <button
                              onClick={() => handleQuizTitleChange('오늘의 주제')}
-                             className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-emerald-400/25 via-emerald-500/25 to-emerald-600/25 hover:from-emerald-400/40 hover:via-emerald-500/40 hover:to-emerald-600/40 transition-all duration-200 group border border-emerald-300/40 hover:border-emerald-300/60"
+                             className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 hover:from-emerald-500/50 hover:via-emerald-400/55 hover:to-emerald-500/50 transition-all duration-200 group border border-emerald-400/50 hover:border-emerald-400/70"
                            >
                              <div className="flex items-center justify-between">
                                <div className="flex-1 min-w-0">
-                                 <div className="text-emerald-200 font-semibold text-xs group-hover:text-emerald-100 transition-colors leading-tight flex items-center gap-2">
+                                 <div className="text-emerald-100 font-semibold text-xs group-hover:text-emerald-50 transition-colors leading-tight flex items-center gap-2">
                                    <Zap className="w-3 h-3" />
                                    오늘의 주제
                                  </div>
-                                 <div className="text-emerald-200/70 text-xs mt-0.5 leading-tight">
+                                 <div className="text-emerald-100/80 text-xs mt-0.5 leading-tight">
                                    날짜별 퀴즈
                                  </div>
                                </div>
                                <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                 <ChevronRight className="w-3 h-3 text-emerald-300" />
+                                 <ChevronRight className="w-3 h-3 text-emerald-200" />
                                </div>
                              </div>
                            </button>
@@ -411,14 +411,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                                <button
                                  key={info.title}
                                  onClick={() => handleQuizTitleChange(info.title)}
-                                 className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-purple-700/35 to-purple-800/30 hover:from-purple-700/50 hover:via-purple-600/55 hover:to-purple-700/50 transition-all duration-200 group border border-purple-400/30 hover:border-purple-400/50"
+                                 className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 transition-all duration-200 group border border-slate-600/50 hover:border-slate-500/70"
                                >
                                  <div className="flex items-start justify-between">
                                    <div className="flex-1 min-w-0">
                                      <div className="text-white font-semibold text-xs group-hover:text-purple-200 transition-colors leading-tight break-words">
                                        {info.title}
                                      </div>
-                                     <div className="text-white/70 text-xs mt-0.5 leading-tight">
+                                     <div className="text-white/90 text-xs mt-0.5 leading-tight">
                                        {info.terms?.length || 0}개 용어
                                      </div>
                                    </div>
@@ -430,7 +430,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                              ))
                            ) : (
                              <div className="text-center py-4">
-                               <div className="text-white/60 text-xs font-medium">사용 가능한 주제가 없습니다</div>
+                               <div className="text-white/80 text-xs font-medium">사용 가능한 주제가 없습니다</div>
                              </div>
                            )}
                          </div>
@@ -439,12 +439,31 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                    )}
                  </AnimatePresence>
                </div>
+
+               {/* 주제 랜덤 선택 버튼 */}
+               <button
+                 onClick={() => {
+                   if (actualAIInfo.length > 0) {
+                     const randomIndex = Math.floor(Math.random() * actualAIInfo.length)
+                     const randomTitle = actualAIInfo[randomIndex].title
+                     handleQuizTitleChange(randomTitle)
+                   }
+                 }}
+                 disabled={actualAIInfo.length === 0}
+                 className="group relative overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 disabled:from-gray-500 disabled:via-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-amber-400/30 hover:border-amber-400/50 disabled:border-gray-400/30"
+               >
+                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                 <span className="relative z-10 flex items-center gap-2">
+                   <Sparkles className="w-4 h-4 md:w-5 md:h-5 group-hover:animate-pulse" />
+                   <span className="text-sm">랜덤</span>
+                 </span>
+               </button>
             </div>
           </div>
 
           {/* 선택된 주제 표시 */}
-          <div className="mt-4 pt-3 border-t border-white/20">
-            <div className="flex items-center gap-2 text-white/70 text-sm font-medium">
+          <div className="mt-4 pt-3 border-t border-purple-500/20">
+            <div className="flex items-center gap-2 text-white/80 text-sm font-medium">
               <Target className="w-4 h-4 text-purple-400" />
               <span>선택된 주제: <span className="text-white font-semibold bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent">{selectedQuizTitle}</span></span>
             </div>
@@ -456,7 +475,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
       {/* 로딩 상태 */}
       {isLoading && (
-        <div className="glass rounded-3xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center bg-gradient-to-br from-white/5 via-white/8 to-white/5 border border-white/25 shadow-2xl shadow-black/20">
+        <div className="glass rounded-3xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
           <div className="text-center text-white">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
             <p className="text-white/90 text-xl font-semibold whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
@@ -466,7 +485,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
       {/* 데이터가 없을 때 */}
       {!isLoading && (!quizData?.quizzes || quizData.quizzes.length === 0) && (
-        <div className="glass rounded-3xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-white/5 via-white/8 to-white/5 border border-white/25 shadow-2xl shadow-black/20">
+        <div className="glass rounded-3xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
           <div className="text-center text-white">
             <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-70" />
             <h3 className="text-lg md:text-xl font-bold mb-3 mobile-text">
@@ -489,7 +508,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
       {/* 퀴즈 내용 - 데이터가 있을 때만 표시 */}
       {!isLoading && quizData?.quizzes && quizData.quizzes.length > 0 && (
-        <div className="glass rounded-3xl p-6 md:p-8 bg-gradient-to-br from-white/5 via-white/8 to-white/5 border border-white/25 shadow-2xl shadow-black/20">
+        <div className="glass rounded-3xl p-6 md:p-8 bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
           {/* 퀴즈 진행상황 */}
           <div className="mb-6 md:mb-8">
             <div className="flex items-center justify-between mb-3 md:mb-4">

@@ -197,7 +197,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 로딩 중인 경우
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
           <div className="space-y-3">
@@ -212,7 +212,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
         <div className="text-center text-white">
           <div className="w-16 h-16 mx-auto mb-4 opacity-60">
             <FaRobot className="w-full h-full text-blue-400" />
@@ -233,7 +233,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   }
 
   return (
-    <div className="glass rounded-2xl p-6 flex flex-col gap-6">
+    <div className="glass rounded-2xl p-6 flex flex-col gap-6 bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
