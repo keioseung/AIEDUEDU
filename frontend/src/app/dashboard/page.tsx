@@ -452,9 +452,9 @@ export default function DashboardPage() {
       )}
 
       {/* 세련된 고급스러운 탭 메뉴 */}
-      <div className="flex justify-center mb-6 md:mb-10">
-        <div className="w-full max-w-2xl md:max-w-4xl">
-          <div className="flex bg-white/5 backdrop-blur-2xl rounded-3xl p-2 md:p-4 shadow-2xl border border-white/20 overflow-x-auto scrollbar-hide">
+      <div className="flex justify-center mb-6 md:mb-8">
+        <div className="w-full max-w-4xl md:max-w-5xl">
+          <div className="flex bg-white/5 backdrop-blur-2xl rounded-2xl p-1.5 md:p-2 shadow-2xl border border-white/20 overflow-x-auto scrollbar-hide">
             {[
               { 
                 id: 'ai', 
@@ -462,7 +462,7 @@ export default function DashboardPage() {
                 gradient: 'from-blue-600 via-purple-600 to-indigo-600',
                 hoverGradient: 'from-blue-500 via-purple-500 to-indigo-500',
                 icon: '🤖',
-                description: '인공지능 정보 학습'
+                description: 'AI 정보 학습'
               },
               { 
                 id: 'quiz', 
@@ -491,9 +491,9 @@ export default function DashboardPage() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                className={`group relative flex-shrink-0 px-4 md:px-8 py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base transition-all duration-300 min-w-0 overflow-hidden ${
+                className={`group relative flex-shrink-0 px-3 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base transition-all duration-300 min-w-0 overflow-hidden ${
                   activeTab === tab.id 
-                    ? `bg-gradient-to-r ${tab.gradient} text-white shadow-2xl transform scale-105 ring-2 ring-white/20` 
+                    ? `bg-gradient-to-r ${tab.gradient} text-white shadow-xl transform scale-105 ring-1 ring-white/30` 
                     : 'text-white/80 hover:text-white hover:bg-white/10 active:scale-95'
                 }`}
                 onClick={() => setActiveTab(tab.id as any)}
@@ -508,17 +508,18 @@ export default function DashboardPage() {
                   <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${tab.hoverGradient}"></div>
                 )}
                 
-                <div className="relative z-10 flex flex-col items-center gap-1 md:gap-2">
-                  {/* 라벨 */}
-                  <span className="font-bold tracking-wide drop-shadow-sm text-base md:text-lg">{tab.label}</span>
+                <div className="relative z-10 flex flex-col items-center gap-1">
+                  {/* 아이콘과 라벨 */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg md:text-xl">{tab.icon}</span>
+                    <span className="font-bold tracking-wide drop-shadow-sm text-sm md:text-base">{tab.label}</span>
+                  </div>
                   
                   {/* 설명 (데스크톱에서만 표시) */}
                   <span className="hidden lg:block text-xs opacity-80 font-medium tracking-wide">
                     {tab.description}
                   </span>
                 </div>
-                
-
               </button>
             ))}
           </div>

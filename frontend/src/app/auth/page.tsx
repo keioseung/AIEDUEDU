@@ -85,34 +85,34 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* 고급스러운 배경 효과 */}
+      {/* 고급스러운 배경 효과 - 더 크게 확장 */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,255,0.15),transparent_50%)]" />
       
-      {/* 움직이는 그라데이션 배경 */}
+      {/* 움직이는 그라데이션 배경 - 더 크게 확장 */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-pink-900/20 animate-gradient-shift" />
       <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-purple-900/10 animate-gradient-float" />
       
-      {/* 인터랙티브 마우스 효과 */}
+      {/* 인터랙티브 마우스 효과 - 더 크게 확장 */}
       <div 
-        className="absolute w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-1000 ease-out"
+        className="absolute w-[120%] h-[120%] bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-1000 ease-out"
         style={{
-          left: mousePosition.x - 192,
-          top: mousePosition.y - 192,
+          left: mousePosition.x - 240,
+          top: mousePosition.y - 240,
           transform: 'translate(-50%, -50%)'
         }}
       />
       
-      {/* 움직이는 파티클 효과 */}
+      {/* 움직이는 파티클 효과 - 더 많은 파티클과 넓은 범위 */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(30)].map((_, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-white/20 rounded-full animate-float"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 120 - 10}%`,
+              top: `${Math.random() * 120 - 10}%`,
               animationDelay: `${Math.random() * 3}s`,
               animationDuration: `${3 + Math.random() * 4}s`
             }}
@@ -120,15 +120,16 @@ export default function AuthPage() {
         ))}
       </div>
 
-      {/* 빛나는 효과 */}
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      {/* 빛나는 효과 - 더 크게 확장 */}
+      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-[120%] h-[120%] bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/2 w-[140%] h-[140%] bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 md:py-16">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 md:py-12">
         <div className="w-full max-w-sm">
           {/* 뒤로 가기 버튼 */}
-          <div className="absolute top-3 left-3 z-20">
+          <div className="absolute top-6 left-6 z-20">
             <button
               onClick={() => router.push('/')}
               className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 flex items-center justify-center hover:scale-110 active:scale-95"
