@@ -385,13 +385,12 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
                        animate={{ opacity: 1, y: 0, scale: 1 }}
                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                       className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-2 border border-white/20 shadow-2xl"
+                       className="absolute top-full mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-2 border border-white/20 shadow-2xl"
                        style={{
-                         left: '50%',
-                         transform: 'translateX(-50%)',
-                         width: 'calc(100vw - 3rem)',
-                         maxWidth: '300px',
-                         minWidth: '260px'
+                         left: '0',
+                         right: '0',
+                         width: '100%',
+                         maxWidth: '100%'
                        }}
                      >
                        <div className="text-center mb-2">
