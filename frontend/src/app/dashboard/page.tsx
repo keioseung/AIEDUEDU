@@ -454,7 +454,7 @@ export default function DashboardPage() {
       {/* 세련된 고급스러운 탭 메뉴 */}
       <div className="flex justify-center mb-6 md:mb-8">
         <div className="w-full max-w-4xl md:max-w-5xl">
-          <div className="flex bg-white/5 backdrop-blur-2xl rounded-2xl p-1.5 md:p-2 shadow-2xl border border-white/20 overflow-x-auto scrollbar-hide">
+          <div className="grid grid-cols-4 bg-white/5 backdrop-blur-2xl rounded-2xl p-1.5 md:p-2 shadow-2xl border border-white/20 overflow-hidden">
             {[
               { 
                 id: 'ai', 
@@ -487,7 +487,7 @@ export default function DashboardPage() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                className={`group relative flex-shrink-0 px-3 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base transition-all duration-300 min-w-0 overflow-hidden ${
+                className={`group relative px-3 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base transition-all duration-300 overflow-hidden ${
                   activeTab === tab.id 
                     ? `bg-gradient-to-r ${tab.gradient} text-white shadow-xl transform scale-105 ring-1 ring-white/30` 
                     : 'text-white/80 hover:text-white hover:bg-white/10 active:scale-95'
