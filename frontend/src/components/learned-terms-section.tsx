@@ -993,17 +993,17 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
       </AnimatePresence>
 
       {/* 모바일 최적화 통계 카드 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
+          className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-xl rounded-lg p-2 md:p-3 border border-white/10"
         >
-          <div className="flex items-center gap-2 md:gap-3">
-            <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-blue-300" />
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <BookOpen className="w-4 h-4 md:w-5 md:h-5 text-blue-300" />
             <div>
-              <div className="text-white font-semibold text-sm md:text-base">{filteredTerms.length}</div>
-              <div className="text-white/60 text-xs md:text-sm">표시된 용어</div>
+              <div className="text-white font-semibold text-xs md:text-sm">{filteredTerms.length}</div>
+              <div className="text-white/60 text-xs">표시된 용어</div>
             </div>
           </div>
         </motion.div>
@@ -1011,13 +1011,13 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
+          className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-lg p-2 md:p-3 border border-white/10"
         >
-          <div className="flex items-center gap-2 md:gap-3">
-            <Star className="w-5 h-5 md:w-6 md:h-6 text-green-300" />
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <Star className="w-4 h-4 md:w-5 md:h-5 text-green-300" />
             <div>
-              <div className="text-white font-semibold text-sm md:text-base">{favoriteTerms.size}</div>
-              <div className="text-white/60 text-xs md:text-sm">즐겨찾기</div>
+              <div className="text-white font-semibold text-xs md:text-sm">{favoriteTerms.size}</div>
+              <div className="text-white/60 text-xs">즐겨찾기</div>
             </div>
           </div>
         </motion.div>
@@ -1025,15 +1025,15 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
+          className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-lg p-2 md:p-3 border border-white/10"
         >
-          <div className="flex items-center gap-2 md:gap-3">
-            <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-yellow-300" />
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-yellow-300" />
             <div>
-              <div className="text-white font-semibold text-sm md:text-base">
+              <div className="text-white font-semibold text-xs md:text-sm">
                 {Math.round((viewedTerms.size / filteredTerms.length) * 100)}%
               </div>
-              <div className="text-white/60 text-xs md:text-sm">학습진행률</div>
+              <div className="text-white/60 text-xs">학습진행률</div>
             </div>
           </div>
         </motion.div>
@@ -1041,13 +1041,13 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/10"
+          className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-xl rounded-lg p-2 md:p-3 border border-white/10"
         >
-          <div className="flex items-center gap-2 md:gap-3">
-            <Brain className="w-5 h-5 md:w-6 md:h-6 text-emerald-300" />
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <Brain className="w-4 h-4 md:w-5 md:h-5 text-emerald-300" />
             <div>
-              <div className="text-white font-semibold text-sm md:text-base">{viewedTerms.size}</div>
-              <div className="text-white/60 text-xs md:text-sm">학습완료</div>
+              <div className="text-white font-semibold text-xs md:text-sm">{viewedTerms.size}</div>
+              <div className="text-white/60 text-xs">학습완료</div>
             </div>
           </div>
         </motion.div>
