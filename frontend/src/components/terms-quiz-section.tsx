@@ -60,6 +60,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     queryFn: async () => {
       try {
         const response = await aiInfoAPI.getAll()
+        console.log('getAll API 성공:', response.data)
         return response.data
       } catch (error) {
         console.log('getAll API 실패, getAllDates API 사용:', error)
@@ -76,6 +77,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     queryFn: async () => {
       try {
         const response = await aiInfoAPI.getAllDates()
+        console.log('getAllDates API 성공:', response.data)
         return response.data
       } catch (error) {
         console.log('getAllDates API도 실패:', error)
@@ -99,6 +101,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         try {
           const response = await aiInfoAPI.getByDate(date)
           const dateInfos = response.data
+          console.log(`날짜 ${date}의 AI 정보:`, dateInfos)
           
           dateInfos.forEach((info: { title: string; content: string; terms?: Array<{ term: string; description: string }> }, index: number) => {
             if (info.title && info.content) {
@@ -117,6 +120,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         }
       }
       
+      console.log('날짜별 AI 정보 총합:', allInfo.length)
       return allInfo
     },
     enabled: allDates.length > 0 && (getAllError !== null || allAIInfo.length === 0),
@@ -137,9 +141,11 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     dateBasedAIInfo: dateBasedAIInfo.length, 
     actualAIInfo: actualAIInfo.length,
     isLoading: isLoadingAIInfo, 
-    error: getAllError 
+    error: getAllError,
+    allDates: allDates.length
   })
   console.log('quizTitleOptions:', quizTitleOptions)
+  console.log('selectedQuizTitle:', selectedQuizTitle)
 
   // 선택된 제목에 해당하는 AI 정보 찾기
   const selectedAIInfo = selectedQuizTitle !== '오늘의 주제' 
@@ -330,15 +336,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* 왼쪽: 제목과 설명 */}
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-slate-700 to-slate-800 rounded-xl flex items-center justify-center shadow-lg border border-white/10">
-                  <Brain className="w-5 h-5 md:w-6 md:h-6 text-slate-300" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-2 h-2 md:w-3 md:h-3 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full" />
-              </div>
-              <div>
-                <h2 className="text-lg md:text-xl font-bold text-white mb-1">용어 퀴즈</h2>
-              </div>
+              {/* 뇌모양 아이콘과 "용어 퀴즈" 문구 제거 */}
             </div>
 
             {/* 오른쪽: 퀴즈 주제 선택 버튼 */}
@@ -389,32 +387,32 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute top-full right-0 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-3 border border-white/20 shadow-2xl min-w-[250px]"
+                      className="absolute top-full right-0 mt-2 z-20 bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl p-2 border border-white/20 shadow-2xl min-w-[280px] max-w-[320px]"
                     >
-                      <div className="text-center mb-3">
-                        <div className="text-white/80 text-sm font-medium mb-2">주제 선택</div>
-                        <div className="w-full bg-white/10 rounded-full h-1">
-                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1 rounded-full transition-all" />
+                      <div className="text-center mb-2">
+                        <div className="text-white/80 text-xs font-medium mb-1">주제 선택</div>
+                        <div className="w-full bg-white/10 rounded-full h-0.5">
+                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-0.5 rounded-full transition-all" />
                         </div>
                       </div>
-                      <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                      <div className="space-y-1 max-h-48 overflow-y-auto custom-scrollbar">
                         {actualAIInfo.map((info, index) => (
                           <button
                             key={info.title}
                             onClick={() => handleQuizTitleChange(info.title)}
-                            className="w-full text-left p-3 rounded-xl bg-gradient-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-200 group"
+                            className="w-full text-left p-2 rounded-lg bg-gradient-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-200 group"
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex-1 min-w-0">
-                                <div className="text-white font-medium truncate group-hover:text-blue-300 transition-colors">
+                                <div className="text-white font-medium text-sm truncate group-hover:text-blue-300 transition-colors leading-tight">
                                   {info.title}
                                 </div>
-                                <div className="text-white/60 text-xs mt-1">
+                                <div className="text-white/60 text-xs mt-0.5 leading-tight">
                                   {info.terms?.length || 0}개 용어
                                 </div>
                               </div>
-                              <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <ChevronRight className="w-4 h-4 text-blue-400" />
+                              <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                <ChevronRight className="w-3 h-3 text-blue-400" />
                               </div>
                             </div>
                           </button>
