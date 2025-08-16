@@ -914,18 +914,35 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                   전체 용어 목록 ({filteredTerms.length}개)
                 </h3>
                 <div className="flex items-center gap-2">
-                  <button
-                    onTouchStart={handleWebViewTouch(() => setScrollMode(!scrollMode))}
-                    onClick={() => setScrollMode(!scrollMode)}
-                    className={`px-2 py-1 rounded text-xs font-medium transition-all touch-manipulation select-none min-h-[32px] min-w-[60px] webview-button ${
-                      scrollMode
-                        ? 'bg-blue-500/30 text-blue-300 border border-blue-500/50'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
-                    }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    {scrollMode ? '📱 스크롤' : '👆 선택'}
-                  </button>
+                  <div className="relative">
+                    <button
+                      onTouchStart={handleWebViewTouch(() => setScrollMode(!scrollMode))}
+                      onClick={() => setScrollMode(!scrollMode)}
+                      className={`px-2 py-1 rounded text-xs font-medium transition-all touch-manipulation select-none min-h-[32px] min-w-[60px] webview-button ${
+                        scrollMode
+                          ? 'bg-blue-500/30 text-blue-300 border border-blue-500/50'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                      }`}
+                      style={{ WebkitTapHighlightColor: 'transparent' }}
+                    >
+                      {scrollMode ? '📱 스크롤' : '👆 선택'}
+                    </button>
+                    
+                    {/* 스크롤 모드 안내 툴팁 */}
+                    {!scrollMode && (
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gradient-to-r from-blue-500/90 to-purple-500/90 backdrop-blur-xl rounded-lg p-3 text-white text-xs shadow-2xl border border-blue-300/50 z-20 animate-fade-in">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                          <span className="font-semibold">스크롤 모드 전환</span>
+                        </div>
+                        <p className="text-white/90 leading-relaxed">
+                          버튼을 <span className="font-bold text-yellow-300">1초 이상</span> 길게 누르면<br/>
+                          스크롤 모드로 전환됩니다
+                        </p>
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-blue-500/90"></div>
+                      </div>
+                    )}
+                  </div>
                   <button
                     onTouchStart={handleWebViewTouch(toggleListHeight)}
                     onClick={toggleListHeight}
