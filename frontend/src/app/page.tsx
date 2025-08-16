@@ -209,7 +209,7 @@ export default function IntroPage() {
               </span>
             </h2>
             <p className="text-white/70 text-sm md:text-base lg:text-lg leading-relaxed max-w-4xl mx-auto mobile-text text-center" style={{ wordBreak: 'keep-all' }}>
-              최신 AI 트렌드와 핵심 개념을 체계적으로 학습하고,<br className="hidden sm:block" />
+              학습하고<br />
               실전 문제를 통해 확실한 이해를 확인하세요.
             </p>
           </div>
@@ -233,19 +233,19 @@ export default function IntroPage() {
             { 
               icon: FaBrain, 
               title: "AI 정보 학습", 
-              desc: "매일 새로운 AI 정보를 제공합니다. 각 정보에는<br className='hidden sm:block' />관련 용어들이 포함되어 있어 AI 개념을<br className='hidden sm:block' />체계적으로 학습할 수 있습니다.", 
+              desc: "매일 새로운 AI 정보를 제공합니다.<br className='hidden sm:block' />각 정보에는 관련 용어들이 포함되어 있어 AI 개념을<br className='hidden sm:block' />체계적으로 학습할 수 있습니다.", 
               color: "from-blue-500 to-cyan-500"
             },
             { 
               icon: FaRocket, 
               title: "용어 퀴즈", 
-              desc: "학습한 AI 정보의 관련 용어들을 퀴즈로 점검합니다. 다양한 난이도의 문제로 지식 이해도를 확인하고<br className='hidden sm:block' />실력을 향상시켜보세요.", 
+              desc: "학습한 AI 정보의 관련 용어들을 퀴즈로 점검합니다.<br className='hidden sm:block' />다양한 난이도의 문제로 지식 이해도를 확인하고<br className='hidden sm:block' />실력을 향상시켜보세요.", 
               color: "from-purple-500 to-pink-500"
             },
             { 
               icon: FaChartLine, 
               title: "학습 진행률", 
-              desc: "개인별 학습 진행 상황을 상세한 통계로 추적합니다. 일별, 주별, 월별 학습 현황을 확인하고 목표를<br className='hidden sm:block' />설정해보세요.", 
+              desc: "개인별 학습 진행 상황을 상세한 통계로 추적합니다.<br className='hidden sm:block' />일별, 주별, 월별 학습 현황을 확인하고 목표를<br className='hidden sm:block' />설정해보세요.", 
               color: "from-green-500 to-emerald-500"
             }
           ].map((feature, index) => (
@@ -314,9 +314,6 @@ export default function IntroPage() {
             <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-3 md:mb-4">
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                 AI Mastery Hub
-              </span>
-              <span className="text-white/90 block text-sm md:text-base font-normal mt-1">
-                지금까지의 학습 현황을 한눈에 확인하세요
               </span>
             </h3>
           </div>
