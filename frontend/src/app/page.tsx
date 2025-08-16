@@ -90,13 +90,17 @@ export default function IntroPage() {
 
   // 통계 아이콘 클릭 효과 - 개선된 버전
   const handleStatClick = (index: number) => {
+    console.log('handleStatClick called with index:', index, 'current clickedStat:', clickedStat)
+    
     // 같은 아이콘을 다시 클릭하면 상태 종료 (아이콘들이 뭉침)
     if (clickedStat === index) {
+      console.log('Same icon clicked, collapsing')
       setClickedStat(null)
       return
     }
     
     // 다른 아이콘을 클릭하면 해당 아이콘의 설명 표시 (기존 상태 유지하면서 새 아이콘 선택)
+    console.log('Different icon clicked, switching to:', index)
     setClickedStat(index)
   }
 
