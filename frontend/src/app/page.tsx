@@ -397,7 +397,7 @@ export default function IntroPage() {
                     className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
-                        : 'transform translate-x-[-80px] md:translate-x-[-100px] translate-y-[60px] md:translate-y-[80px] scale-90'
+                        : 'transform translate-x-[-80px] md:translate-x-[-100px] translate-y-[40px] md:translate-y-[60px] scale-90'
                     }`}
                     onClick={(event) => handleIconClick(2, event)}
                   >
@@ -459,7 +459,7 @@ export default function IntroPage() {
                     className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
-                        : 'transform translate-x-[80px] md:translate-x-[100px] translate-y-[60px] md:translate-y-[80px] scale-90'
+                        : 'transform translate-x-[80px] md:translate-x-[100px] translate-y-[40px] md:translate-y-[60px] scale-90'
                     }`}
                     onClick={(event) => handleIconClick(3, event)}
                   >
@@ -519,7 +519,7 @@ export default function IntroPage() {
 
                                                {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 (위치 조정 및 애니메이션 개선) */}
                  {clickedStat !== null && (
-                   <div className="absolute inset-0 flex items-center justify-center z-40" style={{ transform: 'translateY(40px)' }}>
+                   <div className="absolute inset-0 flex items-center justify-center z-40" style={{ transform: 'translateY(-20px)' }}>
                      {/* 메인 텍스트 상자 */}
                      <div className="relative group">
                       {/* 메인 텍스트 상자 - 더 멋진 애니메이션 효과 추가 */}
