@@ -331,14 +331,13 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             {/* 왼쪽: 제목과 설명 */}
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Brain className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-slate-700 to-slate-800 rounded-xl flex items-center justify-center shadow-lg border border-white/10">
+                  <Brain className="w-5 h-5 md:w-6 md:h-6 text-slate-300" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 md:w-3 md:h-3 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full" />
               </div>
               <div>
                 <h2 className="text-lg md:text-xl font-bold text-white mb-1">용어 퀴즈</h2>
-                <p className="text-white/70 text-sm">주제를 선택하고 도전해보세요!</p>
               </div>
             </div>
 

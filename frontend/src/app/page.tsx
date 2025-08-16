@@ -264,13 +264,13 @@ export default function IntroPage() {
               {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
               <div className="relative h-64 md:h-80">
                {/* 첫 번째 행 */}
-               <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
+               <div className="flex items-center justify-center gap-3 md:gap-4 mb-3 md:mb-4">
                  {/* 첫 번째 아이콘 - AI 정보 */}
                  <div 
                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                      clickedStat === null 
                        ? 'transform scale-100' 
-                       : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
+                       : 'transform translate-x-[-80px] md:translate-x-[-100px] translate-y-[-60px] md:translate-y-[-80px] scale-90'
                    }`}
                    onClick={(event) => handleIconClick(0, event)}
                  >
@@ -332,7 +332,7 @@ export default function IntroPage() {
                     className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
-                        : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
+                        : 'transform translate-x-[80px] md:translate-x-[100px] translate-y-[-60px] md:translate-y-[-80px] scale-90'
                     }`}
                     onClick={(event) => handleIconClick(1, event)}
                   >
@@ -391,13 +391,13 @@ export default function IntroPage() {
                </div>
 
                {/* 두 번째 행 */}
-               <div className="flex items-center justify-center gap-4 md:gap-6">
+               <div className="flex items-center justify-center gap-3 md:gap-4">
                                    {/* 세 번째 아이콘 - 실전 퀴즈 */}
                   <div 
                     className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
-                        : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[80px] md:translate-y-[120px] scale-90'
+                        : 'transform translate-x-[-80px] md:translate-x-[-100px] translate-y-[60px] md:translate-y-[80px] scale-90'
                     }`}
                     onClick={(event) => handleIconClick(2, event)}
                   >
@@ -459,7 +459,7 @@ export default function IntroPage() {
                     className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
-                        : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[80px] md:translate-y-[120px] scale-90'
+                        : 'transform translate-x-[80px] md:translate-x-[100px] translate-y-[60px] md:translate-y-[80px] scale-90'
                     }`}
                     onClick={(event) => handleIconClick(3, event)}
                   >
