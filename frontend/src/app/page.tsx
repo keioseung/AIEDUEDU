@@ -556,9 +556,16 @@ export default function IntroPage() {
               {/* 배경 클릭 영역 - 아이콘들이 펼쳐진 상태에서만 표시 */}
               {clickedStat !== null && (
                 <div 
-                  className="absolute inset-0 -z-10 cursor-pointer"
+                  className="absolute inset-0 z-20 cursor-pointer"
                   onClick={handleBackgroundClick}
-                  style={{ background: 'transparent' }}
+                  style={{ 
+                    background: 'transparent',
+                    width: '100vw',
+                    height: '100vh',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)'
+                  }}
                 />
               )}
             </div>
