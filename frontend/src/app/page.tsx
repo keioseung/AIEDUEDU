@@ -245,27 +245,20 @@ export default function IntroPage() {
                </div>
              )}
              
-             {/* 4개 아이콘을 사방으로 배치 */}
-             <div className="relative w-full h-64 md:h-80">
-               {[
-                 { label: "매일 새로운", value: "AI 정보", icon: FaBrain, position: "top-0 left-1/2 -translate-x-1/2" },
-                 { label: "핵심 개념", value: "관련 용어", icon: FaRocket, position: "top-1/2 right-0 translate-x-1/2 -translate-y-1/2" },
-                 { label: "지식 점검", value: "실전 퀴즈", icon: FaChartLine, position: "bottom-0 left-1/2 -translate-x-1/2" },
-                 { label: "학습 현황", value: "진행률", icon: FaTrophy, position: "top-1/2 left-0 -translate-x-1/2 -translate-y-1/2" }
-               ].map((stat, index) => (
+             {/* 4개 아이콘을 2행 2열로 배치 */}
+             <div className="grid grid-cols-2 gap-8 md:gap-12 h-64 md:h-80">
+               {/* 첫 번째 행 */}
+               <div className="flex items-center justify-center">
                  <div
-                   key={index}
-                   className={`absolute ${stat.position} text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-105 ${
-                     clickedStat === index ? 'scale-110' : ''
-                   }`}
-                   style={{ animationDelay: `${index * 0.3}s` }}
-                   onClick={() => handleStatClick(index)}
+                   className="text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-110 relative z-10"
+                   style={{ animationDelay: '0s' }}
+                   onClick={() => handleStatClick(0)}
                  >
                    {/* Click effects */}
-                   {clickedStat === index && (
+                   {clickedStat === 0 && (
                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
                    )}
-                   {clickedStat === index && [...Array(8)].map((_, i) => (
+                   {clickedStat === 0 && [...Array(8)].map((_, i) => (
                      <div
                        key={i}
                        className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
@@ -278,35 +271,195 @@ export default function IntroPage() {
                        } as React.CSSProperties}
                      />
                    ))}
-                   {clickedStat === index && (
+                   {clickedStat === 0 && (
                      <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
                    )}
-                   {clickedStat === index && (
+                   {clickedStat === 0 && (
                      <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
                    )}
                    
                    {/* Icon */}
                    <div className={`relative z-10 transition-all duration-300 ${
-                     clickedStat === index ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
+                     clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
                      <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === index ? 'animate-stat-glow' : ''
+                       clickedStat === 0 ? 'animate-stat-glow' : ''
                      }`}>
-                       <stat.icon className="text-purple-300 text-lg md:text-xl" />
+                       <FaBrain className="text-purple-300 text-lg md:text-xl" />
                      </div>
                    </div>
                    
                    {/* Text */}
                    <div className="relative z-10">
                      <div className="text-white/70 text-xs md:text-sm font-medium mb-1">
-                       {stat.label}
+                       매일 새로운
                      </div>
                      <div className="text-white font-bold text-sm md:text-base mb-1">
-                       {stat.value}
+                       AI 정보
                      </div>
                    </div>
                  </div>
-               ))}
+               </div>
+               
+               <div className="flex items-center justify-center">
+                 <div
+                   className="text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-110 relative z-10"
+                   style={{ animationDelay: '0.3s' }}
+                   onClick={() => handleStatClick(1)}
+                 >
+                   {/* Click effects */}
+                   {clickedStat === 1 && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === 1 && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
+                     />
+                   ))}
+                   {clickedStat === 1 && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === 1 && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
+                   
+                   {/* Icon */}
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
+                   }`}>
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === 1 ? 'animate-stat-glow' : ''
+                     }`}>
+                       <FaRocket className="text-purple-300 text-lg md:text-xl" />
+                     </div>
+                   </div>
+                   
+                   {/* Text */}
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">
+                       핵심 개념
+                     </div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">
+                       관련 용어
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               
+               {/* 두 번째 행 */}
+               <div className="flex items-center justify-center">
+                 <div
+                   className="text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-110 relative z-10"
+                   style={{ animationDelay: '0.6s' }}
+                   onClick={() => handleStatClick(2)}
+                 >
+                   {/* Click effects */}
+                   {clickedStat === 2 && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === 2 && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
+                     />
+                   ))}
+                   {clickedStat === 2 && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === 2 && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
+                   
+                   {/* Icon */}
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
+                   }`}>
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === 2 ? 'animate-stat-glow' : ''
+                     }`}>
+                       <FaChartLine className="text-purple-300 text-lg md:text-xl" />
+                     </div>
+                   </div>
+                   
+                   {/* Text */}
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">
+                       지식 점검
+                     </div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">
+                       실전 퀴즈
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               
+               <div className="flex items-center justify-center">
+                 <div
+                   className="text-center animate-stat-fade-in cursor-pointer transition-all duration-300 hover:scale-110 relative z-10"
+                   style={{ animationDelay: '0.9s' }}
+                   onClick={() => handleStatClick(3)}
+                 >
+                   {/* Click effects */}
+                   {clickedStat === 3 && (
+                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-stat-aura" />
+                   )}
+                   {clickedStat === 3 && [...Array(8)].map((_, i) => (
+                     <div
+                       key={i}
+                       className="absolute w-1 h-1 bg-white/60 rounded-full animate-stat-particle"
+                       style={{
+                         left: '50%',
+                         top: '50%',
+                         transform: 'translate(-50%, -50%)',
+                         '--angle': `${i * 45}deg`,
+                         '--distance': '20px'
+                       } as React.CSSProperties}
+                     />
+                   ))}
+                   {clickedStat === 3 && (
+                     <div className="absolute inset-0 rounded-full bg-white/10 animate-stat-shine" />
+                   )}
+                   {clickedStat === 3 && (
+                     <div className="absolute inset-0 rounded-full border-2 border-transparent animate-stat-border-glow" />
+                   )}
+                   
+                   {/* Icon */}
+                   <div className={`relative z-10 transition-all duration-300 ${
+                     clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
+                   }`}>
+                     <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
+                       clickedStat === 3 ? 'animate-stat-glow' : ''
+                     }`}>
+                       <FaTrophy className="text-purple-300 text-lg md:text-xl" />
+                     </div>
+                   </div>
+                   
+                   {/* Text */}
+                   <div className="relative z-10">
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">
+                       학습 현황
+                     </div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">
+                       진행률
+                     </div>
+                   </div>
+                 </div>
+               </div>
              </div>
            </div>
          </div>
