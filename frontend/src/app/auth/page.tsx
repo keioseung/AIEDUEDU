@@ -208,7 +208,9 @@ export default function AuthPage() {
                         WebkitTouchCallout: 'none',
                         WebkitUserSelect: 'none',
                         userSelect: 'none',
-                        fontSize: '16px'
+                        fontSize: '16px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        transition: 'all 0.2s ease-in-out'
                       }}
                     />
                   </div>
@@ -278,7 +280,9 @@ export default function AuthPage() {
                         WebkitTouchCallout: 'none',
                         WebkitUserSelect: 'none',
                         userSelect: 'none',
-                        fontSize: '16px'
+                        fontSize: '16px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        transition: 'all 0.2s ease-in-out'
                       }}
                     />
                   </div>
@@ -385,13 +389,34 @@ export default function AuthPage() {
             outline: none;
             -webkit-appearance: none;
             border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(147, 51, 234, 0.5) !important;
           }
           
           /* 모바일 터치 최적화 */
           * {
             -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
+            -webkit-touch-callout: 'none';
           }
+        }
+        
+        /* 포커스 시 검정색 방지 */
+        input[type="text"]:focus, input[type="password"]:focus {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          border-color: rgba(147, 51, 234, 0.5) !important;
+          outline: none !important;
+          box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5) !important;
+        }
+        
+        /* 입력 필드 배경 안정화 */
+        input[type="text"], input[type="password"] {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          transition: all 0.2s ease-in-out !important;
+        }
+        
+        /* 포커스 시 애니메이션 최적화 */
+        input[type="text"]:focus, input[type="password"]:focus {
+          transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
         }
       `}</style>
     </div>
