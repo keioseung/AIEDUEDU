@@ -340,12 +340,12 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             </div>
 
             {/* 오른쪽: 퀴즈 주제 선택 버튼 */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 w-full">
                {/* 주제 선택 버튼 */}
-               <div className="relative">
+               <div className="relative flex-1">
                  <button
                    onClick={() => setShowQuizTitleSelector(!showQuizTitleSelector)}
-                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-500 flex items-center gap-3 hover:scale-105 active:scale-95 border border-purple-400/30"
+                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-500 flex items-center justify-center gap-3 hover:scale-105 active:scale-95 border border-purple-400/30 w-full"
                  >
                    <div className="absolute inset-0 bg-gradient-to-r from-white/25 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                    <span className="relative z-10 flex items-center gap-3">
@@ -361,12 +361,10 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        initial={{ opacity: 0, y: 15, scale: 0.95 }}
                        animate={{ opacity: 1, y: 0, scale: 1 }}
                        exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                       className="absolute top-full mt-3 z-20 bg-gradient-to-br from-purple-950/98 via-violet-900/98 to-purple-950/98 backdrop-blur-3xl rounded-3xl p-4 border border-purple-400/30 shadow-2xl shadow-purple-900/40"
+                       className="absolute top-full mt-3 z-20 bg-gradient-to-br from-purple-950/98 via-violet-900/98 to-purple-950/98 backdrop-blur-3xl rounded-3xl p-4 border border-purple-400/30 shadow-2xl shadow-purple-900/40 w-full min-w-[300px] md:min-w-[400px]"
                        style={{
                          left: '0',
-                         right: '0',
-                         width: '100%',
-                         maxWidth: '100%'
+                         right: '0'
                        }}
                      >
                        <div className="text-center mb-3">
