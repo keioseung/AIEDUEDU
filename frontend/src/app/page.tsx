@@ -232,15 +232,35 @@ export default function IntroPage() {
              {/* 중앙 텍스트 표시 영역 */}
              {clickedStat !== null && (
                <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                 <div className="bg-gradient-to-r from-blue-500/90 to-purple-500/90 backdrop-blur-xl rounded-2xl p-3 md:p-4 border border-white/30 shadow-2xl w-40 md:w-48 h-24 md:h-28 flex items-center justify-center">
-                   <p className="text-white text-xs md:text-sm font-medium leading-relaxed px-2 text-center">
-                     {[
-                       "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다.",
-                       "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다.",
-                       "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다.",
-                       "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다."
-                   ][clickedStat]}
-                   </p>
+                 <div className="relative group">
+                   {/* 메인 텍스트 상자 */}
+                   <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-48 md:w-56 h-28 md:h-32 flex items-center justify-center relative overflow-hidden">
+                     {/* 내부 그라데이션 오버레이 */}
+                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 rounded-3xl" />
+                     
+                     {/* 빛나는 테두리 효과 */}
+                     <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 p-[1px]">
+                       <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 rounded-3xl h-full w-full flex items-center justify-center">
+                         <p className="text-white/90 text-xs md:text-sm font-medium leading-relaxed px-3 text-center relative z-10">
+                           {[
+                             "최신 AI 트렌드와 기술 동향을 매일 업데이트하여 제공합니다.",
+                             "AI 학습에 필수적인 핵심 용어들을 체계적으로 정리했습니다.",
+                             "학습한 내용을 다양한 퀴즈로 점검하여 확실한 이해를 확인합니다.",
+                             "개인별 학습 진행 상황을 체계적으로 추적하고 목표를 달성합니다."
+                         ][clickedStat]}
+                         </p>
+                       </div>
+                     </div>
+                     
+                     {/* 상단 장식 요소 */}
+                     <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-60" />
+                     
+                     {/* 하단 장식 요소 */}
+                     <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-40" />
+                   </div>
+                   
+                   {/* 주변 빛나는 효과 */}
+                   <div className="absolute inset-0 -m-4 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                  </div>
                </div>
              )}
