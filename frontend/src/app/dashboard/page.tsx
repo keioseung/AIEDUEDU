@@ -132,7 +132,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentWelcome((prev) => (prev + 1) % welcomeMessages.length)
-    }, 4000)
+    }, 3000)
     return () => clearInterval(interval)
   }, [welcomeMessages.length])
 
@@ -416,8 +416,13 @@ export default function DashboardPage() {
               {isTyping && <span className="animate-blink">|</span>}
             </h1>
             <div className="h-6 md:h-8 mt-2">
-              <p className="text-lg md:text-xl lg:text-2xl text-purple-300 font-medium animate-fade-in-out">
-                {welcomeMessages[currentWelcome]}
+              <p className="text-lg md:text-xl lg:text-2xl text-purple-300 font-medium">
+                <span 
+                  key={currentWelcome}
+                  className="inline-block animate-tagline-fade"
+                >
+                  {welcomeMessages[currentWelcome]}
+                </span>
               </p>
             </div>
           </div>
@@ -677,6 +682,15 @@ export default function DashboardPage() {
         }
         .animate-fade-in {
           animation: fade-in 1.5s cubic-bezier(0.22,1,0.36,1) both;
+        }
+        @keyframes tagline-fade {
+          0% { opacity: 0; transform: translateY(10px); }
+          20% { opacity: 1; transform: translateY(0); }
+          80% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(10px); }
+        }
+        .animate-tagline-fade {
+          animation: tagline-fade 4s infinite;
         }
       `}</style>
     </div>
