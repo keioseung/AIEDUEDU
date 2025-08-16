@@ -90,18 +90,26 @@ export default function IntroPage() {
 
   // 통계 아이콘 클릭 효과 - 개선된 버전
   const handleStatClick = (index: number) => {
-    console.log('handleStatClick called with index:', index, 'current clickedStat:', clickedStat)
+    console.log('=== handleStatClick 호출됨 ===')
+    console.log('클릭된 아이콘 인덱스:', index)
+    console.log('현재 선택된 아이콘:', clickedStat)
+    console.log('아이콘 상태:', clickedStat === null ? '선택 안됨' : '선택됨')
     
     // 같은 아이콘을 다시 클릭하면 상태 종료 (아이콘들이 뭉침)
     if (clickedStat === index) {
-      console.log('Same icon clicked, collapsing')
+      console.log('같은 아이콘 재클릭 - 아이콘들 뭉침')
       setClickedStat(null)
       return
     }
     
     // 다른 아이콘을 클릭하면 해당 아이콘의 설명 표시 (기존 상태 유지하면서 새 아이콘 선택)
-    console.log('Different icon clicked, switching to:', index)
+    console.log('다른 아이콘 클릭 - 아이콘 설명 전환:', index)
+    console.log('이전 선택:', clickedStat, '-> 새 선택:', index)
+    
+    // 상태 업데이트
     setClickedStat(index)
+    
+    console.log('상태 업데이트 완료:', index)
   }
 
   // 배경 클릭 시 아이콘들이 원래 위치로 돌아가도록 하는 함수
@@ -111,8 +119,21 @@ export default function IntroPage() {
 
   // 아이콘 클릭 이벤트 핸들러 - 이벤트 전파 방지
   const handleIconClick = (index: number, event: React.MouseEvent) => {
-    event.stopPropagation() // 이벤트 전파 방지
+    console.log('=== handleIconClick 호출됨 ===')
+    console.log('아이콘 인덱스:', index)
+    console.log('이벤트 타입:', event.type)
+    
+    // 이벤트 전파 완벽 방지
+    event.preventDefault()
+    event.stopPropagation()
+    
+    console.log('이벤트 전파 방지 완료')
+    console.log('handleStatClick 호출 시작')
+    
+    // handleStatClick 함수 호출
     handleStatClick(index)
+    
+    console.log('handleIconClick 완료')
   }
 
   return (
@@ -246,7 +267,7 @@ export default function IntroPage() {
                <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
                  {/* 첫 번째 아이콘 - AI 정보 */}
                  <div 
-                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                      clickedStat === null 
                        ? 'transform scale-100' 
                        : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
@@ -308,7 +329,7 @@ export default function IntroPage() {
 
                                    {/* 두 번째 아이콘 - 관련 용어 */}
                   <div 
-                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
                         : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[-80px] md:translate-y-[-120px] scale-90'
@@ -373,7 +394,7 @@ export default function IntroPage() {
                <div className="flex items-center justify-center gap-4 md:gap-6">
                                    {/* 세 번째 아이콘 - 실전 퀴즈 */}
                   <div 
-                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
                         : 'transform translate-x-[-120px] md:translate-x-[-160px] translate-y-[80px] md:translate-y-[120px] scale-90'
@@ -435,7 +456,7 @@ export default function IntroPage() {
 
                                    {/* 네 번째 아이콘 - 학습 진행률 */}
                   <div 
-                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-60 ${
+                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
                       clickedStat === null 
                         ? 'transform scale-100' 
                         : 'transform translate-x-[120px] md:translate-x-[160px] translate-y-[80px] md:translate-y-[120px] scale-90'
@@ -566,7 +587,7 @@ export default function IntroPage() {
               {/* 배경 클릭 영역 - 아이콘들이 펼쳐진 상태에서만 표시 */}
               {clickedStat !== null && (
                 <div 
-                  className="fixed inset-0 z-50 cursor-pointer"
+                  className="fixed inset-0 z-40 cursor-pointer"
                   onClick={handleBackgroundClick}
                   style={{ 
                     background: 'transparent'
