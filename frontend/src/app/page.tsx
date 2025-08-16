@@ -100,13 +100,29 @@ export default function IntroPage() {
     setClickedStat(index)
   }
 
-  // 배경 클릭 시 아이콘들이 뭉치도록 하는 함수
-  const handleBackgroundClick = (e: React.MouseEvent) => {
-    // 클릭된 요소가 아이콘이나 텍스트 박스가 아닌 경우에만 실행
-    if (e.target === e.currentTarget) {
+  // ESC 키를 눌러서 아이콘들을 뭉치도록 하는 함수
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
       setClickedStat(null)
     }
   }
+
+  // 키보드 이벤트 리스너 추가
+  useEffect(() => {
+    if (clickedStat !== null) {
+      document.addEventListener('keydown', handleKeyDown)
+      
+      // 5초 후 자동으로 아이콘들이 뭉치도록 타이머 설정
+      const timer = setTimeout(() => {
+        setClickedStat(null)
+      }, 5000)
+      
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown)
+        clearTimeout(timer)
+      }
+    }
+  }, [clickedStat])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
@@ -230,9 +246,9 @@ export default function IntroPage() {
 
         
 
-                                   {/* 하단 통계 섹션 */}
-          <div className="w-full max-w-5xl mb-12 md:mb-16">
-           <div className="relative" onClick={handleBackgroundClick}>
+                                                                       {/* 하단 통계 섹션 */}
+           <div className="w-full max-w-5xl mb-12 md:mb-16">
+            <div className="relative">
              {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
              <div className="relative h-64 md:h-80">
                {/* 첫 번째 행 */}
@@ -441,12 +457,18 @@ export default function IntroPage() {
                  </div>
                </div>
 
-               {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 (위치 조정 및 애니메이션 개선) */}
-               {clickedStat !== null && (
-                 <div className="absolute inset-0 flex items-center justify-center z-20" style={{ transform: 'translateY(-40px)' }}>
-                   <div className="relative group">
-                     {/* 메인 텍스트 상자 - 더 멋진 애니메이션 효과 추가 */}
-                     <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-52 md:w-60 h-32 md:h-36 flex items-center justify-center relative overflow-hidden animate-text-box-appear">
+                               {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 (위치 조정 및 애니메이션 개선) */}
+                {clickedStat !== null && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center z-20" style={{ transform: 'translateY(-40px)' }}>
+                    {/* 안내 텍스트 */}
+                    <div className="text-center mb-4">
+                      <p className="text-white/60 text-xs mb-2">ESC 키를 누르거나 5초 후 자동으로 닫힙니다</p>
+                    </div>
+                    
+                                        {/* 메인 텍스트 상자 */}
+                    <div className="relative group">
+                      {/* 메인 텍스트 상자 - 더 멋진 애니메이션 효과 추가 */}
+                      <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-52 md:w-60 h-32 md:h-36 flex items-center justify-center relative overflow-hidden animate-text-box-appear">
                        {/* 내부 그라데이션 오버레이 */}
                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 rounded-3xl" />
                        
