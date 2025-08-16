@@ -447,7 +447,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-32 md:p-48 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-48 md:p-64 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white mx-auto mb-3"></div>
           <p className="text-white/70 text-sm">학습한 용어를 불러오는 중...</p>

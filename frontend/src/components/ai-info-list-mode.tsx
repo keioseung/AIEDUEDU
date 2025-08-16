@@ -197,7 +197,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 로딩 중이거나 데이터가 아직 없는 경우 계속 로딩 표시
   if (isLoading || actualAIInfo.length === 0) {
     return (
-      <div className="glass rounded-2xl p-32 md:p-48 min-h-[80vh] flex items-center justify-center">
+      <div className="glass rounded-2xl p-48 md:p-64 min-h-[80vh] flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <p className="text-white/70 text-lg mb-2">AI 정보를 불러오는 중...</p>
