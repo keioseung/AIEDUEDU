@@ -520,7 +520,7 @@ export default function DashboardPage() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <main className="flex-1 pb-8 md:pb-12">
+      <main className="flex-1 py-48 md:py-64 lg:py-80">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
@@ -532,27 +532,27 @@ export default function DashboardPage() {
             <section className="mb-8 md:mb-16">
               {/* AI 정보 모드 선택 */}
               <div className="flex justify-center mb-6">
-                <div className="glass backdrop-blur-xl rounded-2xl p-2 shadow-xl border border-white/10">
-                  <div className="flex gap-2">
+                <div className="glass backdrop-blur-xl rounded-2xl p-1.5 shadow-xl border border-white/10">
+                  <div className="flex gap-1.5">
                     <button
                       onClick={() => setAiInfoMode('date')}
-                      className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                      className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
                         aiInfoMode === 'date'
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
                       }`}
                     >
-                      📅 날짜별 모드
+                      📅 날짜별
                     </button>
                     <button
                       onClick={() => setAiInfoMode('list')}
-                      className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                      className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
                         aiInfoMode === 'list'
-                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg transform scale-105'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
                       }`}
                     >
-                      📚 전체 목록 모드
+                      📚 전체목록
                     </button>
                   </div>
                 </div>

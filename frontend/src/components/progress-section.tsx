@@ -312,7 +312,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
-            <div className="flex bg-white/10 rounded-lg p-1 relative z-20">
+            <div className="flex bg-white/10 backdrop-blur-xl rounded-xl p-1.5 border border-white/20 relative z-20">
               <button
                 type="button"
                 onClick={() => {
@@ -321,9 +321,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 onTouchStart={() => {
                   handlePeriodChange('week')
                 }}
-                className={`px-4 py-3 rounded-md text-sm font-medium transition-all cursor-pointer touch-manipulation min-w-[70px] min-h-[44px] relative z-30 ${
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
                   periodType === 'week'
-                    ? 'bg-blue-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
                     : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
                 }`}
                 style={{ 
@@ -345,9 +345,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 onTouchStart={() => {
                   handlePeriodChange('month')
                 }}
-                className={`px-4 py-3 rounded-md text-sm font-medium transition-all cursor-pointer touch-manipulation min-w-[70px] min-h-[44px] relative z-30 ${
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
                   periodType === 'month'
-                    ? 'bg-blue-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
                     : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
                 }`}
                 style={{ 
@@ -369,9 +369,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 onTouchStart={() => {
                   handlePeriodChange('custom')
                 }}
-                className={`px-4 py-3 rounded-md text-sm font-medium transition-all cursor-pointer touch-manipulation min-w-[70px] min-h-[44px] relative z-30 ${
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
                   periodType === 'custom'
-                    ? 'bg-blue-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
                     : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
                 }`}
                 style={{ 
@@ -461,21 +461,21 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-6"
+          className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
-              <BookOpen className="w-5 h-5 text-blue-400" />
-              <h3 className="text-white font-semibold">AI 정보 학습</h3>
+              <BookOpen className="w-4 h-4 text-blue-400" />
+              <h3 className="text-white font-semibold text-sm">AI 정보 학습</h3>
             </div>
-            <TrendingUp className="w-4 h-4 text-blue-400" />
+            <TrendingUp className="w-3 h-3 text-blue-400" />
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">
+              <span className="text-white/70 text-xs">
                 {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
               </span>
-              <span className="text-blue-400 font-bold text-lg">
+              <span className="text-blue-400 font-bold text-base">
                 {(() => {
                   // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
                   if (selectedDate && uniqueChartData.length > 0) {
@@ -489,12 +489,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">일별 총 정보 수</span>
-              <span className="text-blue-400 font-bold text-base">{totalAIInfo}</span>
+              <span className="text-white/70 text-xs">일별 총 정보 수</span>
+              <span className="text-blue-400 font-bold text-sm">{totalAIInfo}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">누적 총 학습 수</span>
-              <span className="text-white font-semibold">
+              <span className="text-white/70 text-xs">누적 총 학습 수</span>
+              <span className="text-white font-semibold text-sm">
                 {(() => {
                   // totalDaysData가 없으면 백엔드에서 직접 계산
                   let totalDays = totalDaysData?.total_days || 0
@@ -518,21 +518,21 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-6"
+          className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
-              <Target className="w-5 h-5 text-purple-400" />
-              <h3 className="text-white font-semibold">용어 학습</h3>
+              <Target className="w-4 h-4 text-purple-400" />
+              <h3 className="text-white font-semibold text-sm">용어 학습</h3>
             </div>
-            <TrendingUp className="w-4 h-4 text-purple-400" />
+            <TrendingUp className="w-3 h-3 text-purple-400" />
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">
+              <span className="text-white/70 text-xs">
                 {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
               </span>
-              <span className="text-purple-400 font-bold text-lg">
+              <span className="text-purple-400 font-bold text-base">
                 {(() => {
                   // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
                   if (selectedDate && uniqueChartData.length > 0) {
@@ -546,12 +546,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">일별 총 용어 수</span>
-              <span className="text-purple-400 font-bold text-base">{totalTerms}</span>
+              <span className="text-white/70 text-xs">일별 총 용어 수</span>
+              <span className="text-purple-400 font-bold text-sm">{totalTerms}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">누적 총 용어 수</span>
-              <span className="text-white font-semibold">
+              <span className="text-white/70 text-xs">누적 총 용어 수</span>
+              <span className="text-white font-semibold text-sm">
                 {(() => {
                   // totalDaysData가 없으면 백엔드에서 직접 계산
                   let totalDays = totalDaysData?.total_days || 0
@@ -575,21 +575,21 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-6"
+          className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
-              <BarChart3 className="w-5 h-5 text-green-400" />
-              <h3 className="text-white font-semibold">퀴즈 점수</h3>
+              <BarChart3 className="w-4 h-4 text-green-400" />
+              <h3 className="text-white font-semibold text-sm">퀴즈 점수</h3>
             </div>
-            <TrendingUp className="w-4 h-4 text-green-400" />
+            <TrendingUp className="w-3 h-3 text-green-400" />
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">
+              <span className="text-white/70 text-xs">
                 {selectedDate ? `${selectedDate} 누적 점수` : '오늘 누적 점수'}
               </span>
-              <span className="text-green-400 font-bold text-lg">
+              <span className="text-green-400 font-bold text-base">
                 {(() => {
                   // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
                   if (selectedDate && uniqueChartData.length > 0) {
@@ -603,10 +603,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">
+              <span className="text-white/70 text-xs">
                 {selectedDate ? `${selectedDate} 정답률` : '오늘 정답률'}
               </span>
-              <span className="text-white font-semibold">
+              <span className="text-white font-semibold text-sm">
                 {(() => {
                   // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
                   if (selectedDate && uniqueChartData.length > 0) {
@@ -620,8 +620,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">전체 누적</span>
-              <span className="text-white font-semibold">
+              <span className="text-white/70 text-xs">전체 누적</span>
+              <span className="text-white font-semibold text-sm">
                 {(() => {
                   const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
                   const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
