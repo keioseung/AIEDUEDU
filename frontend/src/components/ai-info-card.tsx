@@ -269,7 +269,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="glass card-hover p-4 md:p-8 lg:p-10 flex flex-col gap-4 md:gap-6 relative shadow-lg border border-purple-500/30 bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 backdrop-blur-2xl"
+      className="glass card-hover p-4 md:p-8 lg:p-10 flex flex-col gap-4 md:gap-6 relative shadow-lg border-2 border-purple-500/50 bg-gradient-to-br from-purple-900/40 via-purple-800/50 to-purple-900/40 backdrop-blur-2xl shadow-2xl shadow-purple-900/40"
     >
       {/* 헤더 */}
       <div className="flex items-start justify-between mb-3 md:mb-4">
