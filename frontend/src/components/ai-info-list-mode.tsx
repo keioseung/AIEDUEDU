@@ -194,20 +194,20 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     setSelectedInfo(null)
   }
 
-     // 로딩 중인 경우
-   if (isLoading) {
-     return (
-       <div className="glass rounded-2xl p-6 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
-         <div className="text-center text-white">
-           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
-           <div className="space-y-3">
-             <p className="text-white/80 text-xl font-medium">잠시만 기다려 주세요</p>
-             <p className="text-white/50 text-base">AI 정보를 불러오는 중입니다</p>
-           </div>
-         </div>
-       </div>
-     )
-   }
+           // 로딩 중인 경우
+    if (isLoading) {
+      return (
+        <div className="glass rounded-2xl p-6 min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+          <div className="text-center text-white">
+            <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-white mx-auto mb-8"></div>
+            <div className="space-y-4">
+              <p className="text-white/80 text-2xl font-medium">잠시만 기다려 주세요</p>
+              <p className="text-white/50 text-lg">AI 정보를 불러오는 중입니다</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
@@ -268,7 +268,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
         
                  {/* 필터 및 페이지 설정 */}
-         <div className="flex flex-col gap-4">
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
            {/* 정렬 및 즐겨찾기 - 1행 */}
            <div className="flex flex-wrap gap-3">
              {/* 고급스러운 정렬 옵션 */}
