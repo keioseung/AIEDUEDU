@@ -640,79 +640,88 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
              )}
             
                          {/* 정렬 및 필터 옵션 */}
-             <div className="flex flex-wrap gap-3">
-               {/* 고급스러운 정렬 옵션 */}
-               <div className="flex bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-1 border-2 border-purple-600/50 shadow-lg shadow-purple-900/30">
-                 <button
-                   onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
-                   onClick={() => setSortBy('date')}
-                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
-                     sortBy === 'date'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   🕒 최신순
-                 </button>
-                 <button
-                   onTouchStart={handleWebViewTouch(() => setSortBy('alphabet'))}
-                   onClick={() => setSortBy('alphabet')}
-                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
-                     sortBy === 'alphabet'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   🔤 가나다순
-                 </button>
-                 <button
-                   onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
-                   onClick={() => setSortBy('length')}
-                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
-                     sortBy === 'length'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   📏 길이순
-                 </button>
-               </div>
-               
+             <div className="flex flex-wrap gap-2">
+               {/* 정렬 옵션들 */}
                <button
-                 onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
-                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-                 className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[40px] min-w-[70px] touch-manipulation webview-button ${
-                   showFavoritesOnly
-                     ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
-                     : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
+                 onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
+                 onClick={() => setSortBy('date')}
+                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button ${
+                   sortBy === 'date'
+                     ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md ring-2 ring-purple-400/50 border border-purple-300/40'
+                     : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
                  }`}
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
-                 <Star className={`w-3 h-3 transition-all duration-300 ${
-                   showFavoritesOnly 
-                     ? 'text-yellow-400 drop-shadow-sm' 
-                     : 'text-white/30 border border-white/30 rounded-sm'
-                 }`} />
-                 즐겨찾기만
+                 🕒 최신순
                </button>
                
                <button
+                 onTouchStart={handleWebViewTouch(() => setSortBy('alphabet'))}
+                 onClick={() => setSortBy('alphabet')}
+                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button ${
+                   sortBy === 'alphabet'
+                     ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md ring-2 ring-purple-400/50 border border-purple-300/40'
+                     : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                 }`}
+                 style={{ WebkitTapHighlightColor: 'transparent' }}
+               >
+                 🔤 가나다순
+               </button>
+               
+               <button
+                 onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
+                 onClick={() => setSortBy('length')}
+                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button ${
+                   sortBy === 'length'
+                     ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md ring-2 ring-purple-400/50 border border-purple-300/40'
+                     : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                 }`}
+                 style={{ WebkitTapHighlightColor: 'transparent' }}
+               >
+                 📏 길이순
+               </button>
+               
+               {/* 즐겨찾기만 버튼 */}
+               <button
+                 onTouchStart={handleWebViewTouch(() => {
+                   if (isProcessing) return
+                   setIsProcessing(true)
+                   setShowFavoritesOnly(!showFavoritesOnly)
+                   setTimeout(() => setIsProcessing(false), 300)
+                 })}
+                 onClick={() => {
+                   if (isProcessing) return
+                   setIsProcessing(true)
+                   setShowFavoritesOnly(!showFavoritesOnly)
+                   setTimeout(() => setIsProcessing(false), 300)
+                 }}
+                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button flex items-center gap-2 ${
+                   showFavoritesOnly
+                     ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md ring-2 ring-green-400/30 border border-green-300/40'
+                     : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
+                 }`}
+                 style={{ WebkitTapHighlightColor: 'transparent' }}
+               >
+                 <Star className={`w-3 h-3 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} />
+                 즐겨찾기만
+               </button>
+               
+               {/* 랜덤 버튼 */}
+               <button
                  onTouchStart={handleWebViewTouch(handleShuffle)}
                  onClick={handleShuffle}
-                 className="px-2 py-2 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[40px] min-w-[50px] touch-manipulation webview-button"
+                 className="px-3 py-2 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button flex items-center gap-2"
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Shuffle className="w-3 h-3" />
                  랜덤
                </button>
                
+               {/* 내보내기 버튼 */}
                <button
                  onTouchStart={handleWebViewTouch(exportTerms)}
                  onClick={exportTerms}
-                 className="px-2 py-2 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[40px] min-w-[50px] touch-manipulation webview-button"
+                 className="px-3 py-2 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button flex items-center gap-2"
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Download className="w-3 h-3" />
