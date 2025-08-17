@@ -308,16 +308,16 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     if (!showResult) {
       return selectedAnswer === index
         ? 'bg-gradient-to-r from-purple-600 to-violet-700 border-purple-500 text-white shadow-lg shadow-purple-600/40'
-        : 'bg-gradient-to-br from-slate-800 via-purple-900 to-slate-800 border-slate-600/40 text-white/90 shadow-md shadow-slate-900/30 hover:from-slate-700 hover:via-purple-800 hover:to-slate-700 hover:border-slate-500/60 hover:shadow-lg hover:shadow-slate-800/40 transition-all duration-300'
+        : 'bg-gradient-to-br from-purple-800/60 via-purple-700/70 to-purple-800/60 border-purple-600/50 text-white shadow-md shadow-purple-900/30 hover:from-purple-700/70 hover:via-purple-600/80 hover:to-purple-700/70 hover:border-purple-500/70 hover:shadow-lg hover:shadow-purple-800/40 transition-all duration-300'
     }
 
     if (index === currentQuiz?.correct) {
-      return 'bg-gradient-to-r from-emerald-600 to-green-700 border-emerald-500 text-white shadow-lg shadow-emerald-600/40'
+      return 'bg-gradient-to-r from-emerald-500 to-green-600 border-emerald-400 text-white shadow-lg shadow-emerald-500/30'
     }
     if (selectedAnswer === index && index !== currentQuiz?.correct) {
-      return 'bg-gradient-to-r from-rose-600 to-red-700 border-rose-500 text-white shadow-lg shadow-rose-600/40'
+      return 'bg-gradient-to-r from-rose-500 to-red-600 border-rose-400 text-white shadow-lg shadow-rose-500/30'
     }
-    return 'bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 border-slate-600/30 text-white/70 shadow-sm shadow-slate-900/20'
+    return 'bg-gradient-to-br from-purple-800/60 via-purple-700/70 to-purple-800/60 border-purple-600/50 text-white shadow-md shadow-purple-900/30'
   }
 
   const getScoreMessage = (percentage: number) => {
