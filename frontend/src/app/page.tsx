@@ -700,13 +700,7 @@ export default function IntroPage() {
         .animate-stat-fade-in {
           animation: stat-fade-in 1s ease-out both;
         }
-        @keyframes stat-glow {
-          0%, 100% { box-shadow: 0 0 15px rgba(147, 51, 234, 0.2); }
-          50% { box-shadow: 0 0 25px rgba(147, 51, 234, 0.4); }
-        }
-        .animate-stat-glow {
-          animation: stat-glow 3s ease-in-out infinite;
-        }
+
         
         /* 태그라인 애니메이션 */
         @keyframes tagline-fade {
