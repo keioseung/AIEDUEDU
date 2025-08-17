@@ -646,7 +646,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  <button
                    onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
                    onClick={() => setSortBy('date')}
-                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[36px] min-w-[50px] touch-manipulation webview-button ${
+                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
                      sortBy === 'date'
                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
@@ -658,7 +658,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  <button
                    onTouchStart={handleWebViewTouch(() => setSortBy('alphabet'))}
                    onClick={() => setSortBy('alphabet')}
-                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[36px] min-w-[50px] touch-manipulation webview-button ${
+                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
                      sortBy === 'alphabet'
                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
@@ -670,7 +670,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  <button
                    onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
                    onClick={() => setSortBy('length')}
-                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[36px] min-w-[50px] touch-manipulation webview-button ${
+                   className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
                      sortBy === 'length'
                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
@@ -684,7 +684,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                <button
                  onTouchStart={handleWebViewTouch(() => setShowFavoritesOnly(!showFavoritesOnly))}
                  onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-                 className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[36px] min-w-[70px] touch-manipulation webview-button ${
+                 className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[40px] min-w-[70px] touch-manipulation webview-button ${
                    showFavoritesOnly
                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
                      : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
@@ -702,7 +702,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                <button
                  onTouchStart={handleWebViewTouch(handleShuffle)}
                  onClick={handleShuffle}
-                 className="px-2 py-2 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[36px] min-w-[50px] touch-manipulation webview-button"
+                 className="px-2 py-2 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[40px] min-w-[50px] touch-manipulation webview-button"
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Shuffle className="w-3 h-3" />
@@ -712,7 +712,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                <button
                  onTouchStart={handleWebViewTouch(exportTerms)}
                  onClick={exportTerms}
-                 className="px-2 py-2 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[36px] min-w-[50px] touch-manipulation webview-button"
+                 className="px-2 py-2 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[40px] min-w-[50px] touch-manipulation webview-button"
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Download className="w-3 h-3" />
