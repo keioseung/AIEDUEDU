@@ -339,6 +339,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       {/* AI 정보 목록 */}
       <div className="space-y-4">
         {currentItems.map((info, index) => (
+                  <div className="bg-gradient-to-br from-purple-900/50 via-purple-800/60 to-purple-900/50 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-500/40 shadow-lg shadow-purple-900/30">
           <AIInfoCard
             key={info.id}
             info={{
@@ -352,6 +353,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             isLearned={false}
             onProgressUpdate={onProgressUpdate}
           />
+        </div>
         ))}
       </div>
 

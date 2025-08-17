@@ -159,11 +159,11 @@ export default function AuthPage() {
           </div>
 
           {/* 인증 카드 */}
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-purple-900/60 via-purple-800/70 to-purple-900/60 backdrop-blur-2xl rounded-2xl p-6 shadow-2xl border-2 border-purple-600/60 relative overflow-hidden shadow-purple-900/50">
             <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10">
               {/* 탭 메뉴 */}
-              <div className="flex mb-6 bg-white/10 rounded-xl p-1">
+              <div className="flex mb-6 bg-purple-900/40 rounded-xl p-1 border border-purple-500/30">
                 <button
                   className={`flex-1 py-2.5 px-3 rounded-lg font-bold text-sm transition-all duration-300 ${
                     tab === 'login' 
@@ -199,7 +199,7 @@ export default function AuthPage() {
                       placeholder="아이디를 입력하세요"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
-                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px]"
+                      className="w-full p-3 bg-purple-900/40 border-2 border-purple-500/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/70 transition-all text-sm min-h-[44px]"
                       style={{
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
@@ -209,7 +209,7 @@ export default function AuthPage() {
                         WebkitUserSelect: 'none',
                         userSelect: 'none',
                         fontSize: '16px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        backgroundColor: 'rgba(88, 28, 135, 0.4)',
                         transition: 'all 0.2s ease-in-out'
                       }}
                     />
