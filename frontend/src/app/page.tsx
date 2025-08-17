@@ -205,9 +205,9 @@ export default function IntroPage() {
               <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl animate-glow">
                 <FaRobot className="text-2xl md:text-3xl lg:text-4xl text-white" />
               </div>
-              <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
+              <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full" />
               {/* 빛나는 효과 */}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-2xl blur-xl animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-2xl blur-xl" />
             </div>
             <div className="text-center max-w-4xl mx-auto">
               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-3 md:mb-4 animate-text-glow mobile-text text-center">
@@ -578,28 +578,28 @@ export default function IntroPage() {
           50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
         }
         .animate-float {
-          animation: float 6s ease-in-out infinite;
+          animation: float 6s ease-in-out;
         }
         @keyframes bounce-slow {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-20px); }
         }
         .animate-bounce-slow {
-          animation: bounce-slow 3s infinite;
+          animation: bounce-slow 3s;
         }
         @keyframes blink {
           0%, 50% { opacity: 1; }
           51%, 100% { opacity: 0; }
         }
         .animate-blink {
-          animation: blink 1s infinite;
+          animation: blink 1s;
         }
         @keyframes fade-in-out {
           0%, 100% { opacity: 0; transform: translateY(10px); }
           20%, 80% { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in-out {
-          animation: fade-in-out 3s ease-in-out infinite;
+          animation: fade-in-out 3s ease-in-out;
         }
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(30px); }
@@ -615,14 +615,14 @@ export default function IntroPage() {
           75% { transform: translateX(5px) translateY(-5px); }
         }
         .animate-gradient-shift {
-          animation: gradient-shift 8s ease-in-out infinite;
+          animation: gradient-shift 8s ease-in-out;
         }
         @keyframes gradient-float {
           0%, 100% { transform: translateY(0) scale(1); }
           50% { transform: translateY(-20px) scale(1.1); }
         }
         .animate-gradient-float {
-          animation: gradient-float 6s ease-in-out infinite;
+          animation: gradient-float 6s ease-in-out;
         }
         @keyframes slide-down {
           0% { transform: translateY(-100vh); opacity: 0; }
@@ -630,42 +630,42 @@ export default function IntroPage() {
           100% { transform: translateY(100vh); opacity: 0; }
         }
         .animate-slide-down {
-          animation: slide-down 4s linear infinite;
+          animation: slide-down 4s linear;
         }
         @keyframes glow {
           0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.3); }
           50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.6); }
         }
         .animate-glow {
-          animation: glow 3s ease-in-out infinite;
+          animation: glow 3s ease-in-out;
         }
         @keyframes text-glow {
           0%, 100% { filter: drop-shadow(0 0 10px rgba(147, 51, 234, 0.3)); }
           50% { filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.6)); }
         }
         .animate-text-glow {
-          animation: text-glow 4s ease-in-out infinite;
+          animation: text-glow 4s ease-in-out;
         }
         @keyframes button-glow {
           0%, 100% { box-shadow: 0 0 30px rgba(147, 51, 234, 0.2); }
           50% { box-shadow: 0 0 50px rgba(147, 51, 234, 0.4); }
         }
         .animate-button-glow {
-          animation: button-glow 3s ease-in-out infinite;
+          animation: button-glow 3s ease-in-out;
         }
         @keyframes card-float {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-10px); }
         }
         .animate-card-float {
-          animation: card-float 4s ease-in-out infinite;
+          animation: card-float 4s ease-in-out;
         }
         @keyframes icon-glow {
           0%, 100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
           50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
         }
         .animate-icon-glow {
-          animation: icon-glow 2s ease-in-out infinite;
+          animation: icon-glow 2s ease-in-out;
         }
         @keyframes stat-fade-in {
           from { opacity: 0; transform: translateY(20px); }
@@ -727,7 +727,7 @@ export default function IntroPage() {
           50% { transform: scale(1.05); opacity: 0.6; }
         }
         .animate-pulse-scale {
-          animation: pulse-scale 1s ease-in-out infinite;
+          animation: pulse-scale 1s ease-in-out;
         }
         
         @keyframes bounce-scale {
@@ -735,7 +735,7 @@ export default function IntroPage() {
           50% { transform: scale(1.2); }
         }
         .animate-bounce-scale {
-          animation: bounce-scale 0.6s ease-in-out infinite;
+          animation: bounce-scale 0.6s ease-in-out;
         }
         
         @keyframes slide-up {
@@ -760,7 +760,7 @@ export default function IntroPage() {
           }
         }
         .animate-aura-glow {
-          animation: aura-glow 2s ease-in-out infinite;
+          animation: aura-glow 2s ease-in-out;
         }
         
         @keyframes gradient-wave {
@@ -782,7 +782,7 @@ export default function IntroPage() {
           }
         }
         .animate-gradient-wave {
-          animation: gradient-wave 3s ease-in-out infinite;
+          animation: gradient-wave 3s ease-in-out;
         }
         
         @keyframes smooth-expand {
@@ -922,7 +922,7 @@ export default function IntroPage() {
           }
         }
         .animate-stat-border-glow {
-          animation: stat-border-glow 2s ease-in-out infinite;
+          animation: stat-border-glow 2s ease-in-out;
         }
         
         /* 새로운 텍스트 박스 애니메이션 */
@@ -1024,7 +1024,7 @@ export default function IntroPage() {
           }
         }
         .animate-floating-particle {
-          animation: floating-particle 3s ease-in-out infinite;
+          animation: floating-particle 3s ease-in-out;
         }
         
         /* 모바일 최적화 */

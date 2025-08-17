@@ -636,7 +636,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       </div>
 
       {/* 기간별 추이 그래프 - 기본 bar chart 복원 */}
-      <div className="space-y-4 px-3 md:px-4">
+      <div className="space-y-4 px-0">
         <div className="flex items-center justify-between">
           <h3 className="text-white font-semibold text-base ml-1">기간별 학습 추이</h3>
           <div className="text-white/60 text-xs mr-2">
@@ -677,8 +677,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
-                      {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 128/5}} className="font-medium">{v}%</div>
+                      {[100, 80, 60, 40, 20, 0].map((v, i) => (
+                        <div key={v} style={{height: 128/5, lineHeight: '128px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
@@ -748,8 +748,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/50 select-none" style={{height: 96}}>
-                      {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 96/5}} className="font-medium">{v}%</div>
+                      {[100, 80, 60, 40, 20, 0].map((v, i) => (
+                        <div key={v} style={{height: 96/5, lineHeight: '96px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
@@ -819,8 +819,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/50 select-none" style={{height: 96}}>
-                      {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 96/5}} className="font-medium">{v}%</div>
+                      {[100, 80, 60, 40, 20, 0].map((v, i) => (
+                        <div key={v} style={{height: 96/5, lineHeight: '96px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
