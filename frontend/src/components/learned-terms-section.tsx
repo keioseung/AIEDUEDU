@@ -279,6 +279,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
     }
   }
 
+  // 안전한 랜덤 함수 (중복 클릭 방지)
+  const handleShuffleSafe = () => {
+    if (isProcessing || filteredTerms.length === 0) return
+    setIsProcessing(true)
+    handleShuffle()
+    setTimeout(() => setIsProcessing(false), 300)
+  }
+
   // 용어 난이도 계산 (용어 길이 기반)
   const getDifficulty = (term: string) => {
     if (term.length <= 3) return { level: '초급', color: 'text-green-400', bg: 'bg-green-500/20' }
@@ -288,23 +296,40 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   // 용어 목록 내보내기
   const exportTerms = () => {
-    const data = filteredTerms.map(term => ({
-      용어: term.term,
-      설명: term.description,
-      학습일: term.learned_date,
-      난이도: getDifficulty(term.term).level
-    }))
+    if (filteredTerms.length === 0) return
     
-    const csv = [
-      Object.keys(data[0]).join(','),
-      ...data.map(row => Object.values(row).map(v => `"${v}"`).join(','))
-    ].join('\n')
-    
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = `학습용어_${new Date().toISOString().split('T')[0]}.csv`
-    link.click()
+    try {
+      const data = filteredTerms.map(term => ({
+        용어: term.term,
+        설명: term.description,
+        학습일: term.learned_date,
+        난이도: getDifficulty(term.term).level
+      }))
+      
+      const csv = [
+        Object.keys(data[0]).join(','),
+        ...data.map(row => Object.values(row).map(v => `"${v}"`).join(','))
+      ].join('\n')
+      
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = `학습용어_${new Date().toISOString().split('T')[0]}.csv`
+      link.click()
+      
+      // 메모리 정리
+      URL.revokeObjectURL(link.href)
+    } catch (error) {
+      console.error('내보내기 오류:', error)
+    }
+  }
+
+  // 안전한 내보내기 함수 (중복 클릭 방지)
+  const exportTermsSafe = () => {
+    if (isProcessing) return
+    setIsProcessing(true)
+    exportTerms()
+    setTimeout(() => setIsProcessing(false), 500)
   }
 
   // 웹뷰 터치 이벤트 핸들러
@@ -708,8 +733,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                
                {/* 랜덤 버튼 */}
                <button
-                 onTouchStart={handleWebViewTouch(handleShuffle)}
-                 onClick={handleShuffle}
+                 onTouchStart={handleWebViewTouch(handleShuffleSafe)}
+                 onClick={handleShuffleSafe}
                  className="px-3 py-2 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button flex items-center gap-2"
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
@@ -719,8 +744,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                
                {/* 내보내기 버튼 */}
                <button
-                 onTouchStart={handleWebViewTouch(exportTerms)}
-                 onClick={exportTerms}
+                 onTouchStart={handleWebViewTouch(exportTermsSafe)}
+                 onClick={exportTermsSafe}
                  className="px-3 py-2 bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button flex items-center gap-2"
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
