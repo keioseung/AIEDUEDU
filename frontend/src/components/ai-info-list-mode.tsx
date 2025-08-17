@@ -311,7 +311,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                </button>
              </div>
              
-             {/* 즐겨찾기 버튼 */}
+             {/* 즐겨찾기 버튼 - 정렬 버튼 박스 오른쪽에 별도 배치 */}
              <button
                onTouchStart={handleWebViewTouch(() => {
                  if (isProcessing) return
