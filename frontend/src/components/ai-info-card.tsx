@@ -269,7 +269,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="glass card-hover p-4 md:p-8 lg:p-10 flex flex-col gap-4 md:gap-6 relative shadow-lg border-2 border-purple-600/60 bg-gradient-to-br from-purple-900/60 via-purple-800/70 to-purple-900/60 backdrop-blur-2xl shadow-2xl shadow-purple-900/50"
+      className="glass card-hover p-4 md:p-8 lg:p-10 flex flex-col gap-4 md:gap-6 relative shadow-lg border-2 border-purple-700/70 bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl shadow-2xl shadow-purple-900/60"
     >
       {/* 헤더 */}
       <div className="flex items-start justify-between mb-3 md:mb-4">
@@ -343,7 +343,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="bg-gradient-to-br from-purple-900/50 via-purple-800/60 to-purple-900/50 backdrop-blur-xl rounded-xl p-3 md:p-4 border-2 border-purple-500/40 shadow-lg shadow-purple-900/30"
+                className="bg-gradient-to-br from-purple-950/70 via-purple-900/80 to-purple-950/70 backdrop-blur-xl rounded-xl p-3 md:p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}

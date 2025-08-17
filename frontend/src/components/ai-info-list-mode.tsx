@@ -197,7 +197,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 로딩 중인 경우
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
           <div className="space-y-3">
@@ -212,7 +212,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
         <div className="text-center text-white">
           <div className="w-16 h-16 mx-auto mb-4 opacity-60">
             <FaRobot className="w-full h-full text-blue-400" />
@@ -233,7 +233,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   }
 
   return (
-    <div className="glass rounded-2xl p-6 flex flex-col gap-6 bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
+    <div className="glass rounded-2xl p-6 flex flex-col gap-6 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -339,7 +339,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       {/* AI 정보 목록 */}
       <div className="space-y-4">
         {currentItems.map((info, index) => (
-                  <div className="bg-gradient-to-br from-purple-900/50 via-purple-800/60 to-purple-900/50 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-500/40 shadow-lg shadow-purple-900/30">
+                  <div className="bg-gradient-to-br from-purple-950/70 via-purple-900/80 to-purple-950/70 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40">
           <AIInfoCard
             key={info.id}
             info={{

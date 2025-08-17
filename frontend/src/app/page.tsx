@@ -262,9 +262,9 @@ export default function IntroPage() {
                        <div className="w-full max-w-5xl mb-12 md:mb-16">
              <div className="relative">
               {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
-              <div className="relative h-64 md:h-80">
+              <div className="relative h-72 md:h-96">
                {/* 첫 번째 행 */}
-               <div className="flex items-center justify-center gap-3 md:gap-4 mb-3 md:mb-4">
+               <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
                  {/* 첫 번째 아이콘 - AI 정보 */}
                  <div 
                    className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
@@ -277,10 +277,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-16 h-16 md:w-20 md:h-20 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 0 ? 'animate-stat-glow' : ''
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
+                       clickedStat === 0 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
                      }`}>
-                       <FaBrain className="text-purple-300 text-2xl md:text-4xl" />
+                       <FaBrain className="text-purple-300 text-3xl md:text-5xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -339,10 +339,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-16 h-16 md:w-20 md:h-20 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 1 ? 'animate-stat-glow' : ''
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
+                       clickedStat === 1 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
                      }`}>
-                       <FaRocket className="text-purple-300 text-2xl md:text-4xl" />
+                       <FaRocket className="text-purple-300 text-3xl md:text-5xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -391,7 +391,7 @@ export default function IntroPage() {
                </div>
 
                {/* 두 번째 행 */}
-               <div className="flex items-center justify-center gap-3 md:gap-4">
+               <div className="flex items-center justify-center gap-4 md:gap-6">
                                    {/* 세 번째 아이콘 - 실전 퀴즈 */}
                   <div 
                     className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
@@ -404,10 +404,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-16 h-16 md:w-20 md:h-20 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 2 ? 'animate-stat-glow' : ''
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
+                       clickedStat === 2 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
                      }`}>
-                       <FaChartLine className="text-purple-300 text-2xl md:text-4xl" />
+                       <FaChartLine className="text-purple-300 text-3xl md:text-5xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -466,10 +466,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-16 h-16 md:w-20 md:h-20 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 3 ? 'animate-stat-glow' : ''
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
+                       clickedStat === 3 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
                      }`}>
-                       <FaTrophy className="text-purple-300 text-2xl md:text-4xl" />
+                       <FaTrophy className="text-purple-300 text-3xl md:text-5xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
