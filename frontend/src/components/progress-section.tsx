@@ -498,8 +498,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
            </div>
          </div>
          
-         {/* 기간 선택 */}
-         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between relative z-10 px-4 md:px-6">
+                   {/* 기간 선택 */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between relative z-10">
            <div className="flex items-center gap-4">
              <div className="flex items-center gap-2">
                <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
@@ -581,9 +581,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
            </div>
          </div>
          
-         {/* 사용자 정의 기간 설정 - 별도 라인에 배치 */}
-         {periodType === 'custom' && (
-           <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50 mx-4 md:mx-6">
+                   {/* 사용자 정의 기간 설정 - 별도 라인에 배치 */}
+          {periodType === 'custom' && (
+            <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50">
              <div className="text-center">
                <span className="text-white/80 text-sm font-medium">사용자 정의 기간 설정</span>
              </div>
