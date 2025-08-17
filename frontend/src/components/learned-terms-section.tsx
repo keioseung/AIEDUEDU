@@ -695,13 +695,13 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  <button
                    onTouchStart={handleWebViewTouch(() => setShowSortDropdown(!showSortDropdown))}
                    onClick={() => setShowSortDropdown(!showSortDropdown)}
-                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-4 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 w-full min-h-[44px]"
+                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-3 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 w-full min-h-[44px]"
                    style={{ WebkitTapHighlightColor: 'transparent' }}
                  >
                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                    <span className="relative z-10 flex items-center gap-2">
                      <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
-                     <span className="text-sm">정렬순</span>
+                     <span className="text-xs">정렬순</span>
                    </span>
                  </button>
 
@@ -766,7 +766,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                              setShowSortDropdown(false)
                            }}
                            className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
-                             sortBy === 'date'
+                             sortBy === 'alphabet'
                                ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
                                : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
                            }`}
@@ -847,7 +847,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                    setShowFavoritesOnly(!showFavoritesOnly)
                    setTimeout(() => setIsProcessing(false), 300)
                  }}
-                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
+                 className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[80px] webview-button flex items-center justify-center gap-2 ${
                    showFavoritesOnly
                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg ring-2 ring-green-400/30 border border-green-300/40'
                      : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
@@ -855,14 +855,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
-                 즐겨찾기만
+                 <span className="text-xs">즐겨찾기만</span>
                </button>
                
                {/* 랜덤 버튼 */}
                <button
                  onTouchStart={handleWebViewTouch(handleShuffleSafe)}
                  onClick={handleShuffleSafe}
-                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
+                 className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[70px] webview-button flex items-center justify-center gap-2 ${
                    isShuffling
                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg ring-2 ring-blue-400/30 border border-blue-300/40'
                      : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
@@ -870,14 +870,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Shuffle className="w-3.5 h-3.5" />
-                 랜덤
+                 <span className="text-xs">랜덤</span>
                </button>
                
                {/* 내보내기 버튼 */}
                <button
                  onTouchStart={handleWebViewTouch(exportTermsSafe)}
                  onClick={exportTermsSafe}
-                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
+                 className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[80px] webview-button flex items-center justify-center gap-2 ${
                    isExporting
                      ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg ring-2 ring-emerald-400/30 border border-emerald-300/40'
                      : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
@@ -885,7 +885,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Download className="w-3.5 h-3.5" />
-                 내보내기
+                 <span className="text-xs">내보내기</span>
                </button>
              </div>
           </motion.div>

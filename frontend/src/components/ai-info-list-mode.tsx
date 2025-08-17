@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { Settings, ChevronRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import AIInfoCard from './ai-info-card'
@@ -30,6 +31,26 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [showSortDropdown, setShowSortDropdown] = useState(false)
+  const [showItemsPerPageDropdown, setShowItemsPerPageDropdown] = useState(false)
+
+  // 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showSortDropdown) {
+        setShowSortDropdown(false)
+      }
+      if (showItemsPerPageDropdown) {
+        setShowItemsPerPageDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showSortDropdown, showItemsPerPageDropdown])
+
 
   // 웹뷰 터치 이벤트 핸들러
   const handleWebViewTouch = (callback: (e?: React.TouchEvent) => void) => (e: React.TouchEvent) => {
@@ -268,44 +289,147 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
          <div className="flex flex-col gap-4">
                        {/* 정렬 및 즐겨찾기 - 검색창 너비에 맞춰 배치 */}
             <div className="flex justify-between items-center gap-3">
-              {/* 고급스러운 정렬 옵션 */}
-              <div className="flex bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-1 border-2 border-purple-600/50 shadow-lg shadow-purple-900/30">
+              {/* 정렬순 드롭다운 버튼 */}
+              <div className="relative flex-1 max-w-[200px]">
                 <button
-                  onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
-                  onClick={() => setSortBy('date')}
-                  className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
-                    sortBy === 'date'
-                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                  }`}
+                  onTouchStart={handleWebViewTouch(() => setShowSortDropdown(!showSortDropdown))}
+                  onClick={() => setShowSortDropdown(!showSortDropdown)}
+                  className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-3 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 w-full min-h-[44px]"
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
-                  🕒 최신순
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
+                    <span className="text-xs">정렬순</span>
+                  </span>
                 </button>
-                <button
-                  onTouchStart={handleWebViewTouch(() => setSortBy('title'))}
-                  onClick={() => setSortBy('title')}
-                  className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
-                    sortBy === 'title'
-                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                  }`}
-                  style={{ WebkitTapHighlightColor: 'transparent' }}
-                >
-                  📝 제목순
-                </button>
-                <button
-                  onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
-                  onClick={() => setSortBy('length')}
-                  className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all duration-300 min-h-[40px] min-w-[50px] touch-manipulation webview-button ${
-                    sortBy === 'length'
-                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                  }`}
-                  style={{ WebkitTapHighlightColor: 'transparent' }}
-                >
-                  📏 길이순
-                </button>
+
+                {/* 정렬 옵션 드롭다운 */}
+                <AnimatePresence>
+                  {showSortDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-full mt-2 z-20 bg-gradient-to-br from-black/95 via-slate-900/98 to-black/95 backdrop-blur-2xl rounded-2xl p-3 border border-purple-500/40 shadow-xl shadow-black/60 w-full min-w-[200px]"
+                      style={{
+                        left: '0',
+                        right: '0'
+                      }}
+                    >
+                      <div className="text-center mb-2">
+                        <div className="text-white/95 text-xs font-semibold mb-1">정렬 옵션</div>
+                        <div className="w-full bg-white/20 rounded-full h-0.5">
+                          <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <button
+                          onClick={() => {
+                            setSortBy('date')
+                            setShowSortDropdown(false)
+                          }}
+                          className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
+                            sortBy === 'date'
+                              ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
+                              : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className={`font-semibold text-xs leading-tight flex items-center gap-2 ${
+                                sortBy === 'date'
+                                  ? 'text-emerald-100 group-hover:text-emerald-50'
+                                  : 'text-white group-hover:text-purple-200'
+                              } transition-colors`}>
+                                🕒 최신순
+                              </div>
+                              <div className={`text-xs mt-0.5 leading-tight ${
+                                sortBy === 'date'
+                                  ? 'text-emerald-100/80'
+                                  : 'text-white/90'
+                              }`}>
+                                날짜순 정렬
+                              </div>
+                            </div>
+                            <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                              <ChevronRight className="w-3 h-3 text-purple-300" />
+                            </div>
+                          </div>
+                        </button>
+                        
+                        <button
+                          onClick={() => {
+                            setSortBy('title')
+                            setShowSortDropdown(false)
+                          }}
+                          className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
+                            sortBy === 'title'
+                              ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
+                              : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className={`font-semibold text-xs leading-tight flex items-center gap-2 ${
+                                sortBy === 'title'
+                                  ? 'text-emerald-100 group-hover:text-emerald-50'
+                                  : 'text-white group-hover:text-purple-200'
+                              } transition-colors`}>
+                                📝 제목순
+                              </div>
+                              <div className={`text-xs mt-0.5 leading-tight ${
+                                sortBy === 'title'
+                                  ? 'text-emerald-100/80'
+                                  : 'text-white/90'
+                              }`}>
+                                제목순 정렬
+                              </div>
+                            </div>
+                            <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                              <ChevronRight className="w-3 h-3 text-purple-300" />
+                            </div>
+                          </div>
+                        </button>
+                        
+                        <button
+                          onClick={() => {
+                            setSortBy('length')
+                            setShowSortDropdown(false)
+                          }}
+                          className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
+                            sortBy === 'length'
+                              ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
+                              : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className={`font-semibold text-xs leading-tight flex items-center gap-2 ${
+                                sortBy === 'length'
+                                  ? 'text-emerald-100 group-hover:text-emerald-50'
+                                  : 'text-white group-hover:text-purple-200'
+                              } transition-colors`}>
+                                📏 길이순
+                              </div>
+                              <div className={`text-xs mt-0.5 leading-tight ${
+                                sortBy === 'length'
+                                  ? 'text-emerald-100/80'
+                                  : 'text-white/90'
+                              }`}>
+                                내용 길이순 정렬
+                              </div>
+                            </div>
+                            <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                              <ChevronRight className="w-3 h-3 text-purple-300" />
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               
               {/* 즐겨찾기 버튼 - 정렬 버튼 박스 오른쪽에 별도 배치 */}
@@ -322,47 +446,102 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                   setShowFavoritesOnly(!showFavoritesOnly)
                   setTimeout(() => setIsProcessing(false), 300)
                 }}
-                className={`px-2 py-2 rounded-lg text-[10px] font-medium transition-all flex items-center gap-2 min-h-[40px] min-w-[70px] touch-manipulation webview-button ${
+                className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
                   showFavoritesOnly
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg border border-green-400/50'
                     : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
                 }`}
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
-                <FaStar className={`w-3 h-3 transition-all duration-300 ${
+                <FaStar className={`w-3.5 h-3.5 transition-all duration-300 ${
                   showFavoritesOnly 
                     ? 'text-yellow-400 drop-shadow-sm' 
                     : 'text-white/30 border border-white/30 rounded-sm'
                 }`} />
-                즐겨찾기만
+                <span className="text-xs">즐겨찾기만</span>
               </button>
             </div>
            
                        {/* 페이지당 항목 수 선택 - 검색창 너비에 맞춰 배치 */}
             <div className="flex justify-between items-center gap-3">
               <span className="text-white/70 text-sm font-medium">페이지당 항목:</span>
-              <div className="flex gap-2">
-                {[10, 30, 50].map((size) => (
-                  <button
-                    key={size}
-                    onTouchStart={handleWebViewTouch(() => {
-                      setItemsPerPage(size)
-                      setCurrentPage(1)
-                    })}
-                    onClick={() => {
-                      setItemsPerPage(size)
-                      setCurrentPage(1)
-                    }}
-                    className={`px-4 py-2 rounded-lg text-xs font-medium transition-all min-h-[40px] min-w-[60px] touch-manipulation webview-button ${
-                      itemsPerPage === size
-                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
-                        : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
-                    }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    {size}개
-                  </button>
-                ))}
+              {/* 페이지당 항목 수 드롭다운 */}
+              <div className="relative">
+                <button
+                  onTouchStart={handleWebViewTouch(() => setShowItemsPerPageDropdown(!showItemsPerPageDropdown))}
+                  onClick={() => setShowItemsPerPageDropdown(!showItemsPerPageDropdown)}
+                  className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-3 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 min-h-[44px] min-w-[120px]"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
+                    <span className="text-xs">{itemsPerPage}개</span>
+                  </span>
+                </button>
+
+                {/* 페이지당 항목 수 옵션 드롭다운 */}
+                <AnimatePresence>
+                  {showItemsPerPageDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-full mt-2 z-20 bg-gradient-to-br from-black/95 via-slate-900/98 to-black/95 backdrop-blur-2xl rounded-2xl p-3 border border-purple-500/40 shadow-xl shadow-black/60 w-full min-w-[120px]"
+                      style={{
+                        left: '0',
+                        right: '0'
+                      }}
+                    >
+                      <div className="text-center mb-2">
+                        <div className="text-white/95 text-xs font-semibold mb-1">항목 수 선택</div>
+                        <div className="w-full bg-white/20 rounded-full h-0.5">
+                          <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        {[10, 30, 50].map((size) => (
+                          <button
+                            key={size}
+                            onClick={() => {
+                              setItemsPerPage(size)
+                              setCurrentPage(1)
+                              setShowItemsPerPageDropdown(false)
+                            }}
+                            className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
+                              itemsPerPage === size
+                                ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
+                                : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1 min-w-0">
+                                <div className={`font-semibold text-xs leading-tight flex items-center gap-2 ${
+                                  itemsPerPage === size
+                                    ? 'text-emerald-100 group-hover:text-emerald-50'
+                                    : 'text-white group-hover:text-purple-200'
+                                } transition-colors`}>
+                                  📄 {size}개
+                                </div>
+                                <div className={`text-xs mt-0.5 leading-tight ${
+                                  itemsPerPage === size
+                                    ? 'text-emerald-100/80'
+                                    : 'text-white/90'
+                                }`}>
+                                  페이지당 {size}개 표시
+                                </div>
+                              </div>
+                              <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                <ChevronRight className="w-3 h-3 text-purple-300" />
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
          </div>
