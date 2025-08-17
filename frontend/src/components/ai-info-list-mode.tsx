@@ -254,57 +254,86 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             placeholder="제목, 내용, 용어로 검색..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 shadow-lg shadow-purple-900/30"
+            className="w-full pl-10 pr-4 py-3 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 shadow-lg shadow-purple-900/30 backdrop-blur-xl"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="p-2 text-white/50 hover:text-white transition-colors"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-white/50 hover:text-white transition-colors"
             >
               <FaTimes className="w-5 h-5" />
             </button>
           )}
         </div>
         
-                 <div className="flex gap-2">
-           <select
-             value={sortBy}
-             onChange={(e) => {
-               const value = e.target.value
-               if (value === 'date' || value === 'title' || value === 'length') {
-                 setSortBy(value as 'date' | 'title' | 'length')
-               }
-             }}
-             className="px-4 py-3 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 min-h-[44px] min-w-[100px] cursor-pointer hover:from-purple-900/80 hover:via-purple-800/90 hover:to-purple-900/80 active:from-purple-900/90 active:via-purple-800/95 active:to-purple-900/90 transition-all shadow-lg shadow-purple-900/30"
-           >
-             <option value="date">🕒 최신순</option>
-             <option value="title">📝 제목순</option>
-             <option value="length">📏 길이순</option>
-           </select>
+        <div className="flex gap-2">
+          {/* 고급스러운 정렬 옵션 */}
+          <div className="flex bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-lg shadow-purple-900/30">
+            <button
+              onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
+              onClick={() => setSortBy('date')}
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
+                sortBy === 'date'
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                  : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+              }`}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+            >
+              🕒 최신순
+            </button>
+            <button
+              onTouchStart={handleWebViewTouch(() => setSortBy('title'))}
+              onClick={() => setSortBy('title')}
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
+                sortBy === 'title'
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                  : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+              }`}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+            >
+              📝 제목순
+            </button>
+            <button
+              onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
+              onClick={() => setSortBy('length')}
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
+                sortBy === 'length'
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                  : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+              }`}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+            >
+              📏 길이순
+            </button>
+          </div>
           
-          <button
-            onTouchStart={handleWebViewTouch(() => {
-              if (isProcessing) return
-              setIsProcessing(true)
-              setShowFavoritesOnly(!showFavoritesOnly)
-              setTimeout(() => setIsProcessing(false), 300)
-            })}
-            onClick={() => {
-              if (isProcessing) return
-              setIsProcessing(true)
-              setShowFavoritesOnly(!showFavoritesOnly)
-              setTimeout(() => setIsProcessing(false), 300)
-            }}
-            className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] touch-manipulation webview-button ${
-              showFavoritesOnly
-                ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
-                : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-            }`}
-            style={{ WebkitTapHighlightColor: 'transparent' }}
-          >
-            <FaStar className="w-4 h-4" />
-            즐겨찾기만
-          </button>
+                     <button
+             onTouchStart={handleWebViewTouch(() => {
+               if (isProcessing) return
+               setIsProcessing(true)
+               setShowFavoritesOnly(!showFavoritesOnly)
+               setTimeout(() => setIsProcessing(false), 300)
+             })}
+             onClick={() => {
+               if (isProcessing) return
+               setIsProcessing(true)
+               setShowFavoritesOnly(!showFavoritesOnly)
+               setTimeout(() => setIsProcessing(false), 300)
+             }}
+             className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] touch-manipulation webview-button ${
+               showFavoritesOnly
+                 ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
+                 : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
+             }`}
+             style={{ WebkitTapHighlightColor: 'transparent' }}
+           >
+             <FaStar className={`w-4 h-4 transition-colors duration-300 ${
+               showFavoritesOnly 
+                 ? 'text-yellow-400 drop-shadow-sm' 
+                 : 'text-transparent'
+             }`} />
+             즐겨찾기만
+           </button>
         </div>
       </div>
 
@@ -326,7 +355,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[60px] touch-manipulation webview-button ${
                 itemsPerPage === size
                   ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
-                  : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                  : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
               }`}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
@@ -337,23 +366,22 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       </div>
 
       {/* AI 정보 목록 */}
-      <div className="space-y-4">
+      <div className="space-y-4 w-full">
         {currentItems.map((info, index) => (
-                  <div className="bg-gradient-to-br from-purple-950/70 via-purple-900/80 to-purple-950/70 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40">
-          <AIInfoCard
-            key={info.id}
-            info={{
-              title: info.title,
-              content: info.content,
-              terms: info.terms
-            }}
-            index={info.info_index}
-            date={info.date}
-            sessionId={sessionId}
-            isLearned={false}
-            onProgressUpdate={onProgressUpdate}
-          />
-        </div>
+          <div key={info.id} className="w-full bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40">
+            <AIInfoCard
+              info={{
+                title: info.title,
+                content: info.content,
+                terms: info.terms
+              }}
+              index={info.info_index}
+              date={info.date}
+              sessionId={sessionId}
+              isLearned={false}
+              onProgressUpdate={onProgressUpdate}
+            />
+          </div>
         ))}
       </div>
 
@@ -366,8 +394,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             disabled={currentPage === 1}
             className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
               currentPage === 1
-                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-purple-800/20 via-purple-700/30 to-purple-800/20'
-                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/60 active:via-purple-700/70 active:to-purple-800/60'
+                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-slate-800/20 via-purple-700/30 to-slate-800/20'
+                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-slate-800/40 hover:via-purple-700/50 hover:to-slate-800/40 active:from-slate-800/60 active:via-purple-700/70 active:to-slate-800/60 backdrop-blur-xl'
             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
@@ -395,7 +423,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
                     currentPage === pageNum
                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
-                      : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                      : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
                   }`}
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
@@ -411,8 +439,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             disabled={currentPage === totalPages}
             className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
               currentPage === totalPages
-                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-purple-800/20 via-purple-700/30 to-purple-800/20'
-                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/60 active:via-purple-700/70 active:to-purple-800/60'
+                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-slate-800/20 via-purple-700/30 to-slate-800/20'
+                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-slate-800/40 hover:via-purple-700/50 hover:to-slate-800/40 active:from-slate-800/60 active:via-purple-700/70 active:to-slate-800/60 backdrop-blur-xl'
             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >

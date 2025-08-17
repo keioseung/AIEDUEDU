@@ -306,153 +306,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   return (
     <div className="space-y-8 relative">
-      {/* 기간 선택 */}
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between relative z-10 px-4 md:px-6">
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
-                         <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50 relative z-20">
-              <button
-                type="button"
-                onClick={() => {
-                  handlePeriodChange('week')
-                }}
-                onTouchStart={() => {
-                  handlePeriodChange('week')
-                }}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                  periodType === 'week'
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                    : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                }`}
-                style={{ 
-                  WebkitTapHighlightColor: 'transparent',
-                  WebkitTouchCallout: 'none',
-                  WebkitUserSelect: 'none',
-                  userSelect: 'none',
-                  position: 'relative',
-                  zIndex: 9999
-                }}
-              >
-                주간
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  handlePeriodChange('month')
-                }}
-                onTouchStart={() => {
-                  handlePeriodChange('month')
-                }}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                  periodType === 'month'
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                    : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                }`}
-                style={{ 
-                  WebkitTapHighlightColor: 'transparent',
-                  WebkitTouchCallout: 'none',
-                  WebkitUserSelect: 'none',
-                  userSelect: 'none',
-                  position: 'relative',
-                  zIndex: 9999
-                }}
-              >
-                월간
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  handlePeriodChange('custom')
-                }}
-                onTouchStart={() => {
-                  handlePeriodChange('custom')
-                }}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                  periodType === 'custom'
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                    : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                }`}
-                style={{ 
-                  WebkitTapHighlightColor: 'transparent',
-                  WebkitTouchCallout: 'none',
-                  WebkitUserSelect: 'none',
-                  userSelect: 'none',
-                  position: 'relative',
-                  zIndex: 9999
-                }}
-              >
-                사용자
-              </button>
-            </div>
-          </div>
-        </div>
-
-                 {/* 사용자 정의 기간 설정 - 별도 라인에 배치 */}
-         {periodType === 'custom' && (
-           <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50">
-            <div className="text-center">
-              <span className="text-white/80 text-sm font-medium">사용자 정의 기간 설정</span>
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="w-full">
-                <label className="block text-white/70 text-xs font-medium mb-2">
-                  📅 시작일
-                </label>
-                <input
-                  type="date"
-                  value={customStartDate}
-                  onChange={(e) => {
-                    handleCustomStartDateChange(e.target.value)
-                  }}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation relative z-30"
-                  style={{ 
-                    minHeight: '44px',
-                    WebkitAppearance: 'none',
-                    MozAppearance: 'none',
-                    position: 'relative',
-                    zIndex: 9999
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-center">
-                <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
-                <span className="text-white/50 text-xs mx-2">↓</span>
-                <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
-              </div>
-              <div className="w-full">
-                <label className="block text-white/70 text-xs font-medium mb-2">
-                  📅 종료일
-                </label>
-                <input
-                  type="date"
-                  value={customEndDate}
-                  onChange={(e) => {
-                    handleCustomEndDateChange(e.target.value)
-                  }}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation relative z-30"
-                  style={{ 
-                    minHeight: '44px',
-                    WebkitAppearance: 'none',
-                    MozAppearance: 'none',
-                    position: 'relative',
-                    zIndex: 9999
-                  }}
-                />
-              </div>
-            </div>
-            <div className="text-center">
-              <span className="text-white/50 text-xs">
-                {customStartDate && customEndDate ? 
-                  `${customStartDate} ~ ${customEndDate}` : 
-                  '시작일과 종료일을 선택해주세요'
-                }
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
+      
 
       {/* 전체 통계 카드 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -635,14 +489,161 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         </motion.div>
       </div>
 
-      {/* 기간별 추이 그래프 - 기본 bar chart 복원 */}
-      <div className="space-y-4 px-0">
-        <div className="flex items-center justify-between">
-          <h3 className="text-white font-semibold text-base ml-1">기간별 학습 추이</h3>
-          <div className="text-white/60 text-xs mr-2">
-            {periodStats?.start_date} ~ {periodStats?.end_date}
-          </div>
-        </div>
+             {/* 기간별 추이 그래프 - 기본 bar chart 복원 */}
+       <div className="space-y-4 px-0">
+         <div className="flex items-center justify-between">
+           <h3 className="text-white font-semibold text-base ml-1">기간별 학습 추이</h3>
+           <div className="text-white/60 text-xs mr-2">
+             {periodStats?.start_date} ~ {periodStats?.end_date}
+           </div>
+         </div>
+         
+         {/* 기간 선택 */}
+         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between relative z-10 px-4 md:px-6">
+           <div className="flex items-center gap-4">
+             <div className="flex items-center gap-2">
+               <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
+               <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50 relative z-20">
+                 <button
+                   type="button"
+                   onClick={() => {
+                     handlePeriodChange('week')
+                   }}
+                   onTouchStart={() => {
+                     handlePeriodChange('week')
+                   }}
+                   className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                     periodType === 'week'
+                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                   }`}
+                   style={{ 
+                     WebkitTapHighlightColor: 'transparent',
+                     WebkitTouchCallout: 'none',
+                     WebkitUserSelect: 'none',
+                     userSelect: 'none',
+                     position: 'relative',
+                     zIndex: 9999
+                   }}
+                 >
+                   주간
+                 </button>
+                 <button
+                   type="button"
+                   onClick={() => {
+                     handlePeriodChange('month')
+                   }}
+                   onTouchStart={() => {
+                     handlePeriodChange('month')
+                   }}
+                   className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                     periodType === 'month'
+                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                   }`}
+                   style={{ 
+                     WebkitTapHighlightColor: 'transparent',
+                     WebkitTouchCallout: 'none',
+                     WebkitUserSelect: 'none',
+                     userSelect: 'none',
+                     position: 'relative',
+                     zIndex: 9999
+                   }}
+                 >
+                   월간
+                 </button>
+                 <button
+                   type="button"
+                   onClick={() => {
+                     handlePeriodChange('custom')
+                   }}
+                   onTouchStart={() => {
+                     handlePeriodChange('custom')
+                   }}
+                   className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                     periodType === 'custom'
+                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                   }`}
+                   style={{ 
+                     WebkitTapHighlightColor: 'transparent',
+                     WebkitTouchCallout: 'none',
+                     WebkitUserSelect: 'none',
+                     userSelect: 'none',
+                     position: 'relative',
+                     zIndex: 9999
+                   }}
+                 >
+                   사용자
+                 </button>
+               </div>
+             </div>
+           </div>
+         </div>
+         
+         {/* 사용자 정의 기간 설정 - 별도 라인에 배치 */}
+         {periodType === 'custom' && (
+           <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50 mx-4 md:mx-6">
+             <div className="text-center">
+               <span className="text-white/80 text-sm font-medium">사용자 정의 기간 설정</span>
+             </div>
+             <div className="flex flex-col gap-3">
+               <div className="w-full">
+                 <label className="block text-white/70 text-xs font-medium mb-2">
+                   📅 시작일
+                 </label>
+                 <input
+                   type="date"
+                   value={customStartDate}
+                   onChange={(e) => {
+                     handleCustomStartDateChange(e.target.value)
+                   }}
+                   className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation relative z-30"
+                   style={{ 
+                     minHeight: '44px',
+                     WebkitAppearance: 'none',
+                     MozAppearance: 'none',
+                     position: 'relative',
+                     zIndex: 9999
+                   }}
+                 />
+               </div>
+               <div className="flex items-center justify-center">
+                 <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
+                 <span className="text-white/50 text-xs mx-2">↓</span>
+                 <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
+               </div>
+               <div className="w-full">
+                 <label className="block text-white/70 text-xs font-medium mb-2">
+                   📅 종료일
+                 </label>
+                 <input
+                   type="date"
+                   value={customEndDate}
+                   onChange={(e) => {
+                     handleCustomEndDateChange(e.target.value)
+                   }}
+                   className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation relative z-30"
+                   style={{ 
+                     minHeight: '44px',
+                     WebkitAppearance: 'none',
+                     MozAppearance: 'none',
+                     position: 'relative',
+                     zIndex: 9999
+                   }}
+                 />
+               </div>
+             </div>
+             <div className="text-center">
+               <span className="text-white/50 text-xs">
+                 {customStartDate && customEndDate ? 
+                   `${customStartDate} ~ ${customEndDate}` : 
+                   '시작일과 종료일을 선택해주세요'
+                 }
+               </span>
+             </div>
+           </div>
+         )}
         <div className="glass rounded-xl p-2 md:p-3">
           {periodStatsLoading ? (
             <div className="text-center text-white/60 py-12">
@@ -655,7 +656,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             
             return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
           })() ? (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-2">
               {/* AI 정보 추이 */}
               <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl">
                 <div className="flex items-center justify-between mb-4">
@@ -686,10 +687,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 96; // Y축 높이와 동일
-                        const effectiveMaxAI = maxAI > 0 ? maxAI : 100; // 최대값을 100으로 설정
-                        const aiHeight = Math.min(Math.max((data.ai_info / 100) * barMaxHeight, data.ai_info > 0 ? 3 : 0), barMaxHeight);
-                        const isFullAI = data.ai_info >= 100;
-                        const percent = Math.min(Math.round(data.ai_info), 100);
+                        // AI 정보는 실제 개수 기준으로 계산 (예: 2개 = 100%)
+                        const maxAICount = Math.max(...uniqueChartData.map(d => d.ai_info), 1);
+                        const aiHeight = Math.min(Math.max((data.ai_info / maxAICount) * barMaxHeight, data.ai_info > 0 ? 3 : 0), barMaxHeight);
+                        const isFullAI = data.ai_info >= maxAICount;
+                        const percent = Math.min(Math.round((data.ai_info / maxAICount) * 100), 100);
                         return (
                           <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
@@ -757,9 +759,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 96; // Y축 높이와 동일
-                        const termsHeight = Math.min(Math.max((data.terms / 100) * barMaxHeight, data.terms > 0 ? 3 : 0), barMaxHeight);
-                        const isFullTerms = data.terms >= 100;
-                        const percent = Math.min(Math.round(data.terms), 100);
+                        // 용어는 실제 개수 기준으로 계산
+                        const maxTermsCount = Math.max(...uniqueChartData.map(d => d.terms), 1);
+                        const termsHeight = Math.min(Math.max((data.terms / maxTermsCount) * barMaxHeight, data.terms > 0 ? 3 : 0), barMaxHeight);
+                        const isFullTerms = data.terms >= maxTermsCount;
+                        const percent = Math.min(Math.round((data.terms / maxTermsCount) * 100), 100);
                         return (
                           <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
@@ -827,9 +831,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
                         const barMaxHeight = 96; // Y축 높이와 동일
-                        const quizHeight = Math.min(Math.max((data.quiz_score / 100) * barMaxHeight, data.quiz_score > 0 ? 3 : 0), barMaxHeight);
-                        const isFullQuiz = data.quiz_score >= 100;
-                        const percent = Math.min(Math.round(data.quiz_score), 100);
+                        // 퀴즈는 실제 점수 기준으로 계산
+                        const maxQuizScore = Math.max(...uniqueChartData.map(d => d.quiz_score), 1);
+                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuizScore) * barMaxHeight, data.quiz_score > 0 ? 3 : 0), barMaxHeight);
+                        const isFullQuiz = data.quiz_score >= maxQuizScore;
+                        const percent = Math.min(Math.round((data.quiz_score / maxQuizScore) * 100), 100);
                         return (
                           <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
