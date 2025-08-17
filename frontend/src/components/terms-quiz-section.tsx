@@ -475,10 +475,10 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
       {/* 로딩 상태 */}
       {isLoading && (
-        <div className="glass rounded-3xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
+        <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
           <div className="text-center text-white">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
-            <p className="text-white/90 text-xl font-semibold whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
           </div>
         </div>
       )}

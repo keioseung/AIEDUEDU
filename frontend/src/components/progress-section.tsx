@@ -646,9 +646,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
          )}
         <div className="glass rounded-xl p-2 md:p-3">
           {periodStatsLoading ? (
-            <div className="text-center text-white/60 py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
-              <p>학습 데이터를 불러오는 중...</p>
+            <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
+              <div className="text-center text-white">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
+              </div>
             </div>
           ) : (() => {
             const chartData = periodStats?.period_data || []

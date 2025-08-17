@@ -197,13 +197,10 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                                                // 로딩 중인 경우
       if (isLoading) {
         return (
-          <div className="glass rounded-2xl p-12 md:p-16 min-h-[95vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+          <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
             <div className="text-center text-white">
-              <div className="animate-spin rounded-full h-20 w-20 border-b-8"></div>
-              <div className="space-y-4">
-                <p className="text-white/80 text-base font-medium">잠시만 기다려 주세요.</p>
-                <p className="text-white/50 text-xs">AI 정보를 불러오는 중입니다</p>
-              </div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
             </div>
           </div>
         )
