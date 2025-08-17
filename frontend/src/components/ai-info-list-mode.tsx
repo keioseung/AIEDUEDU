@@ -179,7 +179,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 페이지 변경 시 상단으로 스크롤
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, showFavoritesOnly, sortBy])
+  }, [searchQuery, showFavoritesOnly, sortBy, itemsPerPage])
 
   // expandedItems 상태가 변경되지 않도록 안정화
   useEffect(() => {
@@ -297,8 +297,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             }}
             className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] touch-manipulation webview-button ${
               showFavoritesOnly
-                ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50'
-                : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30'
+                ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
+                : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
@@ -325,8 +325,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
               }}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[60px] touch-manipulation webview-button ${
                 itemsPerPage === size
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
+                  : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
               }`}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
@@ -361,13 +361,15 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4">
           <button
+            onTouchStart={handleWebViewTouch(() => setCurrentPage(Math.max(1, currentPage - 1)))}
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            className={`p-2 rounded-lg transition-all ${
+            className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
               currentPage === 1
-                ? 'text-white/30 cursor-not-allowed'
-                : 'text-white/70 hover:text-white hover:bg-white/10'
+                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-purple-800/20 via-purple-700/30 to-purple-800/20'
+                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/60 active:via-purple-700/70 active:to-purple-800/60'
             }`}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <FaChevronLeft className="w-5 h-5" />
           </button>
@@ -388,12 +390,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
               return (
                 <button
                   key={pageNum}
+                  onTouchStart={handleWebViewTouch(() => setCurrentPage(pageNum))}
                   onClick={() => setCurrentPage(pageNum)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
                     currentPage === pageNum
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white/10 text-white/70 hover:bg-white/20'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
+                      : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
                   }`}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
                   {pageNum}
                 </button>
@@ -402,13 +406,15 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           </div>
           
           <button
+            onTouchStart={handleWebViewTouch(() => setCurrentPage(Math.min(totalPages, currentPage + 1)))}
             onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
-            className={`p-2 rounded-lg transition-all ${
+            className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
               currentPage === totalPages
-                ? 'text-white/30 cursor-not-allowed'
-                : 'text-white/70 hover:text-white hover:bg-white/10'
+                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-purple-800/20 via-purple-700/30 to-purple-800/20'
+                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/60 active:via-purple-700/70 active:to-purple-800/60'
             }`}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <FaChevronRight className="w-5 h-5" />
           </button>

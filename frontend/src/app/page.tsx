@@ -292,37 +292,37 @@ export default function IntroPage() {
                     {clickedStat === 0 && (
                       <>
                         {/* 메인 선택 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 animate-stat-aura" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30" />
                         
                         {/* 빛나는 테두리 */}
-                        <div className="absolute inset-0 rounded-full border-2 border-purple-400/60 animate-stat-border-glow" />
+                        <div className="absolute inset-0 rounded-full border-2 border-purple-400/60" />
                         
                         {/* 중앙 빛나는 원 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400/20 to-pink-400/20 animate-pulse-scale" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400/20 to-pink-400/20" />
                         
                         {/* 파티클 효과 */}
-                        {[...Array(12)].map((_, i) => (
+                        {[...Array(8)].map((_, i) => (
                           <div
                             key={i}
-                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-stat-particle"
+                            className="absolute w-1 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
                             style={{
                               left: '50%',
                               top: '50%',
                               transform: 'translate(-50%, -50%)',
-                              '--angle': `${i * 30}deg`,
-                              '--distance': '25px'
+                              '--angle': `${i * 45}deg`,
+                              '--distance': '20px'
                             } as React.CSSProperties}
                           />
                         ))}
                         
                         {/* 빛나는 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         
                         {/* 상단 장식 */}
-                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full" />
                         
                         {/* 하단 장식 */}
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent rounded-full animate-decoration-slide-up" />
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent rounded-full" />
                       </>
                     )}
                  </div>
@@ -354,37 +354,37 @@ export default function IntroPage() {
                     {clickedStat === 1 && (
                       <>
                         {/* 메인 선택 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 animate-stat-aura" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30" />
                         
                         {/* 빛나는 테두리 */}
-                        <div className="absolute inset-0 rounded-full border-2 border-blue-400/60 animate-stat-border-glow" />
+                        <div className="absolute inset-0 rounded-full border-2 border-blue-400/60" />
                         
                         {/* 중앙 빛나는 원 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-cyan-400/20 animate-pulse-scale" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-cyan-400/20" />
                         
                         {/* 파티클 효과 */}
-                        {[...Array(12)].map((_, i) => (
+                        {[...Array(8)].map((_, i) => (
                           <div
                             key={i}
-                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full animate-stat-particle"
+                            className="absolute w-1 h-1 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full"
                             style={{
                               left: '50%',
                               top: '50%',
                               transform: 'translate(-50%, -50%)',
-                              '--angle': `${i * 30}deg`,
-                              '--distance': '25px'
+                              '--angle': `${i * 45}deg`,
+                              '--distance': '20px'
                             } as React.CSSProperties}
                           />
                         ))}
                         
                         {/* 빛나는 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         
                         {/* 상단 장식 */}
-                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full" />
                         
                         {/* 하단 장식 */}
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full animate-decoration-slide-up" />
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full" />
                       </>
                     )}
                  </div>
@@ -419,37 +419,37 @@ export default function IntroPage() {
                     {clickedStat === 2 && (
                       <>
                         {/* 메인 선택 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/30 via-emerald-500/30 to-teal-500/30 animate-stat-aura" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/30 via-emerald-500/30 to-teal-500/30" />
                         
                         {/* 빛나는 테두리 */}
-                        <div className="absolute inset-0 rounded-full border-2 border-green-400/60 animate-stat-border-glow" />
+                        <div className="absolute inset-0 rounded-full border-2 border-green-400/60" />
                         
                         {/* 중앙 빛나는 원 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 animate-pulse-scale" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20" />
                         
                         {/* 파티클 효과 */}
-                        {[...Array(12)].map((_, i) => (
+                        {[...Array(8)].map((_, i) => (
                           <div
                             key={i}
-                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full animate-stat-particle"
+                            className="absolute w-1 h-1 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full"
                             style={{
                               left: '50%',
                               top: '50%',
                               transform: 'translate(-50%, -50%)',
-                              '--angle': `${i * 30}deg`,
-                              '--distance': '25px'
+                              '--angle': `${i * 45}deg`,
+                              '--distance': '20px'
                             } as React.CSSProperties}
                           />
                         ))}
                         
                         {/* 빛나는 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         
                         {/* 상단 장식 */}
-                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent rounded-full" />
                         
                         {/* 하단 장식 */}
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full animate-decoration-slide-up" />
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full" />
                       </>
                     )}
                  </div>
@@ -481,37 +481,37 @@ export default function IntroPage() {
                     {clickedStat === 3 && (
                       <>
                         {/* 메인 선택 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-500/30 via-orange-500/30 to-amber-500/30 animate-stat-aura" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-500/30 via-orange-500/30 to-amber-500/30" />
                         
                         {/* 빛나는 테두리 */}
-                        <div className="absolute inset-0 rounded-full border-2 border-yellow-400/60 animate-stat-border-glow" />
+                        <div className="absolute inset-0 rounded-full border-2 border-yellow-400/60" />
                         
                         {/* 중앙 빛나는 원 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400/20 to-orange-400/20 animate-pulse-scale" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400/20 to-orange-400/20" />
                         
                         {/* 파티클 효과 */}
-                        {[...Array(12)].map((_, i) => (
+                        {[...Array(8)].map((_, i) => (
                           <div
                             key={i}
-                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-stat-particle"
+                            className="absolute w-1 h-1 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full"
                             style={{
                               left: '50%',
                               top: '50%',
                               transform: 'translate(-50%, -50%)',
-                              '--angle': `${i * 30}deg`,
-                              '--distance': '25px'
+                              '--angle': `${i * 45}deg`,
+                              '--distance': '20px'
                             } as React.CSSProperties}
                           />
                         ))}
                         
                         {/* 빛나는 효과 */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-stat-shine" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                         
                         {/* 상단 장식 */}
-                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-decoration-slide-down" />
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full" />
                         
                         {/* 하단 장식 */}
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full animate-decoration-slide-up" />
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full" />
                       </>
                     )}
                  </div>
@@ -522,15 +522,15 @@ export default function IntroPage() {
                    <div className="absolute inset-0 flex items-center justify-center z-40" style={{ transform: 'translateY(-20px)' }}>
                      {/* 메인 텍스트 상자 */}
                      <div className="relative group">
-                      {/* 메인 텍스트 상자 - 더 멋진 애니메이션 효과 추가 */}
-                      <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-52 md:w-60 h-32 md:h-36 flex items-center justify-center relative overflow-hidden animate-text-box-appear">
+                      {/* 메인 텍스트 상자 - 단순화된 효과 */}
+                      <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 backdrop-blur-2xl rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl w-52 md:w-60 h-32 md:h-36 flex items-center justify-center relative overflow-hidden">
                        {/* 내부 그라데이션 오버레이 */}
                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 rounded-3xl" />
                        
                        {/* 빛나는 테두리 효과 */}
                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 p-[1px]">
                          <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 rounded-3xl h-full w-full flex items-center justify-center">
-                           <div className="text-white/90 text-sm md:text-base font-medium leading-relaxed px-4 text-center relative z-10 animate-text-fade-in">
+                           <div className="text-white/90 text-sm md:text-base font-medium leading-relaxed px-4 text-center relative z-10">
                              {[
                                "최신 AI 트렌드와\n기술 동향을 매일 업데이트하여 제공합니다.",
                                "AI 학습에 필수적인\n핵심 용어들을 체계적으로 정리했습니다.",
@@ -541,44 +541,18 @@ export default function IntroPage() {
                          </div>
                        </div>
                        
-                       {/* 상단 장식 요소 - 애니메이션 추가 */}
-                       <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-60 animate-decoration-slide-down" />
+                       {/* 상단 장식 요소 */}
+                       <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-60" />
                        
-                       {/* 하단 장식 요소 - 애니메이션 추가 */}
-                       <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-40 animate-decoration-slide-up" />
-                       
-                       {/* 추가 빛나는 효과 */}
-                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shine-effect" />
+                       {/* 하단 장식 요소 */}
+                       <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-40" />
                        
                        {/* 입체감을 위한 그림자 효과 */}
                        <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-transparent rounded-3xl" />
                      </div>
                      
-                     {/* 주변 빛나는 효과 - 더 강화 */}
-                     <div className="absolute inset-0 -m-4 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-surround-glow" />
-                     
-                     {/* 추가 파티클 효과 - 더 멋진 애니메이션 */}
-                     {[...Array(8)].map((_, i) => (
-                       <div
-                         key={i}
-                         className="absolute w-1 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-floating-particle"
-                         style={{
-                           left: `${15 + i * 12}%`,
-                           top: `${25 + (i % 3) * 25}%`,
-                           animationDelay: `${i * 0.15}s`,
-                           animationDuration: `${2.5 + i * 0.5}s`
-                         }}
-                       />
-                     ))}
-                     
-                     {/* 추가 빛나는 원형 효과 */}
-                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/10 via-transparent to-pink-500/10 animate-pulse-scale" />
-                     
-                     {/* 상단 빛나는 선 효과 */}
-                     <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-20 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full opacity-40 animate-decoration-slide-down" />
-                     
-                     {/* 하단 빛나는 선 효과 */}
-                     <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full opacity-30 animate-decoration-slide-up" />
+                     {/* 주변 빛나는 효과 */}
+                     <div className="absolute inset-0 -m-4 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                    </div>
                  </div>
                )}

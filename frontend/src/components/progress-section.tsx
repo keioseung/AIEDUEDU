@@ -655,30 +655,30 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             
             return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
           })() ? (
-            <div className="space-y-5">
+            <div className="space-y-6">
               {/* AI 정보 추이 */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
-                    <span className="text-white/90 font-semibold text-sm">AI 정보 학습</span>
-                    <div className="flex items-center gap-1 px-1.5 py-0.5 bg-blue-500/20 rounded-full">
-                      <span className="text-blue-300 text-xs">평균</span>
-                      <span className="text-blue-200 font-bold text-xs">
+              <div className="bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl rounded-2xl p-5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
+                    <span className="text-white font-semibold text-base">AI 정보 학습</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 rounded-full border border-blue-400/40">
+                      <span className="text-blue-200 text-xs font-medium">평균</span>
+                      <span className="text-blue-100 font-bold text-sm">
                         {calculateAverage(uniqueChartData, 'ai_info')}%
                       </span>
                     </div>
                   </div>
-                  <span className="text-white/60 text-xs">
+                  <span className="text-white/70 text-sm font-medium">
                     최대: 100%
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/40 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 128/5}}>{v}%</div>
+                        <div key={v} style={{height: 128/5}} className="font-medium">{v}%</div>
                       ))}
                     </div>
 
@@ -716,7 +716,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                               {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
                             </div>
                           </div>
@@ -728,28 +728,28 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
 
               {/* 용어 학습 추이 */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 bg-purple-500 rounded-full"></div>
-                    <span className="text-white/90 font-semibold text-sm">용어 학습</span>
-                    <div className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 rounded-full">
-                      <span className="text-purple-300 text-xs">평균</span>
-                      <span className="text-purple-200 font-bold text-xs">
+              <div className="bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl rounded-2xl p-5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
+                    <span className="text-white font-semibold text-base">용어 학습</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-full border border-purple-400/40">
+                      <span className="text-purple-200 text-xs font-medium">평균</span>
+                      <span className="text-purple-100 font-bold text-sm">
                         {calculateAverage(uniqueChartData, 'terms')}%
                       </span>
                     </div>
                   </div>
-                  <span className="text-white/60 text-xs">
+                  <span className="text-white/70 text-sm font-medium">
                     최대: 100%
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-12 -mx-2 md:-mx-3">
                   <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 96}}>
+                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/50 select-none" style={{height: 96}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 96/5}}>{v}%</div>
+                        <div key={v} style={{height: 96/5}} className="font-medium">{v}%</div>
                       ))}
                     </div>
 
@@ -787,7 +787,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                               {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
                             </div>
                           </div>
@@ -799,28 +799,28 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
 
               {/* 퀴즈 점수 추이 */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                    <span className="text-white/90 font-semibold text-sm">퀴즈 점수</span>
-                    <div className="flex items-center gap-1 px-1.5 py-0.5 bg-green-500/20 rounded-full">
-                      <span className="text-green-300 text-xs">평균</span>
-                      <span className="text-green-200 font-bold text-xs">
+              <div className="bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl rounded-2xl p-5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
+                    <span className="text-white font-semibold text-base">퀴즈 점수</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500/30 to-emerald-500/30 rounded-full border border-green-400/40">
+                      <span className="text-green-200 text-xs font-medium">평균</span>
+                      <span className="text-green-100 font-bold text-sm">
                         {calculateAverage(uniqueChartData, 'quiz_score')}%
                       </span>
                     </div>
                   </div>
-                  <span className="text-white/60 text-xs">
+                  <span className="text-white/70 text-sm font-medium">
                     최대: {maxQuiz}%
                   </span>
                 </div>
                 <div className="overflow-x-auto pt-12 -mx-2 md:-mx-3">
                   <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/40 select-none" style={{height: 96}}>
+                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/50 select-none" style={{height: 96}}>
                       {[100, 80, 60, 40, 20, 0].map(v => (
-                        <div key={v} style={{height: 96/5}}>{v}%</div>
+                        <div key={v} style={{height: 96/5}} className="font-medium">{v}%</div>
                       ))}
                     </div>
 
@@ -857,7 +857,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                 </div>
                               )}
                             </div>
-                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/50'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                               {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
                             </div>
                           </div>
