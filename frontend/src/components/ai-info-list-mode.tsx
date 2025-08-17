@@ -254,7 +254,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             placeholder="제목, 내용, 용어로 검색..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="w-full pl-10 pr-4 py-3 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 shadow-lg shadow-purple-900/30"
           />
           {searchQuery && (
             <button
@@ -275,7 +275,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                  setSortBy(value as 'date' | 'title' | 'length')
                }
              }}
-             className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-300 min-h-[44px] min-w-[100px] cursor-pointer hover:bg-white/20 active:bg-white/30 transition-all"
+             className="px-4 py-3 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 min-h-[44px] min-w-[100px] cursor-pointer hover:from-purple-900/80 hover:via-purple-800/90 hover:to-purple-900/80 active:from-purple-900/90 active:via-purple-800/95 active:to-purple-900/90 transition-all shadow-lg shadow-purple-900/30"
            >
              <option value="date">🕒 최신순</option>
              <option value="title">📝 제목순</option>

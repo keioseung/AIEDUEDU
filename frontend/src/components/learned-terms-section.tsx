@@ -527,7 +527,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           placeholder="용어나 설명으로 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm"
+          className="w-full pl-9 pr-4 py-2.5 bg-white/10 border-2 border-purple-600/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-sm shadow-lg shadow-purple-900/30"
         />
         {searchQuery && (
           <button
@@ -902,12 +902,12 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
       {/* 모바일 최적화 용어 목록 */}
       <AnimatePresence>
         {showTermList && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="bg-white/5 rounded-xl p-4"
-          >
+                     <motion.div
+             initial={{ opacity: 0, height: 0 }}
+             animate={{ opacity: 1, height: 'auto' }}
+             exit={{ opacity: 0, height: 0 }}
+             className="bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-4 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50"
+           >
                          <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                   <Target className="w-5 h-5" />
