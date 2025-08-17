@@ -674,7 +674,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="w-full">
                   <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
@@ -747,7 +747,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="w-full">
                   <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
@@ -820,7 +820,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: {maxQuiz}%
                   </span>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="w-full">
                   <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
