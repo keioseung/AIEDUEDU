@@ -689,7 +689,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         const barMaxHeight = 96; // Y축 높이와 동일
                         // AI 정보는 실제 개수 기준으로 계산 (예: 2개 = 100%)
                         const maxAICount = Math.max(...uniqueChartData.map(d => d.ai_info), 1);
-                        const aiHeight = Math.min(Math.max((data.ai_info / maxAICount) * barMaxHeight, data.ai_info > 0 ? 3 : 0), barMaxHeight);
+                        // Y축 범위에 맞춰 막대 높이 계산 (100% = 96px, 0% = 0px)
+                        const aiHeight = Math.min(Math.max((data.ai_info / maxAICount) * 96, data.ai_info > 0 ? 3 : 0), 96);
                         const isFullAI = data.ai_info >= maxAICount;
                         const percent = Math.min(Math.round((data.ai_info / maxAICount) * 100), 100);
                         return (
@@ -761,7 +762,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         const barMaxHeight = 96; // Y축 높이와 동일
                         // 용어는 실제 개수 기준으로 계산
                         const maxTermsCount = Math.max(...uniqueChartData.map(d => d.terms), 1);
-                        const termsHeight = Math.min(Math.max((data.terms / maxTermsCount) * barMaxHeight, data.terms > 0 ? 3 : 0), barMaxHeight);
+                        // Y축 범위에 맞춰 막대 높이 계산 (100% = 96px, 0% = 0px)
+                        const termsHeight = Math.min(Math.max((data.terms / maxTermsCount) * 96, data.terms > 0 ? 3 : 0), 96);
                         const isFullTerms = data.terms >= maxTermsCount;
                         const percent = Math.min(Math.round((data.terms / maxTermsCount) * 100), 100);
                         return (
@@ -833,7 +835,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         const barMaxHeight = 96; // Y축 높이와 동일
                         // 퀴즈는 실제 점수 기준으로 계산
                         const maxQuizScore = Math.max(...uniqueChartData.map(d => d.quiz_score), 1);
-                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuizScore) * barMaxHeight, data.quiz_score > 0 ? 3 : 0), barMaxHeight);
+                        // Y축 범위에 맞춰 막대 높이 계산 (100% = 96px, 0% = 0px)
+                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuizScore) * 96, data.quiz_score > 0 ? 3 : 0), 96);
                         const isFullQuiz = data.quiz_score >= maxQuizScore;
                         const percent = Math.min(Math.round((data.quiz_score / maxQuizScore) * 100), 100);
                         return (
