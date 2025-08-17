@@ -658,7 +658,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           })() ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* AI 정보 추이 */}
-              <div className="w-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-3 backdrop-blur-xl">
+              <div className="w-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
@@ -731,7 +731,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
 
               {/* 용어 학습 추이 */}
-              <div className="w-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-3 backdrop-blur-xl">
+              <div className="w-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
@@ -804,7 +804,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
 
               {/* 퀴즈 점수 추이 */}
-              <div className="w-full bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-3 backdrop-blur-xl">
+              <div className="w-full bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
