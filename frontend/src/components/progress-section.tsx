@@ -673,12 +673,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                <div className="overflow-x-auto -mx-2 md:-mx-4">
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
-                      {[100, 80, 60, 40, 20, 0].map((v, i) => (
-                        <div key={v} style={{height: 128/5, lineHeight: '128px'}} className="font-medium flex items-center">{v}%</div>
+                      {[100, 50, 0].map((v, i) => (
+                        <div key={v} style={{height: 64, lineHeight: '64px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
@@ -744,12 +744,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                <div className="overflow-x-auto -mx-2 md:-mx-4">
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
-                      {[100, 80, 60, 40, 20, 0].map((v, i) => (
-                        <div key={v} style={{height: 128/5, lineHeight: '128px'}} className="font-medium flex items-center">{v}%</div>
+                      {[100, 50, 0].map((v, i) => (
+                        <div key={v} style={{height: 64, lineHeight: '64px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
@@ -815,12 +815,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: {maxQuiz}%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                <div className="overflow-x-auto -mx-2 md:-mx-4">
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
                     <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
-                      {[100, 80, 60, 40, 20, 0].map((v, i) => (
-                        <div key={v} style={{height: 128/5, lineHeight: '128px'}} className="font-medium flex items-center">{v}%</div>
+                      {[100, 50, 0].map((v, i) => (
+                        <div key={v} style={{height: 64, lineHeight: '64px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
