@@ -277,8 +277,8 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
-                       clickedStat === 0 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-500 ${
+                       clickedStat === 0 ? 'animate-stat-glow scale-110 -translate-y-2 rotate-3' : 'hover:scale-105 hover:-translate-y-1'
                      }`}>
                        <FaBrain className="text-purple-300 text-3xl md:text-5xl" />
                      </div>
@@ -339,8 +339,8 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
-                       clickedStat === 1 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-500 ${
+                       clickedStat === 1 ? 'animate-stat-glow scale-110 -translate-y-2 -rotate-3' : 'hover:scale-105 hover:-translate-y-1'
                      }`}>
                        <FaRocket className="text-purple-300 text-3xl md:text-5xl" />
                      </div>
@@ -404,8 +404,8 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
-                       clickedStat === 2 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-500 ${
+                       clickedStat === 2 ? 'animate-stat-glow scale-110 -translate-y-2 rotate-2' : 'hover:scale-105 hover:-translate-y-1'
                      }`}>
                        <FaChartLine className="text-purple-300 text-3xl md:text-5xl" />
                      </div>
@@ -466,8 +466,8 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-300 ${
-                       clickedStat === 3 ? 'animate-stat-glow scale-110' : 'hover:scale-105'
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-500 ${
+                       clickedStat === 3 ? 'animate-stat-glow scale-110 -translate-y-2 -rotate-2' : 'hover:scale-105 hover:-translate-y-1'
                      }`}>
                        <FaTrophy className="text-purple-300 text-3xl md:text-5xl" />
                      </div>

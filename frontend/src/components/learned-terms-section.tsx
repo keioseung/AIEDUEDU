@@ -694,7 +694,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           key={currentTerm.term + currentTerm.learned_date}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white/10 backdrop-blur-xl rounded-xl p-4 md:p-6 border border-white/20"
+          className="bg-gradient-to-br from-purple-950/70 via-purple-900/80 to-purple-950/70 backdrop-blur-2xl rounded-xl p-4 md:p-6 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/40"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
