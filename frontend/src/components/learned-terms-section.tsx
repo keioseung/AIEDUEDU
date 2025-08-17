@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, PanInfo } from 'framer-motion'
-import { BookOpen, Calendar, Brain, Target, Trophy, TrendingUp, Search, Star, Download, Filter, Shuffle, Bookmark, ChevronLeft, ChevronRight, Play, Pause, X, Menu } from 'lucide-react'
+import { BookOpen, Calendar, Brain, Target, Trophy, TrendingUp, Search, Star, Download, Filter, Shuffle, Bookmark, ChevronLeft, ChevronRight, Play, Pause, X, Menu, Settings } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 
@@ -49,6 +49,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   const [scrollMode, setScrollMode] = useState(false)
   const [isShuffling, setIsShuffling] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
+  const [showSortDropdown, setShowSortDropdown] = useState(false)
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -80,6 +81,20 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
     setSearchQuery('')
     setSortBy('date')
   }, [])
+
+  // 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showSortDropdown) {
+        setShowSortDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showSortDropdown])
   
   const { data: learnedData, isLoading } = useQuery<LearnedTermsResponse>({
     queryKey: ['learned-terms', sessionId],
@@ -284,9 +299,16 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
   // 안전한 랜덤 함수 (중복 클릭 방지)
   const handleShuffleSafe = () => {
     if (isShuffling || filteredTerms.length === 0) return
+    
+    // 즉시 상태 변경으로 중복 클릭 방지
     setIsShuffling(true)
-    handleShuffle()
-    setTimeout(() => setIsShuffling(false), 300)
+    
+    // 약간의 지연 후 실제 셔플 실행 (터치 이벤트 안정화)
+    setTimeout(() => {
+      handleShuffle()
+      // 셔플 완료 후 상태 복원
+      setTimeout(() => setIsShuffling(false), 200)
+    }, 50)
   }
 
   // 용어 난이도 계산 (용어 길이 기반)
@@ -667,106 +689,204 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
              )}
             
                          {/* 정렬 및 필터 옵션 */}
-             <div className="space-y-3">
-               {/* 1행: 정렬 옵션들 (3개) */}
-               <div className="flex justify-center gap-3">
+             <div className="flex justify-center gap-3">
+               {/* 정렬순 드롭다운 버튼 */}
+               <div className="relative flex-1 max-w-[200px]">
                  <button
-                   onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
-                   onClick={() => setSortBy('date')}
-                   className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button ${
-                     sortBy === 'date'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg ring-2 ring-purple-400/50 border border-purple-300/40'
-                       : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
+                   onTouchStart={handleWebViewTouch(() => setShowSortDropdown(!showSortDropdown))}
+                   onClick={() => setShowSortDropdown(!showSortDropdown)}
+                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-4 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 w-full min-h-[44px]"
                    style={{ WebkitTapHighlightColor: 'transparent' }}
                  >
-                   🕒 최신순
+                   <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                   <span className="relative z-10 flex items-center gap-2">
+                     <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
+                     <span className="text-sm">정렬순</span>
+                   </span>
                  </button>
-                 
-                 <button
-                   onTouchStart={handleWebViewTouch(() => setSortBy('alphabet'))}
-                   onClick={() => setSortBy('alphabet')}
-                   className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button ${
-                     sortBy === 'alphabet'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg ring-2 ring-purple-400/50 border border-purple-300/40'
-                       : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   🔤 가나다순
-                 </button>
-                 
-                 <button
-                   onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
-                   onClick={() => setSortBy('length')}
-                   className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button ${
-                     sortBy === 'length'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg ring-2 ring-purple-400/50 border border-purple-300/40'
-                       : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   📏 길이순
-                 </button>
+
+                 {/* 정렬 옵션 드롭다운 */}
+                 <AnimatePresence>
+                   {showSortDropdown && (
+                     <motion.div
+                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                       animate={{ opacity: 1, y: 0, scale: 1 }}
+                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                       className="absolute top-full mt-2 z-20 bg-gradient-to-br from-black/95 via-slate-900/98 to-black/95 backdrop-blur-2xl rounded-2xl p-3 border border-purple-500/40 shadow-xl shadow-black/60 w-full min-w-[200px]"
+                       style={{
+                         left: '0',
+                         right: '0'
+                       }}
+                     >
+                       <div className="text-center mb-2">
+                         <div className="text-white/95 text-xs font-semibold mb-1">정렬 옵션</div>
+                         <div className="w-full bg-white/20 rounded-full h-0.5">
+                           <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
+                         </div>
+                       </div>
+                       
+                       <div className="space-y-1.5">
+                         <button
+                           onClick={() => {
+                             setSortBy('date')
+                             setShowSortDropdown(false)
+                           }}
+                           className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
+                             sortBy === 'date'
+                               ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
+                               : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
+                           }`}
+                         >
+                           <div className="flex items-center justify-between">
+                             <div className="flex-1 min-w-0">
+                               <div className={`font-semibold text-xs leading-tight flex items-center gap-2 ${
+                                 sortBy === 'date'
+                                   ? 'text-emerald-100 group-hover:text-emerald-50'
+                                   : 'text-white group-hover:text-purple-200'
+                               } transition-colors`}>
+                                 🕒 최신순
+                               </div>
+                               <div className={`text-xs mt-0.5 leading-tight ${
+                                 sortBy === 'date'
+                                   ? 'text-emerald-100/80'
+                                   : 'text-white/90'
+                               }`}>
+                                 날짜순 정렬
+                               </div>
+                             </div>
+                             <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                               <ChevronRight className="w-3 h-3 text-purple-300" />
+                             </div>
+                           </div>
+                         </button>
+                         
+                         <button
+                           onClick={() => {
+                             setSortBy('alphabet')
+                             setShowSortDropdown(false)
+                           }}
+                           className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
+                             sortBy === 'date'
+                               ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
+                               : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
+                           }`}
+                         >
+                           <div className="flex items-center justify-between">
+                             <div className="flex-1 min-w-0">
+                               <div className={`font-semibold text-xs leading-tight flex items-center gap-2 ${
+                                 sortBy === 'alphabet'
+                                   ? 'text-emerald-100 group-hover:text-emerald-50'
+                                   : 'text-white group-hover:text-purple-200'
+                               } transition-colors`}>
+                                 🔤 가나다순
+                               </div>
+                               <div className={`text-xs mt-0.5 leading-tight ${
+                                 sortBy === 'alphabet'
+                                   ? 'text-emerald-100/80'
+                                   : 'text-white/90'
+                               }`}>
+                                 알파벳순 정렬
+                               </div>
+                             </div>
+                             <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                               <ChevronRight className="w-3 h-3 text-purple-300" />
+                             </div>
+                           </div>
+                         </button>
+                         
+                         <button
+                           onClick={() => {
+                             setSortBy('length')
+                             setShowSortDropdown(false)
+                           }}
+                           className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 group border ${
+                             sortBy === 'length'
+                               ? 'bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 border-emerald-400/50'
+                               : 'bg-gradient-to-r from-slate-800/60 via-slate-700/70 to-slate-800/60 hover:from-slate-700/80 hover:via-slate-600/85 hover:to-slate-700/80 border-slate-600/50 hover:border-slate-500/70'
+                           }`}
+                         >
+                           <div className="flex items-center justify-between">
+                             <div className="flex-1 min-w-0">
+                               <div className={`font-semibold text-xs leading-tight flex items-center gap-2 ${
+                                 sortBy === 'length'
+                                   ? 'text-emerald-100 group-hover:text-emerald-50'
+                                   : 'text-white group-hover:text-purple-200'
+                               } transition-colors`}>
+                                 📏 길이순
+                               </div>
+                               <div className={`text-xs mt-0.5 leading-tight ${
+                                 sortBy === 'length'
+                                   ? 'text-emerald-100/80'
+                                   : 'text-white/90'
+                               }`}>
+                                 용어 길이순 정렬
+                               </div>
+                             </div>
+                             <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                               <ChevronRight className="w-3 h-3 text-purple-300" />
+                             </div>
+                           </div>
+                         </button>
+                       </div>
+                     </motion.div>
+                   )}
+                 </AnimatePresence>
                </div>
                
-               {/* 2행: 기능 버튼들 (3개) */}
-               <div className="flex justify-center gap-3">
-                 {/* 즐겨찾기만 버튼 */}
-                 <button
-                   onTouchStart={handleWebViewTouch(() => {
-                     if (isProcessing) return
-                     setIsProcessing(true)
-                     setShowFavoritesOnly(!showFavoritesOnly)
-                     setTimeout(() => setIsProcessing(false), 300)
-                   })}
-                   onClick={() => {
-                     if (isProcessing) return
-                     setIsProcessing(true)
-                     setShowFavoritesOnly(!showFavoritesOnly)
-                     setTimeout(() => setIsProcessing(false), 300)
-                   }}
-                   className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
-                     showFavoritesOnly
-                       ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg ring-2 ring-green-400/30 border border-green-300/40'
-                       : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
-                   즐겨찾기만
-                 </button>
-                 
-                 {/* 랜덤 버튼 */}
-                 <button
-                   onTouchStart={handleWebViewTouch(handleShuffleSafe)}
-                   onClick={handleShuffleSafe}
-                   className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
-                     isShuffling
-                       ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg ring-2 ring-blue-400/30 border border-blue-300/40'
-                       : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   <Shuffle className="w-3.5 h-3.5" />
-                   랜덤
-                 </button>
-                 
-                 {/* 내보내기 버튼 */}
-                 <button
-                   onTouchStart={handleWebViewTouch(exportTermsSafe)}
-                   onClick={exportTermsSafe}
-                   className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
-                     isExporting
-                       ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg ring-2 ring-emerald-400/30 border border-emerald-300/40'
-                       : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
-                   }`}
-                   style={{ WebkitTapHighlightColor: 'transparent' }}
-                 >
-                   <Download className="w-3.5 h-3.5" />
-                   내보내기
-                 </button>
-               </div>
+               {/* 즐겨찾기만 버튼 */}
+               <button
+                 onTouchStart={handleWebViewTouch(() => {
+                   if (isProcessing) return
+                   setIsProcessing(true)
+                   setShowFavoritesOnly(!showFavoritesOnly)
+                   setTimeout(() => setIsProcessing(false), 300)
+                 })}
+                 onClick={() => {
+                   if (isProcessing) return
+                   setIsProcessing(true)
+                   setShowFavoritesOnly(!showFavoritesOnly)
+                   setTimeout(() => setIsProcessing(false), 300)
+                 }}
+                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
+                   showFavoritesOnly
+                     ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg ring-2 ring-green-400/30 border border-green-300/40'
+                     : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
+                 }`}
+                 style={{ WebkitTapHighlightColor: 'transparent' }}
+               >
+                 <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
+                 즐겨찾기만
+               </button>
+               
+               {/* 랜덤 버튼 */}
+               <button
+                 onTouchStart={handleWebViewTouch(handleShuffleSafe)}
+                 onClick={handleShuffleSafe}
+                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
+                   isShuffling
+                     ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg ring-2 ring-blue-400/30 border border-blue-300/40'
+                     : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
+                 }`}
+                 style={{ WebkitTapHighlightColor: 'transparent' }}
+               >
+                 <Shuffle className="w-3.5 h-3.5" />
+                 랜덤
+               </button>
+               
+               {/* 내보내기 버튼 */}
+               <button
+                 onTouchStart={handleWebViewTouch(exportTermsSafe)}
+                 onClick={exportTermsSafe}
+                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[90px] webview-button flex items-center justify-center gap-2 ${
+                   isExporting
+                     ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg ring-2 ring-emerald-400/30 border border-emerald-300/40'
+                     : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
+                 }`}
+                 style={{ WebkitTapHighlightColor: 'transparent' }}
+               >
+                 <Download className="w-3.5 h-3.5" />
+                 내보내기
+               </button>
              </div>
           </motion.div>
         )}
