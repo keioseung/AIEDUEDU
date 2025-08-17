@@ -685,11 +685,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 96;
-                        const effectiveMaxAI = maxAI > 0 ? maxAI : 3;
-                        const aiHeight = Math.min(Math.max((data.ai_info / effectiveMaxAI) * barMaxHeight, data.ai_info > 0 ? 3 : 0), barMaxHeight);
-                        const isFullAI = data.ai_info >= effectiveMaxAI;
-                        const percent = Math.min(Math.round((data.ai_info / effectiveMaxAI) * 100), 100);
+                        const barMaxHeight = 96; // Y축 높이와 동일
+                        const effectiveMaxAI = maxAI > 0 ? maxAI : 100; // 최대값을 100으로 설정
+                        const aiHeight = Math.min(Math.max((data.ai_info / 100) * barMaxHeight, data.ai_info > 0 ? 3 : 0), barMaxHeight);
+                        const isFullAI = data.ai_info >= 100;
+                        const percent = Math.min(Math.round(data.ai_info), 100);
                         return (
                           <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
@@ -756,11 +756,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 96;
-                        const effectiveMaxTerms = maxTerms > 0 ? maxTerms : 60;
-                        const termsHeight = Math.min(Math.max((data.terms / effectiveMaxTerms) * barMaxHeight, data.terms > 0 ? 3 : 0), barMaxHeight);
-                        const isFullTerms = data.terms >= effectiveMaxTerms;
-                        const percent = Math.min(Math.round((data.terms / effectiveMaxTerms) * 100), 100);
+                        const barMaxHeight = 96; // Y축 높이와 동일
+                        const termsHeight = Math.min(Math.max((data.terms / 100) * barMaxHeight, data.terms > 0 ? 3 : 0), barMaxHeight);
+                        const isFullTerms = data.terms >= 100;
+                        const percent = Math.min(Math.round(data.terms), 100);
                         return (
                           <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">
@@ -827,10 +826,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     {/* bar + 날짜 */}
                     <div className={`flex items-end h-24 ${getBarGap()}`}>
                       {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 96;
-                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuiz) * barMaxHeight, data.quiz_score > 0 ? 3 : 0), barMaxHeight);
-                        const isFullQuiz = data.quiz_score >= maxQuiz;
-                        const percent = Math.min(Math.round((data.quiz_score / maxQuiz) * 100), 100);
+                        const barMaxHeight = 96; // Y축 높이와 동일
+                        const quizHeight = Math.min(Math.max((data.quiz_score / 100) * barMaxHeight, data.quiz_score > 0 ? 3 : 0), barMaxHeight);
+                        const isFullQuiz = data.quiz_score >= 100;
+                        const percent = Math.min(Math.round(data.quiz_score), 100);
                         return (
                           <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
                             <div className="relative w-full">

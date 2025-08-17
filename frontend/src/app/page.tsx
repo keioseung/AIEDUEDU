@@ -519,7 +519,7 @@ export default function IntroPage() {
 
                                                {/* 중앙 텍스트 - 4개 아이콘이 펼쳐진 후 나타남 (위치 조정 및 애니메이션 개선) */}
                  {clickedStat !== null && (
-                   <div className="absolute inset-0 flex items-center justify-center z-40" style={{ transform: 'translateY(-20px)' }}>
+                   <div className="absolute inset-0 flex items-center justify-center z-40" style={{ transform: 'translateY(20px)' }}>
                      {/* 메인 텍스트 상자 */}
                      <div className="relative group">
                       {/* 메인 텍스트 상자 - 더 멋진 애니메이션 효과 추가 */}
