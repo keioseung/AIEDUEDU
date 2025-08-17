@@ -492,11 +492,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           <button
             onTouchStart={handleWebViewTouch(toggleFilters)}
             onClick={toggleFilters}
-            className={`px-3 py-2 rounded-lg transition-all text-sm font-medium flex items-center gap-1.5 touch-manipulation select-none min-h-[40px] min-w-[70px] justify-center webview-button ${
-              showFilters
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg ring-2 ring-blue-400/50 border border-blue-300/30'
-                : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
-            }`}
+                         className={`px-3 py-2 rounded-lg transition-all text-sm font-medium flex items-center gap-1.5 touch-manipulation select-none min-h-[40px] min-w-[70px] justify-center webview-button ${
+               showFilters
+                 ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg ring-2 ring-purple-400/50 border border-purple-300/30'
+                 : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Filter className={`w-4 h-4 ${showFilters ? 'text-white' : 'text-white/80'}`} />
@@ -505,11 +505,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           <button
             onTouchStart={handleWebViewTouch(toggleTermList)}
             onClick={toggleTermList}
-            className={`px-3 py-2 rounded-lg transition-all text-sm font-medium flex items-center gap-1.5 touch-manipulation select-none min-h-[40px] min-w-[70px] justify-center webview-button ${
-              showTermList
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg ring-2 ring-emerald-400/50 border border-emerald-300/30'
-                : 'bg-white/10 text-white hover:bg-white/20 active:bg-white/30 border border-white/20'
-            }`}
+                         className={`px-3 py-2 rounded-lg transition-all text-sm font-medium flex items-center gap-1.5 touch-manipulation select-none min-h-[40px] min-w-[70px] justify-center webview-button ${
+               showTermList
+                 ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg ring-2 ring-purple-400/50 border border-purple-300/30'
+                 : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Menu className={`w-4 h-4 ${showTermList ? 'text-white' : 'text-white/80'}`} />
@@ -563,11 +563,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                    <button
                      onTouchStart={handleWebViewTouch(() => { setSelectedDate(null); setCurrentTermIndex(0); })}
                      onClick={() => { setSelectedDate(null); setCurrentTermIndex(0); }}
-                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button ${
-                       selectedDate === null
-                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md ring-2 ring-blue-400/30'
-                         : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
-                     }`}
+                                           className={`px-3 py-2 rounded-lg text-sm font-medium transition-all touch-manipulation select-none min-h-[40px] min-w-[80px] webview-button ${
+                        selectedDate === null
+                          ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md ring-2 ring-purple-400/50 border border-purple-300/40'
+                          : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                      }`}
                      style={{ WebkitTapHighlightColor: 'transparent' }}
                    >
                      <div className="flex flex-col items-center">
@@ -963,11 +963,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ delay: index * 0.05, type: "spring", stiffness: 300, damping: 25 }}
-                    className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 touch-manipulation select-none min-h-[60px] webview-button ${
-                      index === currentTermIndex
-                        ? 'bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-indigo-500/20 border border-blue-400/50 shadow-lg shadow-blue-500/20 scale-[1.02] ring-1 ring-blue-400/30'
-                        : 'bg-gradient-to-br from-white/5 via-white/8 to-white/5 hover:from-white/10 hover:via-white/15 hover:to-white/10 active:from-white/20 active:via-white/25 active:to-white/20 border border-white/20 hover:border-white/30 hover:shadow-lg hover:shadow-white/10 hover:scale-[1.01]'
-                    }`}
+                                         className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 touch-manipulation select-none min-h-[60px] webview-button ${
+                       index === currentTermIndex
+                         ? 'bg-gradient-to-br from-purple-600/30 via-purple-500/40 to-purple-600/30 border border-purple-400/60 shadow-lg shadow-purple-500/30 scale-[1.02] ring-1 ring-purple-400/50'
+                         : 'bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 hover:border-purple-400/60 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-[1.01]'
+                     }`}
                                                               onTouchStart={handleWebViewTouch(() => handleTermSelect(index))}
                     onClick={() => handleTermSelect(index)}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -999,25 +999,25 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                               <Brain className="w-2 h-2" />
                             </div>
                             
-                            {/* 용어명 */}
-                            <h3 className="font-bold text-white text-sm leading-tight break-words line-clamp-1">
-                              {term.term}
-                            </h3>
+                                                         {/* 용어명 - 더 크고 눈에 띄게 */}
+                             <h3 className="font-bold text-white text-base leading-tight break-words line-clamp-1 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
+                               {term.term}
+                             </h3>
                           </div>
                           
-                          {/* 난이도 배지 */}
-                          <div className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-semibold shadow-sm ${
-                            termDifficulty.level === '초급' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-200 border border-green-400/30' :
-                            termDifficulty.level === '중급' ? 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-200 border border-yellow-400/30' :
-                            'bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-200 border border-red-400/30'
-                          }`}>
-                            <div className={`w-1 h-1 rounded-full mr-1 shadow-sm ${
-                              termDifficulty.level === '초급' ? 'bg-green-300' :
-                              termDifficulty.level === '중급' ? 'bg-yellow-300' :
-                              'bg-red-300'
-                            }`} />
-                            {termDifficulty.level}
-                          </div>
+                                                     {/* 난이도 배지 - 작게 표시 */}
+                           <div className={`inline-flex items-center px-1 py-0.5 rounded-full text-[10px] font-medium shadow-sm opacity-70 ${
+                             termDifficulty.level === '초급' ? 'bg-gradient-to-r from-green-500/15 to-emerald-500/15 text-green-300 border border-green-400/20' :
+                             termDifficulty.level === '중급' ? 'bg-gradient-to-r from-yellow-500/15 to-amber-500/15 text-yellow-300 border border-yellow-400/20' :
+                             'bg-gradient-to-r from-red-500/15 to-pink-500/15 text-red-300 border border-red-400/20'
+                           }`}>
+                             <div className={`w-0.5 h-0.5 rounded-full mr-1 shadow-sm ${
+                               termDifficulty.level === '초급' ? 'bg-green-400' :
+                               termDifficulty.level === '중급' ? 'bg-yellow-400' :
+                               'bg-red-400'
+                             }`} />
+                             {termDifficulty.level}
+                           </div>
                         </div>
                         
                         {/* 즐겨찾기 버튼 */}
@@ -1037,12 +1037,12 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                       </button>
                     </div>
                       
-                      {/* 중간: 설명 */}
-                      <div className="mb-1">
-                        <p className="text-white/70 text-xs leading-relaxed line-clamp-2 break-words">
-                          {term.description}
-                        </p>
-                      </div>
+                                             {/* 중간: 설명 - 더 눈에 띄게 */}
+                       <div className="mb-1">
+                         <p className="text-white/90 text-sm leading-relaxed line-clamp-2 break-words font-medium">
+                           {term.description}
+                         </p>
+                       </div>
                       
                       {/* 하단: 메타데이터 */}
                     <div className="flex items-center justify-between">

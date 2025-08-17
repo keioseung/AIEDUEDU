@@ -323,8 +323,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 }}
                 className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
                   periodType === 'week'
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
-                    : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
+                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                    : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
                 }`}
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
@@ -347,8 +347,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 }}
                 className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
                   periodType === 'month'
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
-                    : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
+                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                    : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
                 }`}
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
@@ -371,8 +371,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 }}
                 className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
                   periodType === 'custom'
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
-                    : 'text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30'
+                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                    : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
                 }`}
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
