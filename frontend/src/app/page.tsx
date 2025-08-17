@@ -202,57 +202,122 @@ export default function IntroPage() {
           {/* 로고 및 제목 */}
           <div className="flex flex-col items-center gap-4 md:gap-6 mb-6 md:mb-8">
             <div className="relative">
-              <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl animate-glow">
-                <FaRobot className="text-2xl md:text-3xl lg:text-4xl text-white" />
+              <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl animate-glow relative overflow-hidden group">
+                <FaRobot className="text-2xl md:text-3xl lg:text-4xl text-white relative z-10 animate-float" />
+                {/* 내부 빛나는 효과 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-purple-400/20 rounded-2xl animate-pulse-scale" />
+                {/* 테두리 빛나는 효과 */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400/40 via-pink-400/40 to-purple-400/40 p-[2px] animate-border-glow">
+                  <div className="w-full h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl" />
+                </div>
+                {/* 상단 장식 */}
+                <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-bounce-slow shadow-lg shadow-orange-500/50" />
+                {/* 하단 장식 */}
+                <div className="absolute -bottom-1 -left-1 md:-bottom-2 md:-left-2 w-3 h-3 md:w-5 md:h-5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full animate-bounce-slow shadow-lg shadow-cyan-500/50" style={{ animationDelay: '0.5s' }} />
+                {/* 빛나는 효과 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-2xl blur-xl animate-aura-glow" />
+                {/* 파티클 효과 */}
+                <div className="absolute inset-0 overflow-hidden">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-1 h-1 bg-white/40 rounded-full animate-floating-particle"
+                      style={{
+                        left: `${20 + i * 15}%`,
+                        top: `${30 + i * 10}%`,
+                        animationDelay: `${i * 0.3}s`,
+                        animationDuration: `${3 + i * 0.5}s`
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full" />
-              {/* 빛나는 효과 */}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-2xl blur-xl" />
             </div>
             <div className="text-center max-w-4xl mx-auto">
-              <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-3 md:mb-4 animate-text-glow mobile-text text-center">
-                {typedText}
-                {isTyping && <span className="animate-blink">|</span>}
+              <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-3 md:mb-4 animate-text-glow mobile-text text-center relative overflow-hidden">
+                <span className="relative z-10 animate-fade-in">
+                  {typedText}
+                  {isTyping && <span className="animate-blink">|</span>}
+                </span>
+                {/* 제목 배경 빛나는 효과 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl blur-2xl animate-aura-glow" />
+                {/* 제목 테두리 효과 */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-purple-400/20 p-[1px] animate-border-glow">
+                  <div className="w-full h-full bg-transparent rounded-2xl" />
+                </div>
               </h1>
-              <div className="h-6 md:h-8 lg:h-10 flex items-center justify-center">
+              <div className="h-6 md:h-8 lg:h-10 flex items-center justify-center relative">
                 <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-purple-300 font-medium mobile-text text-center max-w-3xl mx-auto leading-relaxed">
                   <span 
                     key={currentTagline}
-                    className="inline-block animate-tagline-fade"
+                    className="inline-block animate-tagline-fade relative"
                   >
                     {taglines[currentTagline]}
+                    {/* 태그라인 밑줄 효과 */}
+                    <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-decoration-slide-down" />
                   </span>
                 </p>
+                {/* 태그라인 배경 효과 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-purple-500/5 rounded-xl blur-xl animate-gradient-wave" />
               </div>
             </div>
           </div>
 
           {/* 메인 텍스트 */}
-          <div className="text-center mb-6 md:mb-8 lg:mb-12 max-w-5xl mx-auto px-1">
-            <h2 className="text-lg md:text-xl lg:text-3xl xl:text-4xl font-bold text-white mb-3 md:mb-4 leading-tight mobile-text text-center">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent block mb-2 md:mb-3">
+          <div className="text-center mb-6 md:mb-8 lg:mb-12 max-w-5xl mx-auto px-1 relative">
+            <h2 className="text-lg md:text-xl lg:text-3xl xl:text-4xl font-bold text-white mb-3 md:mb-4 leading-tight mobile-text text-center relative z-10">
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent block mb-2 md:mb-3 animate-fade-in" style={{ animationDelay: '0.3s' }}>
                 매일 업데이트되는 AI 정보
+                {/* 밑줄 효과 */}
+                <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-decoration-slide-down" />
               </span>
-              <span className="text-white/90 block mb-2 md:mb-3">
+              <span className="text-white/90 block mb-2 md:mb-3 animate-fade-in" style={{ animationDelay: '0.6s' }}>
                 관련 용어를 학습
+                {/* 밑줄 효과 */}
+                <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent animate-decoration-slide-down" />
               </span>
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent block">
+              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent block animate-fade-in" style={{ animationDelay: '0.9s' }}>
                 실전 퀴즈로 지식을 점검
+                {/* 밑줄 효과 */}
+                <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-decoration-slide-down" />
               </span>
             </h2>
-
+            {/* 메인 텍스트 배경 효과 */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-blue-500/5 rounded-2xl blur-2xl animate-gradient-wave" />
           </div>
 
           {/* CTA 버튼 */}
-          <div className="flex justify-center mb-6 md:mb-8">
+          <div className="flex justify-center mb-6 md:mb-8 relative">
             <button
               className="group px-6 md:px-10 lg:px-12 py-3 md:py-4 lg:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-base md:text-lg lg:text-xl rounded-xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-2 md:gap-3 animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow touch-optimized mobile-touch-target"
               onClick={() => router.push('/auth')}
             >
-              <span className="relative z-10">지금 시작하기</span>
-              <FaArrowRight className="group-hover:translate-x-2 transition-transform duration-200 relative z-10" />
+              <span className="relative z-10 animate-text-glow">지금 시작하기</span>
+              <FaArrowRight className="group-hover:translate-x-2 transition-transform duration-200 relative z-10 animate-bounce-slow" />
+              {/* 버튼 내부 빛나는 효과 */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              {/* 버튼 테두리 효과 */}
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-400/40 via-pink-400/40 to-purple-400/40 p-[2px] animate-border-glow">
+                <div className="w-full h-full bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-xl" />
+              </div>
+              {/* 파티클 효과 */}
+              <div className="absolute inset-0 overflow-hidden">
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-1 h-1 bg-white/30 rounded-full animate-floating-particle"
+                    style={{
+                      left: `${10 + i * 12}%`,
+                      top: `${20 + i * 8}%`,
+                      animationDelay: `${i * 0.2}s`,
+                      animationDuration: `${2 + i * 0.3}s`
+                    }}
+                  />
+                ))}
+              </div>
             </button>
+            {/* 버튼 배경 효과 */}
+            <div className="absolute inset-0 -m-8 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-2xl blur-2xl animate-aura-glow" />
           </div>
         </div>
 
@@ -262,30 +327,56 @@ export default function IntroPage() {
                        <div className="w-full max-w-5xl mb-12 md:mb-16">
              <div className="relative">
               {/* 4개 아이콘을 2행2열로 배치하고 클릭하면 펼쳐지는 애니메이션 */}
-              <div className="relative h-72 md:h-96">
+              <div className="relative h-72 md:h-96 animate-fade-in" style={{ animationDelay: '1.2s' }}>
+                {/* 배경 장식 효과 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-blue-500/5 rounded-3xl blur-2xl animate-gradient-wave" />
+                {/* 중앙 빛나는 원 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 rounded-full blur-3xl animate-aura-glow" />
                {/* 첫 번째 행 */}
                <div className="flex items-center justify-center gap-4 md:gap-6 mb-4 md:mb-6">
                  {/* 첫 번째 아이콘 - AI 정보 */}
                  <div 
-                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 ${
+                   className={`text-center cursor-pointer transition-all duration-700 ease-out relative z-70 animate-fade-in ${
                      clickedStat === null 
                        ? 'transform scale-100' 
                        : 'transform translate-x-[-80px] md:translate-x-[-100px] translate-y-[-60px] md:translate-y-[-80px] scale-90'
                    }`}
+                   style={{ animationDelay: '1.4s' }}
                    onClick={(event) => handleIconClick(0, event)}
                  >
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-500 ${
+                     <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-500 relative overflow-hidden ${
                        clickedStat === 0 ? 'scale-110 -translate-y-2 rotate-3' : 'hover:scale-105 hover:-translate-y-1'
                      }`}>
-                       <FaBrain className="text-purple-300 text-3xl md:text-5xl" />
+                       <FaBrain className="text-purple-300 text-3xl md:text-5xl relative z-10 animate-float" />
+                       {/* 아이콘 내부 빛나는 효과 */}
+                       <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-xl animate-pulse-scale" />
+                       {/* 아이콘 테두리 효과 */}
+                       <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/30 via-purple-400/30 to-pink-400/30 p-[1px] animate-border-glow">
+                         <div className="w-full h-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl" />
+                       </div>
+                       {/* 파티클 효과 */}
+                       <div className="absolute inset-0 overflow-hidden">
+                         {[...Array(4)].map((_, i) => (
+                           <div
+                             key={i}
+                             className="absolute w-1 h-1 bg-white/40 rounded-full animate-floating-particle"
+                             style={{
+                               left: `${20 + i * 20}%`,
+                               top: `${30 + i * 15}%`,
+                               animationDelay: `${i * 0.2}s`,
+                               animationDuration: `${2 + i * 0.4}s`
+                             }}
+                           />
+                         ))}
+                       </div>
                      </div>
                    </div>
                    <div className="relative z-10">
-                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">매일 새로운</div>
-                     <div className="text-white font-bold text-sm md:text-base mb-1">AI 정보</div>
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1 animate-fade-in" style={{ animationDelay: '1.6s' }}>매일 새로운</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1 animate-fade-in" style={{ animationDelay: '1.8s' }}>AI 정보</div>
                    </div>
                    
                                        {/* 고급스러운 선택 효과 */}
