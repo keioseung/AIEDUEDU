@@ -108,29 +108,29 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
 
 
-  // 동적 막대 너비 계산
+  // 동적 막대 너비 계산 - 스크롤 방지
   const getBarWidth = () => {
     const dataLength = uniqueChartData.length;
-    if (dataLength <= 7) return 'w-8'; // 주간: 32px
-    if (dataLength <= 14) return 'w-5'; // 2주: 20px
-    if (dataLength <= 30) return 'w-2'; // 월간: 8px (더 좁게)
+    if (dataLength <= 7) return 'w-6'; // 주간: 24px
+    if (dataLength <= 14) return 'w-4'; // 2주: 16px
+    if (dataLength <= 30) return 'w-2'; // 월간: 8px
     if (dataLength <= 60) return 'w-1'; // 2개월: 4px
     return 'w-1'; // 3개월 이상: 4px
   };
 
   const getBarGap = () => {
     const dataLength = uniqueChartData.length;
-    if (dataLength <= 7) return 'gap-2'; // 주간: 8px
-    if (dataLength <= 14) return 'gap-1'; // 2주: 4px
+    if (dataLength <= 7) return 'gap-1'; // 주간: 4px
+    if (dataLength <= 14) return 'gap-0.5'; // 2주: 2px
     if (dataLength <= 30) return 'gap-0'; // 월간: 0px
     return 'gap-0'; // 2개월 이상: 0px
   };
 
   const getContainerMinWidth = () => {
     const dataLength = uniqueChartData.length;
-    if (dataLength <= 7) return `${dataLength * 40}px`; // 주간: 40px per bar
-    if (dataLength <= 14) return `${dataLength * 24}px`; // 2주: 24px per bar
-    if (dataLength <= 30) return `${dataLength * 8}px`; // 월간: 8px per bar (더 좁게)
+    if (dataLength <= 7) return `${dataLength * 28}px`; // 주간: 28px per bar (24px + 4px gap)
+    if (dataLength <= 14) return `${dataLength * 18}px`; // 2주: 18px per bar (16px + 2px gap)
+    if (dataLength <= 30) return `${dataLength * 8}px`; // 월간: 8px per bar
     if (dataLength <= 60) return `${dataLength * 4}px`; // 2개월: 4px per bar
     return `${dataLength * 4}px`; // 3개월 이상: 4px per bar
   };
@@ -744,12 +744,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: 100%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-12 -mx-2 md:-mx-3">
-                  <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
+                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                  <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/50 select-none" style={{height: 96}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map((v, i) => (
-                        <div key={v} style={{height: 96/5, lineHeight: '96px'}} className="font-medium flex items-center">{v}%</div>
+                        <div key={v} style={{height: 128/5, lineHeight: '128px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
@@ -815,12 +815,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     최대: {maxQuiz}%
                   </span>
                 </div>
-                <div className="overflow-x-auto pt-12 -mx-2 md:-mx-3">
-                  <div className="flex flex-row items-end h-24 relative px-2 md:px-3" style={{ minWidth: getContainerMinWidth() }}>
+                <div className="overflow-x-auto pt-16 -mx-2 md:-mx-4">
+                  <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-2 text-xs text-white/50 select-none" style={{height: 96}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
                       {[100, 80, 60, 40, 20, 0].map((v, i) => (
-                        <div key={v} style={{height: 96/5, lineHeight: '96px'}} className="font-medium flex items-center">{v}%</div>
+                        <div key={v} style={{height: 128/5, lineHeight: '128px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
