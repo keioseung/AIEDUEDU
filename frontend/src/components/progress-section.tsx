@@ -315,7 +315,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl"
+          className="w-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl"
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
@@ -372,7 +372,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl"
+          className="w-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl"
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
@@ -429,7 +429,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl"
+          className="w-full bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl"
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
