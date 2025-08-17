@@ -655,9 +655,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             
             return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
           })() ? (
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 gap-4">
               {/* AI 정보 추이 */}
-              <div className="bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl rounded-2xl p-5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+              <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
@@ -676,9 +676,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <div className="overflow-x-auto -mx-2 md:-mx-4">
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 96}}>
                       {[100, 50, 0].map((v, i) => (
-                        <div key={v} style={{height: 64, lineHeight: '64px'}} className="font-medium flex items-center">{v}%</div>
+                        <div key={v} style={{height: 32, lineHeight: '32px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
@@ -728,7 +728,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
 
               {/* 용어 학습 추이 */}
-              <div className="bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl rounded-2xl p-5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+              <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
@@ -747,9 +747,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <div className="overflow-x-auto -mx-2 md:-mx-4">
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 96}}>
                       {[100, 50, 0].map((v, i) => (
-                        <div key={v} style={{height: 64, lineHeight: '64px'}} className="font-medium flex items-center">{v}%</div>
+                        <div key={v} style={{height: 32, lineHeight: '32px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 
@@ -799,7 +799,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
 
               {/* 퀴즈 점수 추이 */}
-              <div className="bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl rounded-2xl p-5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+              <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
@@ -818,9 +818,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <div className="overflow-x-auto -mx-2 md:-mx-4">
                   <div className="flex flex-row items-end h-32 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                     {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 128}}>
+                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 96}}>
                       {[100, 50, 0].map((v, i) => (
-                        <div key={v} style={{height: 64, lineHeight: '64px'}} className="font-medium flex items-center">{v}%</div>
+                        <div key={v} style={{height: 32, lineHeight: '32px'}} className="font-medium flex items-center">{v}%</div>
                       ))}
                     </div>
 

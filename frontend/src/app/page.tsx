@@ -277,10 +277,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 0 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 0 ? 'animate-stat-glow' : ''
+                     <div className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-700 ${
+                       clickedStat === 0 ? 'animate-stat-glow animate-icon-spread' : 'scale-100'
                      }`}>
-                       <FaBrain className="text-purple-300 text-3xl md:text-5xl lg:text-6xl" />
+                       <FaBrain className="text-purple-300 text-4xl md:text-6xl lg:text-7xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -339,10 +339,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 1 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 1 ? 'animate-stat-glow' : ''
+                     <div className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-700 ${
+                       clickedStat === 1 ? 'animate-stat-glow animate-icon-spread' : 'scale-100'
                      }`}>
-                       <FaRocket className="text-purple-300 text-3xl md:text-5xl lg:text-6xl" />
+                       <FaRocket className="text-purple-300 text-4xl md:text-6xl lg:text-7xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -404,10 +404,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 2 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 2 ? 'animate-stat-glow' : ''
+                     <div className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-700 ${
+                       clickedStat === 2 ? 'animate-stat-glow animate-icon-spread' : 'scale-100'
                      }`}>
-                       <FaChartLine className="text-purple-300 text-3xl md:text-5xl lg:text-6xl" />
+                       <FaChartLine className="text-purple-300 text-4xl md:text-6xl lg:text-7xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -466,10 +466,10 @@ export default function IntroPage() {
                    <div className={`relative transition-all duration-300 ${
                      clickedStat === 3 ? 'mb-1 md:mb-2' : 'mb-2 md:mb-3'
                    }`}>
-                     <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center ${
-                       clickedStat === 3 ? 'animate-stat-glow' : ''
+                     <div className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 mx-auto rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center transition-all duration-700 ${
+                       clickedStat === 3 ? 'animate-stat-glow animate-icon-spread' : 'scale-100'
                      }`}>
-                       <FaTrophy className="text-purple-300 text-3xl md:text-5xl lg:text-6xl" />
+                       <FaTrophy className="text-purple-300 text-4xl md:text-6xl lg:text-7xl" />
                      </div>
                    </div>
                    <div className="relative z-10">
@@ -1057,6 +1057,48 @@ export default function IntroPage() {
         }
         .animate-floating-particle {
           animation: floating-particle 3s ease-in-out infinite;
+        }
+        
+        /* 아이콘 클릭 시 퍼지는 애니메이션 */
+        @keyframes icon-spread {
+          0% { 
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+          }
+          25% { 
+            transform: scale(0.8) rotate(5deg);
+            opacity: 0.9;
+          }
+          50% { 
+            transform: scale(0.6) rotate(-3deg);
+            opacity: 0.8;
+          }
+          75% { 
+            transform: scale(0.4) rotate(2deg);
+            opacity: 0.7;
+          }
+          100% { 
+            transform: scale(0.75) rotate(0deg);
+            opacity: 1;
+          }
+        }
+        .animate-icon-spread {
+          animation: icon-spread 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        /* 아이콘 퍼짐 효과 */
+        @keyframes icon-disperse {
+          0% { 
+            transform: scale(1) translateX(0) translateY(0);
+            opacity: 1;
+          }
+          100% { 
+            transform: scale(0.75) translateX(var(--spread-x, 0)) translateY(var(--spread-y, 0));
+            opacity: 0.8;
+          }
+        }
+        .animate-icon-disperse {
+          animation: icon-disperse 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
         
         /* 모바일 최적화 */
