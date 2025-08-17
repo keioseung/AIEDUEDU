@@ -194,20 +194,20 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     setSelectedInfo(null)
   }
 
-  // 로딩 중인 경우
-  if (isLoading) {
-    return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
-        <div className="text-center text-white">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
-          <div className="space-y-3">
-            <p className="text-white/80 text-xl font-medium">AI 정보를 불러오는 중...</p>
-            <p className="text-white/50 text-base">잠시만 기다려주세요</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
+     // 로딩 중인 경우
+   if (isLoading) {
+     return (
+       <div className="glass rounded-2xl p-6 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+         <div className="text-center text-white">
+           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
+           <div className="space-y-3">
+             <p className="text-white/80 text-xl font-medium">잠시만 기다려 주세요</p>
+             <p className="text-white/50 text-base">AI 정보를 불러오는 중입니다</p>
+           </div>
+         </div>
+       </div>
+     )
+   }
 
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
@@ -267,45 +267,45 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
         
         <div className="flex gap-2">
-          {/* 고급스러운 정렬 옵션 */}
-          <div className="flex bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-lg shadow-purple-900/30">
-            <button
-              onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
-              onClick={() => setSortBy('date')}
-              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
-                sortBy === 'date'
-                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                  : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-              }`}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              🕒 최신순
-            </button>
-            <button
-              onTouchStart={handleWebViewTouch(() => setSortBy('title'))}
-              onClick={() => setSortBy('title')}
-              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
-                sortBy === 'title'
-                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                  : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-              }`}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              📝 제목순
-            </button>
-            <button
-              onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
-              onClick={() => setSortBy('length')}
-              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[80px] touch-manipulation webview-button ${
-                sortBy === 'length'
-                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                  : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-              }`}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              📏 길이순
-            </button>
-          </div>
+                     {/* 고급스러운 정렬 옵션 */}
+           <div className="flex bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-1 border-2 border-purple-600/50 shadow-lg shadow-purple-900/30">
+             <button
+               onTouchStart={handleWebViewTouch(() => setSortBy('date'))}
+               onClick={() => setSortBy('date')}
+               className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 min-h-[36px] min-w-[60px] touch-manipulation webview-button ${
+                 sortBy === 'date'
+                   ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                   : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+               }`}
+               style={{ WebkitTapHighlightColor: 'transparent' }}
+             >
+               🕒 최신순
+             </button>
+             <button
+               onTouchStart={handleWebViewTouch(() => setSortBy('title'))}
+               onClick={() => setSortBy('title')}
+               className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 min-h-[36px] min-w-[60px] touch-manipulation webview-button ${
+                 sortBy === 'title'
+                   ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                   : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+               }`}
+               style={{ WebkitTapHighlightColor: 'transparent' }}
+             >
+               📝 제목순
+             </button>
+             <button
+               onTouchStart={handleWebViewTouch(() => setSortBy('length'))}
+               onClick={() => setSortBy('length')}
+               className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 min-h-[36px] min-w-[60px] touch-manipulation webview-button ${
+                 sortBy === 'length'
+                   ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                   : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+               }`}
+               style={{ WebkitTapHighlightColor: 'transparent' }}
+             >
+               📏 길이순
+             </button>
+           </div>
           
                      <button
              onTouchStart={handleWebViewTouch(() => {
@@ -320,14 +320,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                setShowFavoritesOnly(!showFavoritesOnly)
                setTimeout(() => setIsProcessing(false), 300)
              }}
-             className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] touch-manipulation webview-button ${
+             className={`px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-2 min-h-[36px] min-w-[90px] touch-manipulation webview-button ${
                showFavoritesOnly
                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
                  : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
              }`}
              style={{ WebkitTapHighlightColor: 'transparent' }}
            >
-             <FaStar className={`w-4 h-4 transition-colors duration-300 ${
+             <FaStar className={`w-3 h-3 transition-colors duration-300 ${
                showFavoritesOnly 
                  ? 'text-yellow-400 drop-shadow-sm' 
                  : 'text-transparent'
@@ -365,10 +365,10 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
       </div>
 
-      {/* AI 정보 목록 */}
-      <div className="space-y-4 w-full">
-        {currentItems.map((info, index) => (
-          <div key={info.id} className="w-full bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40">
+             {/* AI 정보 목록 */}
+       <div className="space-y-4 w-full">
+         {currentItems.map((info, index) => (
+           <div key={info.id} className="w-full max-w-none bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40">
             <AIInfoCard
               info={{
                 title: info.title,
