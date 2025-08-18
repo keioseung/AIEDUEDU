@@ -183,7 +183,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     if (typeof window !== 'undefined') {
       try {
         const favorites = JSON.parse(localStorage.getItem('favoriteAIInfos') || '[]')
-        const favoriteKey = `${date}_${index}`
+        const favoriteKey = info.id
         const isFav = favorites.includes(favoriteKey)
         console.log(`즐겨찾기 상태 로드: ${favoriteKey} = ${isFav}`)
         setIsFavorite(isFav)
@@ -191,7 +191,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         console.error('즐겨찾기 상태 로드 오류:', error)
       }
     }
-  }, [date, index])
+  }, [info.id])
   
   // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
   const actualLearnedTerms = new Set<string>()
@@ -241,7 +241,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     if (typeof window !== 'undefined') {
       try {
         const favorites = JSON.parse(localStorage.getItem('favoriteAIInfos') || '[]')
-        const favoriteKey = `${date}_${index}`
+        const favoriteKey = info.id
         
         if (isFavorite) {
           const newFavorites = favorites.filter((key: string) => key !== favoriteKey)
@@ -255,7 +255,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         
         // 부모 컴포넌트에 즐겨찾기 상태 변경 알림
         if (onFavoriteToggle) {
-          onFavoriteToggle(favoriteKey)
+          onFavoriteToggle(info.id)
         }
         
         // 로컬 상태도 즉시 업데이트

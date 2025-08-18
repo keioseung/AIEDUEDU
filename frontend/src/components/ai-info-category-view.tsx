@@ -453,8 +453,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
               {/* AI 정보 목록 */}
               {isLoadingCategoryInfo ? (
                 <div className="text-center py-8">
-                  <div className="text-white/70">AI 정보를 불러오는 중...</div>
-                  <div className="text-white/50 text-sm mt-2">새로운 카테고리 데이터를 가져오는 중...</div>
+                  <div className="text-white/70">잠시만 기다려 주세요</div>
                 </div>
               ) : filteredAIInfo.length > 0 ? (
                 <div className="grid gap-4">
@@ -470,9 +469,8 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                          forceUpdate={forceUpdate}
                          setForceUpdate={setForceUpdate}
                          isFavorite={favoriteInfos.has(info.id)}
-                         onFavoriteToggle={() => {
-                           const favoriteKey = info.id
-                           toggleFavorite(favoriteKey)
+                         onFavoriteToggle={(infoId) => {
+                           toggleFavorite(infoId)
                          }}
                          searchQuery={searchQuery}
                        />
