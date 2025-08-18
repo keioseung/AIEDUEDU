@@ -238,6 +238,9 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
       console.log('로컬 스토리지에 저장됨')
     }
+    
+    // 즐겨찾기 상태가 변경되면 필터링된 결과도 즉시 업데이트
+    console.log('즐겨찾기 상태 변경 후 필터링 업데이트 필요')
   }
 
   // 로컬 스토리지에서 즐겨찾기 불러오기
@@ -269,7 +272,9 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       showFavoritesOnly,
       isFavorite: favoriteInfos.has(favoriteKey),
       favoriteKey,
-      searchQuery
+      searchQuery,
+      favoriteInfosSize: favoriteInfos.size,
+      favoriteInfosList: [...favoriteInfos]
     })
     
     return matchesSearch && matchesFavorites
@@ -390,7 +395,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                   {/* 검색 및 필터 */}
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-lg" />
                       <input
                         type="text"
                         placeholder="AI 정보 검색..."
@@ -420,7 +425,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                     >
                       <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-white/70'} />
                       <span className="text-sm font-medium whitespace-nowrap">
-                        {showFavoritesOnly ? '전체 보기' : '즐겨찾기만'}
+                        즐겨찾기만
                       </span>
                     </button>
                   </div>
