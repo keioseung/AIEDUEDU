@@ -34,6 +34,8 @@ class TermItem(BaseModel):
     description: str
 
 class AIInfoItem(BaseModel):
+    id: Optional[int] = None
+    date: Optional[str] = None
     title: str
     content: str
     terms: Optional[List[TermItem]] = []

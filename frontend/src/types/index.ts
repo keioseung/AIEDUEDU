@@ -5,9 +5,14 @@ export interface TermItem {
 }
 
 export interface AIInfoItem {
+  id?: number
+  date?: string
   title: string
   content: string
   terms?: TermItem[]
+  category?: string
+  subcategory?: string
+  confidence?: number
 }
 
 export interface AIInfoCreate {

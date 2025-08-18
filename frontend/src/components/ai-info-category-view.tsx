@@ -288,16 +288,15 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                 </div>
               ) : filteredAIInfo.length > 0 ? (
                 <div className="grid gap-4">
-                  {filteredAIInfo.map((info) => (
+                  {filteredAIInfo.map((info, index) => (
                     <div key={info.id} className="relative">
                       <AIInfoCard
-                        info={{
-                          ...info,
-                          info_index: 0 // 임시 값
-                        }}
+                        info={info}
+                        index={index}
+                        date={info.date || new Date().toISOString().split('T')[0]}
                         sessionId={sessionId}
+                        isLearned={false}
                         onProgressUpdate={onProgressUpdate}
-                        showCategory={false} // 이미 카테고리별로 보여주고 있으므로
                       />
                       
                       {/* 즐겨찾기 버튼 */}
