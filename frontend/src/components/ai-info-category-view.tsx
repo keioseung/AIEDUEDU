@@ -243,8 +243,8 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       setForceUpdate(prev => prev + 1)
       
       return newFavorites
-    })
-  }, [])
+    }, [favoriteInfos])
+  }
 
   // 로컬 스토리지에서 즐겨찾기 불러오기
   useEffect(() => {
@@ -259,6 +259,11 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       }
     }
   }, [])
+
+  // 즐겨찾기 상태 변경 시 강제 리렌더링
+  useEffect(() => {
+    setForceUpdate(prev => prev + 1)
+  }, [favoriteInfos])
 
   // 필터링된 AI 정보
   const filteredAIInfo = categoryAIInfo.filter((info) => {
@@ -436,7 +441,12 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                        }`}
                        style={{ WebkitTapHighlightColor: 'transparent' }}
                      >
-                       <FaStar className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
+                       <FaStar 
+                         className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white'}`} 
+                         fill={showFavoritesOnly ? 'currentColor' : 'none'} 
+                         stroke={showFavoritesOnly ? 'none' : 'currentColor'} 
+                         strokeWidth={showFavoritesOnly ? 0 : 2}
+                       />
                        <span className="text-xs font-medium">즐겨찾기</span>
                      </button>
                   </div>
