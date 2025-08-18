@@ -238,7 +238,7 @@ export default function AuthPage() {
                       placeholder="아이디를 입력하세요"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
-                      className="w-full p-3 bg-purple-900/40 border-2 border-purple-500/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/70 transition-all text-sm min-h-[44px]"
+                      className="w-full p-3 bg-purple-900/40 border-2 border-purple-500/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/70 transition-all text-sm min-h-[44px] input-stable"
                       style={{
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
@@ -249,7 +249,11 @@ export default function AuthPage() {
                         userSelect: 'none',
                         fontSize: '16px',
                         backgroundColor: 'rgba(88, 28, 135, 0.4)',
-                        transition: 'all 0.2s ease-in-out'
+                        transition: 'all 0.2s ease-in-out',
+                        transform: 'translateZ(0)',
+                        backfaceVisibility: 'hidden',
+                        perspective: '1000px',
+                        willChange: 'transform'
                       }}
                     />
                   </div>
@@ -264,7 +268,7 @@ export default function AuthPage() {
                         placeholder="비밀번호를 입력하세요"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        className="w-full p-3 pr-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px]"
+                        className="w-full p-3 pr-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
                         style={{
                           WebkitAppearance: 'none',
                           MozAppearance: 'none',
@@ -273,7 +277,11 @@ export default function AuthPage() {
                           WebkitTouchCallout: 'none',
                           WebkitUserSelect: 'none',
                           userSelect: 'none',
-                          fontSize: '16px'
+                          fontSize: '16px',
+                          transform: 'translateZ(0)',
+                          backfaceVisibility: 'hidden',
+                          perspective: '1000px',
+                          willChange: 'transform'
                         }}
                       />
                       <button
@@ -310,7 +318,7 @@ export default function AuthPage() {
                       placeholder="아이디를 입력하세요"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
-                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px]"
+                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
                       style={{
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
@@ -321,7 +329,11 @@ export default function AuthPage() {
                         userSelect: 'none',
                         fontSize: '16px',
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        transition: 'all 0.2s ease-in-out'
+                        transition: 'all 0.2s ease-in-out',
+                        transform: 'translateZ(0)',
+                        backfaceVisibility: 'hidden',
+                        perspective: '1000px',
+                        willChange: 'transform'
                       }}
                     />
                   </div>
@@ -336,7 +348,7 @@ export default function AuthPage() {
                         placeholder="비밀번호를 입력하세요"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        className="w-full p-3 pr-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px]"
+                        className="w-full p-3 pr-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
                         style={{
                           WebkitAppearance: 'none',
                           MozAppearance: 'none',
@@ -345,7 +357,11 @@ export default function AuthPage() {
                           WebkitTouchCallout: 'none',
                           WebkitUserSelect: 'none',
                           userSelect: 'none',
-                          fontSize: '16px'
+                          fontSize: '16px',
+                          transform: 'translateZ(0)',
+                          backfaceVisibility: 'hidden',
+                          perspective: '1000px',
+                          willChange: 'transform'
                         }}
                       />
                       <button
@@ -524,6 +540,51 @@ export default function AuthPage() {
           .animate-float {
             animation: none;
             opacity: 0.3;
+          }
+        }
+        
+        /* 입력 필드 안정화 강화 */
+        .input-stable {
+          transform: translateZ(0) !important;
+          backface-visibility: hidden !important;
+          perspective: 1000px !important;
+          will-change: transform !important;
+          -webkit-transform: translateZ(0) !important;
+          -webkit-backface-visibility: hidden !important;
+          -webkit-perspective: 1000px !important;
+        }
+        
+        /* 입력 필드 포커스 시 안정화 */
+        .input-stable:focus {
+          transform: translateZ(0) !important;
+          -webkit-transform: translateZ(0) !important;
+          outline: none !important;
+          -webkit-outline: none !important;
+        }
+        
+        /* 입력 필드 스크롤 시 안정화 */
+        .input-stable {
+          -webkit-overflow-scrolling: touch !important;
+          overflow-scrolling: touch !important;
+        }
+        
+        /* 모바일에서 입력 필드 터치 최적화 */
+        @media (max-width: 768px) {
+          .input-stable {
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            font-size: 16px !important;
+            transform: translateZ(0) !important;
+            -webkit-transform: translateZ(0) !important;
+          }
+          
+          .input-stable:focus {
+            transform: translateZ(0) !important;
+            -webkit-transform: translateZ(0) !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(147, 51, 234, 0.5) !important;
           }
         }
       `}</style>
