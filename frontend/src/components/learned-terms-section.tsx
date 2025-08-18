@@ -689,19 +689,19 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
              )}
             
                          {/* 정렬 및 필터 옵션 */}
-             <div className="flex justify-center gap-3">
+             <div className="flex justify-center gap-2">
                {/* 정렬순 드롭다운 버튼 */}
                <div className="relative">
                  <button
                    onTouchStart={handleWebViewTouch(() => setShowSortDropdown(!showSortDropdown))}
                    onClick={() => setShowSortDropdown(!showSortDropdown)}
-                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-4 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 min-h-[44px] min-w-[100px]"
+                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-3 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 min-h-[44px] min-w-[80px]"
                    style={{ WebkitTapHighlightColor: 'transparent' }}
                  >
                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                    <span className="relative z-10 flex items-center gap-2">
                      <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
-                     <span className="text-sm font-medium">정렬</span>
+                     <span className="text-xs font-medium">정렬</span>
                    </span>
                  </button>
 
@@ -847,7 +847,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                    setShowFavoritesOnly(!showFavoritesOnly)
                    setTimeout(() => setIsProcessing(false), 300)
                  }}
-                 className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[80px] webview-button flex items-center justify-center gap-2 ${
+                 className={`px-2 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[70px] webview-button flex items-center justify-center gap-2 ${
                    showFavoritesOnly
                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg ring-2 ring-green-400/30 border border-green-300/40'
                      : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
@@ -855,14 +855,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
-                 <span className="text-sm font-medium">즐겨찾기</span>
+                 <span className="text-xs font-medium">즐겨찾기</span>
                </button>
                
                {/* 랜덤 버튼 */}
                <button
                  onTouchStart={handleWebViewTouch(handleShuffleSafe)}
                  onClick={handleShuffleSafe}
-                 className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[70px] webview-button flex items-center justify-center gap-2 ${
+                 className={`px-2 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[60px] webview-button flex items-center justify-center gap-2 ${
                    isShuffling
                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg ring-2 ring-blue-400/30 border border-blue-300/40'
                      : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
@@ -870,14 +870,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Shuffle className="w-3.5 h-3.5" />
-                 <span className="text-sm font-medium">랜덤</span>
+                 <span className="text-xs font-medium">랜덤</span>
                </button>
                
                {/* 내보내기 버튼 */}
                <button
                  onTouchStart={handleWebViewTouch(exportTermsSafe)}
                  onClick={exportTermsSafe}
-                 className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[80px] webview-button flex items-center justify-center gap-2 ${
+                 className={`px-2 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[70px] webview-button flex items-center justify-center gap-2 ${
                    isExporting
                      ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg ring-2 ring-emerald-400/30 border border-emerald-300/40'
                      : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
@@ -885,7 +885,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Download className="w-3.5 h-3.5" />
-                 <span className="text-sm font-medium">내보내기</span>
+                 <span className="text-xs font-medium">내보내기</span>
                </button>
              </div>
           </motion.div>
