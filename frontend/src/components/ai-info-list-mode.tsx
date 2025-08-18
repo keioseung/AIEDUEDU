@@ -137,23 +137,47 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
   // 즐겨찾기 불러오기
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('favoriteAIInfos')
-      if (stored) {
-        setFavoriteInfos(new Set(JSON.parse(stored)))
+      try {
+        const stored = localStorage.getItem('favoriteAIInfos')
+        if (stored) {
+          const parsed = JSON.parse(stored)
+          console.log('로컬 스토리지에서 즐겨찾기 로드:', parsed)
+          setFavoriteInfos(new Set(parsed))
+        }
+      } catch (error) {
+        console.error('즐겨찾기 데이터 파싱 오류:', error)
       }
     }
   }, [])
 
   // 즐겨찾기 저장
-  const toggleFavorite = (infoId: string) => {
+  const toggleFavorite = (favoriteKey: string) => {
+    console.log('즐겨찾기 토글 호출:', favoriteKey, '현재 상태:', favoriteInfos.has(favoriteKey))
+    
     const newFavorites = new Set(favoriteInfos)
-    if (newFavorites.has(infoId)) {
-      newFavorites.delete(infoId)
+    if (newFavorites.has(favoriteKey)) {
+      newFavorites.delete(favoriteKey)
+      console.log('즐겨찾기에서 제거:', favoriteKey)
     } else {
-      newFavorites.add(infoId)
+      newFavorites.add(favoriteKey)
+      console.log('즐겨찾기에 추가:', favoriteKey)
     }
+    
     setFavoriteInfos(newFavorites)
-    localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
+    console.log('새로운 즐겨찾기 목록:', [...newFavorites])
+    
+    // 로컬 스토리지에 저장
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
+      console.log('로컬 스토리지에 저장됨')
+    }
+    
+    // 즐겨찾기 상태가 변경되면 필터링된 결과도 업데이트
+    if (showFavoritesOnly) {
+      // 강제로 리렌더링을 위해 상태 업데이트
+      setShowFavoritesOnly(false)
+      setTimeout(() => setShowFavoritesOnly(true), 100)
+    }
   }
 
 
@@ -176,7 +200,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
 
     // 즐겨찾기 필터
     if (showFavoritesOnly) {
-      filtered = filtered.filter(info => favoriteInfos.has(info.id))
+      console.log('즐겨찾기만 필터 적용, 현재 즐겨찾기 목록:', [...favoriteInfos])
+      filtered = filtered.filter(info => {
+        const favoriteKey = `${info.date}_${info.info_index}`
+        const isFavorite = favoriteInfos.has(favoriteKey)
+        console.log(`정보 ${info.title} (${favoriteKey}) 즐겨찾기 상태:`, isFavorite)
+        return isFavorite
+      })
+      console.log('필터링 후 결과:', filtered.length, '개')
     }
 
     // 정렬
@@ -267,7 +298,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       <div className="flex flex-col gap-4">
         {/* 검색창 */}
         <div className="relative">
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white w-5 h-5" />
           <input
             type="text"
             placeholder="제목, 내용, 용어로 검색..."
@@ -546,6 +577,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
               sessionId={sessionId}
               isLearned={false}
               onProgressUpdate={onProgressUpdate}
+              isFavorite={favoriteInfos.has(`${info.date}_${info.info_index}`)}
+              onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
             />
           </div>
         ))}

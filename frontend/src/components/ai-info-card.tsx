@@ -71,6 +71,36 @@ const getCategoryStyle = (category: string) => {
       bgColor: 'bg-gradient-to-r from-teal-500/20 to-cyan-500/20',
       textColor: 'text-teal-300',
       borderColor: 'border-teal-400/50'
+    },
+    '코딩/개발 도구': {
+      icon: <Settings className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20',
+      textColor: 'text-emerald-300',
+      borderColor: 'border-emerald-400/50'
+    },
+    '음성/오디오 AI': {
+      icon: <Zap className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20',
+      textColor: 'text-amber-300',
+      borderColor: 'border-amber-400/50'
+    },
+    '데이터 분석/ML': {
+      icon: <Brain className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-violet-500/20 to-purple-500/20',
+      textColor: 'text-violet-300',
+      borderColor: 'border-violet-400/50'
+    },
+    'AI 윤리/정책': {
+      icon: <Shield className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-rose-500/20 to-red-500/20',
+      textColor: 'text-rose-300',
+      borderColor: 'border-rose-400/50'
+    },
+    'AI 하드웨어/인프라': {
+      icon: <Settings className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-slate-500/20 to-gray-500/20',
+      textColor: 'text-slate-300',
+      borderColor: 'border-slate-400/50'
     }
   }
   
@@ -132,8 +162,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       try {
         const favorites = JSON.parse(localStorage.getItem('favoriteAIInfos') || '[]')
         const favoriteKey = `${date}_${index}`
-        setIsFavorite(favorites.includes(favoriteKey))
-      } catch {}
+        const isFav = favorites.includes(favoriteKey)
+        console.log(`즐겨찾기 상태 로드: ${favoriteKey} = ${isFav}`)
+        setIsFavorite(isFav)
+      } catch (error) {
+        console.error('즐겨찾기 상태 로드 오류:', error)
+      }
     }
   }, [date, index])
   
@@ -196,6 +230,14 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           localStorage.setItem('favoriteAIInfos', JSON.stringify(favorites))
           setIsFavorite(true)
         }
+        
+        // 부모 컴포넌트에 즐겨찾기 상태 변경 알림
+        if (onFavoriteToggle) {
+          onFavoriteToggle(favoriteKey)
+        }
+        
+        // 로컬 상태도 즉시 업데이트
+        setIsFavorite(!isFavorite)
       } catch {}
     }
   }

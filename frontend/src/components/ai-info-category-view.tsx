@@ -73,15 +73,45 @@ const getCategoryStyle = (category: string): { icon: React.ReactNode; bgColor: s
     },
     'AI 개발 도구': {
       icon: <Settings className="w-4 h-4" />,
-      bgColor: 'bg-gradient-to-r from-gray-500/20 to-slate-500/20',
-      textColor: 'text-gray-300',
-      borderColor: 'border-gray-500/40'
+      bgColor: 'bg-gradient-to-r from-teal-500/20 to-cyan-500/20',
+      textColor: 'text-teal-300',
+      borderColor: 'border-teal-500/40'
     },
     'AI 창작 도구': {
       icon: <Palette className="w-4 h-4" />,
       bgColor: 'bg-gradient-to-r from-pink-500/20 to-rose-500/20',
       textColor: 'text-pink-300',
       borderColor: 'border-pink-500/40'
+    },
+    '코딩/개발 도구': {
+      icon: <Settings className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20',
+      textColor: 'text-emerald-300',
+      borderColor: 'border-emerald-500/40'
+    },
+    '음성/오디오 AI': {
+      icon: <Zap className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20',
+      textColor: 'text-amber-300',
+      borderColor: 'border-amber-500/40'
+    },
+    '데이터 분석/ML': {
+      icon: <Brain className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-violet-500/20 to-purple-500/20',
+      textColor: 'text-violet-300',
+      borderColor: 'border-violet-500/40'
+    },
+    'AI 윤리/정책': {
+      icon: <Shield className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-rose-500/20 to-red-500/20',
+      textColor: 'text-rose-300',
+      borderColor: 'border-rose-500/40'
+    },
+    'AI 하드웨어/인프라': {
+      icon: <Settings className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-slate-500/20 to-gray-500/20',
+      textColor: 'text-slate-300',
+      borderColor: 'border-slate-500/40'
     }
   }
   
@@ -187,16 +217,16 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   }
 
   // 즐겨찾기 토글
-  const toggleFavorite = (infoId: string) => {
-    console.log('즐겨찾기 토글 호출:', infoId, '현재 상태:', favoriteInfos.has(infoId))
+  const toggleFavorite = (favoriteKey: string) => {
+    console.log('즐겨찾기 토글 호출:', favoriteKey, '현재 상태:', favoriteInfos.has(favoriteKey))
     
     const newFavorites = new Set(favoriteInfos)
-    if (newFavorites.has(infoId)) {
-      newFavorites.delete(infoId)
-      console.log('즐겨찾기에서 제거:', infoId)
+    if (newFavorites.has(favoriteKey)) {
+      newFavorites.delete(favoriteKey)
+      console.log('즐겨찾기에서 제거:', favoriteKey)
     } else {
-      newFavorites.add(infoId)
-      console.log('즐겨찾기에 추가:', infoId)
+      newFavorites.add(favoriteKey)
+      console.log('즐겨찾기에 추가:', favoriteKey)
     }
     
     setFavoriteInfos(newFavorites)
@@ -229,13 +259,15 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       info.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       info.content.toLowerCase().includes(searchQuery.toLowerCase())
     
-    const matchesFavorites = !showFavoritesOnly || favoriteInfos.has(info.id)
+    const favoriteKey = `${info.date || new Date().toISOString().split('T')[0]}_${info.info_index || 0}`
+    const matchesFavorites = !showFavoritesOnly || favoriteInfos.has(favoriteKey)
     
     console.log(`필터링: ${info.title}`, {
       matchesSearch,
       matchesFavorites,
       showFavoritesOnly,
-      isFavorite: favoriteInfos.has(info.id),
+      isFavorite: favoriteInfos.has(favoriteKey),
+      favoriteKey,
       searchQuery
     })
     
@@ -251,8 +283,13 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       '음성 인식/합성 AI': 'from-yellow-500 to-orange-500',
       'AI 응용 서비스': 'from-indigo-500 to-purple-500',
       'AI 보안/윤리': 'from-red-500 to-pink-500',
-      'AI 개발 도구': 'from-gray-500 to-slate-500',
-      'AI 창작 도구': 'from-pink-500 to-rose-500'
+      'AI 개발 도구': 'from-teal-500 to-cyan-500',
+      'AI 창작 도구': 'from-pink-500 to-rose-500',
+      '코딩/개발 도구': 'from-emerald-500 to-teal-500',
+      '음성/오디오 AI': 'from-amber-500 to-yellow-500',
+      '데이터 분석/ML': 'from-violet-500 to-purple-500',
+      'AI 윤리/정책': 'from-rose-500 to-red-500',
+      'AI 하드웨어/인프라': 'from-slate-500 to-gray-500'
     }
     return categoryStyles[category as keyof typeof categoryStyles] || 'from-gray-500 to-slate-500'
   }
@@ -352,14 +389,14 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                   {/* 검색 및 필터 */}
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white" />
                       <input
                         type="text"
                         placeholder="AI 정보 검색..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="pl-10 pr-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/40 transition-all duration-200 backdrop-blur-sm"
-                        style={{ minWidth: 180, maxWidth: 250 }}
+                        style={{ minWidth: 150, maxWidth: 200 }}
                       />
                     </div>
                     
@@ -408,8 +445,8 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         onProgressUpdate={onProgressUpdate}
                         forceUpdate={0}
                         setForceUpdate={() => {}}
-                        isFavorite={favoriteInfos.has(info.id)}
-                        onFavoriteToggle={toggleFavorite}
+                        isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${index}`)}
+                        onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
                       />
                       
                       {/* 카테고리 정보 */}
