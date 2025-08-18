@@ -243,7 +243,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       setForceUpdate(prev => prev + 1)
       
       return newFavorites
-    }, [favoriteInfos])
+    }, [])
   }
 
   // 로컬 스토리지에서 즐겨찾기 불러오기
@@ -260,10 +260,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
     }
   }, [])
 
-  // 즐겨찾기 상태 변경 시 강제 리렌더링
-  useEffect(() => {
-    setForceUpdate(prev => prev + 1)
-  }, [favoriteInfos])
+
 
   // 필터링된 AI 정보
   const filteredAIInfo = categoryAIInfo.filter((info) => {
