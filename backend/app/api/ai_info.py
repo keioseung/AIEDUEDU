@@ -647,16 +647,87 @@ def get_sample_data(db: Session = Depends(get_db)):
                 "date": ai_info.date,
                 "info1_title": ai_info.info1_title[:50] if ai_info.info1_title else None,
                 "info1_content": ai_info.info1_content[:100] if ai_info.info1_content else None,
+                "info1_category": getattr(ai_info, 'info1_category', None),
                 "info2_title": ai_info.info2_title[:50] if ai_info.info2_title else None,
                 "info2_content": ai_info.info2_content[:100] if ai_info.info2_content else None,
+                "info2_category": getattr(ai_info, 'info2_category', None),
                 "info3_title": ai_info.info3_title[:50] if ai_info.info3_title else None,
-                "info3_content": ai_info.info3_content[:100] if ai_info.info3_content else None
+                "info3_content": ai_info.info3_content[:100] if ai_info.info3_content else None,
+                "info3_category": getattr(ai_info, 'info3_category', None)
             })
         
         return {"sample_data": sample_data, "total_records": db.query(AIInfo).count()}
         
     except Exception as e:
         print(f"Error getting sample data: {e}")
+        return {"error": str(e)}
+
+@router.get("/debug/category-check/{category}")
+def check_category_data(category: str, db: Session = Depends(get_db)):
+    """디버깅용: 특정 카테고리의 데이터 상세 확인"""
+    try:
+        print(f"카테고리 '{category}' 상세 확인 요청됨")
+        
+        all_ai_info = db.query(AIInfo).all()
+        category_data = []
+        
+        for ai_info in all_ai_info:
+            # info1 확인
+            if ai_info.info1_title and ai_info.info1_content:
+                stored_category = getattr(ai_info, 'info1_category', None)
+                if stored_category and stored_category.strip():
+                    category_data.append({
+                        "source": "info1",
+                        "date": ai_info.date,
+                        "title": ai_info.info1_title[:50],
+                        "stored_category": stored_category,
+                        "matches_requested": stored_category == category,
+                        "content_preview": ai_info.info1_content[:100]
+                    })
+                    print(f"  info1: 저장된 카테고리 '{stored_category}' -> 요청된 카테고리 '{category}'와 일치: {stored_category == category}")
+            
+            # info2 확인
+            if ai_info.info2_title and ai_info.info2_content:
+                stored_category = getattr(ai_info, 'info2_category', None)
+                if stored_category and stored_category.strip():
+                    category_data.append({
+                        "source": "info2",
+                        "date": ai_info.date,
+                        "title": ai_info.info2_title[:50],
+                        "stored_category": stored_category,
+                        "matches_requested": stored_category == category,
+                        "content_preview": ai_info.info2_content[:100]
+                    })
+                    print(f"  info2: 저장된 카테고리 '{stored_category}' -> 요청된 카테고리 '{category}'와 일치: {stored_category == category}")
+            
+            # info3 확인
+            if ai_info.info3_title and ai_info.info3_content:
+                stored_category = getattr(ai_info, 'info3_category', None)
+                if stored_category and stored_category.strip():
+                    category_data.append({
+                        "source": "info3",
+                        "date": ai_info.date,
+                        "title": ai_info.info3_title[:50],
+                        "stored_category": stored_category,
+                        "matches_requested": stored_category == category,
+                        "content_preview": ai_info.info3_content[:100]
+                    })
+                    print(f"  info3: 저장된 카테고리 '{stored_category}' -> 요청된 카테고리 '{category}'와 일치: {stored_category == category}")
+        
+        # 요청된 카테고리와 일치하는 항목만 필터링
+        matching_items = [item for item in category_data if item["matches_requested"]]
+        
+        print(f"총 {len(category_data)}개 항목에서 요청된 카테고리 '{category}'와 일치하는 항목: {len(matching_items)}개")
+        
+        return {
+            "requested_category": category,
+            "total_items_with_categories": len(category_data),
+            "matching_items": matching_items,
+            "all_category_data": category_data
+        }
+        
+    except Exception as e:
+        print(f"Error checking category data: {e}")
         return {"error": str(e)}
 
 @router.get("/categories/all", response_model=List[str])
