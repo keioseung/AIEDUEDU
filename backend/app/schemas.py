@@ -37,6 +37,9 @@ class AIInfoItem(BaseModel):
     title: str
     content: str
     terms: Optional[List[TermItem]] = []
+    category: Optional[str] = None
+    subcategory: Optional[str] = None
+    confidence: Optional[float] = None
 
 class AIInfoCreate(BaseModel):
     date: str

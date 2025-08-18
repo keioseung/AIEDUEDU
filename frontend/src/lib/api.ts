@@ -276,6 +276,12 @@ export const aiInfoAPI = {
   getTermsQuiz: (sessionId: string) => api.get(`/api/ai-info/terms-quiz/${sessionId}`),
   getTermsQuizByDate: (date: string) => api.get(`/api/ai-info/terms-quiz-by-date/${date}`),
   getLearnedTerms: (sessionId: string) => api.get(`/api/ai-info/learned-terms/${sessionId}`),
+  
+  // 카테고리 관련 API
+  getAllCategories: () => api.get('/api/ai-info/categories/all'),
+  getSubcategories: (category: string) => api.get(`/api/ai-info/categories/${category}/subcategories`),
+  getByCategory: (category: string) => api.get(`/api/ai-info/by-category/${category}`),
+  getCategoryStats: () => api.get('/api/ai-info/categories/stats'),
 }
 
 // Quiz API

@@ -7,6 +7,7 @@ import { TrendingUp, Calendar, Trophy, Sun, Target, BarChart3, BookOpen } from '
 import Sidebar from '@/components/sidebar'
 import AIInfoCard from '@/components/ai-info-card'
 import AIInfoListMode from '@/components/ai-info-list-mode'
+import AIInfoCategoryView from '@/components/ai-info-category-view'
 import TermsQuizSection from '@/components/terms-quiz-section'
 import ProgressSection from '@/components/progress-section'
 import LearnedTermsSection from '@/components/learned-terms-section'
@@ -93,7 +94,7 @@ export default function DashboardPage() {
   const { data: userStats, refetch: refetchUserStats } = useUserStats(sessionId)
   const router = useRouter()
   const queryClient = useQueryClient()
-  const [activeTab, setActiveTab] = useState<'ai' | 'quiz' | 'progress' | 'term'>('ai')
+  const [activeTab, setActiveTab] = useState<'ai' | 'category' | 'quiz' | 'progress' | 'term'>('ai')
   const [aiInfoMode, setAiInfoMode] = useState<'date' | 'list'>('date')
   const [randomTerm, setRandomTerm] = useState(() => TERMS[Math.floor(Math.random() * TERMS.length)])
   
@@ -464,6 +465,13 @@ export default function DashboardPage() {
                 description: 'AI 정보 학습'
               },
               { 
+                id: 'category', 
+                label: '카테고리별', 
+                gradient: 'from-indigo-600 via-blue-600 to-cyan-600',
+                hoverGradient: 'from-indigo-500 via-blue-500 to-cyan-500',
+                description: '카테고리별 정리'
+              },
+              { 
                 id: 'quiz', 
                 label: '용어 퀴즈', 
                 gradient: 'from-purple-600 via-pink-600 to-rose-600',
@@ -597,6 +605,14 @@ export default function DashboardPage() {
                   onProgressUpdate={handleProgressUpdate}
                 />
               )}
+            </section>
+          )}
+          {activeTab === 'category' && (
+            <section className="mb-8 md:mb-16">
+              <AIInfoCategoryView
+                sessionId={sessionId}
+                onProgressUpdate={handleProgressUpdate}
+              />
             </section>
           )}
           {activeTab === 'quiz' && (

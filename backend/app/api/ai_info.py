@@ -7,6 +7,7 @@ import re
 from ..database import get_db
 from ..models import AIInfo
 from ..schemas import AIInfoCreate, AIInfoResponse, AIInfoItem, TermItem
+from ..utils.ai_classifier import ai_classifier
 
 router = APIRouter()
 
@@ -31,30 +32,60 @@ def get_ai_info_by_date(date: str, db: Session = Depends(get_db)):
                 terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
             except json.JSONDecodeError:
                 terms1 = []
+            
+            # 카테고리 자동 분류
+            classification = ai_classifier.classify_content(
+                ai_info.info1_title, 
+                ai_info.info1_content
+            )
+            
             infos.append({
                 "title": ai_info.info1_title, 
                 "content": ai_info.info1_content,
-                "terms": terms1
+                "terms": terms1,
+                "category": classification["category"],
+                "subcategory": classification["subcategory"],
+                "confidence": classification["confidence"]
             })
         if ai_info.info2_title and ai_info.info2_content:
             try:
                 terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
             except json.JSONDecodeError:
                 terms2 = []
+            
+            # 카테고리 자동 분류
+            classification = ai_classifier.classify_content(
+                ai_info.info2_title, 
+                ai_info.info2_content
+            )
+            
             infos.append({
                 "title": ai_info.info2_title, 
                 "content": ai_info.info2_content,
-                "terms": terms2
+                "terms": terms2,
+                "category": classification["category"],
+                "subcategory": classification["subcategory"],
+                "confidence": classification["confidence"]
             })
         if ai_info.info3_title and ai_info.info3_content:
             try:
                 terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
             except json.JSONDecodeError:
                 terms3 = []
+            
+            # 카테고리 자동 분류
+            classification = ai_classifier.classify_content(
+                ai_info.info3_title, 
+                ai_info.info3_content
+            )
+            
             infos.append({
                 "title": ai_info.info3_title, 
                 "content": ai_info.info3_content,
-                "terms": terms3
+                "terms": terms3,
+                "category": classification["category"],
+                "subcategory": classification["subcategory"],
+                "confidence": classification["confidence"]
             })
         
         return infos
@@ -595,4 +626,155 @@ def get_learned_terms(session_id: str, db: Session = Depends(get_db)):
 
 @router.options("/")
 def options_ai_info():
-    return Response(status_code=200) 
+    return Response(status_code=200)
+
+@router.get("/categories/all", response_model=List[str])
+def get_all_categories():
+    """사용 가능한 모든 카테고리를 반환합니다."""
+    try:
+        return ai_classifier.get_all_categories()
+    except Exception as e:
+        print(f"Error getting categories: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get categories: {str(e)}")
+
+@router.get("/categories/{category}/subcategories", response_model=List[str])
+def get_subcategories(category: str):
+    """특정 카테고리의 하위 카테고리를 반환합니다."""
+    try:
+        return ai_classifier.get_subcategories(category)
+    except Exception as e:
+        print(f"Error getting subcategories: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get subcategories: {str(e)}")
+
+@router.get("/by-category/{category}", response_model=List[dict])
+def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
+    """특정 카테고리의 AI 정보를 반환합니다."""
+    try:
+        # 모든 AI 정보를 가져와서 카테고리별로 필터링
+        all_ai_info = db.query(AIInfo).all()
+        filtered_infos = []
+        
+        for ai_info in all_ai_info:
+            infos = []
+            if ai_info.info1_title and ai_info.info1_content:
+                classification = ai_classifier.classify_content(
+                    ai_info.info1_title, 
+                    ai_info.info1_content
+                )
+                if classification["category"] == category:
+                    try:
+                        terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                    except json.JSONDecodeError:
+                        terms1 = []
+                    
+                    filtered_infos.append({
+                        "id": ai_info.id,
+                        "date": ai_info.date,
+                        "title": ai_info.info1_title,
+                        "content": ai_info.info1_content,
+                        "terms": terms1,
+                        "category": classification["category"],
+                        "subcategory": classification["subcategory"],
+                        "confidence": classification["confidence"],
+                        "created_at": ai_info.created_at
+                    })
+            
+            if ai_info.info2_title and ai_info.info2_content:
+                classification = ai_classifier.classify_content(
+                    ai_info.info2_title, 
+                    ai_info.info2_content
+                )
+                if classification["category"] == category:
+                    try:
+                        terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                    except json.JSONDecodeError:
+                        terms2 = []
+                    
+                    filtered_infos.append({
+                        "id": ai_info.id,
+                        "date": ai_info.date,
+                        "title": ai_info.info2_title,
+                        "content": ai_info.info2_content,
+                        "terms": terms2,
+                        "category": classification["category"],
+                        "subcategory": classification["subcategory"],
+                        "confidence": classification["confidence"],
+                        "created_at": ai_info.created_at
+                    })
+            
+            if ai_info.info3_title and ai_info.info3_content:
+                classification = ai_classifier.classify_content(
+                    ai_info.info3_title, 
+                    ai_info.info3_content
+                )
+                if classification["category"] == category:
+                    try:
+                        terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                    except json.JSONDecodeError:
+                        terms3 = []
+                    
+                    filtered_infos.append({
+                        "id": ai_info.id,
+                        "date": ai_info.date,
+                        "title": ai_info.info3_title,
+                        "content": ai_info.info3_content,
+                        "terms": terms3,
+                        "category": classification["category"],
+                        "subcategory": classification["subcategory"],
+                        "confidence": classification["confidence"],
+                        "created_at": ai_info.created_at
+                    })
+        
+        # 날짜순으로 정렬
+        filtered_infos.sort(key=lambda x: x["date"], reverse=True)
+        return filtered_infos
+        
+    except Exception as e:
+        print(f"Error getting AI info by category: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get AI info by category: {str(e)}")
+
+@router.get("/categories/stats", response_model=dict)
+def get_category_statistics(db: Session = Depends(get_db)):
+    """카테고리별 통계를 반환합니다."""
+    try:
+        all_ai_info = db.query(AIInfo).all()
+        category_stats = {}
+        
+        for ai_info in all_ai_info:
+            for title, content in [
+                (ai_info.info1_title, ai_info.info1_content),
+                (ai_info.info2_title, ai_info.info2_content),
+                (ai_info.info3_title, ai_info.info3_content)
+            ]:
+                if title and content:
+                    classification = ai_classifier.classify_content(title, content)
+                    category = classification["category"]
+                    
+                    if category not in category_stats:
+                        category_stats[category] = {
+                            "count": 0,
+                            "subcategories": {},
+                            "dates": []
+                        }
+                    
+                    category_stats[category]["count"] += 1
+                    
+                    # 하위 카테고리 통계
+                    subcategory = classification["subcategory"]
+                    if subcategory not in category_stats[category]["subcategories"]:
+                        category_stats[category]["subcategories"][subcategory] = 0
+                    category_stats[category]["subcategories"][subcategory] += 1
+                    
+                    # 날짜 정보
+                    if ai_info.date not in category_stats[category]["dates"]:
+                        category_stats[category]["dates"].append(ai_info.date)
+        
+        # 날짜 정렬
+        for category in category_stats:
+            category_stats[category]["dates"].sort(reverse=True)
+        
+        return category_stats
+        
+    except Exception as e:
+        print(f"Error getting category statistics: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get category statistics: {str(e)}") 
