@@ -269,7 +269,9 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
     // 즐겨찾기 필터링
     if (showFavoritesOnly) {
       // 즐겨찾기만 모드일 때는 즐겨찾기된 카드만 표시
-      return matchesSearch && favoriteInfos.has(favoriteKey)
+      const isFavorite = favoriteInfos.has(favoriteKey)
+      console.log(`즐겨찾기 필터링: ${info.title}`, { showFavoritesOnly, favoriteKey, isFavorite, favoriteInfosSize: favoriteInfos.size })
+      return matchesSearch && isFavorite
     } else {
       // 전체보기 모드일 때는 모든 카드 표시
       return matchesSearch
@@ -416,7 +418,9 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         onClick={() => {
                           if (isProcessing) return
                           setIsProcessing(true)
+                          console.log('즐겨찾기만 버튼 클릭 전 상태:', showFavoritesOnly)
                           setShowFavoritesOnly(!showFavoritesOnly)
+                          console.log('즐겨찾기만 버튼 클릭 후 상태:', !showFavoritesOnly)
                           setTimeout(() => setIsProcessing(false), 300)
                         }}
                         className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
