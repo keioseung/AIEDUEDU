@@ -269,41 +269,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
     <div className="space-y-6">
       {/* 헤더 */}
       <div className="flex flex-col gap-4">
-        {/* 검색 및 필터 */}
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300" />
-            <input
-              type="text"
-              placeholder="AI 정보 검색..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-3 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
-              style={{ minWidth: 150, maxWidth: 200 }}
-            />
-          </div>
-          
-          <button
-            onClick={() => {
-              const newShowFavoritesOnly = !showFavoritesOnly
-              console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', newShowFavoritesOnly)
-              setShowFavoritesOnly(newShowFavoritesOnly)
-              
-              // 즐겨찾기 상태가 변경되면 검색 쿼리도 초기화
-              if (newShowFavoritesOnly) {
-                setSearchQuery('')
-              }
-            }}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-              showFavoritesOnly 
-                ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-300 border border-yellow-400/40 shadow-lg shadow-yellow-500/20' 
-                : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white/90 border border-purple-400/40 hover:from-purple-500/30 hover:to-pink-500/30 hover:text-white hover:border-purple-300/50'
-            }`}
-          >
-            <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-purple-300'} />
-            <span className="text-sm font-medium whitespace-nowrap">즐겨찾기만</span>
-          </button>
-        </div>
+        {/* 기존 헤더 내용 제거 - 검색 및 필터는 카테고리 목록 밑으로 이동 */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -314,6 +280,42 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
               <FaFilter className="text-purple-300" />
               카테고리 목록
             </h3>
+            
+            {/* 검색 및 필터 */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative">
+                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300" />
+                <input
+                  type="text"
+                  placeholder="AI 정보 검색..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-3 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
+                  style={{ minWidth: 150, maxWidth: 200 }}
+                />
+              </div>
+              
+              <button
+                onClick={() => {
+                  const newShowFavoritesOnly = !showFavoritesOnly
+                  console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', newShowFavoritesOnly)
+                  setShowFavoritesOnly(newShowFavoritesOnly)
+                  
+                  // 즐겨찾기 상태가 변경되면 검색 쿼리도 초기화
+                  if (newShowFavoritesOnly) {
+                    setSearchQuery('')
+                  }
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+                  showFavoritesOnly 
+                    ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-300 border border-yellow-400/40 shadow-lg shadow-yellow-500/20' 
+                    : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white/90 border border-purple-400/40 hover:from-purple-500/30 hover:to-pink-500/30 hover:text-white hover:border-purple-300/50'
+                }`}
+              >
+                <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-purple-300'} />
+                <span className="text-sm font-medium whitespace-nowrap">즐겨찾기만</span>
+              </button>
+            </div>
             
             <div className="space-y-2">
               {categories.map((category) => {
