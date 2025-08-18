@@ -424,38 +424,20 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                     </div>
                     
                                          <button
-                       onClick={() => {
-                         console.log('즐겨찾기만 버튼 클릭 전 상태:', showFavoritesOnly)
-                         
-                         // 상태를 강제로 토글
-                         setShowFavoritesOnly(prevState => {
-                           const newState = !prevState
-                           console.log('즐겨찾기 상태 변경:', prevState, '->', newState)
-                           
-                           // 즐겨찾기만 모드 활성화 시 검색 쿼리 초기화
-                           if (newState) {
-                             setSearchQuery('')
-                           }
-                           
-                           return newState
-                         })
-                         
-                         // 상태 변경 확인을 위한 추가 로그
-                         setTimeout(() => {
-                           console.log('즐겨찾기 상태 최종 확인:', showFavoritesOnly)
-                         }, 50)
-                       }}
-                       className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-                         showFavoritesOnly 
-                           ? 'bg-gradient-to-r from-yellow-500/80 to-orange-500/80 text-white border border-yellow-400/60 shadow-lg shadow-yellow-500/30' 
-                           : 'bg-white/20 text-white/90 border border-white/30 hover:bg-white/30 hover:text-white hover:border-white/40 backdrop-blur-sm'
-                       }`}
-                     >
-                       <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-white/70'} />
-                       <span className="text-sm font-medium whitespace-nowrap">
-                         즐겨찾기만
-                       </span>
-                     </button>
+                        onClick={() => {
+                          setShowFavoritesOnly(!showFavoritesOnly)
+                        }}
+                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+                          showFavoritesOnly 
+                            ? 'bg-gradient-to-r from-yellow-500/80 to-orange-500/80 text-white border border-yellow-400/60 shadow-lg shadow-yellow-500/30' 
+                            : 'bg-white/20 text-white/90 border border-white/30 hover:bg-white/30 hover:text-white hover:border-white/40 backdrop-blur-sm'
+                        }`}
+                      >
+                        <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-white/70'} />
+                        <span className="text-sm font-medium whitespace-nowrap">
+                          즐겨찾기만
+                        </span>
+                      </button>
                   </div>
                 </div>
               </div>
