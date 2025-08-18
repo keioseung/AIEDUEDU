@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles, ChevronLeft, ChevronRight, Image, MessageSquare, Cpu, Globe, Zap, Shield, Palette, Bot } from 'lucide-react'
+import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles, ChevronLeft, ChevronRight, Image, MessageSquare, Cpu, Globe, Zap, Shield, Palette, Bot, Settings } from 'lucide-react'
 import { useUpdateUserProgress, useCheckAchievements, useUpdateTermProgress, useLearnedTerms } from '@/hooks/use-user-progress'
 import { useQueryClient } from '@tanstack/react-query'
 import type { AIInfoItem, TermItem } from '@/types'
