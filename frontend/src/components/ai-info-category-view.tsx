@@ -416,24 +416,29 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                       />
                     </div>
                     
-                                         <button
-                        onClick={() => {
-                          if (isProcessing) return
-                          setIsProcessing(true)
-                          setShowFavoritesOnly(prev => !prev)
-                          setTimeout(() => setIsProcessing(false), 300)
-                        }}
-                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-                          showFavoritesOnly 
-                            ? 'bg-gradient-to-r from-yellow-500/80 to-orange-500/80 text-white border border-yellow-400/60 shadow-lg shadow-yellow-500/30' 
-                            : 'bg-white/20 text-white/90 border border-white/30 hover:bg-white/30 hover:text-white hover:border-white/40 backdrop-blur-sm'
-                        }`}
-                      >
-                        <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-white/70'} />
-                        <span className="text-sm font-medium whitespace-nowrap">
-                          즐겨찾기만
-                        </span>
-                      </button>
+                     <button
+                       onTouchStart={() => {
+                         if (isProcessing) return
+                         setIsProcessing(true)
+                         setShowFavoritesOnly(prev => !prev)
+                         setTimeout(() => setIsProcessing(false), 300)
+                       }}
+                       onClick={() => {
+                         if (isProcessing) return
+                         setIsProcessing(true)
+                         setShowFavoritesOnly(prev => !prev)
+                         setTimeout(() => setIsProcessing(false), 300)
+                       }}
+                       className={`px-2 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[70px] webview-button flex items-center justify-center gap-2 ${
+                         showFavoritesOnly
+                           ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg ring-2 ring-green-400/30 border border-green-300/40'
+                           : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
+                       }`}
+                       style={{ WebkitTapHighlightColor: 'transparent' }}
+                     >
+                       <FaStar className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
+                       <span className="text-xs font-medium">즐겨찾기</span>
+                     </button>
                   </div>
                 </div>
               </div>
