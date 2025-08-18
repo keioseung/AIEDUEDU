@@ -691,11 +691,11 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                          {/* 정렬 및 필터 옵션 */}
              <div className="flex justify-center gap-3">
                {/* 정렬순 드롭다운 버튼 */}
-               <div className="relative flex-1 max-w-[200px]">
+               <div className="relative">
                  <button
                    onTouchStart={handleWebViewTouch(() => setShowSortDropdown(!showSortDropdown))}
                    onClick={() => setShowSortDropdown(!showSortDropdown)}
-                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-3 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 w-full min-h-[44px]"
+                   className="group relative overflow-hidden bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 text-white px-4 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 border border-purple-400/30 min-h-[44px] min-w-[100px]"
                    style={{ WebkitTapHighlightColor: 'transparent' }}
                  >
                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
@@ -870,7 +870,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Shuffle className="w-3.5 h-3.5" />
-                 <span className="text-sm font-medium">섞기</span>
+                 <span className="text-sm font-medium">랜덤</span>
                </button>
                
                {/* 내보내기 버튼 */}
