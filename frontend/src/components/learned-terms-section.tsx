@@ -701,7 +701,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                    <span className="relative z-10 flex items-center gap-2">
                      <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
-                     <span className="text-sm font-medium">정렬순</span>
+                     <span className="text-sm font-medium">정렬</span>
                    </span>
                  </button>
 
@@ -855,7 +855,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
-                 <span className="text-sm font-medium">즐겨찾기만</span>
+                 <span className="text-sm font-medium">즐겨찾기</span>
                </button>
                
                {/* 랜덤 버튼 */}
@@ -870,7 +870,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Shuffle className="w-3.5 h-3.5" />
-                 <span className="text-sm font-medium">랜덤</span>
+                 <span className="text-sm font-medium">섞기</span>
                </button>
                
                {/* 내보내기 버튼 */}
