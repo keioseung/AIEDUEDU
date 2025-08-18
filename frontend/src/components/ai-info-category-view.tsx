@@ -133,7 +133,26 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       newFavorites.add(infoId)
     }
     setFavoriteInfos(newFavorites)
+    
+    // 로컬 스토리지에 저장
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
+    }
   }
+
+  // 로컬 스토리지에서 즐겨찾기 불러오기
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('favoriteAIInfos')
+      if (stored) {
+        try {
+          setFavoriteInfos(new Set(JSON.parse(stored)))
+        } catch (error) {
+          console.error('즐겨찾기 데이터 파싱 오류:', error)
+        }
+      }
+    }
+  }, [])
 
   // 필터링된 AI 정보
   const filteredAIInfo = categoryAIInfo.filter(info => {
@@ -174,10 +193,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       {/* 헤더 */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-            <FaRobot className="text-blue-400" />
-            AI 정보 카테고리별 보기
-          </h2>
+          {/* 헤더 제목 제거 */}
         </div>
         
         {/* 검색 및 필터 */}
@@ -189,20 +205,21 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
               placeholder="AI 정보 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
+              className="pl-10 pr-3 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
+              style={{ minWidth: 200 }}
             />
           </div>
           
           <button
             onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+            className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
               showFavoritesOnly 
                 ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-300 border border-yellow-400/40 shadow-lg shadow-yellow-500/20' 
                 : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white/90 border border-purple-400/40 hover:from-purple-500/30 hover:to-pink-500/30 hover:text-white hover:border-purple-300/50'
             }`}
           >
             <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-purple-300'} />
-            즐겨찾기만
+            <span className="text-sm font-medium whitespace-nowrap">즐겨찾기만</span>
           </button>
         </div>
       </div>
