@@ -691,87 +691,159 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
             
             # info1 처리
             if ai_info.info1_title and ai_info.info1_content:
-                total_classifications += 1
-                classification = ai_classifier.classify_content(
-                    ai_info.info1_title, 
-                    ai_info.info1_content
-                )
-                print(f"  info1 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
-                
-                if classification["category"] == category:
-                    try:
-                        terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
-                    except json.JSONDecodeError:
-                        terms1 = []
+                # 저장된 카테고리가 있으면 우선 사용, 없으면 실시간 분류
+                stored_category = getattr(ai_info, 'info1_category', None)
+                if stored_category and stored_category.strip():
+                    print(f"  info1 저장된 카테고리: {stored_category}")
+                    if stored_category == category:
+                        try:
+                            terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                        except json.JSONDecodeError:
+                            terms1 = []
+                        
+                        filtered_infos.append({
+                            "id": f"{ai_info.date}_0",
+                            "date": ai_info.date,
+                            "title": ai_info.info1_title,
+                            "content": ai_info.info1_content,
+                            "terms": terms1,
+                            "category": stored_category,
+                            "subcategory": None,
+                            "confidence": 1.0,
+                            "created_at": ai_info.created_at
+                        })
+                        print(f"  -> info1 저장된 카테고리로 매칭됨!")
+                else:
+                    # 실시간 분류
+                    total_classifications += 1
+                    classification = ai_classifier.classify_content(
+                        ai_info.info1_title, 
+                        ai_info.info1_content
+                    )
+                    print(f"  info1 실시간 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
                     
-                    filtered_infos.append({
-                        "id": f"{ai_info.date}_0",
-                        "date": ai_info.date,
-                        "title": ai_info.info1_title,
-                        "content": ai_info.info1_content,
-                        "terms": terms1,
-                        "category": classification["category"],
-                        "subcategory": classification["subcategory"],
-                        "confidence": classification["confidence"],
-                        "created_at": ai_info.created_at
-                    })
-                    print(f"  -> info1 매칭됨!")
+                    if classification["category"] == category:
+                        try:
+                            terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                        except json.JSONDecodeError:
+                            terms1 = []
+                        
+                        filtered_infos.append({
+                            "id": f"{ai_info.date}_0",
+                            "date": ai_info.date,
+                            "title": ai_info.info1_title,
+                            "content": ai_info.info1_content,
+                            "terms": terms1,
+                            "category": classification["category"],
+                            "subcategory": classification["subcategory"],
+                            "confidence": classification["confidence"],
+                            "created_at": ai_info.created_at
+                        })
+                        print(f"  -> info1 실시간 분류로 매칭됨!")
             
             # info2 처리
             if ai_info.info2_title and ai_info.info2_content:
-                total_classifications += 1
-                classification = ai_classifier.classify_content(
-                    ai_info.info2_title, 
-                    ai_info.info2_content
-                )
-                print(f"  info2 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
-                
-                if classification["category"] == category:
-                    try:
-                        terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
-                    except json.JSONDecodeError:
-                        terms2 = []
+                # 저장된 카테고리가 있으면 우선 사용, 없으면 실시간 분류
+                stored_category = getattr(ai_info, 'info2_category', None)
+                if stored_category and stored_category.strip():
+                    print(f"  info2 저장된 카테고리: {stored_category}")
+                    if stored_category == category:
+                        try:
+                            terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                        except json.JSONDecodeError:
+                            terms2 = []
+                        
+                        filtered_infos.append({
+                            "id": f"{ai_info.date}_1",
+                            "date": ai_info.date,
+                            "title": ai_info.info2_title,
+                            "content": ai_info.info2_content,
+                            "terms": terms2,
+                            "category": stored_category,
+                            "subcategory": None,
+                            "confidence": 1.0,
+                            "created_at": ai_info.created_at
+                        })
+                        print(f"  -> info2 저장된 카테고리로 매칭됨!")
+                else:
+                    # 실시간 분류
+                    total_classifications += 1
+                    classification = ai_classifier.classify_content(
+                        ai_info.info2_title, 
+                        ai_info.info2_content
+                    )
+                    print(f"  info2 실시간 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
                     
-                    filtered_infos.append({
-                        "id": f"{ai_info.date}_1",
-                        "date": ai_info.date,
-                        "title": ai_info.info2_title,
-                        "content": ai_info.info2_content,
-                        "terms": terms2,
-                        "category": classification["category"],
-                        "subcategory": classification["subcategory"],
-                        "confidence": classification["confidence"],
-                        "created_at": ai_info.created_at
-                    })
-                    print(f"  -> info2 매칭됨!")
+                    if classification["category"] == category:
+                        try:
+                            terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                        except json.JSONDecodeError:
+                            terms2 = []
+                        
+                        filtered_infos.append({
+                            "id": f"{ai_info.date}_1",
+                            "date": ai_info.date,
+                            "title": ai_info.info2_title,
+                            "content": ai_info.info2_content,
+                            "terms": terms2,
+                            "category": classification["category"],
+                            "subcategory": classification["subcategory"],
+                            "confidence": classification["confidence"],
+                            "created_at": ai_info.created_at
+                        })
+                        print(f"  -> info2 실시간 분류로 매칭됨!")
             
             # info3 처리
             if ai_info.info3_title and ai_info.info3_content:
-                total_classifications += 1
-                classification = ai_classifier.classify_content(
-                    ai_info.info3_title, 
-                    ai_info.info3_content
-                )
-                print(f"  info3 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
-                
-                if classification["category"] == category:
-                    try:
-                        terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
-                    except json.JSONDecodeError:
-                        terms3 = []
+                # 저장된 카테고리가 있으면 우선 사용, 없으면 실시간 분류
+                stored_category = getattr(ai_info, 'info3_category', None)
+                if stored_category and stored_category.strip():
+                    print(f"  info3 저장된 카테고리: {stored_category}")
+                    if stored_category == category:
+                        try:
+                            terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                        except json.JSONDecodeError:
+                            terms3 = []
+                        
+                        filtered_infos.append({
+                            "id": f"{ai_info.date}_2",
+                            "date": ai_info.date,
+                            "title": ai_info.info3_title,
+                            "content": ai_info.info3_content,
+                            "terms": terms3,
+                            "category": stored_category,
+                            "subcategory": None,
+                            "confidence": 1.0,
+                            "created_at": ai_info.created_at
+                        })
+                        print(f"  -> info3 저장된 카테고리로 매칭됨!")
+                else:
+                    # 실시간 분류
+                    total_classifications += 1
+                    classification = ai_classifier.classify_content(
+                        ai_info.info3_title, 
+                        ai_info.info3_content
+                    )
+                    print(f"  info3 실시간 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
                     
-                    filtered_infos.append({
-                        "id": f"{ai_info.date}_2",
-                        "date": ai_info.date,
-                        "title": ai_info.info3_title,
-                        "content": ai_info.info3_content,
-                        "terms": terms3,
-                        "category": classification["category"],
-                        "subcategory": classification["subcategory"],
-                        "confidence": classification["confidence"],
-                        "created_at": ai_info.created_at
-                    })
-                    print(f"  -> info3 매칭됨!")
+                    if classification["category"] == category:
+                        try:
+                            terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                        except json.JSONDecodeError:
+                            terms3 = []
+                        
+                        filtered_infos.append({
+                            "id": f"{ai_info.date}_2",
+                            "date": ai_info.date,
+                            "title": ai_info.info3_title,
+                            "content": ai_info.info3_content,
+                            "terms": terms3,
+                            "category": classification["category"],
+                            "subcategory": classification["subcategory"],
+                            "confidence": classification["confidence"],
+                            "created_at": ai_info.created_at
+                        })
+                        print(f"  -> info3 매칭됨!")
         
         print(f"총 {total_classifications}개 항목 분류 완료")
         print(f"카테고리 '{category}'에서 {len(filtered_infos)}개 항목 발견")
@@ -798,28 +870,77 @@ def get_category_statistics(db: Session = Depends(get_db)):
         for ai_info in all_ai_info:
             print(f"날짜 {ai_info.date} 통계 처리 중...")
             
-            for i, (title, content) in enumerate([
-                (ai_info.info1_title, ai_info.info1_content),
-                (ai_info.info2_title, ai_info.info2_content),
-                (ai_info.info3_title, ai_info.info3_content)
-            ]):
-                if title and content:
-                    total_items += 1
-                    classification = ai_classifier.classify_content(title, content)
+            # info1 처리
+            if ai_info.info1_title and ai_info.info1_content:
+                total_items += 1
+                stored_category = getattr(ai_info, 'info1_category', None)
+                if stored_category and stored_category.strip():
+                    category = stored_category
+                    print(f"  info1: '{ai_info.info1_title[:30]}...' -> 저장된 카테고리: {category}")
+                else:
+                    classification = ai_classifier.classify_content(ai_info.info1_title, ai_info.info1_content)
                     category = classification["category"]
-                    print(f"  info{i+1}: '{title[:30]}...' -> {category}")
-                    
-                    if category not in category_stats:
-                        category_stats[category] = {
-                            "count": 0,
-                            "dates": []
-                        }
-                    
-                    category_stats[category]["count"] += 1
-                    
-                    # 날짜 정보
-                    if ai_info.date not in category_stats[category]["dates"]:
-                        category_stats[category]["dates"].append(ai_info.date)
+                    print(f"  info1: '{ai_info.info1_title[:30]}...' -> 실시간 분류: {category}")
+                
+                if category not in category_stats:
+                    category_stats[category] = {
+                        "count": 0,
+                        "dates": []
+                    }
+                
+                category_stats[category]["count"] += 1
+                
+                # 날짜 정보
+                if ai_info.date not in category_stats[category]["dates"]:
+                    category_stats[category]["dates"].append(ai_info.date)
+            
+            # info2 처리
+            if ai_info.info2_title and ai_info.info2_content:
+                total_items += 1
+                stored_category = getattr(ai_info, 'info2_category', None)
+                if stored_category and stored_category.strip():
+                    category = stored_category
+                    print(f"  info2: '{ai_info.info2_title[:30]}...' -> 저장된 카테고리: {category}")
+                else:
+                    classification = ai_classifier.classify_content(ai_info.info2_title, ai_info.info2_content)
+                    category = classification["category"]
+                    print(f"  info2: '{ai_info.info2_title[:30]}...' -> 실시간 분류: {category}")
+                
+                if category not in category_stats:
+                    category_stats[category] = {
+                        "count": 0,
+                        "dates": []
+                    }
+                
+                category_stats[category]["count"] += 1
+                
+                # 날짜 정보
+                if ai_info.date not in category_stats[category]["dates"]:
+                    category_stats[category]["dates"].append(ai_info.date)
+            
+            # info3 처리
+            if ai_info.info3_title and ai_info.info3_content:
+                total_items += 1
+                stored_category = getattr(ai_info, 'info3_category', None)
+                if stored_category and stored_category.strip():
+                    category = stored_category
+                    print(f"  info3: '{ai_info.info3_title[:30]}...' -> 저장된 카테고리: {category}")
+                else:
+                    classification = ai_classifier.classify_content(ai_info.info3_title, ai_info.info3_content)
+                    category = classification["category"]
+                    print(f"  info3: '{ai_info.info3_title[:30]}...' -> 실시간 분류: {category}")
+                
+                if category not in category_stats:
+                    category_stats[category] = {
+                        "count": 0,
+                        "dates": []
+                    }
+                
+                category_stats[category]["count"] += 1
+                
+                # 날짜 정보
+                if ai_info.date not in category_stats[category]["dates"]:
+                    category_stats[category]["dates"].append(ai_info.date)
         
         print(f"총 {total_items}개 항목 분류 완료")
         
