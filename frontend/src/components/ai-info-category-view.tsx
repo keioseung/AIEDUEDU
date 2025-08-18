@@ -131,6 +131,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   const [searchQuery, setSearchQuery] = useState('')
   const [favoriteInfos, setFavoriteInfos] = useState<Set<string>>(new Set())
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // 모든 카테고리 가져오기
   const { data: categories = [], isLoading: isLoadingCategories } = useQuery<string[]>({
@@ -413,7 +414,10 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                     
                                          <button
                         onClick={() => {
+                          if (isProcessing) return
+                          setIsProcessing(true)
                           setShowFavoritesOnly(!showFavoritesOnly)
+                          setTimeout(() => setIsProcessing(false), 300)
                         }}
                         className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                           showFavoritesOnly 
