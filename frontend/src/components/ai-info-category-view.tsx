@@ -86,7 +86,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
     },
     enabled: !!selectedCategory,
     staleTime: 0, // 항상 새로운 데이터 요청
-    cacheTime: 0, // 캐시하지 않음
+    gcTime: 0, // 캐시하지 않음 (React Query v4)
     refetchOnMount: true, // 컴포넌트 마운트 시 재요청
     refetchOnWindowFocus: false // 윈도우 포커스 시 재요청하지 않음
   })
