@@ -17,6 +17,8 @@ interface AIInfoCardProps {
   onProgressUpdate?: () => void
   forceUpdate?: number
   setForceUpdate?: (fn: (prev: number) => number) => void
+  isFavorite?: boolean
+  onFavoriteToggle?: (infoId: string) => void
 }
 
 // 카테고리별 아이콘과 색상 정의
@@ -80,7 +82,7 @@ const getCategoryStyle = (category: string) => {
   }
 }
 
-function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate }: AIInfoCardProps) {
+function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle }: AIInfoCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
@@ -92,7 +94,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   const [showRelearnButton, setShowRelearnButton] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(isFavoriteProp || false)
   const queryClient = useQueryClient()
   const updateProgressMutation = useUpdateUserProgress()
   const checkAchievementsMutation = useCheckAchievements()
@@ -116,6 +118,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       } catch {}
     }
   }, [sessionId, date, index])
+
+  // 외부에서 전달받은 즐겨찾기 상태와 동기화
+  useEffect(() => {
+    if (isFavoriteProp !== undefined) {
+      setIsFavorite(isFavoriteProp)
+    }
+  }, [isFavoriteProp])
 
   // 즐겨찾기 상태 불러오기
   useEffect(() => {

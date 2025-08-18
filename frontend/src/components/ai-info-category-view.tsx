@@ -200,16 +200,16 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       {/* 헤더 */}
       <div className="flex flex-col gap-4">
         {/* 검색 및 필터 */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="relative flex-1 sm:flex-none">
+        <div className="flex items-center gap-3">
+          <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300" />
             <input
               type="text"
               placeholder="AI 정보 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full sm:w-auto pl-10 pr-3 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
-              style={{ minWidth: 180, maxWidth: 250 }}
+              className="pl-10 pr-3 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
+              style={{ minWidth: 200, maxWidth: 300 }}
             />
           </div>
           
@@ -219,7 +219,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
               setShowFavoritesOnly(!showFavoritesOnly)
               console.log('새로운 상태:', !showFavoritesOnly)
             }}
-            className={`w-full sm:w-auto px-4 sm:px-6 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
               showFavoritesOnly 
                 ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-300 border border-yellow-400/40 shadow-lg shadow-yellow-500/20' 
                 : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white/90 border border-purple-400/40 hover:from-purple-500/30 hover:to-pink-500/30 hover:text-white hover:border-purple-300/50'
@@ -325,28 +325,18 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         onProgressUpdate={onProgressUpdate}
                         forceUpdate={0}
                         setForceUpdate={() => {}}
+                        isFavorite={favoriteInfos.has(info.id)}
+                        onFavoriteToggle={toggleFavorite}
                       />
                       
-                      {/* 즐겨찾기 버튼 */}
-                      <button
-                        onClick={() => toggleFavorite(info.id)}
-                        className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
-                          favoriteInfos.has(info.id)
-                            ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
-                            : 'bg-white/10 text-white/50 border border-white/20 hover:bg-white/20'
-                        }`}
-                      >
-                        <FaStar className="text-sm" />
-                      </button>
-                      
-                                                                    {/* 카테고리 정보 */}
-                        <div className="absolute top-4 left-4 flex gap-2">
-                          {info.subcategory && (
-                            <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs border border-blue-500/30">
-                              {info.subcategory}
-                            </span>
-                          )}
-                        </div>
+                      {/* 카테고리 정보 */}
+                      <div className="absolute top-4 left-4 flex gap-2">
+                        {info.subcategory && (
+                          <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs border border-blue-500/30">
+                            {info.subcategory}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
