@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaRobot, FaFilter, FaSearch, FaChevronDown, FaChevronRight, FaStar, FaCalendar } from 'react-icons/fa'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import AIInfoCard from './ai-info-card'
 
@@ -32,6 +32,7 @@ interface AIInfoCategoryViewProps {
 }
 
 export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIInfoCategoryViewProps) {
+  const queryClient = useQueryClient()
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
@@ -99,7 +100,19 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
 
   // 카테고리 선택
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category)
+    // 이전 카테고리와 다른 경우에만 상태 초기화
+    if (selectedCategory !== category) {
+      // 이전 카테고리 데이터 무효화
+      if (selectedCategory) {
+        queryClient.invalidateQueries({ queryKey: ['ai-info-by-category', selectedCategory] })
+      }
+      
+      setSelectedCategory(category)
+      // 검색 쿼리 초기화
+      setSearchQuery('')
+      // 즐겨찾기 필터 초기화
+      setShowFavoritesOnly(false)
+    }
   }
 
   // 즐겨찾기 토글
@@ -265,6 +278,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
               {isLoadingCategoryInfo ? (
                 <div className="text-center py-8">
                   <div className="text-white/70">AI 정보를 불러오는 중...</div>
+                  <div className="text-white/50 text-sm mt-2">새로운 카테고리 데이터를 가져오는 중...</div>
                 </div>
               ) : filteredAIInfo.length > 0 ? (
                 <div className="grid gap-4">
