@@ -256,35 +256,23 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   }, [])
 
   // 필터링된 AI 정보
-  const filteredAIInfo = categoryAIInfo.filter((info, index) => {
+  const filteredAIInfo = categoryAIInfo.filter((info) => {
     // 검색 필터링
     const matchesSearch = searchQuery === '' || 
       info.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       info.content.toLowerCase().includes(searchQuery.toLowerCase())
     
-    // 즐겨찾기 키 생성 - info_index가 없으면 배열 인덱스 사용
-    const favoriteKey = `${info.date || new Date().toISOString().split('T')[0]}_${info.info_index !== undefined ? info.info_index : index}`
+    // 즐겨찾기 키 생성 - info.id 사용으로 일관성 보장
+    const favoriteKey = `${info.date || new Date().toISOString().split('T')[0]}_${info.id}`
     
     // 즐겨찾기 필터링
-    let matchesFavorites = true
     if (showFavoritesOnly) {
       // 즐겨찾기만 모드일 때는 즐겨찾기된 카드만 표시
-      matchesFavorites = favoriteInfos.has(favoriteKey)
+      return matchesSearch && favoriteInfos.has(favoriteKey)
+    } else {
+      // 전체보기 모드일 때는 모든 카드 표시
+      return matchesSearch
     }
-    // showFavoritesOnly가 false일 때는 모든 카드 표시 (matchesFavorites = true)
-    
-    console.log(`필터링: ${info.title}`, {
-      matchesSearch,
-      matchesFavorites,
-      showFavoritesOnly,
-      isFavorite: favoriteInfos.has(favoriteKey),
-      favoriteKey,
-      searchQuery,
-      favoriteInfosSize: favoriteInfos.size,
-      favoriteInfosList: [...favoriteInfos]
-    })
-    
-    return matchesSearch && matchesFavorites
   })
 
   // 카테고리별 색상 매핑
@@ -461,8 +449,11 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                          onProgressUpdate={onProgressUpdate}
                          forceUpdate={0}
                          setForceUpdate={() => {}}
-                         isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${info.info_index !== undefined ? info.info_index : index}`)}
-                         onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
+                         isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${info.id}`)}
+                         onFavoriteToggle={() => {
+                           const favoriteKey = `${info.date || new Date().toISOString().split('T')[0]}_${info.id}`
+                           toggleFavorite(favoriteKey)
+                         }}
                          searchQuery={searchQuery}
                        />
                       
