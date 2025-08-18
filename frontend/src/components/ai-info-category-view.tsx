@@ -178,31 +178,30 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
             <FaRobot className="text-blue-400" />
             AI 정보 카테고리별 보기
           </h2>
-          <p className="text-white/70 mt-1">AI 정보를 카테고리별로 정리하여 보여줍니다</p>
         </div>
         
         {/* 검색 및 필터 */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex items-center gap-3">
           <div className="relative">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" />
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300" />
             <input
               type="text"
               placeholder="AI 정보 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="pl-10 pr-4 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
             />
           </div>
           
           <button
             onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
               showFavoritesOnly 
-                ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' 
-                : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/20'
+                ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-300 border border-yellow-400/40 shadow-lg shadow-yellow-500/20' 
+                : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white/90 border border-purple-400/40 hover:from-purple-500/30 hover:to-pink-500/30 hover:text-white hover:border-purple-300/50'
             }`}
           >
-            <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-white/50'} />
+            <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-purple-300'} />
             즐겨찾기만
           </button>
         </div>
