@@ -239,12 +239,12 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
         console.log('로컬 스토리지에 저장됨')
       }
       
-      // 강제 리렌더링을 위해 forceUpdate 트리거
-      setForceUpdate(prev => prev + 1)
-      
       return newFavorites
-    }, [])
-  }
+    })
+    
+    // 강제 리렌더링을 위해 forceUpdate 트리거
+    setForceUpdate(prev => prev + 1)
+  }, [])
 
   // 로컬 스토리지에서 즐겨찾기 불러오기
   useEffect(() => {
