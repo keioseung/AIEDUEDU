@@ -5,7 +5,7 @@ export interface TermItem {
 }
 
 export interface AIInfoItem {
-  id?: number
+  id?: number | string
   date?: string
   title: string
   content: string

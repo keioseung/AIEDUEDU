@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Union
 from datetime import datetime
 
 # User Schemas (실제 Supabase 스키마에 맞춤)
@@ -34,7 +34,7 @@ class TermItem(BaseModel):
     description: str
 
 class AIInfoItem(BaseModel):
-    id: Optional[int] = None
+    id: Optional[Union[int, str]] = None
     date: Optional[str] = None
     title: str
     content: str
