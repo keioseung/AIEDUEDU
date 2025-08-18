@@ -94,8 +94,8 @@ export default function DashboardPage() {
   const { data: userStats, refetch: refetchUserStats } = useUserStats(sessionId)
   const router = useRouter()
   const queryClient = useQueryClient()
-  const [activeTab, setActiveTab] = useState<'ai' | 'category' | 'quiz' | 'progress' | 'term'>('ai')
-  const [aiInfoMode, setAiInfoMode] = useState<'date' | 'list'>('date')
+  const [activeTab, setActiveTab] = useState<'ai' | 'quiz' | 'progress' | 'term'>('ai')
+  const [aiInfoMode, setAiInfoMode] = useState<'date' | 'category' | 'list'>('date')
   const [randomTerm, setRandomTerm] = useState(() => TERMS[Math.floor(Math.random() * TERMS.length)])
   
   // 타이핑 애니메이션 상태
@@ -465,13 +465,6 @@ export default function DashboardPage() {
                 description: 'AI 정보 학습'
               },
               { 
-                id: 'category', 
-                label: '카테고리별', 
-                gradient: 'from-indigo-600 via-blue-600 to-cyan-600',
-                hoverGradient: 'from-indigo-500 via-blue-500 to-cyan-500',
-                description: '카테고리별 정리'
-              },
-              { 
                 id: 'quiz', 
                 label: '용어 퀴즈', 
                 gradient: 'from-purple-600 via-pink-600 to-rose-600',
@@ -553,6 +546,16 @@ export default function DashboardPage() {
                       📅 날짜별
                     </button>
                     <button
+                      onClick={() => setAiInfoMode('category')}
+                      className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                        aiInfoMode === 'category'
+                          ? 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg transform scale-105'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
+                      }`}
+                    >
+                      🏷️ 카테고리별
+                    </button>
+                    <button
                       onClick={() => setAiInfoMode('list')}
                       className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
                         aiInfoMode === 'list'
@@ -598,6 +601,14 @@ export default function DashboardPage() {
                 </div>
               )}
 
+              {/* 카테고리별 모드 */}
+              {aiInfoMode === 'category' && (
+                <AIInfoCategoryView
+                  sessionId={sessionId}
+                  onProgressUpdate={handleProgressUpdate}
+                />
+              )}
+
               {/* 목록 모드 */}
               {aiInfoMode === 'list' && (
                 <AIInfoListMode
@@ -607,14 +618,7 @@ export default function DashboardPage() {
               )}
             </section>
           )}
-          {activeTab === 'category' && (
-            <section className="mb-8 md:mb-16">
-              <AIInfoCategoryView
-                sessionId={sessionId}
-                onProgressUpdate={handleProgressUpdate}
-              />
-            </section>
-          )}
+
           {activeTab === 'quiz' && (
             <section className="mb-8 md:mb-16">
               <TermsQuizSection 

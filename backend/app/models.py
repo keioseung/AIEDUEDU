@@ -51,12 +51,15 @@ class AIInfo(Base):
     info1_title = Column(Text)
     info1_content = Column(Text)
     info1_terms = Column(Text)  # JSON 직렬화된 용어 리스트
+    info1_category = Column(String)  # 카테고리
     info2_title = Column(Text)
     info2_content = Column(Text)
     info2_terms = Column(Text)  # JSON 직렬화된 용어 리스트
+    info2_category = Column(String)  # 카테고리
     info3_title = Column(Text)
     info3_content = Column(Text)
     info3_terms = Column(Text)  # JSON 직렬화된 용어 리스트
+    info3_category = Column(String)  # 카테고리
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class Quiz(Base):

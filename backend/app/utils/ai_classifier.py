@@ -53,27 +53,8 @@ class AIClassifier:
             ]
         }
         
-        # 하위 카테고리 정의
-        self.subcategory_keywords = {
-            "챗봇/대화형 AI": {
-                "일반 대화": ["chat", "talk", "conversation", "대화", "채팅"],
-                "교육/튜터링": ["education", "tutoring", "학습", "교육", "가르침", "튜터"],
-                "고객 서비스": ["customer service", "고객", "서비스", "문의", "상담"],
-                "창작 도우미": ["writing", "창작", "글쓰기", "아이디어", "창의성"]
-            },
-            "이미지 생성 AI": {
-                "아트워크": ["art", "artwork", "예술", "그림", "painting"],
-                "사진/리얼리즘": ["photo", "realistic", "사진", "현실적", "photorealistic"],
-                "디자인": ["design", "디자인", "레이아웃", "branding", "브랜딩"],
-                "3D/모델링": ["3d", "modeling", "3차원", "모델링", "mesh"]
-            },
-            "코딩/개발 도구": {
-                "코드 생성": ["code generation", "코드 생성", "generate code"],
-                "코드 리뷰": ["code review", "코드 리뷰", "review", "검토"],
-                "디버깅": ["debug", "디버깅", "error", "오류", "bug"],
-                "테스트": ["testing", "테스트", "unit test", "통합 테스트"]
-            }
-        }
+        # 하위 카테고리는 제거하고 8개 대분류만 사용
+        self.subcategory_keywords = {}
     
     def classify_content(self, title: str, content: str) -> Dict[str, str]:
         """
@@ -105,24 +86,9 @@ class AIClassifier:
         else:
             main_category = "기타"
         
-        # 하위 카테고리 분류
-        subcategory = "일반"
-        if main_category in self.subcategory_keywords:
-            subcategory_scores = {}
-            for sub, sub_keywords in self.subcategory_keywords[main_category].items():
-                score = 0
-                for keyword in sub_keywords:
-                    if keyword.lower() in full_text:
-                        score += 1
-                if score > 0:
-                    subcategory_scores[sub] = score
-            
-            if subcategory_scores:
-                subcategory = max(subcategory_scores, key=subcategory_scores.get)
-        
         return {
             "category": main_category,
-            "subcategory": subcategory,
+            "subcategory": None,
             "confidence": self._calculate_confidence(full_text, main_category)
         }
     
@@ -147,9 +113,7 @@ class AIClassifier:
         return list(self.category_keywords.keys())
     
     def get_subcategories(self, category: str) -> List[str]:
-        """특정 카테고리의 하위 카테고리를 반환합니다."""
-        if category in self.subcategory_keywords:
-            return list(self.subcategory_keywords[category].keys())
+        """하위 카테고리는 사용하지 않으므로 빈 리스트를 반환합니다."""
         return []
     
     def suggest_categories(self, text: str) -> List[Tuple[str, float]]:

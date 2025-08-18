@@ -43,7 +43,7 @@ def get_ai_info_by_date(date: str, db: Session = Depends(get_db)):
                 "title": ai_info.info1_title, 
                 "content": ai_info.info1_content,
                 "terms": terms1,
-                "category": classification["category"],
+                "category": ai_info.info1_category or classification["category"],
                 "subcategory": classification["subcategory"],
                 "confidence": classification["confidence"]
             })
@@ -63,7 +63,7 @@ def get_ai_info_by_date(date: str, db: Session = Depends(get_db)):
                 "title": ai_info.info2_title, 
                 "content": ai_info.info2_content,
                 "terms": terms2,
-                "category": classification["category"],
+                "category": ai_info.info2_category or classification["category"],
                 "subcategory": classification["subcategory"],
                 "confidence": classification["confidence"]
             })
@@ -83,7 +83,7 @@ def get_ai_info_by_date(date: str, db: Session = Depends(get_db)):
                 "title": ai_info.info3_title, 
                 "content": ai_info.info3_content,
                 "terms": terms3,
-                "category": classification["category"],
+                "category": ai_info.info3_category or classification["category"],
                 "subcategory": classification["subcategory"],
                 "confidence": classification["confidence"]
             })
@@ -108,7 +108,8 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 infos.append({
                     "title": obj.info1_title,
                     "content": obj.info1_content,
-                    "terms": terms1
+                    "terms": terms1,
+                    "category": obj.info1_category
                 })
             if obj.info2_title and obj.info2_content:
                 try:
@@ -118,7 +119,8 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 infos.append({
                     "title": obj.info2_title,
                     "content": obj.info2_content,
-                    "terms": terms2
+                    "terms": terms2,
+                    "category": obj.info2_category
                 })
             if obj.info3_title and obj.info3_content:
                 try:
@@ -128,7 +130,8 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 infos.append({
                     "title": obj.info3_title,
                     "content": obj.info3_content,
-                    "terms": terms3
+                    "terms": terms3,
+                    "category": obj.info3_category
                 })
             return infos
 
@@ -142,17 +145,18 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
             # 기존 데이터 업데이트 (비어있는 info2, info3에 순차적으로 채움)
             infos_to_add = [i for i in ai_info_data.infos if i.title and i.content]
             fields = [
-                ("info1_title", "info1_content", "info1_terms"),
-                ("info2_title", "info2_content", "info2_terms"),
-                ("info3_title", "info3_content", "info3_terms"),
+                ("info1_title", "info1_content", "info1_terms", "info1_category"),
+                ("info2_title", "info2_content", "info2_terms", "info2_category"),
+                ("info3_title", "info3_content", "info3_terms", "info3_category"),
             ]
-            for i, (title_field, content_field, terms_field) in enumerate(fields):
+            for i, (title_field, content_field, terms_field, category_field) in enumerate(fields):
                 if getattr(existing_info, title_field) == '' or getattr(existing_info, content_field) == '':
                     if infos_to_add:
                         info = infos_to_add.pop(0)
                         setattr(existing_info, title_field, info.title)
                         setattr(existing_info, content_field, info.content)
                         setattr(existing_info, terms_field, json.dumps(terms_to_dict(info.terms or [])))
+                        setattr(existing_info, category_field, info.category or '')
             db.commit()
             db.refresh(existing_info)
             return {
@@ -168,12 +172,15 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 info1_title=ai_info_data.infos[0].title if len(ai_info_data.infos) >= 1 else "",
                 info1_content=ai_info_data.infos[0].content if len(ai_info_data.infos) >= 1 else "",
                 info1_terms=json.dumps(terms_to_dict(ai_info_data.infos[0].terms or [])) if len(ai_info_data.infos) >= 1 else "[]",
+                info1_category=ai_info_data.infos[0].category if len(ai_info_data.infos) >= 1 else "",
                 info2_title=ai_info_data.infos[1].title if len(ai_info_data.infos) >= 2 else "",
                 info2_content=ai_info_data.infos[1].content if len(ai_info_data.infos) >= 2 else "",
                 info2_terms=json.dumps(terms_to_dict(ai_info_data.infos[1].terms or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info2_category=ai_info_data.infos[1].category if len(ai_info_data.infos) >= 2 else "",
                 info3_title=ai_info_data.infos[2].title if len(ai_info_data.infos) >= 3 else "",
                 info3_content=ai_info_data.infos[2].content if len(ai_info_data.infos) >= 3 else "",
-                info3_terms=json.dumps(terms_to_dict(ai_info_data.infos[2].terms or [])) if len(ai_info_data.infos) >= 3 else "[]"
+                info3_terms=json.dumps(terms_to_dict(ai_info_data.infos[2].terms or [])) if len(ai_info_data.infos) >= 3 else "[]",
+                info3_category=ai_info_data.infos[2].category if len(ai_info_data.infos) >= 3 else ""
             )
             db.add(db_ai_info)
             db.commit()
@@ -639,12 +646,8 @@ def get_all_categories():
 
 @router.get("/categories/{category}/subcategories", response_model=List[str])
 def get_subcategories(category: str):
-    """특정 카테고리의 하위 카테고리를 반환합니다."""
-    try:
-        return ai_classifier.get_subcategories(category)
-    except Exception as e:
-        print(f"Error getting subcategories: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to get subcategories: {str(e)}")
+    """하위 카테고리는 사용하지 않으므로 빈 리스트를 반환합니다."""
+    return []
 
 @router.get("/by-category/{category}", response_model=List[dict])
 def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
@@ -753,17 +756,10 @@ def get_category_statistics(db: Session = Depends(get_db)):
                     if category not in category_stats:
                         category_stats[category] = {
                             "count": 0,
-                            "subcategories": {},
                             "dates": []
                         }
                     
                     category_stats[category]["count"] += 1
-                    
-                    # 하위 카테고리 통계
-                    subcategory = classification["subcategory"]
-                    if subcategory not in category_stats[category]["subcategories"]:
-                        category_stats[category]["subcategories"][subcategory] = 0
-                    category_stats[category]["subcategories"][subcategory] += 1
                     
                     # 날짜 정보
                     if ai_info.date not in category_stats[category]["dates"]:

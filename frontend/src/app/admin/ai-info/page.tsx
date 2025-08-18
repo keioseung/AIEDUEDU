@@ -15,6 +15,7 @@ interface AIInfoItem {
   title: string
   content: string
   terms?: TermItem[]
+  category?: string
 }
 
 interface ServerPrompt {
@@ -37,7 +38,7 @@ export default function AdminAIInfoPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const [date, setDate] = useState('')
-  const [inputs, setInputs] = useState([{ title: '', content: '', terms: [] as TermItem[] }])
+  const [inputs, setInputs] = useState([{ title: '', content: '', terms: [] as TermItem[], category: '' }])
   const [editId, setEditId] = useState<boolean>(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -117,7 +118,7 @@ export default function AdminAIInfoPage() {
     onSuccess: () => {
       refetchAIInfo()
       refetchDates()
-      setInputs([{ title: '', content: '', terms: [] }])
+      setInputs([{ title: '', content: '', terms: [], category: '' }])
       setDate('')
       setEditId(false)
       setSuccess('등록이 완료되었습니다!')
@@ -135,7 +136,7 @@ export default function AdminAIInfoPage() {
     onSuccess: () => {
       refetchAIInfo()
       refetchDates()
-      setInputs([{ title: '', content: '', terms: [] }])
+      setInputs([{ title: '', content: '', terms: [], category: '' }])
       setDate('')
       setEditId(false)
       setSuccess('삭제가 완료되었습니다!')
@@ -264,13 +265,13 @@ export default function AdminAIInfoPage() {
     }
   })
 
-  const handleInputChange = (idx: number, field: 'title' | 'content', value: string) => {
+  const handleInputChange = (idx: number, field: 'title' | 'content' | 'category', value: string) => {
     setInputs(inputs => inputs.map((input, i) => i === idx ? { ...input, [field]: value } : input))
   }
 
   const handleAddInput = () => {
     if (inputs.length < 3) {
-      setInputs([...inputs, { title: '', content: '', terms: [] }])
+      setInputs([...inputs, { title: '', content: '', terms: [], category: '' }])
     }
   }
 
@@ -386,7 +387,7 @@ export default function AdminAIInfoPage() {
 
   const handleEdit = (info: AIInfoItem, idx: number) => {
     setEditId(true)
-    setInputs([{ title: info.title, content: info.content, terms: info.terms || [] }])
+    setInputs([{ title: info.title, content: info.content, terms: info.terms || [], category: info.category || '' }])
   }
 
   const handleDelete = (date: string) => {
@@ -650,6 +651,24 @@ export default function AdminAIInfoPage() {
                       />
                     </div>
                     <div className="flex flex-col gap-2">
+                      <label className="font-semibold text-white/80">카테고리</label>
+                      <select 
+                        value={input.category} 
+                        onChange={e => handleInputChange(idx, 'category', e.target.value)} 
+                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                      >
+                        <option value="">카테고리를 선택하세요</option>
+                        <option value="챗봇/대화형 AI">챗봇/대화형 AI</option>
+                        <option value="이미지 생성 AI">이미지 생성 AI</option>
+                        <option value="코딩/개발 도구">코딩/개발 도구</option>
+                        <option value="음성/오디오 AI">음성/오디오 AI</option>
+                        <option value="데이터 분석/ML">데이터 분석/ML</option>
+                        <option value="AI 윤리/정책">AI 윤리/정책</option>
+                        <option value="AI 하드웨어/인프라">AI 하드웨어/인프라</option>
+                        <option value="AI 응용 서비스">AI 응용 서비스</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
                       <label className="font-semibold text-white/80">내용</label>
                       <textarea 
                         placeholder={`내용 ${idx+1}`} 
@@ -843,6 +862,9 @@ export default function AdminAIInfoPage() {
                       aiInfos.map((info, idx) => (
                         <div key={idx} className="mb-4 last:mb-0 bg-white/5 rounded-lg p-4">
                           <div className="font-bold text-lg text-white mb-2">{info.title}</div>
+                          {info.category && (
+                            <div className="text-blue-400 text-sm mb-2">🏷️ {info.category}</div>
+                          )}
                           <div className="text-white/70 text-sm whitespace-pre-line mb-3">{info.content}</div>
                           <div className="flex gap-2">
                             <button 
