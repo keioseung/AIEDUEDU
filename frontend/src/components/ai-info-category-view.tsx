@@ -425,20 +425,25 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                     
                                          <button
                        onClick={() => {
-                         const newState = !showFavoritesOnly
-                         console.log('즐겨찾기만 버튼 클릭:', showFavoritesOnly, '->', newState)
+                         console.log('즐겨찾기만 버튼 클릭 전 상태:', showFavoritesOnly)
                          
-                         setShowFavoritesOnly(newState)
+                         // 상태를 강제로 토글
+                         setShowFavoritesOnly(prevState => {
+                           const newState = !prevState
+                           console.log('즐겨찾기 상태 변경:', prevState, '->', newState)
+                           
+                           // 즐겨찾기만 모드 활성화 시 검색 쿼리 초기화
+                           if (newState) {
+                             setSearchQuery('')
+                           }
+                           
+                           return newState
+                         })
                          
-                         // 즐겨찾기만 모드 활성화 시 검색 쿼리 초기화
-                         if (newState) {
-                           setSearchQuery('')
-                         }
-                         
-                         // 상태 변경 후 강제 리렌더링을 위한 지연 처리
+                         // 상태 변경 확인을 위한 추가 로그
                          setTimeout(() => {
-                           console.log('즐겨찾기 상태 업데이트 완료:', newState)
-                         }, 100)
+                           console.log('즐겨찾기 상태 최종 확인:', showFavoritesOnly)
+                         }, 50)
                        }}
                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                          showFavoritesOnly 
@@ -448,7 +453,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                      >
                        <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-white/70'} />
                        <span className="text-sm font-medium whitespace-nowrap">
-                         {showFavoritesOnly ? '전체보기' : '즐겨찾기만'}
+                         즐겨찾기만
                        </span>
                      </button>
                   </div>
