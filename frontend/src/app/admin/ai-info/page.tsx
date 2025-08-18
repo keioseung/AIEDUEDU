@@ -655,17 +655,17 @@ export default function AdminAIInfoPage() {
                       <select 
                         value={input.category} 
                         onChange={e => handleInputChange(idx, 'category', e.target.value)} 
-                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                       >
-                        <option value="">카테고리를 선택하세요</option>
-                        <option value="챗봇/대화형 AI">챗봇/대화형 AI</option>
-                        <option value="이미지 생성 AI">이미지 생성 AI</option>
-                        <option value="코딩/개발 도구">코딩/개발 도구</option>
-                        <option value="음성/오디오 AI">음성/오디오 AI</option>
-                        <option value="데이터 분석/ML">데이터 분석/ML</option>
-                        <option value="AI 윤리/정책">AI 윤리/정책</option>
-                        <option value="AI 하드웨어/인프라">AI 하드웨어/인프라</option>
-                        <option value="AI 응용 서비스">AI 응용 서비스</option>
+                        <option value="" className="text-black">카테고리를 선택하세요</option>
+                        <option value="챗봇/대화형 AI" className="text-black">챗봇/대화형 AI</option>
+                        <option value="이미지 생성 AI" className="text-black">이미지 생성 AI</option>
+                        <option value="코딩/개발 도구" className="text-black">코딩/개발 도구</option>
+                        <option value="음성/오디오 AI" className="text-black">음성/오디오 AI</option>
+                        <option value="데이터 분석/ML" className="text-black">데이터 분석/ML</option>
+                        <option value="AI 윤리/정책" className="text-black">AI 윤리/정책</option>
+                        <option value="AI 하드웨어/인프라" className="text-black">AI 하드웨어/인프라</option>
+                        <option value="AI 응용 서비스" className="text-black">AI 응용 서비스</option>
                       </select>
                     </div>
                     <div className="flex flex-col gap-2">
