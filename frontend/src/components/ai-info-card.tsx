@@ -341,6 +341,16 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="glass card-hover p-4 md:p-8 lg:p-10 flex flex-col gap-4 md:gap-6 relative shadow-lg border-2 border-purple-700/70 bg-gradient-to-br from-purple-950/80 via-purple-900/90 to-purple-950/80 backdrop-blur-2xl shadow-2xl shadow-purple-900/60"
     >
+      {/* 카테고리 배지 */}
+      {info.category && (
+        <div className="mb-3 md:mb-4">
+          <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border ${getCategoryStyle(info.category).bgColor} ${getCategoryStyle(info.category).borderColor} ${getCategoryStyle(info.category).textColor} backdrop-blur-sm shadow-lg`}>
+            {getCategoryStyle(info.category).icon}
+            <span className="text-sm font-medium">{info.category}</span>
+          </div>
+        </div>
+      )}
+      
       {/* 헤더 */}
       <div className="flex items-start justify-between mb-3 md:mb-4">
         <div className="flex items-center gap-2 md:gap-3">
@@ -373,16 +383,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           </button>
         </div>
       </div>
-      
-      {/* 카테고리 배지 */}
-      {info.category && (
-        <div className="mb-3 md:mb-4">
-          <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border ${getCategoryStyle(info.category).bgColor} ${getCategoryStyle(info.category).borderColor} ${getCategoryStyle(info.category).textColor} backdrop-blur-sm shadow-lg`}>
-            {getCategoryStyle(info.category).icon}
-            <span className="text-sm font-medium">{info.category}</span>
-          </div>
-        </div>
-      )}
       
       {/* 내용 */}
       <div className="mb-3 md:mb-4 text-white/90 text-sm md:text-base leading-relaxed whitespace-pre-line">

@@ -120,7 +120,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden auth-container">
       {/* 고급스러운 배경 효과 - 더 크게 확장 */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
@@ -521,6 +521,10 @@ export default function AuthPage() {
           body {
             -webkit-overflow-scrolling: touch;
             overflow-scrolling: touch;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
           }
           
           /* 모바일에서 탭 전환 시 깜박임 완전 방지 */
@@ -540,6 +544,25 @@ export default function AuthPage() {
           .animate-float {
             animation: none;
             opacity: 0.3;
+          }
+          
+          /* 모바일에서 입력 필드 클릭 시 스크롤 방지 */
+          input:focus {
+            transform: translateZ(0) !important;
+            -webkit-transform: translateZ(0) !important;
+            position: relative !important;
+            z-index: 1000 !important;
+          }
+          
+          /* 모바일에서 뷰포트 안정화 */
+          .auth-container {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
           }
         }
         

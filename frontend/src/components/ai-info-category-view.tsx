@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaRobot, FaFilter, FaSearch, FaChevronDown, FaChevronRight, FaStar, FaCalendar } from 'react-icons/fa'
+import { Image, MessageSquare, Brain, Zap, Globe, Shield, Settings, Palette } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import AIInfoCard from './ai-info-card'
@@ -29,6 +30,67 @@ interface CategoryStats {
 interface AIInfoCategoryViewProps {
   sessionId: string
   onProgressUpdate: () => void
+}
+
+// 카테고리별 아이콘과 색상 정의
+const getCategoryStyle = (category: string): { icon: React.ReactNode; bgColor: string; textColor: string; borderColor: string } => {
+  const categoryStyles: Record<string, { icon: React.ReactNode; bgColor: string; textColor: string; borderColor: string }> = {
+    '이미지 생성 AI': {
+      icon: <Image className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-purple-500/20 to-pink-500/20',
+      textColor: 'text-purple-300',
+      borderColor: 'border-purple-500/40'
+    },
+    '챗봇/대화형 AI': {
+      icon: <MessageSquare className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20',
+      textColor: 'text-blue-300',
+      borderColor: 'border-blue-500/40'
+    },
+    '자연어 처리 AI': {
+      icon: <Brain className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-green-500/20 to-emerald-500/20',
+      textColor: 'text-green-300',
+      borderColor: 'border-green-500/40'
+    },
+    '음성 인식/합성 AI': {
+      icon: <Zap className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20',
+      textColor: 'text-yellow-300',
+      borderColor: 'border-yellow-500/40'
+    },
+    'AI 응용 서비스': {
+      icon: <Globe className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20',
+      textColor: 'text-indigo-300',
+      borderColor: 'border-indigo-500/40'
+    },
+    'AI 보안/윤리': {
+      icon: <Shield className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-red-500/20 to-pink-500/20',
+      textColor: 'text-red-300',
+      borderColor: 'border-red-500/40'
+    },
+    'AI 개발 도구': {
+      icon: <Settings className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-gray-500/20 to-slate-500/20',
+      textColor: 'text-gray-300',
+      borderColor: 'border-gray-500/40'
+    },
+    'AI 창작 도구': {
+      icon: <Palette className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-pink-500/20 to-rose-500/20',
+      textColor: 'text-pink-300',
+      borderColor: 'border-pink-500/40'
+    }
+  }
+  
+  return categoryStyles[category] || {
+    icon: <Brain className="w-4 h-4" />,
+    bgColor: 'bg-gradient-to-r from-purple-500/20 to-pink-500/20',
+    textColor: 'text-purple-300',
+    borderColor: 'border-purple-500/40'
+  }
 }
 
 export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIInfoCategoryViewProps) {
@@ -209,7 +271,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 pr-3 py-2 bg-white/10 border border-purple-400/40 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/60 transition-all duration-200"
-              style={{ minWidth: 200, maxWidth: 300 }}
+              style={{ minWidth: 150, maxWidth: 200 }}
             />
           </div>
           
@@ -290,7 +352,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
           {selectedCategory ? (
             <div className="space-y-4">
               {/* 선택된 카테고리 헤더 */}
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-6 text-white">
+              <div className={`rounded-2xl p-6 text-white ${getCategoryStyle(selectedCategory).bgColor} border ${getCategoryStyle(selectedCategory).borderColor}`}>
                 <h3 className="text-xl font-bold mb-2">{selectedCategory}</h3>
                 <div className="flex items-center gap-4 text-sm">
                   <span className="flex items-center gap-2">

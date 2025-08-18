@@ -1193,35 +1193,19 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                       {/* 상단: 용어명과 즐겨찾기 */}
                       <div className="flex items-start justify-between mb-1">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5 mb-1">
-                            {/* 용어 아이콘 */}
-                            <div className={`w-4 h-4 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md ${
-                              termDifficulty.level === '초급' ? 'bg-gradient-to-br from-green-500/25 to-emerald-500/25 text-green-300 border border-green-400/30' :
-                              termDifficulty.level === '중급' ? 'bg-gradient-to-br from-yellow-500/25 to-amber-500/25 text-yellow-300 border border-yellow-400/30' :
-                              'bg-gradient-to-br from-red-500/25 to-pink-500/25 text-red-300 border border-red-400/30'
-                            }`}>
-                              <Brain className="w-2 h-2" />
-                            </div>
-                            
-                                                         {/* 용어명 - 더 크고 눈에 띄게 */}
-                             <h3 className="font-bold text-white text-base leading-tight break-words line-clamp-1 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
-                               {term.term}
-                             </h3>
+                          <div className="mb-1">
+                            {/* 용어명 - 난이도와 함께 표시 */}
+                            <h3 className="font-bold text-white text-base leading-tight break-words line-clamp-1 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
+                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium mr-2 ${
+                                termDifficulty.level === '초급' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                                termDifficulty.level === '중급' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30' :
+                                'bg-red-500/20 text-red-300 border border-red-400/30'
+                              }`}>
+                                {termDifficulty.level}
+                              </span>
+                              {term.term}
+                            </h3>
                           </div>
-                          
-                                                     {/* 난이도 배지 - 작게 표시 */}
-                           <div className={`inline-flex items-center px-1 py-0.5 rounded-full text-[10px] font-medium shadow-sm opacity-70 ${
-                             termDifficulty.level === '초급' ? 'bg-gradient-to-r from-green-500/15 to-emerald-500/15 text-green-300 border border-green-400/20' :
-                             termDifficulty.level === '중급' ? 'bg-gradient-to-r from-yellow-500/15 to-amber-500/15 text-yellow-300 border border-yellow-400/20' :
-                             'bg-gradient-to-r from-red-500/15 to-pink-500/15 text-red-300 border border-red-400/20'
-                           }`}>
-                             <div className={`w-0.5 h-0.5 rounded-full mr-1 shadow-sm ${
-                               termDifficulty.level === '초급' ? 'bg-green-400' :
-                               termDifficulty.level === '중급' ? 'bg-yellow-400' :
-                               'bg-red-400'
-                             }`} />
-                             {termDifficulty.level}
-                           </div>
                         </div>
                         
                         {/* 즐겨찾기 버튼 */}

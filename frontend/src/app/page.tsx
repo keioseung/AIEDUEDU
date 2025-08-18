@@ -200,30 +200,30 @@ export default function IntroPage() {
         {/* 헤더 섹션 */}
         <div className="text-center mb-8 md:mb-12 lg:mb-16 w-full max-w-6xl mx-auto">
           {/* 로고 및 제목 */}
-          <div className="flex flex-col items-center gap-4 md:gap-6 mb-6 md:mb-8">
-            <div className="relative">
-              <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl animate-glow">
-                <FaRobot className="text-2xl md:text-3xl lg:text-4xl text-white" />
+          <div className="text-center max-w-4xl mx-auto mb-6 md:mb-8">
+            <div className="flex items-center justify-center gap-3 md:gap-4 mb-3 md:mb-4">
+              <div className="relative">
+                <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl animate-glow">
+                  <FaRobot className="text-xl md:text-2xl lg:text-3xl text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
+                {/* 빛나는 효과 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-2xl blur-xl animate-pulse" />
               </div>
-              <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse" />
-              {/* 빛나는 효과 */}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-2xl blur-xl animate-pulse" />
-            </div>
-            <div className="text-center max-w-4xl mx-auto">
-              <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight mb-3 md:mb-4 animate-text-glow mobile-text text-center">
+              <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight animate-text-glow mobile-text text-center">
                 {typedText}
                 {isTyping && <span className="animate-blink">|</span>}
               </h1>
-              <div className="h-6 md:h-8 lg:h-10 flex items-center justify-center">
-                <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-purple-300 font-medium mobile-text text-center max-w-3xl mx-auto leading-relaxed">
-                  <span 
-                    key={currentTagline}
-                    className="inline-block animate-tagline-fade"
-                  >
-                    {taglines[currentTagline]}
-                  </span>
-                </p>
-              </div>
+            </div>
+            <div className="h-6 md:h-8 lg:h-10 flex items-center justify-center">
+              <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-purple-300 font-medium mobile-text text-center max-w-3xl mx-auto leading-relaxed">
+                <span 
+                  key={currentTagline}
+                  className="inline-block animate-tagline-fade"
+                >
+                  {taglines[currentTagline]}
+                </span>
+              </p>
             </div>
           </div>
 
