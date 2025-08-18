@@ -57,10 +57,12 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
     queryKey: ['ai-category-stats'],
     queryFn: async () => {
       try {
+        console.log('카테고리 통계 요청 중...')
         const response = await aiInfoAPI.getCategoryStats()
+        console.log('카테고리 통계 응답:', response.data)
         return response.data
       } catch (error) {
-        console.log('카테고리 통계 가져오기 실패:', error)
+        console.error('카테고리 통계 가져오기 실패:', error)
         return {}
       }
     }
@@ -72,10 +74,12 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
     queryFn: async () => {
       if (!selectedCategory) return []
       try {
+        console.log(`카테고리 "${selectedCategory}" 정보 요청 중...`)
         const response = await aiInfoAPI.getByCategory(selectedCategory)
+        console.log(`카테고리 "${selectedCategory}" 응답:`, response.data)
         return response.data
       } catch (error) {
-        console.log('카테고리별 AI 정보 가져오기 실패:', error)
+        console.error(`카테고리 "${selectedCategory}" AI 정보 가져오기 실패:`, error)
         return []
       }
     },
@@ -289,19 +293,14 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         <FaStar className="text-sm" />
                       </button>
                       
-                                             {/* 카테고리 정보 */}
-                       <div className="absolute top-4 left-4 flex gap-2">
-                         {info.subcategory && (
-                           <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs border border-blue-500/30">
-                             {info.subcategory}
-                           </span>
-                         )}
-                         {info.confidence && (
-                           <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs border border-green-500/30">
-                             신뢰도: {Math.round(info.confidence * 100)}%
-                           </span>
-                         )}
-                       </div>
+                                                                    {/* 카테고리 정보 */}
+                        <div className="absolute top-4 left-4 flex gap-2">
+                          {info.subcategory && (
+                            <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs border border-blue-500/30">
+                              {info.subcategory}
+                            </span>
+                          )}
+                        </div>
                     </div>
                   ))}
                 </div>
