@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles, ChevronLeft, ChevronRight, Image, MessageSquare, Cpu, Globe, Zap, Shield, Palette, Bot } from 'lucide-react'
 import { useUpdateUserProgress, useCheckAchievements, useUpdateTermProgress, useLearnedTerms } from '@/hooks/use-user-progress'
 import { useQueryClient } from '@tanstack/react-query'
 import type { AIInfoItem, TermItem } from '@/types'
@@ -17,6 +17,67 @@ interface AIInfoCardProps {
   onProgressUpdate?: () => void
   forceUpdate?: number
   setForceUpdate?: (fn: (prev: number) => number) => void
+}
+
+// 카테고리별 아이콘과 색상 정의
+const getCategoryStyle = (category: string) => {
+  const categoryStyles: Record<string, { icon: React.ReactNode; bgColor: string; textColor: string; borderColor: string }> = {
+    '이미지 생성 AI': {
+      icon: <Image className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-pink-500/20 to-purple-500/20',
+      textColor: 'text-pink-300',
+      borderColor: 'border-pink-400/50'
+    },
+    '챗봇/대화형 AI': {
+      icon: <MessageSquare className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20',
+      textColor: 'text-blue-300',
+      borderColor: 'border-blue-400/50'
+    },
+    'AI 응용 서비스': {
+      icon: <Globe className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-green-500/20 to-emerald-500/20',
+      textColor: 'text-green-300',
+      borderColor: 'border-green-400/50'
+    },
+    '자연어 처리': {
+      icon: <Bot className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-indigo-500/20 to-blue-500/20',
+      textColor: 'text-indigo-300',
+      borderColor: 'border-indigo-400/50'
+    },
+    '머신러닝/딥러닝': {
+      icon: <Cpu className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-orange-500/20 to-red-500/20',
+      textColor: 'text-orange-300',
+      borderColor: 'border-orange-400/50'
+    },
+    'AI 윤리/안전': {
+      icon: <Shield className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20',
+      textColor: 'text-yellow-300',
+      borderColor: 'border-yellow-400/50'
+    },
+    'AI 도구/플랫폼': {
+      icon: <Zap className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-violet-500/20 to-purple-500/20',
+      textColor: 'text-violet-300',
+      borderColor: 'border-violet-400/50'
+    },
+    'AI 연구/동향': {
+      icon: <Palette className="w-4 h-4" />,
+      bgColor: 'bg-gradient-to-r from-teal-500/20 to-cyan-500/20',
+      textColor: 'text-teal-300',
+      borderColor: 'border-teal-400/50'
+    }
+  }
+  
+  return categoryStyles[category] || {
+    icon: <Cpu className="w-4 h-4" />,
+    bgColor: 'bg-gradient-to-r from-gray-500/20 to-slate-500/20',
+    textColor: 'text-gray-300',
+    borderColor: 'border-gray-400/50'
+  }
 }
 
 function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate }: AIInfoCardProps) {
@@ -303,6 +364,16 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           </button>
         </div>
       </div>
+      
+      {/* 카테고리 배지 */}
+      {info.category && (
+        <div className="mb-3 md:mb-4">
+          <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border ${getCategoryStyle(info.category).bgColor} ${getCategoryStyle(info.category).borderColor} ${getCategoryStyle(info.category).textColor} backdrop-blur-sm shadow-lg`}>
+            {getCategoryStyle(info.category).icon}
+            <span className="text-sm font-medium">{info.category}</span>
+          </div>
+        </div>
+      )}
       
       {/* 내용 */}
       <div className="mb-3 md:mb-4 text-white/90 text-sm md:text-base leading-relaxed whitespace-pre-line">
