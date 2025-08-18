@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaRobot, FaFilter, FaSearch, FaChevronDown, FaChevronRight, FaStar, FaCalendar } from 'react-icons/fa'
 import { Image, MessageSquare, Brain, Zap, Globe, Shield, Settings, Palette } from 'lucide-react'
@@ -132,6 +132,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   const [favoriteInfos, setFavoriteInfos] = useState<Set<string>>(new Set())
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [forceUpdate, setForceUpdate] = useState(0)
 
   // 모든 카테고리 가져오기
   const { data: categories = [], isLoading: isLoadingCategories } = useQuery<string[]>({
@@ -219,7 +220,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   }
 
   // 즐겨찾기 토글
-  const toggleFavorite = (favoriteKey: string) => {
+  const toggleFavorite = useCallback((favoriteKey: string) => {
     console.log('즐겨찾기 토글 호출:', favoriteKey, '현재 상태:', favoriteInfos.has(favoriteKey))
     
     setFavoriteInfos(prev => {
@@ -238,9 +239,12 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
         console.log('로컬 스토리지에 저장됨')
       }
       
+      // 강제 리렌더링을 위해 forceUpdate 트리거
+      setForceUpdate(prev => prev + 1)
+      
       return newFavorites
     })
-  }
+  }, [])
 
   // 로컬 스토리지에서 즐겨찾기 불러오기
   useEffect(() => {
@@ -416,7 +420,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         onClick={() => {
                           if (isProcessing) return
                           setIsProcessing(true)
-                          setShowFavoritesOnly(!showFavoritesOnly)
+                          setShowFavoritesOnly(prev => !prev)
                           setTimeout(() => setIsProcessing(false), 300)
                         }}
                         className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
@@ -451,8 +455,8 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                          sessionId={sessionId}
                          isLearned={false}
                          onProgressUpdate={onProgressUpdate}
-                         forceUpdate={0}
-                         setForceUpdate={() => {}}
+                         forceUpdate={forceUpdate}
+                         setForceUpdate={setForceUpdate}
                          isFavorite={favoriteInfos.has(info.id)}
                          onFavoriteToggle={() => {
                            const favoriteKey = info.id
