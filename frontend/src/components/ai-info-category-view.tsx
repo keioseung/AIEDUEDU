@@ -215,10 +215,10 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       // 새로운 카테고리로 설정
       setSelectedCategory(category)
       
-      // 모든 상태 초기화
+      // 검색어만 초기화하고 즐겨찾기 상태는 유지
       setSearchQuery('')
-      setShowFavoritesOnly(false)
-      setFavoriteInfos(new Set())
+      // setShowFavoritesOnly(false) 제거 - 즐겨찾기 모드 유지
+      // setFavoriteInfos(new Set()) 제거 - 즐겨찾기 데이터 유지
       
       // 새로운 카테고리 데이터 요청을 위해 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ['ai-info-by-category', category] })
