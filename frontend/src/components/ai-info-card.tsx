@@ -255,7 +255,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         
         // 부모 컴포넌트에 즐겨찾기 상태 변경 알림
         if (onFavoriteToggle && info.id) {
-          onFavoriteToggle(info.id)
+          onFavoriteToggle(String(info.id))
         }
         
         // 로컬 상태도 즉시 업데이트
