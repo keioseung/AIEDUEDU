@@ -236,17 +236,17 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
 
   // 카테고리별 색상 매핑
   const getCategoryColor = (category: string) => {
-    const colors = {
-      '챗봇/대화형 AI': 'from-blue-500 to-cyan-500',
+    const categoryStyles = {
       '이미지 생성 AI': 'from-purple-500 to-pink-500',
-      '코딩/개발 도구': 'from-green-500 to-emerald-500',
-      '음성/오디오 AI': 'from-orange-500 to-red-500',
-      '데이터 분석/ML': 'from-indigo-500 to-blue-500',
-      'AI 윤리/정책': 'from-yellow-500 to-orange-500',
-      'AI 하드웨어/인프라': 'from-gray-500 to-slate-500',
-      'AI 응용 서비스': 'from-teal-500 to-green-500'
+      '챗봇/대화형 AI': 'from-blue-500 to-cyan-500',
+      '자연어 처리 AI': 'from-green-500 to-emerald-500',
+      '음성 인식/합성 AI': 'from-yellow-500 to-orange-500',
+      'AI 응용 서비스': 'from-indigo-500 to-purple-500',
+      'AI 보안/윤리': 'from-red-500 to-pink-500',
+      'AI 개발 도구': 'from-gray-500 to-slate-500',
+      'AI 창작 도구': 'from-pink-500 to-rose-500'
     }
-    return colors[category as keyof typeof colors] || 'from-gray-500 to-slate-500'
+    return categoryStyles[category as keyof typeof categoryStyles] || 'from-gray-500 to-slate-500'
   }
 
   if (isLoadingCategories || isLoadingStats) {
