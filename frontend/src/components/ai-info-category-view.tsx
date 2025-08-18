@@ -257,13 +257,21 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
 
   // 필터링된 AI 정보
   const filteredAIInfo = categoryAIInfo.filter((info, index) => {
+    // 검색 필터링
     const matchesSearch = searchQuery === '' || 
       info.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       info.content.toLowerCase().includes(searchQuery.toLowerCase())
     
     // 즐겨찾기 키 생성 - info_index가 없으면 배열 인덱스 사용
     const favoriteKey = `${info.date || new Date().toISOString().split('T')[0]}_${info.info_index !== undefined ? info.info_index : index}`
-    const matchesFavorites = !showFavoritesOnly || favoriteInfos.has(favoriteKey)
+    
+    // 즐겨찾기 필터링
+    let matchesFavorites = true
+    if (showFavoritesOnly) {
+      // 즐겨찾기만 모드일 때는 즐겨찾기된 카드만 표시
+      matchesFavorites = favoriteInfos.has(favoriteKey)
+    }
+    // showFavoritesOnly가 false일 때는 모든 카드 표시 (matchesFavorites = true)
     
     console.log(`필터링: ${info.title}`, {
       matchesSearch,
@@ -440,7 +448,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                      >
                        <FaStar className={showFavoritesOnly ? 'text-yellow-300' : 'text-white/70'} />
                        <span className="text-sm font-medium whitespace-nowrap">
-                         즐겨찾기만
+                         {showFavoritesOnly ? '전체보기' : '즐겨찾기만'}
                        </span>
                      </button>
                   </div>
