@@ -68,17 +68,18 @@ export default function AuthPage() {
     }
   }
 
-  // 탭 전환 최적화
+  // 탭 전환 최적화 - 모바일 안정성 강화
   const handleTabChange = (newTab: 'login' | 'register') => {
     if (isTabTransitioning || tab === newTab) return
     
     setIsTabTransitioning(true)
     setError('')
     
-    // 모바일에서는 즉시 전환, 데스크톱에서는 애니메이션
+    // 모바일에서는 즉시 전환하고 추가 지연 없음
     if (isMobile) {
       setTab(newTab)
-      setIsTabTransitioning(false)
+      // 모바일에서는 즉시 전환 완료
+      setTimeout(() => setIsTabTransitioning(false), 50)
     } else {
       // 데스크톱에서는 부드러운 전환
       setTimeout(() => {
@@ -224,7 +225,7 @@ export default function AuthPage() {
               </div>
 
               {/* 폼 */}
-              <div className={`tab-transition ${isTabTransitioning ? 'opacity-80' : 'opacity-100'}`}>
+              <div className={`tab-transition ${isTabTransitioning ? 'opacity-90' : 'opacity-100'}`} style={{ minHeight: '280px' }}>
                 {tab === 'login' ? (
                   <form onSubmit={handleLogin} className="space-y-4">
                   <div>
@@ -438,27 +439,46 @@ export default function AuthPage() {
             -webkit-touch-callout: 'none';
           }
           
-          /* 모바일에서 탭 전환 시 레이아웃 안정화 */
-          .tab-transition {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-            will-change: transform;
-          }
-          
-          /* 모바일에서 애니메이션 최적화 */
-          .animate-gradient-shift,
-          .animate-gradient-float,
-          .animate-float {
-            animation-duration: 8s;
-            animation-timing-function: ease-out;
-          }
-          
-          /* 모바일에서 파티클 효과 최적화 */
-          .particle-optimized {
-            transform: translateZ(0);
-            will-change: transform;
-          }
+                  /* 모바일에서 탭 전환 시 레이아웃 안정화 */
+        .tab-transition {
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+          will-change: transform;
+          transition: opacity 0.1s ease-out;
+        }
+        
+        /* 모바일에서 애니메이션 최적화 */
+        .animate-gradient-shift,
+        .animate-gradient-float,
+        .animate-float {
+          animation-duration: 8s;
+          animation-timing-function: ease-out;
+        }
+        
+        /* 모바일에서 파티클 효과 최적화 */
+        .particle-optimized {
+          transform: translateZ(0);
+          will-change: transform;
+        }
+        
+        /* 모바일에서 탭 전환 시 깜박임 방지 */
+        .tab-transition * {
+          transform: translateZ(0);
+          backface-visibility: hidden;
+        }
+        
+        /* 모바일에서 배경 안정화 */
+        .tab-transition {
+          background: transparent !important;
+          background-color: transparent !important;
+        }
+        
+        /* 모바일에서 폼 전환 시 레이아웃 고정 */
+        .tab-transition form {
+          position: relative;
+          z-index: 1;
+        }
         }
         
         /* 포커스 시 검정색 방지 */
@@ -478,6 +498,33 @@ export default function AuthPage() {
         /* 포커스 시 애니메이션 최적화 */
         input[type="text"]:focus, input[type="password"]:focus {
           transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
+        }
+        
+        /* 모바일에서 전체 페이지 안정화 */
+        @media (max-width: 768px) {
+          body {
+            -webkit-overflow-scrolling: touch;
+            overflow-scrolling: touch;
+          }
+          
+          /* 모바일에서 탭 전환 시 깜박임 완전 방지 */
+          .tab-transition {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+          }
+          
+          /* 모바일에서 배경 효과 최소화 */
+          .animate-gradient-shift,
+          .animate-gradient-float {
+            animation: none;
+          }
+          
+          /* 모바일에서 파티클 효과 최소화 */
+          .animate-float {
+            animation: none;
+            opacity: 0.3;
+          }
         }
       `}</style>
     </div>

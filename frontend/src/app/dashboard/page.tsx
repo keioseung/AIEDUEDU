@@ -430,8 +430,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 날짜 선택 (AI 정보 탭, 용어 퀴즈 탭, 진행률 탭, 용어학습 탭에서 표시) */}
-      {(activeTab === 'ai' || activeTab === 'progress' || activeTab === 'quiz' || activeTab === 'term') && (
+      {/* 날짜 선택 (용어 퀴즈 탭, 진행률 탭, 용어학습 탭에서만 표시) */}
+      {(activeTab === 'progress' || activeTab === 'quiz' || activeTab === 'term') && (
         <div className="flex justify-center mb-4 md:mb-6">
           <div className="glass backdrop-blur-xl rounded-xl px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-3 shadow-lg border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl">
             <FaCalendar className="w-4 h-4 md:w-5 md:h-5 text-blue-400 flex-shrink-0" />
@@ -571,33 +571,58 @@ export default function DashboardPage() {
 
               {/* 날짜별 모드 */}
               {aiInfoMode === 'date' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  {aiInfoFixed.length === 0 && (
-                    <div className="glass backdrop-blur-xl rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center text-white/70 shadow-xl min-h-[180px] border border-white/10">
-                      <FaBookOpen className="w-10 h-10 md:w-12 md:h-12 mb-3 opacity-60" />
-                      <span className="text-base md:text-lg font-semibold">AI 정보가 없습니다</span>
+                <div>
+                  {/* 세련된 날짜 선택기 */}
+                  <div className="flex justify-center mb-6">
+                    <div className="glass backdrop-blur-xl rounded-2xl p-2 shadow-xl border border-white/10">
+                      <div className="flex items-center gap-3 px-4 py-2">
+                        <FaCalendar className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                        <div className="flex items-center gap-3">
+                          <span className="text-white/80 text-sm font-medium">날짜:</span>
+                          <input 
+                            type="date" 
+                            value={selectedDate} 
+                            onChange={e => setSelectedDate(e.target.value)} 
+                            className="px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm font-medium shadow-sm transition-all duration-200 hover:bg-white/15 focus:bg-white/20" 
+                            style={{ minWidth: 130 }} 
+                          />
+                          <div className="px-3 py-2 rounded-xl bg-gradient-to-r from-blue-500/80 to-purple-500/80 text-white font-bold text-sm shadow-sm border border-white/20">
+                            {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : new Date(selectedDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  {aiInfoFixed.map((info, index) => {
-                    // 로컬 스토리지와 백엔드 데이터를 모두 확인하여 학습 상태 결정
-                    const isLearnedLocally = localProgress.includes(index)
-                    const isLearnedBackend = backendProgress.includes(index)
-                    const isLearned = isLearnedLocally || isLearnedBackend
-                    
-                    return (
-                      <AIInfoCard
-                        key={index}
-                        info={info}
-                        index={index}
-                        date={selectedDate}
-                        sessionId={sessionId}
-                        isLearned={isLearned}
-                        onProgressUpdate={handleProgressUpdate}
-                        forceUpdate={forceUpdate}
-                        setForceUpdate={setForceUpdate}
-                      />
-                    )
-                  })}
+                  </div>
+                  
+                  {/* AI 정보 카드들 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    {aiInfoFixed.length === 0 && (
+                      <div className="glass backdrop-blur-xl rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center text-white/70 shadow-xl min-h-[180px] border border-white/10">
+                        <FaBookOpen className="w-10 h-10 md:w-12 md:h-12 mb-3 opacity-60" />
+                        <span className="text-base md:text-lg font-semibold">AI 정보가 없습니다</span>
+                      </div>
+                    )}
+                    {aiInfoFixed.map((info, index) => {
+                      // 로컬 스토리지와 백엔드 데이터를 모두 확인하여 학습 상태 결정
+                      const isLearnedLocally = localProgress.includes(index)
+                      const isLearnedBackend = backendProgress.includes(index)
+                      const isLearned = isLearnedLocally || isLearnedBackend
+                      
+                      return (
+                        <AIInfoCard
+                          key={index}
+                          info={info}
+                          index={index}
+                          date={selectedDate}
+                          sessionId={sessionId}
+                          isLearned={isLearned}
+                          onProgressUpdate={handleProgressUpdate}
+                          forceUpdate={forceUpdate}
+                          setForceUpdate={setForceUpdate}
+                        />
+                      )
+                    })}
+                  </div>
                 </div>
               )}
 
