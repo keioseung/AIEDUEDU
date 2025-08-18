@@ -221,30 +221,24 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   const toggleFavorite = (favoriteKey: string) => {
     console.log('즐겨찾기 토글 호출:', favoriteKey, '현재 상태:', favoriteInfos.has(favoriteKey))
     
-    const newFavorites = new Set(favoriteInfos)
-    if (newFavorites.has(favoriteKey)) {
-      newFavorites.delete(favoriteKey)
-      console.log('즐겨찾기에서 제거:', favoriteKey)
-    } else {
-      newFavorites.add(favoriteKey)
-      console.log('즐겨찾기에 추가:', favoriteKey)
-    }
-    
-    setFavoriteInfos(newFavorites)
-    console.log('새로운 즐겨찾기 목록:', [...newFavorites])
-    
-    // 로컬 스토리지에 저장
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
-      console.log('로컬 스토리지에 저장됨')
-    }
-    
-    // 즐겨찾기 상태가 변경되면 필터링된 결과도 업데이트
-    if (showFavoritesOnly) {
-      // 강제로 리렌더링을 위해 상태 업데이트
-      setShowFavoritesOnly(false)
-      setTimeout(() => setShowFavoritesOnly(true), 100)
-    }
+    setFavoriteInfos(prev => {
+      const newFavorites = new Set(prev)
+      if (newFavorites.has(favoriteKey)) {
+        newFavorites.delete(favoriteKey)
+        console.log('즐겨찾기에서 제거:', favoriteKey)
+      } else {
+        newFavorites.add(favoriteKey)
+        console.log('즐겨찾기에 추가:', favoriteKey)
+      }
+      
+      // 로컬 스토리지에 저장
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
+        console.log('로컬 스토리지에 저장됨')
+      }
+      
+      return newFavorites
+    })
   }
 
   // 로컬 스토리지에서 즐겨찾기 불러오기
@@ -349,20 +343,30 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                          <FaRobot className="text-lg" />
                          <span className="font-medium">{category}</span>
                        </div>
-                       <div className="flex items-center gap-2">
-                         <span className="text-sm bg-purple-600/40 text-purple-100 px-2 py-1 rounded-full border border-purple-500/30">
-                           {stats.count}개
-                         </span>
-                         <button
-                           onClick={(e) => {
-                             e.stopPropagation()
-                             handleCategorySelect(category)
-                           }}
-                           className="text-white/60 hover:text-white transition"
-                         >
-                           <FaChevronRight />
-                         </button>
-                       </div>
+                                               <div className="flex items-center gap-2">
+                          <span className="text-sm bg-purple-600/40 text-purple-100 px-2 py-1 rounded-full border border-purple-500/30">
+                            {stats.count}개
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleCategorySelect(category)
+                              // 헤더로 스크롤 이동
+                              setTimeout(() => {
+                                const headerElement = document.querySelector('.category-header')
+                                if (headerElement) {
+                                  headerElement.scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'start' 
+                                  })
+                                }
+                              }, 100)
+                            }}
+                            className="text-white/60 hover:text-white transition"
+                          >
+                            <FaChevronDown />
+                          </button>
+                        </div>
                      </button>
                     
 
@@ -377,8 +381,8 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
         <div className="lg:col-span-2">
           {selectedCategory ? (
             <div className="space-y-4">
-              {/* 선택된 카테고리 헤더 */}
-              <div className={`rounded-2xl p-6 text-white ${getCategoryStyle(selectedCategory).bgColor} border ${getCategoryStyle(selectedCategory).borderColor}`}>
+                             {/* 선택된 카테고리 헤더 */}
+               <div className={`category-header rounded-2xl p-6 text-white ${getCategoryStyle(selectedCategory).bgColor} border ${getCategoryStyle(selectedCategory).borderColor}`}>
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
                   <div>
                     <h3 className="text-xl font-bold mb-2">{selectedCategory}</h3>
@@ -412,7 +416,8 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                     
                                          <button
                        onClick={() => {
-                         setShowFavoritesOnly(!showFavoritesOnly)
+                         setShowFavoritesOnly(prev => !prev)
+                         console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', !showFavoritesOnly)
                        }}
                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                          showFavoritesOnly 
