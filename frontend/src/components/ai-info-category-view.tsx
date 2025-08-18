@@ -14,15 +14,14 @@ interface AIInfoItem {
   content: string
   terms: Array<{ term: string; description: string }>
   category: string
-  subcategory: string
-  confidence: number
+  subcategory?: string
+  confidence?: number
   created_at: string
 }
 
 interface CategoryStats {
   [category: string]: {
     count: number
-    subcategories: { [subcategory: string]: number }
     dates: string[]
   }
 }
@@ -194,7 +193,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
             
             <div className="space-y-2">
               {categories.map((category) => {
-                const stats = categoryStats[category] || { count: 0, subcategories: {}, dates: [] }
+                const stats = categoryStats[category] || { count: 0, dates: [] }
                 const isExpanded = expandedCategories.has(category)
                 const isSelected = selectedCategory === category
                 
@@ -229,30 +228,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                       </div>
                     </button>
                     
-                    {/* 하위 카테고리 */}
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="ml-6 space-y-1"
-                        >
-                          {Object.entries(stats.subcategories).map(([subcategory, count]) => (
-                            <div
-                              key={subcategory}
-                              className="flex items-center justify-between p-2 rounded-lg bg-white/5 text-white/70 text-sm"
-                            >
-                              <span>{subcategory}</span>
-                              <span className="bg-white/20 px-2 py-1 rounded-full text-xs">
-                                {count}개
-                              </span>
-                            </div>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+
                   </div>
                 )
               })}
@@ -297,6 +273,8 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         sessionId={sessionId}
                         isLearned={false}
                         onProgressUpdate={onProgressUpdate}
+                        forceUpdate={0}
+                        setForceUpdate={() => {}}
                       />
                       
                       {/* 즐겨찾기 버튼 */}
