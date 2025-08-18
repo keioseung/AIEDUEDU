@@ -404,7 +404,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                   {/* 검색 및 필터 */}
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-lg font-normal drop-shadow-lg z-10" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-sm font-light drop-shadow-sm z-10" />
                       <input
                         type="text"
                         placeholder="AI 정보 검색..."
@@ -418,13 +418,19 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                                          <button
                        onClick={() => {
                          const newState = !showFavoritesOnly
-                         setShowFavoritesOnly(newState)
-                         console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', newState)
+                         console.log('즐겨찾기만 버튼 클릭:', showFavoritesOnly, '->', newState)
                          
-                         // 즐겨찾기 상태가 변경되면 검색 쿼리도 초기화
+                         setShowFavoritesOnly(newState)
+                         
+                         // 즐겨찾기만 모드 활성화 시 검색 쿼리 초기화
                          if (newState) {
                            setSearchQuery('')
                          }
+                         
+                         // 상태 변경 후 강제 리렌더링을 위한 지연 처리
+                         setTimeout(() => {
+                           console.log('즐겨찾기 상태 업데이트 완료:', newState)
+                         }, 100)
                        }}
                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                          showFavoritesOnly 

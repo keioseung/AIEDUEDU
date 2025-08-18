@@ -298,7 +298,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       <div className="flex flex-col gap-4">
         {/* 검색창 */}
         <div className="relative">
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-lg font-normal drop-shadow-lg z-10" />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-sm font-light drop-shadow-sm z-10" />
           <input
             type="text"
             placeholder="제목, 내용, 용어로 검색..."
