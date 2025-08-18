@@ -211,9 +211,9 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 카테고리 사이드바 */}
         <div className="lg:col-span-1">
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
+          <div className="bg-gradient-to-br from-purple-900/80 via-purple-800/90 to-purple-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 shadow-2xl shadow-purple-900/40 p-6">
             <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <FaFilter className="text-blue-400" />
+              <FaFilter className="text-purple-300" />
               카테고리 목록
             </h3>
             
@@ -231,7 +231,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                       className={`w-full text-left p-3 rounded-lg transition-all flex items-center justify-between group ${
                         isSelected 
                           ? 'bg-gradient-to-r ' + getCategoryColor(category) + ' text-white shadow-lg' 
-                          : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white'
+                          : 'bg-purple-800/40 hover:bg-purple-700/50 text-white/90 hover:text-white border border-purple-600/30 hover:border-purple-500/50'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -239,7 +239,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         <span className="font-medium">{category}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm bg-white/20 px-2 py-1 rounded-full">
+                        <span className="text-sm bg-purple-600/40 text-purple-100 px-2 py-1 rounded-full border border-purple-500/30">
                           {stats.count}개
                         </span>
                         <button
