@@ -14,16 +14,31 @@ export default function AuthPage() {
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isTabTransitioning, setIsTabTransitioning] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const router = useRouter()
 
-  // 마우스 위치 추적
+  // 모바일 감지
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // 마우스 위치 추적 (데스크톱에서만)
+  useEffect(() => {
+    if (isMobile) return
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  }, [isMobile])
 
   // 회원가입
   const handleRegister = async (e: React.FormEvent) => {
@@ -53,6 +68,26 @@ export default function AuthPage() {
     }
   }
 
+  // 탭 전환 최적화
+  const handleTabChange = (newTab: 'login' | 'register') => {
+    if (isTabTransitioning || tab === newTab) return
+    
+    setIsTabTransitioning(true)
+    setError('')
+    
+    // 모바일에서는 즉시 전환, 데스크톱에서는 애니메이션
+    if (isMobile) {
+      setTab(newTab)
+      setIsTabTransitioning(false)
+    } else {
+      // 데스크톱에서는 부드러운 전환
+      setTimeout(() => {
+        setTab(newTab)
+        setIsTabTransitioning(false)
+      }, 150)
+    }
+  }
+
   // 로그인
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,12 +98,12 @@ export default function AuthPage() {
     
     try {
       const result = await authAPI.login({ username, password })
-    setError('')
+      setError('')
       
       if (result.user.role === 'admin') {
-      router.replace('/admin')
-    } else {
-      router.replace('/dashboard')
+        router.replace('/admin')
+      } else {
+        router.replace('/dashboard')
       }
     } catch (error: any) {
       if (error.response?.data?.detail) {
@@ -169,8 +204,9 @@ export default function AuthPage() {
                     tab === 'login' 
                       ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' 
                       : 'text-white/60 hover:text-white hover:bg-white/10'
-                  }`}
-                  onClick={() => { setTab('login'); setError('') }}
+                  } ${isTabTransitioning ? 'pointer-events-none opacity-80' : ''}`}
+                  onClick={() => handleTabChange('login')}
+                  disabled={isTabTransitioning}
                 >
                   로그인
                 </button>
@@ -179,16 +215,18 @@ export default function AuthPage() {
                     tab === 'register' 
                       ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' 
                       : 'text-white/60 hover:text-white hover:bg-white/10'
-                  }`}
-                  onClick={() => { setTab('register'); setError('') }}
+                  } ${isTabTransitioning ? 'pointer-events-none opacity-80' : ''}`}
+                  onClick={() => handleTabChange('register')}
+                  disabled={isTabTransitioning}
                 >
                   회원가입
                 </button>
               </div>
 
               {/* 폼 */}
-              {tab === 'login' ? (
-                <form onSubmit={handleLogin} className="space-y-4">
+              <div className={`tab-transition ${isTabTransitioning ? 'opacity-80' : 'opacity-100'}`}>
+                {tab === 'login' ? (
+                  <form onSubmit={handleLogin} className="space-y-4">
                   <div>
                     <label className="block text-white/80 text-xs font-medium mb-1.5 flex items-center gap-1.5">
                       <FaUser className="text-purple-400 text-xs" />
@@ -333,6 +371,7 @@ export default function AuthPage() {
                   </button>
                 </form>
               )}
+                </div>
             </div>
           </div>
         </div>
@@ -397,6 +436,28 @@ export default function AuthPage() {
           * {
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: 'none';
+          }
+          
+          /* 모바일에서 탭 전환 시 레이아웃 안정화 */
+          .tab-transition {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+            will-change: transform;
+          }
+          
+          /* 모바일에서 애니메이션 최적화 */
+          .animate-gradient-shift,
+          .animate-gradient-float,
+          .animate-float {
+            animation-duration: 8s;
+            animation-timing-function: ease-out;
+          }
+          
+          /* 모바일에서 파티클 효과 최적화 */
+          .particle-optimized {
+            transform: translateZ(0);
+            will-change: transform;
           }
         }
         
