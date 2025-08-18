@@ -662,7 +662,7 @@ def get_sample_data(db: Session = Depends(get_db)):
         print(f"Error getting sample data: {e}")
         return {"error": str(e)}
 
-@router.get("/debug/category-check/{category}")
+@router.get("/debug/category-check/{category:path}")
 def check_category_data(category: str, db: Session = Depends(get_db)):
     """디버깅용: 특정 카테고리의 데이터 상세 확인"""
     try:
@@ -784,12 +784,12 @@ def get_all_categories():
         print(f"Error getting categories: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get categories: {str(e)}")
 
-@router.get("/categories/{category}/subcategories", response_model=List[str])
+@router.get("/categories/{category:path}/subcategories", response_model=List[str])
 def get_subcategories(category: str):
     """하위 카테고리는 사용하지 않으므로 빈 리스트를 반환합니다."""
     return []
 
-@router.get("/by-category/{category}", response_model=List[dict])
+@router.get("/by-category/{category:path}", response_model=List[dict])
 def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
     """특정 카테고리의 AI 정보를 반환합니다."""
     try:
