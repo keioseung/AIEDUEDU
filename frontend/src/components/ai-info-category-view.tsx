@@ -221,31 +221,24 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   const toggleFavorite = (favoriteKey: string) => {
     console.log('즐겨찾기 토글 호출:', favoriteKey, '현재 상태:', favoriteInfos.has(favoriteKey))
     
-    const newFavorites = new Set(favoriteInfos)
-    if (newFavorites.has(favoriteKey)) {
-      newFavorites.delete(favoriteKey)
-      console.log('즐겨찾기에서 제거:', favoriteKey)
-    } else {
-      newFavorites.add(favoriteKey)
-      console.log('즐겨찾기에 추가:', favoriteKey)
-    }
-    
-    setFavoriteInfos(newFavorites)
-    console.log('새로운 즐겨찾기 목록:', [...newFavorites])
-    
-    // 로컬 스토리지에 저장
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
-      console.log('로컬 스토리지에 저장됨')
-    }
-    
-    // 즐겨찾기 상태가 변경되면 필터링된 결과도 즉시 업데이트
-    console.log('즐겨찾기 상태 변경 후 필터링 업데이트 필요')
-    
-    // 강제로 리렌더링을 위한 상태 업데이트
-    setTimeout(() => {
-      setFavoriteInfos(prev => new Set(prev))
-    }, 100)
+    setFavoriteInfos(prev => {
+      const newFavorites = new Set(prev)
+      if (newFavorites.has(favoriteKey)) {
+        newFavorites.delete(favoriteKey)
+        console.log('즐겨찾기에서 제거:', favoriteKey)
+      } else {
+        newFavorites.add(favoriteKey)
+        console.log('즐겨찾기에 추가:', favoriteKey)
+      }
+      
+      // 로컬 스토리지에 저장
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoriteAIInfos', JSON.stringify([...newFavorites]))
+        console.log('로컬 스토리지에 저장됨')
+      }
+      
+      return newFavorites
+    })
   }
 
   // 로컬 스토리지에서 즐겨찾기 불러오기
@@ -369,11 +362,29 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                      {/* 확장된 카테고리 내용 */}
                      {isExpanded && (
                        <div className="ml-4 pl-4 border-l-2 border-purple-500/30 space-y-2">
-                         <div className="text-sm text-purple-300/70">
+                         <div className="text-sm text-purple-300/70 mb-2">
                            최근 업데이트: {stats.dates.length > 0 ? stats.dates.slice(0, 3).join(', ') : '없음'}
                          </div>
-                         <div className="text-xs text-purple-400/60">
+                         <div className="text-xs text-purple-400/60 mb-3">
                            총 {stats.count}개의 AI 정보가 있습니다
+                         </div>
+                         {/* AI 정보 제목 리스트 */}
+                         <div className="space-y-1">
+                           <div className="text-xs text-purple-300/80 font-medium mb-2">AI 정보 목록:</div>
+                           {categoryAIInfo.length > 0 ? (
+                             categoryAIInfo.slice(0, 10).map((info, idx) => (
+                               <div key={idx} className="text-xs text-purple-300/60 pl-2 border-l border-purple-400/20">
+                                 • {info.title}
+                               </div>
+                             ))
+                           ) : (
+                             <div className="text-xs text-purple-400/40 italic">AI 정보를 불러오는 중...</div>
+                           )}
+                           {categoryAIInfo.length > 10 && (
+                             <div className="text-xs text-purple-400/50 italic pl-2">
+                               ... 및 {categoryAIInfo.length - 10}개 더
+                             </div>
+                           )}
                          </div>
                        </div>
                      )}
@@ -412,7 +423,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                   {/* 검색 및 필터 */}
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-xl font-bold drop-shadow-lg" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-2xl font-black drop-shadow-xl" />
                       <input
                         type="text"
                         placeholder="AI 정보 검색..."
@@ -425,19 +436,13 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                     
                                          <button
                        onClick={() => {
-                         const newShowFavoritesOnly = !showFavoritesOnly
-                         console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', newShowFavoritesOnly)
-                         setShowFavoritesOnly(newShowFavoritesOnly)
+                         setShowFavoritesOnly(prev => !prev)
+                         console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', !showFavoritesOnly)
                          
                          // 즐겨찾기 상태가 변경되면 검색 쿼리도 초기화
-                         if (newShowFavoritesOnly) {
+                         if (!showFavoritesOnly) {
                            setSearchQuery('')
                          }
-                         
-                         // 즐겨찾기 상태 변경 후 즉시 필터링 업데이트
-                         setTimeout(() => {
-                           console.log('즐겨찾기 필터링 상태 업데이트:', newShowFavoritesOnly)
-                         }, 100)
                        }}
                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                          showFavoritesOnly 
