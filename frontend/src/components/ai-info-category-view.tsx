@@ -256,12 +256,13 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   }, [])
 
   // 필터링된 AI 정보
-  const filteredAIInfo = categoryAIInfo.filter(info => {
+  const filteredAIInfo = categoryAIInfo.filter((info, index) => {
     const matchesSearch = searchQuery === '' || 
       info.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       info.content.toLowerCase().includes(searchQuery.toLowerCase())
     
-    const favoriteKey = `${info.date || new Date().toISOString().split('T')[0]}_${info.info_index || 0}`
+    // 즐겨찾기 키 생성 - info_index가 없으면 배열 인덱스 사용
+    const favoriteKey = `${info.date || new Date().toISOString().split('T')[0]}_${info.info_index !== undefined ? info.info_index : index}`
     const matchesFavorites = !showFavoritesOnly || favoriteInfos.has(favoriteKey)
     
     console.log(`필터링: ${info.title}`, {
@@ -403,7 +404,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                   {/* 검색 및 필터 */}
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-2xl font-black drop-shadow-xl z-10" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-lg font-normal drop-shadow-lg z-10" />
                       <input
                         type="text"
                         placeholder="AI 정보 검색..."
@@ -416,8 +417,14 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                     
                                          <button
                        onClick={() => {
-                         setShowFavoritesOnly(prev => !prev)
-                         console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', !showFavoritesOnly)
+                         const newState = !showFavoritesOnly
+                         setShowFavoritesOnly(newState)
+                         console.log('즐겨찾기만 버튼 클릭됨, 현재 상태:', showFavoritesOnly, '-> 새로운 상태:', newState)
+                         
+                         // 즐겨찾기 상태가 변경되면 검색 쿼리도 초기화
+                         if (newState) {
+                           setSearchQuery('')
+                         }
                        }}
                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                          showFavoritesOnly 
@@ -453,7 +460,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                          onProgressUpdate={onProgressUpdate}
                          forceUpdate={0}
                          setForceUpdate={() => {}}
-                         isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${info.info_index || index}`)}
+                         isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${info.info_index !== undefined ? info.info_index : index}`)}
                          onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
                          searchQuery={searchQuery}
                        />
