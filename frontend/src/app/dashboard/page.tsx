@@ -553,22 +553,19 @@ export default function DashboardPage() {
               {aiInfoMode === 'date' && (
                 <div>
                   {/* 세련된 날짜 선택기 */}
-                  <div className="flex justify-center mb-6">
-                    <div className="glass backdrop-blur-xl rounded-2xl p-2 shadow-xl border border-white/10">
-                      <div className="flex items-center gap-3 px-4 py-2">
-                        <FaCalendar className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                        <div className="flex items-center gap-3">
-                          <span className="text-white/80 text-sm font-medium">날짜:</span>
-                          <input 
-                            type="date" 
-                            value={selectedDate} 
-                            onChange={e => setSelectedDate(e.target.value)} 
-                            className="px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm font-medium shadow-sm transition-all duration-200 hover:bg-white/15 focus:bg-white/20" 
-                            style={{ minWidth: 130 }} 
-                          />
-                          <div className="px-3 py-2 rounded-xl bg-gradient-to-r from-blue-500/80 to-purple-500/80 text-white font-bold text-sm shadow-sm border border-white/20">
-                            {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : new Date(selectedDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
-                          </div>
+                  <div className="flex justify-center mb-4">
+                    <div className="bg-gradient-to-r from-purple-900/60 via-purple-800/70 to-purple-900/60 backdrop-blur-xl rounded-xl p-1.5 shadow-lg border border-purple-500/30">
+                      <div className="flex items-center gap-2 px-3 py-1.5">
+                        <FaCalendar className="w-4 h-4 text-purple-300 flex-shrink-0" />
+                        <input 
+                          type="date" 
+                          value={selectedDate} 
+                          onChange={e => setSelectedDate(e.target.value)} 
+                          className="px-2 py-1.5 bg-white/10 border border-purple-400/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 text-xs font-medium shadow-sm transition-all duration-200 hover:bg-white/15 focus:bg-white/20" 
+                          style={{ minWidth: 110 }} 
+                        />
+                        <div className="px-2 py-1.5 rounded-lg bg-gradient-to-r from-purple-500/80 to-pink-500/80 text-white font-semibold text-xs shadow-sm border border-purple-400/30">
+                          {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : new Date(selectedDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                         </div>
                       </div>
                     </div>
