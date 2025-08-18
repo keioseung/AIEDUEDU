@@ -19,6 +19,28 @@ interface AIInfoCardProps {
   setForceUpdate?: (fn: (prev: number) => number) => void
   isFavorite?: boolean
   onFavoriteToggle?: (infoId: string) => void
+  searchQuery?: string
+}
+
+// 검색어 강조 함수
+const highlightText = (text: string, searchQuery: string) => {
+  if (!searchQuery || searchQuery.trim() === '') {
+    return text
+  }
+  
+  const regex = new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+  const parts = text.split(regex)
+  
+  return parts.map((part, index) => {
+    if (regex.test(part)) {
+      return (
+        <span key={index} className="bg-yellow-400/60 text-black font-semibold px-1 rounded">
+          {part}
+        </span>
+      )
+    }
+    return part
+  })
 }
 
 // 카테고리별 아이콘과 색상 정의
@@ -405,7 +427,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-base md:text-lg font-semibold gradient-text line-clamp-2 leading-tight">
-              {info.title}
+              {highlightText(info.title, searchQuery || '')}
             </h3>
             <p className="text-white/60 text-xs md:text-sm">
               {isLearned ? '학습 완료' : '학습 필요'}
@@ -429,7 +451,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       {/* 내용 */}
       <div className="mb-3 md:mb-4 text-white/90 text-sm md:text-base leading-relaxed whitespace-pre-line">
         <p className={isExpanded ? '' : 'line-clamp-3'}>
-          {info.content}
+          {highlightText(info.content, searchQuery || '')}
         </p>
         {info.content.length > 150 && (
           <button

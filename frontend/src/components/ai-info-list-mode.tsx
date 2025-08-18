@@ -566,20 +566,21 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
        <div className="space-y-4 w-full">
          {currentItems.map((info, index) => (
            <div key={info.id} className="w-full max-w-none bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40">
-            <AIInfoCard
-              info={{
-                title: info.title,
-                content: info.content,
-                terms: info.terms
-              }}
-              index={info.info_index}
-              date={info.date}
-              sessionId={sessionId}
-              isLearned={false}
-              onProgressUpdate={onProgressUpdate}
-              isFavorite={favoriteInfos.has(`${info.date}_${info.info_index}`)}
-              onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
-            />
+                         <AIInfoCard
+               info={{
+                 title: info.title,
+                 content: info.content,
+                 terms: info.terms
+               }}
+               index={info.info_index}
+               date={info.date}
+               sessionId={sessionId}
+               isLearned={false}
+               onProgressUpdate={onProgressUpdate}
+               isFavorite={favoriteInfos.has(`${info.date}_${info.info_index}`)}
+               onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
+               searchQuery={searchQuery}
+             />
           </div>
         ))}
       </div>

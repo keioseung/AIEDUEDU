@@ -444,18 +444,19 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                 <div className="grid gap-4">
                   {filteredAIInfo.map((info, index) => (
                     <div key={info.id} className="relative">
-                      <AIInfoCard
-                        info={info}
-                        index={index}
-                        date={info.date || new Date().toISOString().split('T')[0]}
-                        sessionId={sessionId}
-                        isLearned={false}
-                        onProgressUpdate={onProgressUpdate}
-                        forceUpdate={0}
-                        setForceUpdate={() => {}}
-                        isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${info.info_index || index}`)}
-                        onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
-                      />
+                                             <AIInfoCard
+                         info={info}
+                         index={index}
+                         date={info.date || new Date().toISOString().split('T')[0]}
+                         sessionId={sessionId}
+                         isLearned={false}
+                         onProgressUpdate={onProgressUpdate}
+                         forceUpdate={0}
+                         setForceUpdate={() => {}}
+                         isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${info.info_index || index}`)}
+                         onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
+                         searchQuery={searchQuery}
+                       />
                       
                       {/* 카테고리 정보 */}
                       <div className="absolute top-4 left-4 flex gap-2">
