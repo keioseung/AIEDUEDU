@@ -145,7 +145,10 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
         console.log('카테고리 가져오기 실패:', error)
         return []
       }
-    }
+    },
+    staleTime: 30000, // 30초
+    gcTime: 300000, // 5분
+    refetchOnWindowFocus: false
   })
 
   // 카테고리별 통계 가져오기
@@ -161,7 +164,10 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
         console.error('카테고리 통계 가져오기 실패:', error)
         return {}
       }
-    }
+    },
+    staleTime: 30000, // 30초
+    gcTime: 300000, // 5분
+    refetchOnWindowFocus: false
   })
 
   // 선택된 카테고리의 AI 정보 가져오기
@@ -304,8 +310,11 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
 
   if (isLoadingCategories || isLoadingStats) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-white/70 text-lg">카테고리 정보를 불러오는 중...</div>
+      <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
+        </div>
       </div>
     )
   }
