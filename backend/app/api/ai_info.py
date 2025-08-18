@@ -730,6 +730,51 @@ def check_category_data(category: str, db: Session = Depends(get_db)):
         print(f"Error checking category data: {e}")
         return {"error": str(e)}
 
+@router.get("/debug/all-stored-categories")
+def get_all_stored_categories(db: Session = Depends(get_db)):
+    """디버깅용: 데이터베이스에 저장된 모든 카테고리 값 확인"""
+    try:
+        print("저장된 모든 카테고리 값 확인 요청됨")
+        
+        all_ai_info = db.query(AIInfo).all()
+        stored_categories = set()
+        
+        for ai_info in all_ai_info:
+            # info1 카테고리
+            if ai_info.info1_title and ai_info.info1_content:
+                stored_category = getattr(ai_info, 'info1_category', None)
+                if stored_category and stored_category.strip():
+                    stored_categories.add(stored_category)
+                    print(f"  info1: '{stored_category}'")
+            
+            # info2 카테고리
+            if ai_info.info2_title and ai_info.info2_content:
+                stored_category = getattr(ai_info, 'info2_category', None)
+                if stored_category and stored_category.strip():
+                    stored_categories.add(stored_category)
+                    print(f"  info2: '{stored_category}'")
+            
+            # info3 카테고리
+            if ai_info.info3_title and ai_info.info3_content:
+                stored_category = getattr(ai_info, 'info3_category', None)
+                if stored_category and stored_category.strip():
+                    stored_categories.add(stored_category)
+                    print(f"  info3: '{stored_category}'")
+        
+        stored_categories_list = list(stored_categories)
+        stored_categories_list.sort()
+        
+        print(f"총 {len(stored_categories_list)}개의 고유한 카테고리 값 발견: {stored_categories_list}")
+        
+        return {
+            "total_unique_categories": len(stored_categories_list),
+            "stored_categories": stored_categories_list
+        }
+        
+    except Exception as e:
+        print(f"Error getting stored categories: {e}")
+        return {"error": str(e)}
+
 @router.get("/categories/all", response_model=List[str])
 def get_all_categories():
     """사용 가능한 모든 카테고리를 반환합니다."""
