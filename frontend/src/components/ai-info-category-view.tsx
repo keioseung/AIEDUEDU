@@ -84,7 +84,11 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
         return []
       }
     },
-    enabled: !!selectedCategory
+    enabled: !!selectedCategory,
+    staleTime: 0, // 항상 새로운 데이터 요청
+    cacheTime: 0, // 캐시하지 않음
+    refetchOnMount: true, // 컴포넌트 마운트 시 재요청
+    refetchOnWindowFocus: false // 윈도우 포커스 시 재요청하지 않음
   })
 
   // 카테고리 토글
@@ -102,16 +106,21 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   const handleCategorySelect = (category: string) => {
     // 이전 카테고리와 다른 경우에만 상태 초기화
     if (selectedCategory !== category) {
-      // 이전 카테고리 데이터 무효화
+      // 이전 카테고리 데이터 완전 제거
       if (selectedCategory) {
-        queryClient.invalidateQueries({ queryKey: ['ai-info-by-category', selectedCategory] })
+        queryClient.removeQueries({ queryKey: ['ai-info-by-category', selectedCategory] })
       }
       
+      // 새로운 카테고리로 설정
       setSelectedCategory(category)
-      // 검색 쿼리 초기화
+      
+      // 모든 상태 초기화
       setSearchQuery('')
-      // 즐겨찾기 필터 초기화
       setShowFavoritesOnly(false)
+      setFavoriteInfos(new Set())
+      
+      // 새로운 카테고리 데이터 요청을 위해 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: ['ai-info-by-category', category] })
     }
   }
 

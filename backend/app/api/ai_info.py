@@ -653,12 +653,14 @@ def get_subcategories(category: str):
 def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
     """특정 카테고리의 AI 정보를 반환합니다."""
     try:
+        print(f"카테고리 '{category}' 요청됨")
+        
         # 모든 AI 정보를 가져와서 카테고리별로 필터링
         all_ai_info = db.query(AIInfo).all()
         filtered_infos = []
         
         for ai_info in all_ai_info:
-            infos = []
+            # info1 처리
             if ai_info.info1_title and ai_info.info1_content:
                 classification = ai_classifier.classify_content(
                     ai_info.info1_title, 
@@ -671,7 +673,7 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         terms1 = []
                     
                     filtered_infos.append({
-                        "id": ai_info.id,
+                        "id": f"{ai_info.date}_0",
                         "date": ai_info.date,
                         "title": ai_info.info1_title,
                         "content": ai_info.info1_content,
@@ -682,6 +684,7 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         "created_at": ai_info.created_at
                     })
             
+            # info2 처리
             if ai_info.info2_title and ai_info.info2_content:
                 classification = ai_classifier.classify_content(
                     ai_info.info2_title, 
@@ -694,7 +697,7 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         terms2 = []
                     
                     filtered_infos.append({
-                        "id": ai_info.id,
+                        "id": f"{ai_info.date}_1",
                         "date": ai_info.date,
                         "title": ai_info.info2_title,
                         "content": ai_info.info2_content,
@@ -705,6 +708,7 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         "created_at": ai_info.created_at
                     })
             
+            # info3 처리
             if ai_info.info3_title and ai_info.info3_content:
                 classification = ai_classifier.classify_content(
                     ai_info.info3_title, 
@@ -717,7 +721,7 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         terms3 = []
                     
                     filtered_infos.append({
-                        "id": ai_info.id,
+                        "id": f"{ai_info.date}_2",
                         "date": ai_info.date,
                         "title": ai_info.info3_title,
                         "content": ai_info.info3_content,
@@ -727,6 +731,8 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         "confidence": classification["confidence"],
                         "created_at": ai_info.created_at
                     })
+        
+        print(f"카테고리 '{category}'에서 {len(filtered_infos)}개 항목 발견")
         
         # 날짜순으로 정렬
         filtered_infos.sort(key=lambda x: x["date"], reverse=True)
@@ -740,6 +746,7 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
 def get_category_statistics(db: Session = Depends(get_db)):
     """카테고리별 통계를 반환합니다."""
     try:
+        print("카테고리 통계 요청됨")
         all_ai_info = db.query(AIInfo).all()
         category_stats = {}
         
@@ -769,6 +776,7 @@ def get_category_statistics(db: Session = Depends(get_db)):
         for category in category_stats:
             category_stats[category]["dates"].sort(reverse=True)
         
+        print(f"카테고리 통계 결과: {category_stats}")
         return category_stats
         
     except Exception as e:
