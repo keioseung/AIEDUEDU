@@ -18,6 +18,7 @@ interface AIInfoItem {
   subcategory?: string
   confidence?: number
   created_at: string
+  info_index?: number
 }
 
 interface CategoryStats {
@@ -445,7 +446,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                         onProgressUpdate={onProgressUpdate}
                         forceUpdate={0}
                         setForceUpdate={() => {}}
-                        isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${index}`)}
+                        isFavorite={favoriteInfos.has(`${info.date || new Date().toISOString().split('T')[0]}_${info.info_index || index}`)}
                         onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
                       />
                       
