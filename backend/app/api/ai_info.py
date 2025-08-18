@@ -635,6 +635,30 @@ def get_learned_terms(session_id: str, db: Session = Depends(get_db)):
 def options_ai_info():
     return Response(status_code=200)
 
+@router.get("/debug/sample-data")
+def get_sample_data(db: Session = Depends(get_db)):
+    """디버깅용: 샘플 데이터 확인"""
+    try:
+        all_ai_info = db.query(AIInfo).limit(3).all()
+        sample_data = []
+        
+        for ai_info in all_ai_info:
+            sample_data.append({
+                "date": ai_info.date,
+                "info1_title": ai_info.info1_title[:50] if ai_info.info1_title else None,
+                "info1_content": ai_info.info1_content[:100] if ai_info.info1_content else None,
+                "info2_title": ai_info.info2_title[:50] if ai_info.info2_title else None,
+                "info2_content": ai_info.info2_content[:100] if ai_info.info2_content else None,
+                "info3_title": ai_info.info3_title[:50] if ai_info.info3_title else None,
+                "info3_content": ai_info.info3_content[:100] if ai_info.info3_content else None
+            })
+        
+        return {"sample_data": sample_data, "total_records": db.query(AIInfo).count()}
+        
+    except Exception as e:
+        print(f"Error getting sample data: {e}")
+        return {"error": str(e)}
+
 @router.get("/categories/all", response_model=List[str])
 def get_all_categories():
     """사용 가능한 모든 카테고리를 반환합니다."""
@@ -657,15 +681,23 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
         
         # 모든 AI 정보를 가져와서 카테고리별로 필터링
         all_ai_info = db.query(AIInfo).all()
+        print(f"총 {len(all_ai_info)}개의 AI 정보 레코드 발견")
+        
         filtered_infos = []
+        total_classifications = 0
         
         for ai_info in all_ai_info:
+            print(f"날짜 {ai_info.date} 처리 중...")
+            
             # info1 처리
             if ai_info.info1_title and ai_info.info1_content:
+                total_classifications += 1
                 classification = ai_classifier.classify_content(
                     ai_info.info1_title, 
                     ai_info.info1_content
                 )
+                print(f"  info1 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
+                
                 if classification["category"] == category:
                     try:
                         terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
@@ -683,13 +715,17 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         "confidence": classification["confidence"],
                         "created_at": ai_info.created_at
                     })
+                    print(f"  -> info1 매칭됨!")
             
             # info2 처리
             if ai_info.info2_title and ai_info.info2_content:
+                total_classifications += 1
                 classification = ai_classifier.classify_content(
                     ai_info.info2_title, 
                     ai_info.info2_content
                 )
+                print(f"  info2 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
+                
                 if classification["category"] == category:
                     try:
                         terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
@@ -707,13 +743,17 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         "confidence": classification["confidence"],
                         "created_at": ai_info.created_at
                     })
+                    print(f"  -> info2 매칭됨!")
             
             # info3 처리
             if ai_info.info3_title and ai_info.info3_content:
+                total_classifications += 1
                 classification = ai_classifier.classify_content(
                     ai_info.info3_title, 
                     ai_info.info3_content
                 )
+                print(f"  info3 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
+                
                 if classification["category"] == category:
                     try:
                         terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
@@ -731,7 +771,9 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         "confidence": classification["confidence"],
                         "created_at": ai_info.created_at
                     })
+                    print(f"  -> info3 매칭됨!")
         
+        print(f"총 {total_classifications}개 항목 분류 완료")
         print(f"카테고리 '{category}'에서 {len(filtered_infos)}개 항목 발견")
         
         # 날짜순으로 정렬
@@ -748,17 +790,24 @@ def get_category_statistics(db: Session = Depends(get_db)):
     try:
         print("카테고리 통계 요청됨")
         all_ai_info = db.query(AIInfo).all()
+        print(f"총 {len(all_ai_info)}개의 AI 정보 레코드 발견")
+        
         category_stats = {}
+        total_items = 0
         
         for ai_info in all_ai_info:
-            for title, content in [
+            print(f"날짜 {ai_info.date} 통계 처리 중...")
+            
+            for i, (title, content) in enumerate([
                 (ai_info.info1_title, ai_info.info1_content),
                 (ai_info.info2_title, ai_info.info2_content),
                 (ai_info.info3_title, ai_info.info3_content)
-            ]:
+            ]):
                 if title and content:
+                    total_items += 1
                     classification = ai_classifier.classify_content(title, content)
                     category = classification["category"]
+                    print(f"  info{i+1}: '{title[:30]}...' -> {category}")
                     
                     if category not in category_stats:
                         category_stats[category] = {
@@ -771,6 +820,8 @@ def get_category_statistics(db: Session = Depends(get_db)):
                     # 날짜 정보
                     if ai_info.date not in category_stats[category]["dates"]:
                         category_stats[category]["dates"].append(ai_info.date)
+        
+        print(f"총 {total_items}개 항목 분류 완료")
         
         # 날짜 정렬
         for category in category_stats:
