@@ -314,7 +314,7 @@ def get_total_ai_info_days(db: Session = Depends(get_db)):
     total_days = db.query(AIInfo).count()
     return {"total_days": total_days}
 
-@router.get("/total-count")
+@router.get("/total-count", response_model=dict)
 def get_total_ai_info_count(db: Session = Depends(get_db)):
     """AI 정보의 총 개수를 반환합니다 (info1, info2, info3 중 내용이 있는 것만)."""
     try:
@@ -348,7 +348,7 @@ def get_total_ai_info_count(db: Session = Depends(get_db)):
         print(f"Error getting total AI info count: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get total AI info count: {str(e)}")
 
-@router.get("/learned-count/{session_id}")
+@router.get("/learned-count/{session_id}", response_model=dict)
 def get_user_learned_ai_info_count(session_id: str, db: Session = Depends(get_db)):
     """사용자가 학습 완료한 AI 정보 카드의 총 개수를 반환합니다."""
     try:
