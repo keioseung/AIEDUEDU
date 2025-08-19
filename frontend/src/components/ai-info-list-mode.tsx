@@ -623,7 +623,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
                     currentPage === pageNum
                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg border border-purple-400/50'
-                      : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
+                      : 'bg-gradient-to-br from-purple-900/40 via-purple-800/50 to-purple-900/40 text-white/80 hover:from-purple-800/60 hover:via-purple-700/70 hover:to-purple-800/60 active:from-purple-700/80 active:via-purple-600/90 active:to-purple-700/80 border border-purple-500/30 backdrop-blur-xl hover:border-purple-400/50'
                   }`}
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
