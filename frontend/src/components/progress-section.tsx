@@ -34,6 +34,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const [periodType, setPeriodType] = useState<'week' | 'month' | 'custom'>('week')
   const [customStartDate, setCustomStartDate] = useState('')
   const [customEndDate, setCustomEndDate] = useState('')
+  const [viewMode, setViewMode] = useState<'cards' | 'graph'>('cards')
 
   const { data: stats } = useUserStats(sessionId)
   const queryClient = useQueryClient()
@@ -308,584 +309,546 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     <div className="space-y-8 relative">
       
 
-      {/* 전체 통계 카드 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* AI 정보 통계 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <BookOpen className="w-4 h-4 text-blue-400" />
-              <h3 className="text-white font-semibold text-sm">AI 정보 학습</h3>
-            </div>
-            <TrendingUp className="w-3 h-3 text-blue-400" />
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">
-                {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
-              </span>
-              <span className="text-blue-400 font-bold text-base">
-                {(() => {
-                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                  if (selectedDate && uniqueChartData.length > 0) {
-                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                    if (selectedDateData) {
-                      return selectedDateData.ai_info
-                    }
-                  }
-                  return stats?.today_ai_info || 0
-                })()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">일별 총 정보 수</span>
-              <span className="text-blue-400 font-bold text-sm">{totalAIInfo}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">누적 총 학습 수</span>
-              <span className="text-white font-semibold text-sm">
-                {(() => {
-                  // totalDaysData가 없으면 백엔드에서 직접 계산
-                  let totalDays = totalDaysData?.total_days || 0
-                  if (totalDays === 0) {
-                    // 하드코딩된 값 사용 (7월 21일부터 8월 3일까지 = 14일)
-                    totalDays = 14
-                  }
-                  const totalLearned = stats?.total_ai_info_available || stats?.total_learned || 0
-                  const maxPossible = totalDays * 2 // 일 수 * 2
-                  const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
-
-                  return `${totalLearned}/${maxPossible} (${percentage}%)`
-                })()}
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 용어 학습 통계 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="w-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <Target className="w-4 h-4 text-purple-400" />
-              <h3 className="text-white font-semibold text-sm">용어 학습</h3>
-            </div>
-            <TrendingUp className="w-3 h-3 text-purple-400" />
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">
-                {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
-              </span>
-              <span className="text-purple-400 font-bold text-base">
-                {(() => {
-                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                  if (selectedDate && uniqueChartData.length > 0) {
-                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                    if (selectedDateData) {
-                      return selectedDateData.terms
-                    }
-                  }
-                  return stats?.today_terms || 0
-                })()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">일별 총 용어 수</span>
-              <span className="text-purple-400 font-bold text-sm">{totalTerms}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">누적 총 용어 수</span>
-              <span className="text-white font-semibold text-sm">
-                {(() => {
-                  // totalDaysData가 없으면 백엔드에서 직접 계산
-                  let totalDays = totalDaysData?.total_days || 0
-                  if (totalDays === 0) {
-                    // 하드코딩된 값 사용 (7월 21일부터 8월 3일까지 = 14일)
-                    totalDays = 14
-                  }
-                  const totalTermsLearned = stats?.total_terms_learned || 0
-                  const maxPossible = totalDays * 40 // 일 수 * 40
-                  const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
-
-                  return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
-                })()}
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 퀴즈 통계 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <BarChart3 className="w-4 h-4 text-green-400" />
-              <h3 className="text-white font-semibold text-sm">퀴즈 점수</h3>
-            </div>
-            <TrendingUp className="w-3 h-3 text-green-400" />
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">
-                {selectedDate ? `${selectedDate} 누적 점수` : '오늘 누적 점수'}
-              </span>
-              <span className="text-green-400 font-bold text-base">
-                {(() => {
-                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                  if (selectedDate && uniqueChartData.length > 0) {
-                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                    if (selectedDateData) {
-                      return `${selectedDateData.quiz_score}%`
-                    }
-                  }
-                  return `${stats?.today_quiz_score || 0}%`
-                })()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">
-                {selectedDate ? `${selectedDate} 정답률` : '오늘 정답률'}
-              </span>
-              <span className="text-white font-semibold text-sm">
-                {(() => {
-                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                  if (selectedDate && uniqueChartData.length > 0) {
-                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                    if (selectedDateData) {
-                      return `${selectedDateData.quiz_correct}/${selectedDateData.quiz_total}`
-                    }
-                  }
-                  return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
-                })()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">전체 누적</span>
-              <span className="text-white font-semibold text-sm">
-                {(() => {
-                  const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
-                  const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
-                  const percentage = stats?.cumulative_quiz_score || 0
-
-                  return `${correct}/${total} (${percentage}%)`
-                })()}
-              </span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-             {/* 기간별 추이 그래프 - 기본 bar chart 복원 */}
-       <div className="space-y-4 px-0">
-         <div className="flex items-center justify-between">
-           <h3 className="text-white font-semibold text-base ml-1">기간별 학습 추이</h3>
-           <div className="text-white/60 text-xs mr-2">
-             {periodStats?.start_date} ~ {periodStats?.end_date}
-           </div>
-         </div>
-         
-                   {/* 기간 선택 */}
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between relative z-10">
-           <div className="flex items-center gap-4">
-             <div className="flex items-center gap-2">
-               <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
-               <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50 relative z-20">
-                 <button
-                   type="button"
-                   onClick={() => {
-                     handlePeriodChange('week')
-                   }}
-                   onTouchStart={() => {
-                     handlePeriodChange('week')
-                   }}
-                   className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                     periodType === 'week'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ 
-                     WebkitTapHighlightColor: 'transparent',
-                     WebkitTouchCallout: 'none',
-                     WebkitUserSelect: 'none',
-                     userSelect: 'none',
-                     position: 'relative',
-                     zIndex: 9999
-                   }}
-                 >
-                   주간
-                 </button>
-                 <button
-                   type="button"
-                   onClick={() => {
-                     handlePeriodChange('month')
-                   }}
-                   onTouchStart={() => {
-                     handlePeriodChange('month')
-                   }}
-                   className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                     periodType === 'month'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ 
-                     WebkitTapHighlightColor: 'transparent',
-                     WebkitTouchCallout: 'none',
-                     WebkitUserSelect: 'none',
-                     userSelect: 'none',
-                     position: 'relative',
-                     zIndex: 9999
-                   }}
-                 >
-                   월간
-                 </button>
-                 <button
-                   type="button"
-                   onClick={() => {
-                     handlePeriodChange('custom')
-                   }}
-                   onTouchStart={() => {
-                     handlePeriodChange('custom')
-                   }}
-                   className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                     periodType === 'custom'
-                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                       : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                   }`}
-                   style={{ 
-                     WebkitTapHighlightColor: 'transparent',
-                     WebkitTouchCallout: 'none',
-                     WebkitUserSelect: 'none',
-                     userSelect: 'none',
-                     position: 'relative',
-                     zIndex: 9999
-                   }}
-                 >
-                   사용자
-                 </button>
-               </div>
-             </div>
-           </div>
-         </div>
-         
-                   {/* 사용자 정의 기간 설정 - 별도 라인에 배치 */}
-          {periodType === 'custom' && (
-            <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50">
-             <div className="text-center">
-               <span className="text-white/80 text-sm font-medium">사용자 정의 기간 설정</span>
-             </div>
-             <div className="flex flex-col gap-3">
-               <div className="w-full">
-                 <label className="block text-white/70 text-xs font-medium mb-2">
-                   📅 시작일
-                 </label>
-                 <input
-                   type="date"
-                   value={customStartDate}
-                   onChange={(e) => {
-                     handleCustomStartDateChange(e.target.value)
-                   }}
-                   className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation relative z-30"
-                   style={{ 
-                     minHeight: '44px',
-                     WebkitAppearance: 'none',
-                     MozAppearance: 'none',
-                     position: 'relative',
-                     zIndex: 9999
-                   }}
-                 />
-               </div>
-               <div className="flex items-center justify-center">
-                 <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
-                 <span className="text-white/50 text-xs mx-2">↓</span>
-                 <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
-               </div>
-               <div className="w-full">
-                 <label className="block text-white/70 text-xs font-medium mb-2">
-                   📅 종료일
-                 </label>
-                 <input
-                   type="date"
-                   value={customEndDate}
-                   onChange={(e) => {
-                     handleCustomEndDateChange(e.target.value)
-                   }}
-                   className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation relative z-30"
-                   style={{ 
-                     minHeight: '44px',
-                     WebkitAppearance: 'none',
-                     MozAppearance: 'none',
-                     position: 'relative',
-                     zIndex: 9999
-                   }}
-                 />
-               </div>
-             </div>
-             <div className="text-center">
-               <span className="text-white/50 text-xs">
-                 {customStartDate && customEndDate ? 
-                   `${customStartDate} ~ ${customEndDate}` : 
-                   '시작일과 종료일을 선택해주세요'
-                 }
-               </span>
-             </div>
-           </div>
-         )}
-        <div className="glass rounded-xl p-2 md:p-3">
-          {periodStatsLoading ? (
-            <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
-              <div className="text-center text-white">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-                <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
-              </div>
-            </div>
-          ) : (() => {
-            const chartData = periodStats?.period_data || []
-
-            
-            return uniqueChartData.length > 0 || (localAIProgress.length > 0) || (chartData && chartData.length > 0)
-          })() ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* AI 정보 추이 */}
-              <div className="w-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
-                    <span className="text-white font-semibold text-base">AI 정보 학습</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 rounded-full border border-blue-400/40">
-                      <span className="text-blue-200 text-xs font-medium">평균</span>
-                      <span className="text-blue-100 font-bold text-sm">
-                        {calculateAverage(uniqueChartData, 'ai_info')}%
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-white/70 text-sm font-medium">
-                    최대: 100%
-                  </span>
-                </div>
-                <div className="w-full">
-                  <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
-                    {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
-                      {[100, 50, 0].map((v, i) => (
-                        <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}%</div>
-                      ))}
-                    </div>
-
-                    {/* bar + 날짜 */}
-                    <div className={`flex items-end h-20 ${getBarGap()}`}>
-                      {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 80; // Y축 높이와 동일
-                        // AI 정보는 실제 개수 기준으로 계산 (예: 2개 = 100%)
-                        const maxAICount = Math.max(...uniqueChartData.map(d => d.ai_info), 1);
-                        // Y축 범위에 맞춰 막대 높이 계산 (100% = 40px, 0% = 0px) - 반으로 줄임
-                        const aiHeight = Math.min(Math.max((data.ai_info / maxAICount) * 40, data.ai_info > 0 ? 3 : 0), 40);
-                        const isFullAI = data.ai_info >= maxAICount;
-                        const percent = Math.min(Math.round((data.ai_info / maxAICount) * 100), 100);
-                        return (
-                          <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
-                            <div className="relative w-full">
-                              <div
-                                className={
-                                  isFullAI
-                                    ? "bg-gradient-to-t from-blue-700 to-blue-400 shadow-lg animate-pulse rounded-t-sm transition-all duration-500"
-                                    : "bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-sm transition-all duration-500 hover:from-blue-400 hover:to-blue-300"
-                                }
-                                style={{
-                                  height: aiHeight,
-                                  minHeight: data.ai_info > 0 ? 3 : 0,
-                                  width: "100%"
-                                }}
-                              />
-                              {/* bar 위에 % */}
-                              {data.ai_info > 0 && shouldShowPercentage() && (
-                                <div className={`absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
-                                  percent === 100 
-                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
-                                    : 'bg-gradient-to-r from-blue-400 to-cyan-300 text-white shadow-lg shadow-blue-500/30 px-1 py-0.5 rounded-md'
-                                }`}>
-                                  {percent}%
-                                </div>
-                              )}
-                            </div>
-                            <div className={`text-xs mt-1 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '12px'}}>
-                              {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 용어 학습 추이 */}
-              <div className="w-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
-                    <span className="text-white font-semibold text-base">용어 학습</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-full border border-purple-400/40">
-                      <span className="text-purple-200 text-xs font-medium">평균</span>
-                      <span className="text-purple-100 font-bold text-sm">
-                        {calculateAverage(uniqueChartData, 'terms')}%
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-white/70 text-sm font-medium">
-                    최대: 100%
-                  </span>
-                </div>
-                <div className="w-full">
-                  <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
-                    {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
-                      {[100, 50, 0].map((v, i) => (
-                        <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}%</div>
-                      ))}
-                    </div>
-
-                    {/* bar + 날짜 */}
-                    <div className={`flex items-end h-20 ${getBarGap()}`}>
-                      {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 80; // Y축 높이와 동일
-                        // 용어는 실제 개수 기준으로 계산
-                        const maxTermsCount = Math.max(...uniqueChartData.map(d => d.terms), 1);
-                        // Y축 범위에 맞춰 막대 높이 계산 (100% = 40px, 0% = 0px) - 반으로 줄임
-                        const termsHeight = Math.min(Math.max((data.terms / maxTermsCount) * 40, data.terms > 0 ? 3 : 0), 40);
-                        const isFullTerms = data.terms >= maxTermsCount;
-                        const percent = Math.min(Math.round((data.terms / maxTermsCount) * 100), 100);
-                        return (
-                          <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
-                            <div className="relative w-full">
-                              <div
-                                className={
-                                  isFullTerms
-                                    ? "bg-gradient-to-t from-purple-700 to-pink-400 shadow-lg animate-pulse rounded-t-sm transition-all duration-500"
-                                    : "bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-sm transition-all duration-500 hover:from-purple-400 hover:to-purple-300"
-                                }
-                                style={{
-                                  height: termsHeight,
-                                  minHeight: data.terms > 0 ? 3 : 0,
-                                  width: "100%"
-                                }}
-                              />
-                              {/* bar 위에 % */}
-                              {data.terms > 0 && shouldShowPercentage() && (
-                                <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
-                                  percent === 100 
-                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
-                                    : 'bg-gradient-to-r from-purple-400 to-pink-300 text-white shadow-lg shadow-purple-500/30 px-1 py-0.5 rounded-md'
-                                }`}>
-                                  {percent}%
-                                </div>
-                              )}
-                            </div>
-                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                              {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 퀴즈 점수 추이 */}
-              <div className="w-full bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
-                    <span className="text-white font-semibold text-base">퀴즈 점수</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500/30 to-emerald-500/30 rounded-full border border-green-400/40">
-                      <span className="text-green-200 text-xs font-medium">평균</span>
-                      <span className="text-green-100 font-bold text-sm">
-                        {calculateAverage(uniqueChartData, 'quiz_score')}%
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-white/70 text-sm font-medium">
-                    최대: {maxQuiz}%
-                  </span>
-                </div>
-                <div className="w-full">
-                  <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
-                    {/* y축 라벨 */}
-                    <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
-                      {[100, 50, 0].map((v, i) => (
-                        <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}%</div>
-                      ))}
-                    </div>
-
-                    {/* bar + 날짜 */}
-                    <div className={`flex items-end h-20 ${getBarGap()}`}>
-                      {uniqueChartData.map((data, index) => {
-                        const barMaxHeight = 80; // Y축 높이와 동일
-                        // 퀴즈는 실제 점수 기준으로 계산
-                        const maxQuizScore = Math.max(...uniqueChartData.map(d => d.quiz_score), 1);
-                        // Y축 범위에 맞춰 막대 높이 계산 (100% = 40px, 0% = 0px) - 반으로 줄임
-                        const quizHeight = Math.min(Math.max((data.quiz_score / maxQuizScore) * 40, data.quiz_score > 0 ? 3 : 0), 40);
-                        const isFullQuiz = data.quiz_score >= maxQuizScore;
-                        const percent = Math.min(Math.round((data.quiz_score / maxQuizScore) * 100), 100);
-                        return (
-                          <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
-                            <div className="relative w-full">
-                              <div
-                                className={
-                                  isFullQuiz
-                                    ? "bg-gradient-to-t from-green-700 to-green-400 shadow-lg animate-pulse rounded-t-sm transition-all duration-500"
-                                    : "bg-gradient-to-t from-green-500 to-green-400 rounded-t-sm transition-all duration-500 hover:from-green-400 hover:to-green-300"
-                                }
-                                style={{
-                                  height: quizHeight,
-                                  minHeight: data.quiz_score > 0 ? 3 : 0,
-                                  width: "100%"
-                                }}
-                              />
-                              {/* bar 위에 % */}
-                              {data.quiz_score > 0 && shouldShowPercentage() && (
-                                <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
-                                  percent === 100 
-                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
-                                    : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-1 py-0.5 rounded-md'
-                                }`}>
-                                  {percent}%
-                                </div>
-                              )}
-                            </div>
-                            <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                              {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center text-white/60 py-8">
-              <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-40" />
-              <p>선택한 기간에 학습 데이터가 없습니다.</p>
-            </div>
-          )}
+      {/* 모드 선택 */}
+      <div className="flex items-center justify-center mb-6">
+        <div className="bg-white/10 backdrop-blur-xl rounded-xl p-1 border border-white/20">
+          <button
+            onClick={() => setViewMode('cards')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              viewMode === 'cards'
+                ? 'bg-white/20 text-white shadow-sm'
+                : 'text-white/70 hover:text-white/90'
+            }`}
+          >
+            📊 학습 추이 카드
+          </button>
+          <button
+            onClick={() => setViewMode('graph')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              viewMode === 'graph'
+                ? 'bg-white/20 text-white shadow-sm'
+                : 'text-white/70 hover:text-white/90'
+            }`}
+          >
+            📈 학습 추이 그래프
+          </button>
         </div>
       </div>
+
+      {/* 모드별 콘텐츠 */}
+      {viewMode === 'cards' ? (
+        // 학습 추이 카드 모드
+        <div className="space-y-4">
+          {/* AI 정보 통계 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <BookOpen className="w-4 h-4 text-blue-400" />
+                <h3 className="text-white font-semibold text-sm">AI 정보 학습</h3>
+              </div>
+              <TrendingUp className="w-3 h-3 text-blue-400" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">
+                  {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
+                </span>
+                <span className="text-blue-400 font-bold text-base">
+                  {(() => {
+                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                    if (selectedDate && uniqueChartData.length > 0) {
+                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                      if (selectedDateData) {
+                        return selectedDateData.ai_info
+                      }
+                    }
+                    return stats?.today_ai_info || 0
+                  })()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">일별 총 정보 수</span>
+                <span className="text-blue-400 font-bold text-sm">{totalAIInfo}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">누적 총 학습 수</span>
+                <span className="text-white font-semibold text-sm">
+                  {(() => {
+                    // totalDaysData가 없으면 백엔드에서 직접 계산
+                    let totalDays = totalDaysData?.total_days || 0
+                    if (totalDays === 0) {
+                      // 하드코딩된 값 사용 (7월 21일부터 8월 3일까지 = 14일)
+                      totalDays = 14
+                    }
+                    const totalLearned = stats?.total_ai_info_available || stats?.total_learned || 0
+                    const maxPossible = totalDays * 2 // 일 수 * 2
+                    const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
+
+                    return `${totalLearned}/${maxPossible} (${percentage}%)`
+                  })()}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 용어 학습 통계 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <Target className="w-4 h-4 text-purple-400" />
+                <h3 className="text-white font-semibold text-sm">용어 학습</h3>
+              </div>
+              <TrendingUp className="w-3 h-3 text-purple-400" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">
+                  {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
+                </span>
+                <span className="text-purple-400 font-bold text-base">
+                  {(() => {
+                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                    if (selectedDate && uniqueChartData.length > 0) {
+                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                      if (selectedDateData) {
+                        return selectedDateData.terms
+                      }
+                    }
+                    return stats?.today_terms || 0
+                  })()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">일별 총 용어 수</span>
+                <span className="text-purple-400 font-bold text-sm">{totalTerms}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">누적 총 용어 수</span>
+                <span className="text-white font-semibold text-sm">
+                  {(() => {
+                    // totalDaysData가 없으면 백엔드에서 직접 계산
+                    let totalDays = totalDaysData?.total_days || 0
+                    if (totalDays === 0) {
+                      // 하드코딩된 값 사용 (7월 21일부터 8월 3일까지 = 14일)
+                      totalDays = 14
+                    }
+                    const totalTermsLearned = stats?.total_terms_learned || 0
+                    const maxPossible = totalDays * 40 // 일 수 * 40
+                    const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
+
+                    return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
+                  })()}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 퀴즈 통계 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="w-full bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <BarChart3 className="w-4 h-4 text-green-400" />
+                <h3 className="text-white font-semibold text-sm">퀴즈 점수</h3>
+              </div>
+              <TrendingUp className="w-3 h-3 text-green-400" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">
+                  {selectedDate ? `${selectedDate} 누적 점수` : '오늘 누적 점수'}
+                </span>
+                <span className="text-green-400 font-bold text-base">
+                  {(() => {
+                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                    if (selectedDate && uniqueChartData.length > 0) {
+                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                      if (selectedDateData) {
+                        return `${selectedDateData.quiz_score}%`
+                      }
+                    }
+                    return `${stats?.today_quiz_score || 0}%`
+                  })()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">
+                  {selectedDate ? `${selectedDate} 정답률` : '오늘 정답률'}
+                </span>
+                <span className="text-white font-semibold text-sm">
+                  {(() => {
+                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                    if (selectedDate && uniqueChartData.length > 0) {
+                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                      if (selectedDateData) {
+                        return `${selectedDateData.quiz_correct}/${selectedDateData.quiz_total}`
+                      }
+                    }
+                    return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
+                  })()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">전체 누적</span>
+                <span className="text-white font-semibold text-sm">
+                  {(() => {
+                    const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
+                    const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
+                    const percentage = stats?.cumulative_quiz_score || 0
+
+                    return `${correct}/${total} (${percentage}%)`
+                  })()}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      ) : (
+        // 학습 추이 그래프 모드
+        <div className="space-y-4 px-0">
+          <div className="flex items-center justify-between">
+            <h3 className="text-white font-semibold text-base ml-1">기간별 학습 추이</h3>
+            <div className="text-white/60 text-xs mr-2">
+              {periodStats?.start_date} ~ {periodStats?.end_date}
+            </div>
+          </div>
+          
+          {/* 기간 선택 */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
+                <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50 relative z-20">
+                  <button
+                    type="button"
+                    onClick={() => handlePeriodChange('week')}
+                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                      periodType === 'week'
+                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                    }`}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                  >
+                    주간
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePeriodChange('month')}
+                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                      periodType === 'month'
+                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                    }`}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                  >
+                    월간
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePeriodChange('custom')}
+                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                      periodType === 'custom'
+                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                    }`}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                  >
+                    사용자 정의
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* 사용자 정의 기간 설정 */}
+          {periodType === 'custom' && (
+            <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50">
+              <div className="text-center">
+                <span className="text-white/80 text-sm font-medium">사용자 정의 기간 설정</span>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="w-full">
+                  <label className="block text-white/70 text-xs font-medium mb-2">📅 시작일</label>
+                  <input
+                    type="date"
+                    value={customStartDate}
+                    onChange={(e) => handleCustomStartDateChange(e.target.value)}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation"
+                    style={{ minHeight: '44px' }}
+                  />
+                </div>
+                <div className="flex items-center justify-center">
+                  <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
+                  <span className="text-white/50 text-xs mx-2">↓</span>
+                  <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
+                </div>
+                <div className="w-full">
+                  <label className="block text-white/70 text-xs font-medium mb-2">📅 종료일</label>
+                  <input
+                    type="date"
+                    value={customEndDate}
+                    onChange={(e) => handleCustomEndDateChange(e.target.value)}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer touch-manipulation"
+                    style={{ minHeight: '44px' }}
+                  />
+                </div>
+              </div>
+              <div className="text-center">
+                <span className="text-white/50 text-xs">
+                  {customStartDate && customEndDate ? 
+                    `${customStartDate} ~ ${customEndDate}` : 
+                    '시작일과 종료일을 선택해주세요'
+                  }
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* 그래프 표시 */}
+          <div className="glass rounded-xl p-2 md:p-3">
+            {periodStatsLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+                <p className="text-white/80 text-sm">데이터를 불러오는 중...</p>
+              </div>
+            ) : uniqueChartData.length > 0 ? (
+              <div className="space-y-6">
+                {/* AI 정보 추이 */}
+                <div className="w-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-4 backdrop-blur-xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
+                      <span className="text-white font-semibold text-base">AI 정보 학습</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500/30 to-blue-600/30 rounded-full border border-blue-400/40">
+                        <span className="text-blue-200 text-xs font-medium">평균</span>
+                        <span className="text-blue-100 font-bold text-sm">
+                          {calculateAverage(uniqueChartData, 'ai_info')}%
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-white/70 text-sm font-medium">
+                      최대: {maxAI}개
+                    </span>
+                  </div>
+                  <div className="w-full">
+                    <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
+                      {/* y축 라벨 */}
+                      <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
+                        {[maxAI, Math.round(maxAI/2), 0].map((v, i) => (
+                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}개</div>
+                        ))}
+                      </div>
+
+                      {/* bar + 날짜 */}
+                      <div className={`flex items-end h-20 ${getBarGap()}`}>
+                        {uniqueChartData.map((data, index) => {
+                          const barMaxHeight = 80;
+                          const maxValue = Math.max(...uniqueChartData.map(d => d.ai_info), 1);
+                          const aiHeight = Math.min(Math.max((data.ai_info / maxValue) * 40, data.ai_info > 0 ? 3 : 0), 40);
+                          const isFullAI = data.ai_info >= maxValue;
+                          const percent = Math.min(Math.round((data.ai_info / maxValue) * 100), 100);
+                          return (
+                            <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
+                              <div className="relative w-full">
+                                <div
+                                  className={
+                                    isFullAI
+                                      ? "bg-gradient-to-t from-blue-700 to-blue-400 shadow-lg animate-pulse rounded-t-sm transition-all duration-500"
+                                      : "bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-sm transition-all duration-500 hover:from-blue-400 hover:to-blue-300"
+                                  }
+                                  style={{
+                                    height: aiHeight,
+                                    minHeight: data.ai_info > 0 ? 3 : 0,
+                                    width: "100%"
+                                  }}
+                                />
+                                {/* bar 위에 % */}
+                                {data.ai_info > 0 && shouldShowPercentage() && (
+                                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
+                                    percent === 100 
+                                      ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
+                                      : 'bg-gradient-to-r from-blue-400 to-blue-300 text-white shadow-lg shadow-blue-500/30 px-1 py-0.5 rounded-md'
+                                  }`}>
+                                    {percent}%
+                                  </div>
+                                )}
+                              </div>
+                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 용어 학습 추이 */}
+                <div className="w-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-4 backdrop-blur-xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
+                      <span className="text-white font-semibold text-base">용어 학습</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/30 to-purple-600/30 rounded-full border border-purple-400/40">
+                        <span className="text-purple-200 text-xs font-medium">평균</span>
+                        <span className="text-purple-100 font-bold text-sm">
+                          {calculateAverage(uniqueChartData, 'terms')}%
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-white/70 text-sm font-medium">
+                      최대: {maxTerms}개
+                    </span>
+                  </div>
+                  <div className="w-full">
+                    <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
+                      {/* y축 라벨 */}
+                      <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
+                        {[maxTerms, Math.round(maxTerms/2), 0].map((v, i) => (
+                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}개</div>
+                        ))}
+                      </div>
+
+                      {/* bar + 날짜 */}
+                      <div className={`flex items-end h-20 ${getBarGap()}`}>
+                        {uniqueChartData.map((data, index) => {
+                          const barMaxHeight = 80;
+                          const maxValue = Math.max(...uniqueChartData.map(d => d.terms), 1);
+                          const termsHeight = Math.min(Math.max((data.terms / maxValue) * 40, data.terms > 0 ? 3 : 0), 40);
+                          const isFullTerms = data.terms >= maxValue;
+                          const percent = Math.min(Math.round((data.terms / maxValue) * 100), 100);
+                          return (
+                            <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
+                              <div className="relative w-full">
+                                <div
+                                  className={
+                                    isFullTerms
+                                      ? "bg-gradient-to-t from-purple-700 to-purple-400 shadow-lg animate-pulse rounded-t-sm transition-all duration-500"
+                                      : "bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-sm transition-all duration-500 hover:from-purple-400 hover:to-purple-300"
+                                  }
+                                  style={{
+                                    height: termsHeight,
+                                    minHeight: data.terms > 0 ? 3 : 0,
+                                    width: "100%"
+                                  }}
+                                />
+                                {/* bar 위에 % */}
+                                {data.terms > 0 && shouldShowPercentage() && (
+                                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
+                                    percent === 100 
+                                      ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
+                                      : 'bg-gradient-to-r from-purple-400 to-purple-300 text-white shadow-lg shadow-purple-500/30 px-1 py-0.5 rounded-md'
+                                  }`}>
+                                    {percent}%
+                                  </div>
+                                )}
+                              </div>
+                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 퀴즈 점수 추이 */}
+                <div className="w-full bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-4 backdrop-blur-xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
+                      <span className="text-white font-semibold text-base">퀴즈 점수</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500/30 to-emerald-500/30 rounded-full border border-green-400/40">
+                        <span className="text-green-200 text-xs font-medium">평균</span>
+                        <span className="text-green-100 font-bold text-sm">
+                          {calculateAverage(uniqueChartData, 'quiz_score')}%
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-white/70 text-sm font-medium">
+                      최대: {maxQuiz}%
+                    </span>
+                  </div>
+                  <div className="w-full">
+                    <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
+                      {/* y축 라벨 */}
+                      <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
+                        {[100, 50, 0].map((v, i) => (
+                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}%</div>
+                        ))}
+                      </div>
+
+                      {/* bar + 날짜 */}
+                      <div className={`flex items-end h-20 ${getBarGap()}`}>
+                        {uniqueChartData.map((data, index) => {
+                          const barMaxHeight = 80;
+                          const maxQuizScore = Math.max(...uniqueChartData.map(d => d.quiz_score), 1);
+                          const quizHeight = Math.min(Math.max((data.quiz_score / maxQuizScore) * 40, data.quiz_score > 0 ? 3 : 0), 40);
+                          const isFullQuiz = data.quiz_score >= maxQuizScore;
+                          const percent = Math.min(Math.round((data.quiz_score / maxQuizScore) * 100), 100);
+                          return (
+                            <div key={index} className={`flex flex-col items-center ${getBarWidth()}`}>
+                              <div className="relative w-full">
+                                <div
+                                  className={
+                                    isFullQuiz
+                                      ? "bg-gradient-to-t from-green-700 to-green-400 shadow-lg animate-pulse rounded-t-sm transition-all duration-500"
+                                      : "bg-gradient-to-t from-green-500 to-green-400 rounded-t-sm transition-all duration-500 hover:from-green-400 hover:to-green-300"
+                                  }
+                                  style={{
+                                    height: quizHeight,
+                                    minHeight: data.quiz_score > 0 ? 3 : 0,
+                                    width: "100%"
+                                  }}
+                                />
+                                {/* bar 위에 % */}
+                                {data.quiz_score > 0 && shouldShowPercentage() && (
+                                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
+                                    percent === 100 
+                                      ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
+                                      : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-1 py-0.5 rounded-md'
+                                  }`}>
+                                    {percent}%
+                                  </div>
+                                )}
+                              </div>
+                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center text-white/60 py-8">
+                <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-40" />
+                <p>선택한 기간에 학습 데이터가 없습니다.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
