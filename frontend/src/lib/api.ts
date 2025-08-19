@@ -273,6 +273,7 @@ export const aiInfoAPI = {
   getAll: () => api.get('/api/ai-info/all'),
   getTotalDays: () => api.get('/api/ai-info/total-days'),
   getTotalCount: () => api.get('/api/ai-info/total-count'),
+  getLearnedCount: (sessionId: string) => api.get(`/api/ai-info/learned-count/${sessionId}`),
 
   getTermsQuiz: (sessionId: string) => api.get(`/api/ai-info/terms-quiz/${sessionId}`),
   getTermsQuizByDate: (date: string) => api.get(`/api/ai-info/terms-quiz-by-date/${date}`),

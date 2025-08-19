@@ -86,6 +86,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     refetchIntervalInBackground: true,
   })
 
+  // 사용자가 학습 완료한 AI 정보 카드의 총 개수 가져오기
+  const { data: learnedCountData } = useQuery({
+    queryKey: ['ai-info-learned-count', sessionId],
+    queryFn: async () => {
+      try {
+        const response = await aiInfoAPI.getLearnedCount(sessionId)
+        return response.data
+      } catch (error) {
+        console.log('학습 완료한 AI 정보 개수 가져오기 실패:', error)
+        return { learned_count: 0 }
+      }
+    },
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
   // 기간별 데이터 계산
   const getPeriodDates = () => {
     const today = new Date()
@@ -421,17 +437,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">누적 총 학습 수</span>
-                <span className="text-white font-semibold text-sm">
-                  {(() => {
-                    // 총 AI 정보 개수를 사용하여 계산
-                    const totalCount = totalCountData?.total_count || 0
-                    const totalLearned = stats?.total_ai_info_available || stats?.total_learned || 0
-                    const maxPossible = totalCount * 2 // 총 정보 수 * 2
-                    const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
+                                  <span className="text-white font-semibold text-sm">
+                    {(() => {
+                      // 총 AI 정보 개수를 사용하여 계산
+                      const totalCount = totalCountData?.total_count || 0
+                      const totalLearned = learnedCountData?.learned_count || 0
+                      const maxPossible = totalCount * 2 // 총 정보 수 * 2
+                      const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
 
-                    return `${totalLearned}/${maxPossible} (${percentage}%)`
-                  })()}
-                </span>
+                      return `${totalLearned}/${maxPossible} (${percentage}%)`
+                    })()}
+                  </span>
               </div>
             </div>
           </motion.div>

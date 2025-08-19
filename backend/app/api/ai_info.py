@@ -323,17 +323,46 @@ def get_total_ai_info_count(db: Session = Depends(get_db)):
         
         for ai_info in all_ai_info:
             # info1, info2, info3 중 내용이 있는 것만 카운트
-            if ai_info.info1_title and ai_info.info1_content:
+            # title과 content가 모두 있거나, info 필드에 내용이 있는 경우
+            if (ai_info.info1_title and ai_info.info1_content) or (ai_info.info1 and ai_info.info1.strip()):
                 total_count += 1
-            if ai_info.info2_title and ai_info.info2_content:
+            if (ai_info.info2_title and ai_info.info2_content) or (ai_info.info2 and ai_info.info2.strip()):
                 total_count += 1
-            if ai_info.info3_title and ai_info.info3_content:
+            if (ai_info.info3_title and ai_info.info3_content) or (ai_info.info3 and ai_info.info3.strip()):
                 total_count += 1
         
         return {"total_count": total_count}
     except Exception as e:
         print(f"Error getting total AI info count: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get total AI info count: {str(e)}")
+
+@router.get("/learned-count/{session_id}")
+def get_user_learned_ai_info_count(session_id: str, db: Session = Depends(get_db)):
+    """사용자가 학습 완료한 AI 정보 카드의 총 개수를 반환합니다."""
+    try:
+        from ..models import UserProgress
+        
+        # 사용자의 학습 진행상황 가져오기
+        user_progress = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id,
+            UserProgress.date != '__stats__'
+        ).all()
+        
+        total_learned_count = 0
+        
+        for progress in user_progress:
+            if progress.learned_info:
+                try:
+                    # learned_info는 JSON 형태로 저장된 학습한 info 인덱스들
+                    learned_indices = json.loads(progress.learned_info)
+                    total_learned_count += len(learned_indices)
+                except json.JSONDecodeError:
+                    continue
+        
+        return {"learned_count": total_learned_count}
+    except Exception as e:
+        print(f"Error getting user learned AI info count: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get user learned AI info count: {str(e)}")
 
 @router.get("/terms-quiz/{session_id}")
 def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
