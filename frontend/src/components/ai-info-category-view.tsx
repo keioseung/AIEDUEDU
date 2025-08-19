@@ -500,15 +500,12 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <div className="text-white/50 text-lg">해당 카테고리의 AI 정보가 없습니다.</div>
-                  <p className="text-white/30 mt-2">
-                    {searchQuery ? '검색 조건을 변경해보세요.' : '다른 카테고리를 선택해보세요.'}
-                  </p>
+                  {/* 안내 문구와 로봇 아이콘 삭제 */}
                 </div>
               )}
             </div>
           ) : (
-            <div className="text-center py-16">
+            <div className="text-center py-8">
               {/* 안내 문구와 로봇 아이콘 삭제 */}
             </div>
           )}
