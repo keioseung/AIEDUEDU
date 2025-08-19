@@ -621,9 +621,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           {/* 그래프 표시 */}
           <div className="glass rounded-xl p-2 md:p-3">
             {periodStatsLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-                <p className="text-white/80 text-sm">데이터를 불러오는 중...</p>
+              <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
+                <div className="text-center text-white">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                  <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
+                </div>
               </div>
             ) : uniqueChartData.length > 0 ? (
               <div className="space-y-6">

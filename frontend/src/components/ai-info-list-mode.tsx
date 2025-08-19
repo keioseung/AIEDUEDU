@@ -246,7 +246,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
     setSelectedInfo(null)
   }
 
-                                               // 로딩 중인 경우
+      // 로딩 중인 경우
       if (isLoading) {
         return (
           <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">

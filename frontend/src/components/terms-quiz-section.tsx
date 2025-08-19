@@ -376,9 +376,9 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        
                        {/* AI 정보 로딩 중 표시 */}
                        {isLoadingAIInfo && (
-                         <div className="text-center py-4">
-                           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400 mx-auto mb-2"></div>
-                           <div className="text-white/90 text-xs font-medium">AI 정보 로딩 중...</div>
+                         <div className="flex items-center gap-2 text-white/70">
+                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                           <div className="text-white/80 text-sm font-medium">잠시만 기다려 주세요.</div>
                          </div>
                        )}
                        
@@ -474,193 +474,195 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       
 
       {/* 로딩 상태 */}
-      {isLoading && (
+      {isLoading ? (
         <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
           <div className="text-center text-white">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
             <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
           </div>
         </div>
-      )}
-
-      {/* 데이터가 없을 때 */}
-      {!isLoading && (!quizData?.quizzes || quizData.quizzes.length === 0) && (
-        <div className="glass rounded-3xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
-          <div className="text-center text-white">
-            <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-70" />
-            <h3 className="text-lg md:text-xl font-bold mb-3 mobile-text">
-              {selectedQuizTitle === '오늘의 주제' ? '등록된 용어가 없습니다' : '선택된 주제에 용어가 없습니다'}
-            </h3>
-            <p className="text-white/80 mb-4 text-base mobile-text">
-              {quizData?.message || 
-                (selectedQuizTitle === '오늘의 주제' 
-                  ? `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
-                  : `"${selectedQuizTitle}" 주제에 등록된 용어가 없습니다. 다른 주제를 선택하거나 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
-                )
-              }
-            </p>
-            <div className="text-sm text-white/60 mobile-text">
-              {selectedQuizTitle === '오늘의 주제' ? `선택한 날짜: ${selectedDate}` : `선택한 주제: ${selectedQuizTitle}`}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 퀴즈 내용 - 데이터가 있을 때만 표시 */}
-      {!isLoading && quizData?.quizzes && quizData.quizzes.length > 0 && (
-        <div className="glass rounded-3xl p-6 md:p-8 bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
-          {/* 퀴즈 진행상황 */}
-          <div className="mb-6 md:mb-8">
-            <div className="flex items-center justify-between mb-3 md:mb-4">
-              <span className="text-white/80 text-base font-medium mobile-text">
-                {currentQuizIndex + 1} / {quizData.quizzes.length}
-              </span>
-              <span className="text-white font-bold text-base mobile-text bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent">
-                점수: {score} / {quizData.quizzes.length}
-              </span>
-            </div>
-            <div className="w-full bg-white/15 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-2 rounded-full transition-all duration-500 shadow-lg shadow-purple-500/25"
-                style={{ width: `${((currentQuizIndex + 1) / quizData.quizzes.length) * 100}%` }}
-              />
-            </div>
-          </div>
-
-          {/* 퀴즈 내용 */}
-          {currentQuiz && !quizCompleted && (
-            <div className="space-y-6 md:space-y-8">
-              <div>
-                <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6 mobile-text leading-tight bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
-                  {currentQuiz.question}
+      ) : (
+        <>
+          {/* 데이터가 없을 때 */}
+          {!quizData?.quizzes || quizData.quizzes.length === 0 && (
+            <div className="glass rounded-3xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
+              <div className="text-center text-white">
+                <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-70" />
+                <h3 className="text-lg md:text-xl font-bold mb-3 mobile-text">
+                  {selectedQuizTitle === '오늘의 주제' ? '등록된 용어가 없습니다' : '선택된 주제에 용어가 없습니다'}
                 </h3>
+                <p className="text-white/80 mb-4 text-base mobile-text">
+                  {quizData?.message || 
+                    (selectedQuizTitle === '오늘의 주제' 
+                      ? `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
+                      : `"${selectedQuizTitle}" 주제에 등록된 용어가 없습니다. 다른 주제를 선택하거나 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
+                    )
+                  }
+                </p>
+                <div className="text-sm text-white/60 mobile-text">
+                  {selectedQuizTitle === '오늘의 주제' ? `선택한 날짜: ${selectedDate}` : `선택한 주제: ${selectedQuizTitle}`}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 퀴즈 내용 - 데이터가 있을 때만 표시 */}
+          {quizData?.quizzes && quizData.quizzes.length > 0 && (
+            <div className="glass rounded-3xl p-6 md:p-8 bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
+              {/* 퀴즈 진행상황 */}
+              <div className="mb-6 md:mb-8">
+                <div className="flex items-center justify-between mb-3 md:mb-4">
+                  <span className="text-white/80 text-base font-medium mobile-text">
+                    {currentQuizIndex + 1} / {quizData.quizzes.length}
+                  </span>
+                  <span className="text-white font-bold text-base mobile-text bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent">
+                    점수: {score} / {quizData.quizzes.length}
+                  </span>
+                </div>
+                <div className="w-full bg-white/15 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-2 rounded-full transition-all duration-500 shadow-lg shadow-purple-500/25"
+                    style={{ width: `${((currentQuizIndex + 1) / quizData.quizzes.length) * 100}%` }}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-3">
-                {[currentQuiz.option1, currentQuiz.option2, currentQuiz.option3, currentQuiz.option4].map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={showResult}
-                    className={`w-full p-4 md:p-5 text-left rounded-2xl border-2 transition-all duration-300 touch-optimized mobile-touch-target ${getOptionClass(index)}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-base text-purple-200/80">{String.fromCharCode(65 + index)}.</span>
-                      <span className="text-base mobile-text flex-1 font-medium leading-relaxed text-white/85">{option}</span>
-                      {showResult && index === currentQuiz.correct && (
-                        <CheckCircle className="w-5 h-5 ml-auto flex-shrink-0 text-emerald-400" />
-                      )}
-                      {showResult && selectedAnswer === index && index !== currentQuiz.correct && (
-                        <XCircle className="w-5 h-5 ml-auto flex-shrink-0 text-rose-400" />
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
+              {/* 퀴즈 내용 */}
+              {currentQuiz && !quizCompleted && (
+                <div className="space-y-6 md:space-y-8">
+                  <div>
+                    <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6 mobile-text leading-tight bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
+                      {currentQuiz.question}
+                    </h3>
+                  </div>
 
-              {/* 결과 표시 */}
-              <AnimatePresence>
-                {showResult && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 25 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 25 }}
-                    className="p-5 rounded-2xl bg-gradient-to-br from-white/12 via-white/15 to-white/12 border border-white/25 shadow-lg shadow-white/10"
-                  >
-                    <h4 className="text-lg font-bold text-white mb-3 mobile-text">
-                      {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
-                    </h4>
-                    <p className="text-white/90 text-base mobile-text leading-relaxed font-medium">{currentQuiz.explanation}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* 액션 버튼 */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                {!showResult ? (
-                  <button
-                    onClick={handleSubmitAnswer}
-                    disabled={selectedAnswer === null}
-                    className="flex-1 bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 text-white py-4 rounded-2xl font-bold hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 disabled:opacity-50 disabled:cursor-not-allowed touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-purple-400/30"
-                  >
-                    답안 제출
-                  </button>
-                ) : (
-                  <>
-                    {currentQuizIndex < quizData.quizzes.length - 1 ? (
+                  <div className="space-y-3">
+                    {[currentQuiz.option1, currentQuiz.option2, currentQuiz.option3, currentQuiz.option4].map((option, index) => (
                       <button
-                        onClick={handleNextQuiz}
-                        className="flex-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 text-white py-4 rounded-2xl font-bold hover:from-emerald-500 hover:via-green-600 hover:to-emerald-700 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-emerald-300/30"
+                        key={index}
+                        onClick={() => handleAnswerSelect(index)}
+                        disabled={showResult}
+                        className={`w-full p-4 md:p-5 text-left rounded-2xl border-2 transition-all duration-300 touch-optimized mobile-touch-target ${getOptionClass(index)}`}
                       >
-                        다음 문제
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-base text-purple-200/80">{String.fromCharCode(65 + index)}.</span>
+                          <span className="text-base mobile-text flex-1 font-medium leading-relaxed text-white/85">{option}</span>
+                          {showResult && index === currentQuiz.correct && (
+                            <CheckCircle className="w-5 h-5 ml-auto flex-shrink-0 text-emerald-400" />
+                          )}
+                          {showResult && selectedAnswer === index && index !== currentQuiz.correct && (
+                            <XCircle className="w-5 h-5 ml-auto flex-shrink-0 text-rose-400" />
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* 결과 표시 */}
+                  <AnimatePresence>
+                    {showResult && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 25 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 25 }}
+                        className="p-5 rounded-2xl bg-gradient-to-br from-white/12 via-white/15 to-white/12 border border-white/25 shadow-lg shadow-white/10"
+                      >
+                        <h4 className="text-lg font-bold text-white mb-3 mobile-text">
+                          {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
+                        </h4>
+                        <p className="text-white/90 text-base mobile-text leading-relaxed font-medium">{currentQuiz.explanation}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* 액션 버튼 */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {!showResult ? (
+                      <button
+                        onClick={handleSubmitAnswer}
+                        disabled={selectedAnswer === null}
+                        className="flex-1 bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 text-white py-4 rounded-2xl font-bold hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 disabled:opacity-50 disabled:cursor-not-allowed touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-purple-400/30"
+                      >
+                        답안 제출
                       </button>
                     ) : (
-                      <button
-                        onClick={handleNextQuiz}
-                        className="flex-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white py-4 rounded-2xl font-bold hover:from-amber-500 hover:via-yellow-600 hover:to-orange-600 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-amber-300/30"
-                      >
-                        퀴즈 완료하기
-                      </button>
+                      <>
+                        {currentQuizIndex < quizData.quizzes.length - 1 ? (
+                          <button
+                            onClick={handleNextQuiz}
+                            className="flex-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 text-white py-4 rounded-2xl font-bold hover:from-emerald-500 hover:via-green-600 hover:to-emerald-700 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-emerald-300/30"
+                          >
+                            다음 문제
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleNextQuiz}
+                            className="flex-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white py-4 rounded-2xl font-bold hover:from-amber-500 hover:via-yellow-600 hover:to-orange-600 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-amber-300/30"
+                          >
+                            퀴즈 완료하기
+                          </button>
+                        )}
+                        <button
+                          onClick={handleResetQuiz}
+                          className="px-6 py-4 bg-gradient-to-br from-white/10 via-white/15 to-white/10 text-white rounded-2xl hover:from-white/15 hover:via-white/20 hover:to-white/15 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-white/25 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                          <RotateCcw className="w-5 h-5" />
+                          <span className="hidden sm:inline">다시 시작</span>
+                          <span className="sm:hidden">재시작</span>
+                        </button>
+                      </>
                     )}
+                  </div>
+                </div>
+              )}
+
+              {/* 퀴즈 완료 결과 */}
+              {quizCompleted && finalScore && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center space-y-6 md:space-y-8"
+                >
+                  <div className="space-y-4 md:space-y-6">
+                    <div className="text-4xl md:text-6xl mb-4 md:mb-6">
+                      {finalScore.percentage >= 90 ? '🏆' : 
+                       finalScore.percentage >= 80 ? '🥇' : 
+                       finalScore.percentage >= 70 ? '🥈' : 
+                       finalScore.percentage >= 60 ? '🥉' : '📚'}
+                    </div>
+                    
+                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
+                      퀴즈 완료!
+                    </h3>
+                    
+                    <div className="text-2xl md:text-3xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">
+                      {finalScore.score} / {finalScore.total}
+                    </div>
+                    
+                    <div className="text-xl md:text-2xl text-white/90 mb-4 md:mb-6 mobile-text font-semibold">
+                      정답률: {finalScore.percentage}%
+                    </div>
+                    
+                    <div className="text-lg md:text-xl text-white/80 mb-6 md:mb-8 mobile-text font-medium">
+                      {getScoreMessage(finalScore.percentage)}
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
                     <button
                       onClick={handleResetQuiz}
-                      className="px-6 py-4 bg-gradient-to-br from-white/10 via-white/15 to-white/10 text-white rounded-2xl hover:from-white/15 hover:via-white/20 hover:to-white/15 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-white/25 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="px-8 md:px-10 py-4 bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 text-white rounded-2xl font-bold hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 border border-purple-400/30"
                     >
                       <RotateCcw className="w-5 h-5" />
-                      <span className="hidden sm:inline">다시 시작</span>
-                      <span className="sm:hidden">재시작</span>
+                      <span className="hidden sm:inline">다시 도전</span>
+                      <span className="sm:hidden">재도전</span>
                     </button>
-                  </>
-                )}
-              </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
           )}
-
-          {/* 퀴즈 완료 결과 */}
-          {quizCompleted && finalScore && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center space-y-6 md:space-y-8"
-            >
-              <div className="space-y-4 md:space-y-6">
-                <div className="text-4xl md:text-6xl mb-4 md:mb-6">
-                  {finalScore.percentage >= 90 ? '🏆' : 
-                   finalScore.percentage >= 80 ? '🥇' : 
-                   finalScore.percentage >= 70 ? '🥈' : 
-                   finalScore.percentage >= 60 ? '🥉' : '📚'}
-                </div>
-                
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
-                  퀴즈 완료!
-                </h3>
-                
-                <div className="text-2xl md:text-3xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">
-                  {finalScore.score} / {finalScore.total}
-                </div>
-                
-                <div className="text-xl md:text-2xl text-white/90 mb-4 md:mb-6 mobile-text font-semibold">
-                  정답률: {finalScore.percentage}%
-                </div>
-                
-                <div className="text-lg md:text-xl text-white/80 mb-6 md:mb-8 mobile-text font-medium">
-                  {getScoreMessage(finalScore.percentage)}
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
-                <button
-                  onClick={handleResetQuiz}
-                  className="px-8 md:px-10 py-4 bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 text-white rounded-2xl font-bold hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 border border-purple-400/30"
-                >
-                  <RotateCcw className="w-5 h-5" />
-                  <span className="hidden sm:inline">다시 도전</span>
-                  <span className="sm:hidden">재도전</span>
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </div>
+        </>
       )}
 
       {/* 퀴즈 완료 알림 */}

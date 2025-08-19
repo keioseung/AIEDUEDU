@@ -371,19 +371,36 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           date,
           infoIndex: index
         })
-         setIsLearned(true)
-         setShowLearnComplete(true)
-         setTimeout(() => setShowLearnComplete(false), 3000)
+        
+        // 로컬 스토리지에 즉시 저장 (낙관적 업데이트)
+        const currentProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+        if (!currentProgress[sessionId]) currentProgress[sessionId] = {}
+        if (!currentProgress[sessionId][date]) currentProgress[sessionId][date] = []
+        if (!currentProgress[sessionId][date].includes(index)) {
+          currentProgress[sessionId][date].push(index)
+        }
+        localStorage.setItem('userProgress', JSON.stringify(currentProgress))
+        
+        setIsLearned(true)
+        setShowLearnComplete(true)
+        setTimeout(() => setShowLearnComplete(false), 3000)
          
-         // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
-         queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
-         queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+        // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
+        queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+        queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
          
-         if (onProgressUpdate) onProgressUpdate()
-         const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
-         if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
-           setShowAchievement(true)
-         }
+        if (onProgressUpdate) onProgressUpdate()
+        
+        // 성취 확인
+        try {
+          const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
+          if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
+            setShowAchievement(true)
+            setTimeout(() => setShowAchievement(false), 3000)
+          }
+        } catch (error) {
+          console.error('Failed to check achievements:', error)
+        }
       }
     } catch (error) {
       console.error('Failed to update progress:', error)
