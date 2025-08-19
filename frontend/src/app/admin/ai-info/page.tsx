@@ -85,6 +85,10 @@ export default function AdminAIInfoPage() {
     queryKey: ['ai-info-dates'],
     queryFn: async () => {
       const res = await aiInfoAPI.getAllDates()
+      console.log('getAllDates Response:', res)
+      console.log('getAllDates Data:', res.data)
+      console.log('getAllDates Data Type:', typeof res.data)
+      console.log('getAllDates Data Length:', Array.isArray(res.data) ? res.data.length : 'Not Array')
       return res.data as string[]
     }
   })
