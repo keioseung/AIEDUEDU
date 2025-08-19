@@ -316,38 +316,20 @@ def get_total_ai_info_days(db: Session = Depends(get_db)):
 
 @router.get("/total-count", response_model=dict)
 def get_total_ai_info_count(db: Session = Depends(get_db)):
-    """AI 정보의 총 개수를 반환합니다 (info1, info2, info3 중 내용이 있는 것만)."""
-    print("DEBUG: get_total_ai_info_count function called")
+    """등록된 AI 정보 날짜 수를 반환합니다 (각 날짜당 최대 2개의 카드)."""
     try:
-        all_ai_info = db.query(AIInfo).all()
-        print(f"DEBUG: Total AIInfo records found: {len(all_ai_info)}")
+        # 등록된 날짜 수를 세기 (info1_title과 info1_content가 있는 레코드만)
+        total_dates = db.query(AIInfo).filter(
+            AIInfo.info1_title != None,
+            AIInfo.info1_title != "",
+            AIInfo.info1_content != None,
+            AIInfo.info1_content != ""
+        ).count()
         
-        total_count = 0
+        # 각 날짜당 최대 2개의 카드이므로 * 2
+        total_cards = total_dates * 2
         
-        for ai_info in all_ai_info:
-            # info1, info2, info3 중 내용이 있는 것만 카운트
-            # title과 content가 모두 있거나, info 필드에 내용이 있는 경우
-            info1_count = 0
-            info2_count = 0
-            info3_count = 0
-            
-            if ai_info.info1_title and ai_info.info1_content:
-                total_count += 1
-                info1_count = 1
-            if ai_info.info2_title and ai_info.info2_content:
-                total_count += 1
-                info2_count = 1
-            if ai_info.info3_title and ai_info.info3_content:
-                total_count += 1
-                info3_count = 1
-            
-            print(f"DEBUG: Date {ai_info.date} - Info1: {info1_count}, Info2: {info2_count}, Info3: {info3_count}")
-        
-        print(f"DEBUG: Final total_count: {total_count}")
-        result = {"total_count": total_count}
-        print(f"DEBUG: Returning result: {result}")
-        print(f"DEBUG: Result type: {type(result)}")
-        return result
+        return {"total_count": total_cards}
     except Exception as e:
         print(f"Error getting total AI info count: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get total AI info count: {str(e)}")
