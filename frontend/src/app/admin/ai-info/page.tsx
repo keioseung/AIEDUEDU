@@ -552,15 +552,30 @@ export default function AdminAIInfoPage() {
       
       console.log('기존 데이터 그룹:', existingDateGroup)
       console.log('수정할 항목:', existingDateGroup.infos[index])
+      console.log('기존 infos 길이:', existingDateGroup.infos.length)
       
       // 해당 항목의 카테고리만 변경
       const updatedInfos = [...existingDateGroup.infos]
       updatedInfos[index] = { ...updatedInfos[index], category: newCategory }
       console.log('수정된 데이터:', updatedInfos)
+      console.log('수정된 infos 길이:', updatedInfos.length)
       
-      // 수정된 데이터 저장
+      // 먼저 해당 날짜의 모든 데이터를 삭제
+      console.log('기존 데이터 삭제 시작...')
+      await aiInfoAPI.delete(date)
+      console.log('기존 데이터 삭제 완료')
+      
+      // 수정된 데이터로 다시 추가
+      console.log('수정된 데이터 추가 시작...')
       const saveResult = await aiInfoAPI.add({ date, infos: updatedInfos })
       console.log('저장 결과:', saveResult)
+      console.log('저장된 infos 길이:', saveResult.data.infos?.length)
+      
+      // 저장된 데이터가 예상과 다른 경우 경고
+      if (saveResult.data.infos && saveResult.data.infos.length !== updatedInfos.length) {
+        console.warn('⚠️ 저장된 데이터 길이가 예상과 다릅니다!')
+        console.warn('예상 길이:', updatedInfos.length, '실제 길이:', saveResult.data.infos.length)
+      }
       
       // 즉시 데이터 새로고침
       try {
