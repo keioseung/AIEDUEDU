@@ -484,7 +484,7 @@ export default function AdminAIInfoPage() {
 
   const handleDeleteAIInfo = (date: string, index: number) => {
     if (window.confirm('정말 이 항목을 삭제하시겠습니까?')) {
-      deleteItemMutation.mutate({ date, index })
+      deleteItemMutation.mutate({ date, itemIndex: index })
     }
   }
 
