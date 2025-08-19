@@ -106,6 +106,13 @@ export default function AdminAIInfoPage() {
     queryFn: async () => {
       const res = await aiInfoAPI.getAll()
       console.log('API Response:', res) // 디버깅용 로그
+      console.log('API Response Type:', typeof res)
+      console.log('API Response Data:', res.data)
+      console.log('API Response Data Type:', typeof res.data)
+      console.log('API Response Data Length:', Array.isArray(res.data) ? res.data.length : 'Not Array')
+      if (Array.isArray(res.data)) {
+        console.log('First Item:', res.data[0])
+      }
       return res.data as Array<{date: string, infos: AIInfoItem[]}>
     },
     enabled: true, // 항상 활성화
