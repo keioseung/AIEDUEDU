@@ -110,49 +110,44 @@ export default function AdminAIInfoPage() {
   const { data: allAIInfos = [], refetch: refetchAllAIInfo, isLoading: isLoadingAllAIInfo } = useQuery({
     queryKey: ['all-ai-info'],
     queryFn: async () => {
-      const res = await aiInfoAPI.getAll()
-      console.log('API Response:', res) // 디버깅용 로그
-      console.log('API Response Type:', typeof res)
-      console.log('API Response Data:', res.data)
-      console.log('API Response Data Type:', typeof res.data)
-      console.log('API Response Data Length:', Array.isArray(res.data) ? res.data.length : 'Not Array')
-      if (Array.isArray(res.data)) {
-        console.log('First Item:', res.data[0])
-      }
+      console.log('전체 AI 정보 수집 시작...')
       
-      // getAll이 실패하면 getAllDates로 각 날짜별로 데이터를 수집
-      if (!res.data || res.data.length === 0) {
-        console.log('getAll 실패, getAllDates로 대체 시도...')
-        try {
-          const datesRes = await aiInfoAPI.getAllDates()
-          if (datesRes.data && datesRes.data.length > 0) {
-            console.log('getAllDates 성공, 각 날짜별로 데이터 수집...')
-            const allData = []
-            for (const dateItem of datesRes.data) { // 모든 날짜 데이터 수집
-              try {
-                const dateData = await aiInfoAPI.getByDate(dateItem)
-                if (dateData.data && dateData.data.length > 0) {
-                  allData.push({
-                    date: dateItem,
-                    infos: dateData.data
-                  })
-                  console.log(`날짜 ${dateItem} 데이터:`, dateData.data)
-                }
-              } catch (error) {
-                console.log(`날짜 ${dateItem} 데이터 가져오기 실패:`, error)
+      try {
+        // getAllDates로 모든 날짜 가져오기
+        const datesRes = await aiInfoAPI.getAllDates()
+        if (datesRes.data && datesRes.data.length > 0) {
+          console.log('getAllDates 성공, 각 날짜별로 데이터 수집...')
+          const allData = []
+          
+          for (const dateItem of datesRes.data) {
+            try {
+              const dateData = await aiInfoAPI.getByDate(dateItem)
+              if (dateData.data && dateData.data.length > 0) {
+                allData.push({
+                  date: dateItem,
+                  infos: dateData.data
+                })
+                console.log(`날짜 ${dateItem} 데이터:`, dateData.data)
               }
+            } catch (error) {
+              console.log(`날짜 ${dateItem} 데이터 가져오기 실패:`, error)
             }
-            console.log('수집된 전체 데이터:', allData)
-            return allData
           }
-        } catch (error) {
-          console.log('getAllDates로 대체 시도 실패:', error)
+          
+          console.log('수집된 전체 데이터:', allData)
+          return allData
+        } else {
+          console.log('getAllDates에서 날짜 데이터를 가져올 수 없습니다.')
+          return []
         }
+      } catch (error) {
+        console.error('전체 AI 정보 수집 실패:', error)
+        return []
       }
-      
-      return res.data as Array<{date: string, infos: AIInfoItem[]}>
     },
     enabled: true, // 항상 활성화
+    staleTime: 30000, // 30초 동안 캐시 유지
+    gcTime: 300000, // 5분 동안 가비지 컬렉션 방지
   })
 
   // 서버에서 프롬프트 목록 불러오기
