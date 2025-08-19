@@ -497,7 +497,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                   </div>
                   
                   <div className="space-y-1.5">
-                    {[10, 30, 50].map((size) => (
+                    {[5, 10, 30, 50].map((size) => (
                       <button
                         key={size}
                         onClick={() => {

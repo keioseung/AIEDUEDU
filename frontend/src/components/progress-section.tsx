@@ -578,7 +578,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             {/* 현재 기간 표시 */}
             <div className="flex justify-center">
               <div className="text-white/80 text-xs font-medium bg-gradient-to-r from-purple-900/30 via-purple-800/40 to-purple-900/30 px-3 py-1.5 rounded-md border border-purple-500/20 backdrop-blur-xl">
-                <span className="text-purple-200 mr-1">📅</span> {formatCompactDate(periodStats?.start_date)} ~ {formatCompactDate(periodStats?.end_date)}
+                <span className="text-purple-200 mr-1">📅</span> {periodStats?.start_date ? formatCompactDate(periodStats.start_date) : '로딩 중'} ~ {periodStats?.end_date ? formatCompactDate(periodStats.end_date) : '로딩 중'}
               </div>
             </div>
           </div>
