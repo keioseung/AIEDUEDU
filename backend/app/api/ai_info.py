@@ -322,19 +322,34 @@ def get_total_ai_info_count(db: Session = Depends(get_db)):
         total_cards = 0
         ai_infos = db.query(AIInfo).all()
         
+        print(f"DEBUG: Total AIInfo records found: {len(ai_infos)}")
+        
         for ai_info in ai_infos:
+            info1_count = 0
+            info2_count = 0
+            info3_count = 0
+            
             # info1
             if ai_info.info1_title and ai_info.info1_content:
                 total_cards += 1
+                info1_count = 1
+                print(f"DEBUG: Date {ai_info.date} - Info1: title='{ai_info.info1_title[:20]}...', content='{ai_info.info1_content[:20]}...'")
             
             # info2
             if ai_info.info2_title and ai_info.info2_content:
                 total_cards += 1
+                info2_count = 1
+                print(f"DEBUG: Date {ai_info.date} - Info2: title='{ai_info.info2_title[:20]}...', content='{ai_info.info2_content[:20]}...'")
             
             # info3
             if ai_info.info3_title and ai_info.info3_content:
                 total_cards += 1
+                info3_count = 1
+                print(f"DEBUG: Date {ai_info.date} - Info3: title='{ai_info.info3_title[:20]}...', content='{ai_info.info3_content[:20]}...'")
+            
+            print(f"DEBUG: Date {ai_info.date} - Info1: {info1_count}, Info2: {info2_count}, Info3: {info3_count}")
         
+        print(f"DEBUG: Final total_cards: {total_cards}")
         return {"total_count": total_cards}
     except Exception as e:
         print(f"Error getting total AI info count: {e}")
