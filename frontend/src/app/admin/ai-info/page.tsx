@@ -101,13 +101,14 @@ export default function AdminAIInfoPage() {
   })
 
   // 전체 AI 정보 불러오기
-  const { data: allAIInfos = [], refetch: refetchAllAIInfo } = useQuery({
+  const { data: allAIInfos = [], refetch: refetchAllAIInfo, isLoading: isLoadingAllAIInfo } = useQuery({
     queryKey: ['all-ai-info'],
     queryFn: async () => {
       const res = await aiInfoAPI.getAll()
+      console.log('API Response:', res) // 디버깅용 로그
       return res.data as Array<{date: string, infos: AIInfoItem[]}>
     },
-    enabled: showAllAIInfo,
+    enabled: true, // 항상 활성화
   })
 
   // 서버에서 프롬프트 목록 불러오기
@@ -1016,34 +1017,11 @@ export default function AdminAIInfoPage() {
               {/* 전체 AI 정보 보기 */}
               {showAllAIInfo && (
                 <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="mb-6">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                       <FaBrain className="text-green-400" />
                       전체 AI 정보 관리
                     </h3>
-                    
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          if (window.confirm('정말 모든 AI 정보를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-                            // 모든 날짜의 AI 정보를 삭제
-                            const deletePromises = allAIInfos.map(dateGroup => 
-                              deleteMutation.mutateAsync(dateGroup.date)
-                            )
-                            Promise.all(deletePromises).then(() => {
-                              refetchAllAIInfo()
-                              setSuccess('모든 AI 정보가 삭제되었습니다!')
-                            }).catch(() => {
-                              setError('일괄 삭제 중 오류가 발생했습니다.')
-                            })
-                          }
-                        }}
-                        className="px-4 py-2 bg-red-500/20 text-red-300 rounded-lg font-medium hover:bg-red-500/30 transition border border-red-500/30 flex items-center gap-2"
-                      >
-                        <FaTrash className="w-4 h-4" />
-                        전체 삭제
-                      </button>
-                    </div>
                   </div>
                   
                   {/* 검색 및 필터링 */}
@@ -1109,9 +1087,17 @@ export default function AdminAIInfoPage() {
                     </div>
                   </div>
                   
-                  {filteredAIInfos.length === 0 ? (
+                  {isLoadingAllAIInfo ? (
+                    <div className="text-white/50 text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+                      AI 정보를 불러오는 중...
+                    </div>
+                  ) : filteredAIInfos.length === 0 ? (
                     <div className="text-white/50 text-center py-8">
                       {allAIInfos.length === 0 ? '등록된 AI 정보가 없습니다.' : '검색 조건에 맞는 AI 정보가 없습니다.'}
+                      <div className="mt-4 text-xs text-white/40">
+                        디버그: allAIInfos 길이 = {allAIInfos.length}, filteredAIInfos 길이 = {filteredAIInfos.length}
+                      </div>
                     </div>
                   ) : (
                     <div className="space-y-6">
