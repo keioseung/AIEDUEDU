@@ -533,6 +533,30 @@ export default function AdminAIInfoPage() {
     }
   }
 
+  // 카테고리 변경 핸들러
+  const handleCategoryChange = async (date: string, index: number, newCategory: string) => {
+    try {
+      const existingData = allAIInfos.find(item => item.date === date)
+      if (!existingData) {
+        setError('해당 날짜의 데이터를 찾을 수 없습니다.')
+        return
+      }
+      
+      const updatedInfos = [...existingData.infos]
+      updatedInfos[index] = { ...updatedInfos[index], category: newCategory }
+      
+      await aiInfoAPI.add({ date, infos: updatedInfos })
+      
+      // 데이터 새로고침
+      refetchAIInfo()
+      refetchDates()
+      refetchAllAIInfo()
+      setSuccess('카테고리가 변경되었습니다!')
+    } catch (error) {
+      setError('카테고리 변경에 실패했습니다.')
+    }
+  }
+
   // 필터링된 AI 정보 계산
   const filteredAIInfos = allAIInfos
     .map(dateGroup => ({
@@ -1291,12 +1315,21 @@ export default function AdminAIInfoPage() {
                                       <FaTrash className="w-4 h-4" />
                                       삭제
                                     </button>
-                                    <button
-                                      onClick={() => handleEditAIInfo(dateGroup.date, index, info)}
-                                      className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition flex items-center gap-2"
+                                    <select
+                                      value={info.category || ''}
+                                      onChange={(e) => handleCategoryChange(dateGroup.date, index, e.target.value)}
+                                      className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                                     >
-                                      🏷️ 카테고리 변경
-                                    </button>
+                                      <option value="">카테고리 선택</option>
+                                      <option value="챗봇/대화형 AI">챗봇/대화형 AI</option>
+                                      <option value="이미지 생성 AI">이미지 생성 AI</option>
+                                      <option value="코딩/개발 도구">코딩/개발 도구</option>
+                                      <option value="음성/오디오 AI">음성/오디오 AI</option>
+                                      <option value="데이터 분석/ML">데이터 분석/ML</option>
+                                      <option value="AI 윤리/정책">AI 윤리/정책</option>
+                                      <option value="AI 하드웨어/인프라">AI 하드웨어/인프라</option>
+                                      <option value="AI 응용 서비스">AI 응용 서비스</option>
+                                    </select>
                                   </div>
                                 </>
                               )}
