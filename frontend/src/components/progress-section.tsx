@@ -371,12 +371,30 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 </span>
                 <span className="text-blue-400 font-bold text-base">
                   {(() => {
-                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                    if (selectedDate && uniqueChartData.length > 0) {
-                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                      if (selectedDateData) {
-                        return selectedDateData.ai_info
+                    // selectedDate가 있으면 해당 날짜의 실제 학습 데이터를 표시
+                    if (selectedDate) {
+                      // 로컬 스토리지에서 해당 날짜의 학습 데이터 확인
+                      if (typeof window !== 'undefined') {
+                        try {
+                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                          const sessionProgress = userProgress[sessionId]
+                          if (sessionProgress && sessionProgress[selectedDate]) {
+                            return sessionProgress[selectedDate].length
+                          }
+                        } catch (error) {
+                          console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                        }
                       }
+                      
+                      // 백엔드 데이터에서 해당 날짜의 학습 데이터 확인
+                      if (uniqueChartData.length > 0) {
+                        const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                        if (selectedDateData) {
+                          return selectedDateData.ai_info
+                        }
+                      }
+                      
+                      return 0
                     }
                     return stats?.today_ai_info || 0
                   })()}
@@ -428,12 +446,49 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 </span>
                 <span className="text-purple-400 font-bold text-base">
                   {(() => {
-                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                    if (selectedDate && uniqueChartData.length > 0) {
-                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                      if (selectedDateData) {
-                        return selectedDateData.terms
+                    // selectedDate가 있으면 해당 날짜의 실제 학습 데이터를 표시
+                    if (selectedDate) {
+                      // 로컬 스토리지에서 해당 날짜의 용어 학습 데이터 확인
+                      if (typeof window !== 'undefined') {
+                        try {
+                          let totalTermsLearned = 0
+                          // 해당 날짜의 모든 AI 정보에 대해 용어 학습 상태 확인
+                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                          const sessionProgress = userProgress[sessionId]
+                          if (sessionProgress && sessionProgress[selectedDate]) {
+                            // 해당 날짜에 학습한 AI 정보의 인덱스들
+                            const learnedIndices = sessionProgress[selectedDate]
+                            
+                            // 각 학습된 AI 정보의 용어 학습 상태 확인
+                            learnedIndices.forEach((infoIndex: number) => {
+                              const learnedTermsKey = `learnedTerms_${sessionId}_${selectedDate}_${infoIndex}`
+                              const learnedTerms = localStorage.getItem(learnedTermsKey)
+                              if (learnedTerms) {
+                                try {
+                                  const terms = JSON.parse(learnedTerms)
+                                  totalTermsLearned += terms.length
+                                } catch (error) {
+                                  console.error('용어 데이터 파싱 오류:', error)
+                                }
+                              }
+                            })
+                            
+                            return totalTermsLearned
+                          }
+                        } catch (error) {
+                          console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                        }
                       }
+                      
+                      // 백엔드 데이터에서 해당 날짜의 학습 데이터 확인
+                      if (uniqueChartData.length > 0) {
+                        const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                        if (selectedDateData) {
+                          return selectedDateData.terms
+                        }
+                      }
+                      
+                      return 0
                     }
                     return stats?.today_terms || 0
                   })()}
