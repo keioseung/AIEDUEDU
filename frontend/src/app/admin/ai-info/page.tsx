@@ -1151,7 +1151,7 @@ export default function AdminAIInfoPage() {
                             📅 {dateGroup.date}
                           </div>
                           
-                          {dateGroup.infos.map((info, index) => (
+                          {dateGroup.infos.map((info: AIInfoItem, index: number) => (
                             <div key={index} className="mb-4 last:mb-0 bg-white/5 rounded-lg p-4">
                               {editingAIInfo && editingAIInfo.id === dateGroup.date && editingAIInfo.index === index ? (
                                 // 수정 모드
