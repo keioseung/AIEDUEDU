@@ -534,7 +534,17 @@ export default function AdminAIInfoPage() {
   }
 
   // 카테고리 변경 핸들러
-  const handleCategoryChange = async (date: string, index: number, newCategory: string) => {
+  const handleCategoryChange = async (date: string, index: number, newCategory: string, oldCategory: string) => {
+    // 빈 값이거나 기존과 같은 경우 변경하지 않음
+    if (!newCategory || newCategory === oldCategory) {
+      return
+    }
+    
+    // 확인 메시지
+    if (!window.confirm(`카테고리를 "${oldCategory || '미분류'}"에서 "${newCategory}"로 변경하시겠습니까?`)) {
+      return
+    }
+    
     try {
       const existingData = allAIInfos.find(item => item.date === date)
       if (!existingData) {
@@ -1317,7 +1327,7 @@ export default function AdminAIInfoPage() {
                                     </button>
                                     <select
                                       value={info.category || ''}
-                                      onChange={(e) => handleCategoryChange(dateGroup.date, index, e.target.value)}
+                                      onChange={(e) => handleCategoryChange(dateGroup.date, index, e.target.value, info.category || '')}
                                       className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                                     >
                                       <option value="">카테고리 선택</option>
