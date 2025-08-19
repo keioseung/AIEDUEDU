@@ -340,6 +340,56 @@ def get_user_learned_ai_info_count(session_id: str, db: Session = Depends(get_db
     try:
         from ..models import UserProgress
         
+        # AI 정보 전체목록 가져오기
+        all_ai_info = []
+        ai_infos = db.query(AIInfo).order_by(AIInfo.date.desc()).all()
+        
+        for ai_info in ai_infos:
+            # info1
+            if ai_info.info1_title and ai_info.info1_content:
+                try:
+                    terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                except json.JSONDecodeError:
+                    terms1 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_0",
+                    "date": ai_info.date,
+                    "title": ai_info.info1_title,
+                    "content": ai_info.info1_content,
+                    "terms": terms1,
+                    "info_index": 0
+                })
+            
+            # info2
+            if ai_info.info2_title and ai_info.info2_content:
+                try:
+                    terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                except json.JSONDecodeError:
+                    terms2 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_1",
+                    "date": ai_info.date,
+                    "title": ai_info.info2_title,
+                    "content": ai_info.info2_content,
+                    "terms": terms2,
+                    "info_index": 1
+                })
+            
+            # info3
+            if ai_info.info3_title and ai_info.info3_content:
+                try:
+                    terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                except json.JSONDecodeError:
+                    terms3 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_2",
+                    "date": ai_info.date,
+                    "title": ai_info.info3_title,
+                    "content": ai_info.info3_content,
+                    "terms": terms3,
+                    "info_index": 2
+                })
+        
         # 사용자의 학습 진행상황 가져오기
         user_progress = db.query(UserProgress).filter(
             UserProgress.session_id == session_id,
@@ -348,12 +398,18 @@ def get_user_learned_ai_info_count(session_id: str, db: Session = Depends(get_db
         
         total_learned_count = 0
         
-        for progress in user_progress:
-            if progress.learned_info:
+        # 각 AI 정보 카드에 대해 사용자가 학습했는지 확인
+        for ai_info_item in all_ai_info:
+            date = ai_info_item["date"]
+            info_index = ai_info_item["info_index"]
+            
+            # 해당 날짜의 사용자 진행상황 찾기
+            progress = next((p for p in user_progress if p.date == date), None)
+            if progress and progress.learned_info:
                 try:
-                    # learned_info는 JSON 형태로 저장된 학습한 info 인덱스들
                     learned_indices = json.loads(progress.learned_info)
-                    total_learned_count += len(learned_indices)
+                    if info_index in learned_indices:
+                        total_learned_count += 1
                 except json.JSONDecodeError:
                     continue
         
