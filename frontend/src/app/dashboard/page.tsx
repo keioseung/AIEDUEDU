@@ -359,8 +359,8 @@ export default function DashboardPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,255,0.15),transparent_50%)]" />
       
-      {/* 움직이는 파티클 효과 */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* 움직이는 파티클 효과 - 완전 제거 */}
+      {/* <div className="absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
           <div
             key={i}
@@ -373,7 +373,7 @@ export default function DashboardPage() {
             }}
           />
         ))}
-      </div>
+      </div> */}
 
       {/* 토스트 알림 */}
       <AnimatePresence>
@@ -656,13 +656,15 @@ export default function DashboardPage() {
 
       {/* 커스텀 애니메이션 스타일 */}
       <style jsx global>{`
-        @keyframes float {
+        /* 배경 애니메이션 관련 스타일 제거 - 깜박거림 현상 해결 */
+        /* @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.2; }
           50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
         }
         .animate-float {
           animation: float 6s ease-in-out infinite;
-        }
+        } */
+        
         @keyframes bounce-slow {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-20px); }
