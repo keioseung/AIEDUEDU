@@ -331,13 +331,13 @@ def get_total_ai_info_count(db: Session = Depends(get_db)):
             info2_count = 0
             info3_count = 0
             
-            if (ai_info.info1_title and ai_info.info1_content) or (ai_info.info1 and ai_info.info1.strip()):
+            if ai_info.info1_title and ai_info.info1_content:
                 total_count += 1
                 info1_count = 1
-            if (ai_info.info2_title and ai_info.info2_content) or (ai_info.info2 and ai_info.info2.strip()):
+            if ai_info.info2_title and ai_info.info2_content:
                 total_count += 1
                 info2_count = 1
-            if (ai_info.info3_title and ai_info.info3_content) or (ai_info.info3 and ai_info.info3.strip()):
+            if ai_info.info3_title and ai_info.info3_content:
                 total_count += 1
                 info3_count = 1
             
