@@ -577,14 +577,24 @@ export default function AdminAIInfoPage() {
         console.warn('예상 길이:', updatedInfos.length, '실제 길이:', saveResult.data.infos.length)
       }
       
-      // 즉시 데이터 새로고침
-      try {
-        await refetchAllAIInfo()
-        console.log('데이터 새로고침 완료')
-      } catch (refreshError) {
-        console.error('데이터 새로고침 오류:', refreshError)
-      }
+      // 로컬 상태만 업데이트 (전체 데이터 다시 로딩하지 않음)
+      queryClient.setQueryData(['all-ai-info'], (oldData: any) => {
+        if (!oldData) return oldData
+        
+        return oldData.map((item: any) => {
+          if (item.date === date) {
+            return {
+              ...item,
+              infos: item.infos.map((info: any, i: number) => 
+                i === index ? { ...info, category: newCategory } : info
+              )
+            }
+          }
+          return item
+        })
+      })
       
+      console.log('로컬 상태 업데이트 완료')
       setSuccess(`카테고리가 "${oldCategory || '미분류'}"에서 "${newCategory}"로 변경되었습니다!`)
     } catch (error) {
       console.error('카테고리 변경 오류:', error)
