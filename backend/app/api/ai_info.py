@@ -317,6 +317,7 @@ def get_total_ai_info_days(db: Session = Depends(get_db)):
 @router.get("/total-count", response_model=dict)
 def get_total_ai_info_count(db: Session = Depends(get_db)):
     """AI 정보의 총 개수를 반환합니다 (info1, info2, info3 중 내용이 있는 것만)."""
+    print("DEBUG: get_total_ai_info_count function called")
     try:
         all_ai_info = db.query(AIInfo).all()
         print(f"DEBUG: Total AIInfo records found: {len(all_ai_info)}")
@@ -343,7 +344,10 @@ def get_total_ai_info_count(db: Session = Depends(get_db)):
             print(f"DEBUG: Date {ai_info.date} - Info1: {info1_count}, Info2: {info2_count}, Info3: {info3_count}")
         
         print(f"DEBUG: Final total_count: {total_count}")
-        return {"total_count": total_count}
+        result = {"total_count": total_count}
+        print(f"DEBUG: Returning result: {result}")
+        print(f"DEBUG: Result type: {type(result)}")
+        return result
     except Exception as e:
         print(f"Error getting total AI info count: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get total AI info count: {str(e)}")
