@@ -126,22 +126,22 @@ export default function AuthPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,255,0.15),transparent_50%)]" />
       
-      {/* 움직이는 그라데이션 배경 - 더 크게 확장 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-pink-900/20 animate-gradient-shift" />
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-purple-900/10 animate-gradient-float" />
+      {/* 움직이는 그라데이션 배경 - 완전 제거 */}
+      {/* <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-pink-900/20 animate-gradient-shift" />
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-purple-900/10 animate-gradient-float" /> */}
       
-      {/* 인터랙티브 마우스 효과 - 더 크게 확장 */}
-      <div 
+      {/* 인터랙티브 마우스 효과 - 완전 제거 */}
+      {/* <div 
         className="absolute w-[120%] h-[120%] bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-1000 ease-out"
         style={{
           left: mousePosition.x - 240,
           top: mousePosition.y - 240,
           transform: 'translate(-50%, -50%)'
         }}
-      />
+      /> */}
       
-      {/* 움직이는 파티클 효과 - 더 많은 파티클과 넓은 범위 */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* 움직이는 파티클 효과 - 완전 제거 */}
+      {/* <div className="absolute inset-0 overflow-hidden">
         {[...Array(30)].map((_, i) => (
           <div
             key={i}
@@ -154,12 +154,12 @@ export default function AuthPage() {
             }}
           />
         ))}
-      </div>
+      </div> */}
 
-      {/* 빛나는 효과 - 더 크게 확장 */}
-      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
+      {/* 빛나는 효과 - 완전 제거 */}
+      {/* <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-[120%] h-[120%] bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/2 w-[140%] h-[140%] bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/2 left-1/2 w-[140%] h-[140%] bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} /> */}
 
       {/* 메인 컨텐츠 */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-32 md:py-48 lg:py-64">
@@ -238,8 +238,12 @@ export default function AuthPage() {
                       placeholder="아이디를 입력하세요"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
-                      className="w-full p-3 bg-purple-900/40 border-2 border-purple-500/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/70 transition-all text-sm min-h-[44px] input-stable"
+                      className="w-full p-3 bg-purple-900/40 border-2 border-purple-500/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/70 text-sm min-h-[44px]"
                       style={{
+                        fontSize: '16px',
+                        backgroundColor: 'rgba(88, 28, 135, 0.4)',
+                        borderColor: 'rgba(147, 51, 234, 0.5)',
+                        color: 'white',
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
                         appearance: 'none',
@@ -247,13 +251,9 @@ export default function AuthPage() {
                         WebkitTouchCallout: 'none',
                         WebkitUserSelect: 'none',
                         userSelect: 'none',
-                        fontSize: '16px',
-                        backgroundColor: 'rgba(88, 28, 135, 0.4)',
-                        transition: 'all 0.2s ease-in-out',
-                        transform: 'translateZ(0)',
-                        backfaceVisibility: 'hidden',
-                        perspective: '1000px',
-                        willChange: 'transform'
+                        transform: 'none',
+                        transition: 'none',
+                        willChange: 'auto'
                       }}
                     />
                   </div>
@@ -435,7 +435,7 @@ export default function AuthPage() {
             user-select: none;
             font-size: 16px !important;
             transform: translateZ(0);
-            backface-visibility: hidden;
+            backfaceVisibility: hidden;
             perspective: 1000px;
           }
           
@@ -585,6 +585,85 @@ export default function AuthPage() {
             -webkit-transform: translateZ(0) !important;
             background-color: rgba(255, 255, 255, 0.1) !important;
             border-color: rgba(147, 51, 234, 0.5) !important;
+          }
+        }
+
+        /* 입력 상자 깜박거림 방지 - 완전 새로운 접근 */
+        input[type="text"], 
+        input[type="password"] {
+          -webkit-appearance: none !important;
+          -moz-appearance: none !important;
+          appearance: none !important;
+          -webkit-tap-highlight-color: transparent !important;
+          -webkit-touch-callout: none !important;
+          -webkit-user-select: none !important;
+          user-select: none !important;
+          font-size: 16px !important;
+          background-color: transparent !important;
+          border-color: rgba(147, 51, 234, 0.5) !important;
+          color: white !important;
+          outline: none !important;
+          transition: none !important;
+          -webkit-transition: none !important;
+          transform: none !important;
+          -webkit-transform: none !important;
+          will-change: auto !important;
+          -webkit-will-change: auto !important;
+          backface-visibility: visible !important;
+          -webkit-backface-visibility: visible !important;
+          perspective: none !important;
+          -webkit-perspective: none !important;
+        }
+        
+        /* 포커스 시 깜박거림 방지 */
+        input[type="text"]:focus, 
+        input[type="password"]:focus {
+          background-color: transparent !important;
+          border-color: rgba(147, 51, 234, 0.7) !important;
+          outline: none !important;
+          box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.3) !important;
+          transition: none !important;
+          -webkit-transition: none !important;
+          transform: none !important;
+          -webkit-transform: none !important;
+        }
+        
+        /* 모바일에서 입력 상자 안정화 */
+        @media (max-width: 768px) {
+          input[type="text"], 
+          input[type="password"] {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            font-size: 16px !important;
+            background-color: transparent !important;
+            border-radius: 8px !important;
+            -webkit-border-radius: 8px !important;
+            transition: none !important;
+            -webkit-transition: none !important;
+            transform: none !important;
+            -webkit-transform: none !important;
+            will-change: auto !important;
+            -webkit-will-change: auto !important;
+            backface-visibility: visible !important;
+            -webkit-backface-visibility: visible !important;
+            perspective: none !important;
+            -webkit-perspective: none !important;
+          }
+          
+          input[type="text"]:focus, 
+          input[type="password"]:focus {
+            background-color: transparent !important;
+            border-color: rgba(147, 51, 234, 0.7) !important;
+            box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.3) !important;
+            transition: none !important;
+            -webkit-transition: none !important;
+            transform: none !important;
+            -webkit-transform: none !important;
           }
         }
       `}</style>
