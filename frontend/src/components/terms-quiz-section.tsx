@@ -531,7 +531,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
               {currentQuiz && !quizCompleted && (
                 <div className="space-y-6 md:space-y-8">
                   <div>
-                    <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6 mobile-text leading-tight bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
+                    <h3 className="text-base md:text-lg font-bold text-white mb-4 md:mb-6 mobile-text leading-tight bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
                       {currentQuiz.question}
                     </h3>
                   </div>
@@ -545,8 +545,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                         className={`w-full p-4 md:p-5 text-left rounded-2xl border-2 transition-all duration-300 touch-optimized mobile-touch-target ${getOptionClass(index)}`}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="font-bold text-base text-purple-200/80">{String.fromCharCode(65 + index)}.</span>
-                          <span className="text-base mobile-text flex-1 font-medium leading-relaxed text-white/85">{option}</span>
+                          <span className="font-bold text-sm text-purple-200/80">{String.fromCharCode(65 + index)}.</span>
+                          <span className="text-sm mobile-text flex-1 font-medium leading-relaxed text-white/85">{option}</span>
                           {showResult && index === currentQuiz.correct && (
                             <CheckCircle className="w-5 h-5 ml-auto flex-shrink-0 text-emerald-400" />
                           )}
