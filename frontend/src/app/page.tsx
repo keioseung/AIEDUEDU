@@ -138,17 +138,17 @@ export default function IntroPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* 고급스러운 배경 효과 */}
+      {/* 고급스러운 배경 효과 - 정적으로만 유지 */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,255,0.15),transparent_50%)]" />
       
-      {/* 움직이는 그라데이션 배경 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-pink-900/20 animate-gradient-shift" />
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-purple-900/10 animate-gradient-float" />
+      {/* 움직이는 그라데이션 배경 - 완전 제거 */}
+      {/* <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-pink-900/20 animate-gradient-shift" />
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-purple-900/10 animate-gradient-float" /> */}
       
-      {/* 인터랙티브 마우스 효과 (데스크톱에서만) */}
-      {!isMobile && (
+      {/* 인터랙티브 마우스 효과 - 완전 제거 */}
+      {/* {!isMobile && (
         <div 
           className="absolute w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-1000 ease-out"
           style={{
@@ -157,10 +157,10 @@ export default function IntroPage() {
             transform: 'translate(-50%, -50%)'
           }}
         />
-      )}
+      )} */}
       
-      {/* 움직이는 파티클 효과 (모바일에서는 줄임) */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* 움직이는 파티클 효과 - 완전 제거 */}
+      {/* <div className="absolute inset-0 overflow-hidden">
         {[...Array(isMobile ? 15 : 30)].map((_, i) => (
           <div
             key={i}
@@ -173,19 +173,19 @@ export default function IntroPage() {
             }}
           />
         ))}
-      </div>
+      </div> */}
 
-      {/* 빛나는 효과 (모바일에서는 줄임) */}
-      <div className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
+      {/* 빛나는 효과 - 완전 제거 */}
+      {/* <div className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-96 md:h-96 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/2 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/2 left-1/2 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} /> */}
 
-      {/* 움직이는 선 효과 (모바일에서는 줄임) */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* 움직이는 선 효과 - 완전 제거 */}
+      {/* <div className="absolute inset-0 overflow-hidden">
         {[...Array(isMobile ? 3 : 5)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-px h-16 md:h-32 bg-gradient-to-b from-transparent via-purple-500/30 to-transparent animate-slide-down"
+            className="absolute w-px h-16 md:h-32 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent animate-slide-down"
             style={{
               left: `${20 + i * 15}%`,
               animationDelay: `${i * 0.5}s`,
@@ -193,7 +193,7 @@ export default function IntroPage() {
             }}
           />
         ))}
-      </div>
+      </div> */}
 
              {/* 메인 컨텐츠 */}
        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-1 py-8 md:py-12">
