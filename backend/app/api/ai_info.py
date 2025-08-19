@@ -319,18 +319,30 @@ def get_total_ai_info_count(db: Session = Depends(get_db)):
     """AI 정보의 총 개수를 반환합니다 (info1, info2, info3 중 내용이 있는 것만)."""
     try:
         all_ai_info = db.query(AIInfo).all()
+        print(f"DEBUG: Total AIInfo records found: {len(all_ai_info)}")
+        
         total_count = 0
         
         for ai_info in all_ai_info:
             # info1, info2, info3 중 내용이 있는 것만 카운트
             # title과 content가 모두 있거나, info 필드에 내용이 있는 경우
+            info1_count = 0
+            info2_count = 0
+            info3_count = 0
+            
             if (ai_info.info1_title and ai_info.info1_content) or (ai_info.info1 and ai_info.info1.strip()):
                 total_count += 1
+                info1_count = 1
             if (ai_info.info2_title and ai_info.info2_content) or (ai_info.info2 and ai_info.info2.strip()):
                 total_count += 1
+                info2_count = 1
             if (ai_info.info3_title and ai_info.info3_content) or (ai_info.info3 and ai_info.info3.strip()):
                 total_count += 1
+                info3_count = 1
+            
+            print(f"DEBUG: Date {ai_info.date} - Info1: {info1_count}, Info2: {info2_count}, Info3: {info3_count}")
         
+        print(f"DEBUG: Final total_count: {total_count}")
         return {"total_count": total_count}
     except Exception as e:
         print(f"Error getting total AI info count: {e}")
