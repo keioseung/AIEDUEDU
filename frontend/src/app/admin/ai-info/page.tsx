@@ -58,6 +58,18 @@ export default function AdminAIInfoPage() {
   const [showAIInfoList, setShowAIInfoList] = useState(false)
   const [showPromptList, setShowPromptList] = useState(false)
   const [showBaseContentList, setShowBaseContentList] = useState(false)
+  
+  // 전체 AI 정보 관리 상태
+  const [showAllAIInfo, setShowAllAIInfo] = useState(false)
+  const [editingAIInfo, setEditingAIInfo] = useState<{id: string, index: number} | null>(null)
+  const [editingData, setEditingData] = useState<{title: string, content: string, category: string, terms: TermItem[]}>({
+    title: '', content: '', category: '', terms: []
+  })
+  
+  // 검색 및 필터링 상태
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [sortBy, setSortBy] = useState<'date' | 'title' | 'category'>('date')
 
   // 프롬프트+기반내용 합치기 상태
   const [selectedPromptId, setSelectedPromptId] = useState<number | null>(null)
@@ -86,6 +98,16 @@ export default function AdminAIInfoPage() {
       return res.data as AIInfoItem[]
     },
     enabled: !!date,
+  })
+
+  // 전체 AI 정보 불러오기
+  const { data: allAIInfos = [], refetch: refetchAllAIInfo } = useQuery({
+    queryKey: ['all-ai-info'],
+    queryFn: async () => {
+      const res = await aiInfoAPI.getAll()
+      return res.data as Array<{date: string, infos: AIInfoItem[]}>
+    },
+    enabled: showAllAIInfo,
   })
 
   // 서버에서 프롬프트 목록 불러오기
@@ -118,6 +140,7 @@ export default function AdminAIInfoPage() {
     onSuccess: () => {
       refetchAIInfo()
       refetchDates()
+      refetchAllAIInfo()
       setInputs([{ title: '', content: '', terms: [], category: '' }])
       setDate('')
       setEditId(false)
@@ -136,6 +159,7 @@ export default function AdminAIInfoPage() {
     onSuccess: () => {
       refetchAIInfo()
       refetchDates()
+      refetchAllAIInfo()
       setInputs([{ title: '', content: '', terms: [], category: '' }])
       setDate('')
       setEditId(false)
@@ -154,10 +178,37 @@ export default function AdminAIInfoPage() {
     onSuccess: () => {
       refetchAIInfo()
       refetchDates()
+      refetchAllAIInfo()
       setSuccess('항목이 삭제되었습니다!')
     },
     onError: () => {
       setError('항목 삭제에 실패했습니다. 다시 시도해주세요.')
+    }
+  })
+
+  // AI 정보 개별 항목 수정
+  const updateItemMutation = useMutation({
+    mutationFn: async ({ date, itemIndex, data }: { date: string; itemIndex: number; data: AIInfoItem }) => {
+      // 기존 데이터를 가져와서 특정 항목만 수정
+      const existingData = allAIInfos.find(item => item.date === date)
+      if (!existingData) throw new Error('해당 날짜의 데이터를 찾을 수 없습니다.')
+      
+      const updatedInfos = [...existingData.infos]
+      updatedInfos[itemIndex] = data
+      
+      // 전체 데이터를 다시 저장
+      return aiInfoAPI.add({ date, infos: updatedInfos })
+    },
+    onSuccess: () => {
+      refetchAIInfo()
+      refetchDates()
+      refetchAllAIInfo()
+      setEditingAIInfo(null)
+      setEditingData({ title: '', content: '', category: '', terms: [] })
+      setSuccess('항목이 수정되었습니다!')
+    },
+    onError: () => {
+      setError('항목 수정에 실패했습니다. 다시 시도해주세요.')
     }
   })
 
@@ -399,6 +450,73 @@ export default function AdminAIInfoPage() {
       deleteItemMutation.mutate({ date, itemIndex })
     }
   }
+
+  // 전체 AI 정보 관리 핸들러
+  const handleEditAIInfo = (date: string, index: number, info: AIInfoItem) => {
+    setEditingAIInfo({ id: date, index })
+    setEditingData({
+      title: info.title,
+      content: info.content,
+      category: info.category || '',
+      terms: info.terms || []
+    })
+  }
+
+  const handleUpdateAIInfo = () => {
+    if (!editingAIInfo) return
+    
+    if (!editingData.title.trim() || !editingData.content.trim()) {
+      setError('제목과 내용을 모두 입력해주세요.')
+      return
+    }
+
+    updateItemMutation.mutate({
+      date: editingAIInfo.id,
+      itemIndex: editingAIInfo.index,
+      data: editingData
+    })
+  }
+
+  const handleCancelEdit = () => {
+    setEditingAIInfo(null)
+    setEditingData({ title: '', content: '', category: '', terms: [] })
+  }
+
+  const handleDeleteAIInfo = (date: string, index: number) => {
+    if (window.confirm('정말 이 항목을 삭제하시겠습니까?')) {
+      deleteItemMutation.mutate({ date, index })
+    }
+  }
+
+  // 필터링된 AI 정보 계산
+  const filteredAIInfos = allAIInfos
+    .map(dateGroup => ({
+      ...dateGroup,
+      infos: dateGroup.infos.filter(info => {
+        const matchesSearch = !searchTerm || 
+          info.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          info.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (info.terms && info.terms.some(term => 
+            term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            term.description.toLowerCase().includes(searchTerm.toLowerCase())
+          ))
+        
+        const matchesCategory = !selectedCategory || info.category === selectedCategory
+        
+        return matchesSearch && matchesCategory
+      })
+    }))
+    .filter(dateGroup => dateGroup.infos.length > 0)
+    .sort((a, b) => {
+      if (sortBy === 'date') {
+        return new Date(b.date).getTime() - new Date(a.date).getTime()
+      } else if (sortBy === 'title') {
+        return a.infos[0]?.title.localeCompare(b.infos[0]?.title || '')
+      } else if (sortBy === 'category') {
+        return (a.infos[0]?.category || '').localeCompare(b.infos[0]?.category || '')
+      }
+      return 0
+    })
 
   // 프롬프트 관리 핸들러
   const handlePromptSubmit = (e: React.FormEvent) => {
@@ -821,14 +939,20 @@ export default function AdminAIInfoPage() {
             <div className="grid gap-4">
               {dates.length === 0 && <div className="text-white/50 text-center">등록된 AI 정보가 없습니다.</div>}
               
-              {/* 목록 보기 버튼 */}
+              {/* 전체 AI 정보 보기 버튼 */}
               {dates.length > 0 && (
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center gap-4 mb-4">
                   <button
                     onClick={() => setShowAIInfoList(!showAIInfoList)}
                     className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
                   >
                     {showAIInfoList ? '목록 숨기기' : '목록 보기'} ({dates.length}개)
+                  </button>
+                  <button
+                    onClick={() => setShowAllAIInfo(!showAllAIInfo)}
+                    className="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+                  >
+                    {showAllAIInfo ? '전체 보기 숨기기' : '전체 AI 정보 보기'}
                   </button>
                 </div>
               )}
@@ -888,6 +1012,280 @@ export default function AdminAIInfoPage() {
                   )}
                 </div>
               ))}
+
+              {/* 전체 AI 정보 보기 */}
+              {showAllAIInfo && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                      <FaBrain className="text-green-400" />
+                      전체 AI 정보 관리
+                    </h3>
+                    
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          if (window.confirm('정말 모든 AI 정보를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                            // 모든 날짜의 AI 정보를 삭제
+                            const deletePromises = allAIInfos.map(dateGroup => 
+                              deleteMutation.mutateAsync(dateGroup.date)
+                            )
+                            Promise.all(deletePromises).then(() => {
+                              refetchAllAIInfo()
+                              setSuccess('모든 AI 정보가 삭제되었습니다!')
+                            }).catch(() => {
+                              setError('일괄 삭제 중 오류가 발생했습니다.')
+                            })
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 text-red-300 rounded-lg font-medium hover:bg-red-500/30 transition border border-red-500/30 flex items-center gap-2"
+                      >
+                        <FaTrash className="w-4 h-4" />
+                        전체 삭제
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* 검색 및 필터링 */}
+                  <div className="mb-6 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-white/80 font-medium mb-2">🔍 검색</label>
+                        <input
+                          type="text"
+                          placeholder="제목, 내용, 용어로 검색..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-white/80 font-medium mb-2">🏷️ 카테고리 필터</label>
+                        <select
+                          value={selectedCategory}
+                          onChange={(e) => setSelectedCategory(e.target.value)}
+                          className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                        >
+                          <option value="" className="text-black">모든 카테고리</option>
+                          <option value="챗봇/대화형 AI" className="text-black">챗봇/대화형 AI</option>
+                          <option value="이미지 생성 AI" className="text-black">이미지 생성 AI</option>
+                          <option value="코딩/개발 도구" className="text-black">코딩/개발 도구</option>
+                          <option value="음성/오디오 AI" className="text-black">음성/오디오 AI</option>
+                          <option value="데이터 분석/ML" className="text-black">데이터 분석/ML</option>
+                          <option value="AI 윤리/정책" className="text-black">AI 윤리/정책</option>
+                          <option value="AI 하드웨어/인프라" className="text-black">AI 하드웨어/인프라</option>
+                          <option value="AI 응용 서비스" className="text-black">AI 응용 서비스</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-white/80 font-medium mb-2">📊 정렬</label>
+                        <select
+                          value={sortBy}
+                          onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'category')}
+                          className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                        >
+                          <option value="date" className="text-black">날짜순</option>
+                          <option value="title" className="text-black">제목순</option>
+                          <option value="category" className="text-black">카테고리순</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-sm text-white/60">
+                      <span>총 {filteredAIInfos.reduce((total, group) => total + group.infos.length, 0)}개 항목</span>
+                      {(searchTerm || selectedCategory) && (
+                        <button
+                          onClick={() => {
+                            setSearchTerm('')
+                            setSelectedCategory('')
+                          }}
+                          className="px-3 py-1 bg-gray-500/20 text-gray-300 rounded hover:bg-gray-500/30 transition text-sm border border-gray-500/30"
+                        >
+                          필터 초기화
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {filteredAIInfos.length === 0 ? (
+                    <div className="text-white/50 text-center py-8">
+                      {allAIInfos.length === 0 ? '등록된 AI 정보가 없습니다.' : '검색 조건에 맞는 AI 정보가 없습니다.'}
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {filteredAIInfos.map((dateGroup) => (
+                        <div key={dateGroup.date} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                          <div className="text-blue-400 font-medium mb-3 text-lg border-b border-white/10 pb-2">
+                            📅 {dateGroup.date}
+                          </div>
+                          
+                          {dateGroup.infos.map((info, index) => (
+                            <div key={index} className="mb-4 last:mb-0 bg-white/5 rounded-lg p-4">
+                              {editingAIInfo && editingAIInfo.id === dateGroup.date && editingAIInfo.index === index ? (
+                                // 수정 모드
+                                <div className="space-y-4">
+                                  <div>
+                                    <label className="block text-white/80 font-medium mb-2">제목</label>
+                                    <input
+                                      type="text"
+                                      value={editingData.title}
+                                      onChange={(e) => setEditingData({...editingData, title: e.target.value})}
+                                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                    />
+                                  </div>
+                                  
+                                  <div>
+                                    <label className="block text-white/80 font-medium mb-2">카테고리</label>
+                                    <select
+                                      value={editingData.category}
+                                      onChange={(e) => setEditingData({...editingData, category: e.target.value})}
+                                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                    >
+                                      <option value="" className="text-black">카테고리를 선택하세요</option>
+                                      <option value="챗봇/대화형 AI" className="text-black">챗봇/대화형 AI</option>
+                                      <option value="이미지 생성 AI" className="text-black">이미지 생성 AI</option>
+                                      <option value="코딩/개발 도구" className="text-black">코딩/개발 도구</option>
+                                      <option value="음성/오디오 AI" className="text-black">음성/오디오 AI</option>
+                                      <option value="데이터 분석/ML" className="text-black">데이터 분석/ML</option>
+                                      <option value="AI 윤리/정책" className="text-black">AI 윤리/정책</option>
+                                      <option value="AI 하드웨어/인프라" className="text-black">AI 하드웨어/인프라</option>
+                                      <option value="AI 응용 서비스" className="text-black">AI 응용 서비스</option>
+                                    </select>
+                                  </div>
+                                  
+                                  <div>
+                                    <label className="block text-white/80 font-medium mb-2">내용</label>
+                                    <textarea
+                                      value={editingData.content}
+                                      onChange={(e) => setEditingData({...editingData, content: e.target.value})}
+                                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
+                                      rows={4}
+                                    />
+                                  </div>
+                                  
+                                  {/* 용어 수정 섹션 */}
+                                  <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                      <label className="block text-white/80 font-medium">관련 용어</label>
+                                      <button
+                                        type="button"
+                                        onClick={() => setEditingData({
+                                          ...editingData,
+                                          terms: [...editingData.terms, { term: '', description: '' }]
+                                        })}
+                                        className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
+                                      >
+                                        + 용어 추가
+                                      </button>
+                                    </div>
+                                    
+                                    {editingData.terms.map((term, termIdx) => (
+                                      <div key={termIdx} className="flex gap-2 items-start mb-2">
+                                        <div className="flex-1 flex gap-2">
+                                          <input
+                                            type="text"
+                                            placeholder="용어"
+                                            value={term.term}
+                                            onChange={(e) => {
+                                              const newTerms = [...editingData.terms]
+                                              newTerms[termIdx] = { ...term, term: e.target.value }
+                                              setEditingData({ ...editingData, terms: newTerms })
+                                            }}
+                                            className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
+                                          />
+                                          <input
+                                            type="text"
+                                            placeholder="용어 설명"
+                                            value={term.description}
+                                            onChange={(e) => {
+                                              const newTerms = [...editingData.terms]
+                                              newTerms[termIdx] = { ...term, description: e.target.value }
+                                              setEditingData({ ...editingData, terms: newTerms })
+                                            }}
+                                            className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
+                                          />
+                                        </div>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            const newTerms = editingData.terms.filter((_, i) => i !== termIdx)
+                                            setEditingData({ ...editingData, terms: newTerms })
+                                          }}
+                                          className="px-2 py-1 bg-red-500/20 text-red-300 rounded font-medium hover:bg-red-500/30 transition text-sm border border-red-500/30"
+                                        >
+                                          삭제
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={handleUpdateAIInfo}
+                                      disabled={updateItemMutation.isPending}
+                                      className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition flex items-center gap-2 disabled:opacity-50"
+                                    >
+                                      <FaSave className="w-4 h-4" />
+                                      {updateItemMutation.isPending ? '저장 중...' : '저장'}
+                                    </button>
+                                    <button
+                                      onClick={handleCancelEdit}
+                                      className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition"
+                                    >
+                                      취소
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                // 보기 모드
+                                <>
+                                  <div className="font-bold text-lg text-white mb-2">{info.title}</div>
+                                  {info.category && (
+                                    <div className="text-blue-400 text-sm mb-2">🏷️ {info.category}</div>
+                                  )}
+                                  <div className="text-white/70 text-sm whitespace-pre-line mb-3">{info.content}</div>
+                                  
+                                  {info.terms && info.terms.length > 0 && (
+                                    <div className="mb-3">
+                                      <div className="text-purple-300 text-sm font-medium mb-2">📚 관련 용어:</div>
+                                      <div className="space-y-1">
+                                        {info.terms.map((term, termIdx) => (
+                                          <div key={termIdx} className="text-xs text-white/60 bg-white/5 rounded px-2 py-1">
+                                            <span className="font-medium">{term.term}:</span> {term.description}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={() => handleEditAIInfo(dateGroup.date, index, info)}
+                                      className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition flex items-center gap-2"
+                                    >
+                                      <FaEdit className="w-4 h-4" />
+                                      수정
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteAIInfo(dateGroup.date, index)}
+                                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition flex items-center gap-2"
+                                    >
+                                      <FaTrash className="w-4 h-4" />
+                                      삭제
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </section>
 
