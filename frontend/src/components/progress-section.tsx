@@ -445,6 +445,13 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       const maxPossible = totalCount * 2 // 총 정보 수 * 2
                       const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
 
+                      // 디버깅용 로그
+                      console.log('Debug - totalCountData:', totalCountData)
+                      console.log('Debug - learnedCountData:', learnedCountData)
+                      console.log('Debug - totalCount:', totalCount)
+                      console.log('Debug - totalLearned:', totalLearned)
+                      console.log('Debug - maxPossible:', maxPossible)
+
                       return `${totalLearned}/${maxPossible} (${percentage}%)`
                     })()}
                   </span>
