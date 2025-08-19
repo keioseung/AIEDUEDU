@@ -424,6 +424,121 @@ def get_user_learned_ai_info_count(session_id: str, db: Session = Depends(get_db
         print(f"Error getting user learned AI info count: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get user learned AI info count: {str(e)}")
 
+@router.get("/terms-total-count", response_model=dict)
+def get_total_terms_count(db: Session = Depends(get_db)):
+    """AI 정보 전체목록의 총 용어 수를 반환합니다 (총 정보 개수 * 20)."""
+    try:
+        # AI 정보 전체목록 가져오기 (실제 카드 수 계산)
+        total_cards = 0
+        ai_infos = db.query(AIInfo).all()
+        
+        for ai_info in ai_infos:
+            # info1
+            if ai_info.info1_title and ai_info.info1_content:
+                total_cards += 1
+            
+            # info2
+            if ai_info.info2_title and ai_info.info2_content:
+                total_cards += 1
+            
+            # info3
+            if ai_info.info3_title and ai_info.info3_content:
+                total_cards += 1
+        
+        # 각 카드당 평균 20개의 용어가 있다고 가정
+        total_terms = total_cards * 20
+        
+        return {"total_terms": total_terms}
+    except Exception as e:
+        print(f"Error getting total terms count: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get total terms count: {str(e)}")
+
+@router.get("/terms-learned-count/{session_id}", response_model=dict)
+def get_user_learned_terms_count(session_id: str, db: Session = Depends(get_db)):
+    """사용자가 학습 완료한 용어의 총 개수를 반환합니다."""
+    try:
+        from ..models import UserProgress
+        
+        # AI 정보 전체목록 가져오기
+        all_ai_info = []
+        ai_infos = db.query(AIInfo).order_by(AIInfo.date.desc()).all()
+        
+        for ai_info in ai_infos:
+            # info1
+            if ai_info.info1_title and ai_info.info1_content:
+                try:
+                    terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                except json.JSONDecodeError:
+                    terms1 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_0",
+                    "date": ai_info.date,
+                    "title": ai_info.info1_title,
+                    "content": ai_info.info1_content,
+                    "terms": terms1,
+                    "info_index": 0
+                })
+            
+            # info2
+            if ai_info.info2_title and ai_info.info2_content:
+                try:
+                    terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                except json.JSONDecodeError:
+                    terms2 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_1",
+                    "date": ai_info.date,
+                    "title": ai_info.info2_title,
+                    "content": ai_info.info2_content,
+                    "terms": terms2,
+                    "info_index": 1
+                })
+            
+            # info3
+            if ai_info.info3_title and ai_info.info3_content:
+                try:
+                    terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                except json.JSONDecodeError:
+                    terms3 = []
+                all_ai_info.append({
+                    "id": f"{ai_info.date}_2",
+                    "date": ai_info.date,
+                    "title": ai_info.info3_title,
+                    "content": ai_info.info3_content,
+                    "terms": terms3,
+                    "info_index": 2
+                })
+        
+        # 사용자의 학습 진행상황 가져오기
+        user_progress = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id,
+            UserProgress.date != '__stats__'
+        ).all()
+        
+        total_learned_terms = 0
+        
+        # 각 AI 정보 카드에 대해 사용자가 학습한 용어들 확인
+        for ai_info_item in all_ai_info:
+            date = ai_info_item["date"]
+            info_index = ai_info_item["info_index"]
+            terms = ai_info_item["terms"]
+            
+            # 해당 날짜의 사용자 진행상황 찾기
+            progress = next((p for p in user_progress if p.date == date), None)
+            if progress and progress.learned_info:
+                try:
+                    learned_indices = json.loads(progress.learned_info)
+                    if info_index in learned_indices:
+                        # 해당 카드를 학습했다면 모든 용어를 학습한 것으로 간주
+                        total_learned_terms += len(terms)
+                except json.JSONDecodeError:
+                    continue
+        
+        return {"learned_terms": total_learned_terms}
+    except Exception as e:
+        print(f"Error getting user learned terms count: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get user learned terms count: {str(e)}")
+
 @router.get("/terms-quiz/{session_id}")
 def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
     """사용자가 학습한 날짜의 모든 용어로 퀴즈를 생성합니다."""

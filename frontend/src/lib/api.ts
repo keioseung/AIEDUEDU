@@ -279,6 +279,10 @@ export const aiInfoAPI = {
   getTermsQuizByDate: (date: string) => api.get(`/api/ai-info/terms-quiz-by-date/${date}`),
   getLearnedTerms: (sessionId: string) => api.get(`/api/ai-info/learned-terms/${sessionId}`),
   
+  // 용어 통계 관련 API
+  getTotalTermsCount: () => api.get('/api/ai-info/terms-total-count'),
+  getLearnedTermsCount: (sessionId: string) => api.get(`/api/ai-info/terms-learned-count/${sessionId}`),
+  
   // 카테고리 관련 API
   getAllCategories: () => api.get('/api/ai-info/categories/all'),
   getSubcategories: (category: string) => api.get(`/api/ai-info/categories/${category}/subcategories`),
