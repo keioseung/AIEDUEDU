@@ -128,7 +128,7 @@ export default function AdminAIInfoPage() {
           if (datesRes.data && datesRes.data.length > 0) {
             console.log('getAllDates 성공, 각 날짜별로 데이터 수집...')
             const allData = []
-            for (const dateItem of datesRes.data.slice(0, 3)) { // 처음 3개만 테스트
+            for (const dateItem of datesRes.data) { // 모든 날짜 데이터 수집
               try {
                 const dateData = await aiInfoAPI.getByDate(dateItem)
                 if (dateData.data && dateData.data.length > 0) {
@@ -1269,25 +1269,11 @@ export default function AdminAIInfoPage() {
                                   </div>
                                 </div>
                               ) : (
-                                // 보기 모드
+                                // 보기 모드 - 제목만 간단하게 표시
                                 <>
                                   <div className="font-bold text-lg text-white mb-2">{info.title}</div>
                                   {info.category && (
                                     <div className="text-blue-400 text-sm mb-2">🏷️ {info.category}</div>
-                                  )}
-                                  <div className="text-white/70 text-sm whitespace-pre-line mb-3">{info.content}</div>
-                                  
-                                  {info.terms && info.terms.length > 0 && (
-                                    <div className="mb-3">
-                                      <div className="text-purple-300 text-sm font-medium mb-2">📚 관련 용어:</div>
-                                      <div className="space-y-1">
-                                        {info.terms.map((term, termIdx) => (
-                                          <div key={termIdx} className="text-xs text-white/60 bg-white/5 rounded px-2 py-1">
-                                            <span className="font-medium">{term.term}:</span> {term.description}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
                                   )}
                                   
                                   <div className="flex gap-2">
@@ -1304,6 +1290,12 @@ export default function AdminAIInfoPage() {
                                     >
                                       <FaTrash className="w-4 h-4" />
                                       삭제
+                                    </button>
+                                    <button
+                                      onClick={() => handleEditAIInfo(dateGroup.date, index, info)}
+                                      className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition flex items-center gap-2"
+                                    >
+                                      🏷️ 카테고리 변경
                                     </button>
                                   </div>
                                 </>
