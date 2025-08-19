@@ -70,16 +70,16 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     },
   })
 
-  // AI 정보의 총 개수 가져오기
-  const { data: totalCountData } = useQuery({
-    queryKey: ['ai-info-total-count'],
+  // AI 정보 전체목록을 가져와서 총 개수 계산
+  const { data: allAIInfoData } = useQuery({
+    queryKey: ['ai-info-all'],
     queryFn: async () => {
       try {
-        const response = await aiInfoAPI.getTotalCount()
+        const response = await aiInfoAPI.getAll()
         return response.data
       } catch (error) {
-        console.log('총 AI 정보 개수 가져오기 실패:', error)
-        return { total_count: 0 }
+        console.log('AI 정보 전체목록 가져오기 실패:', error)
+        return []
       }
     },
     refetchInterval: 5000,
@@ -439,14 +439,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">누적 총 학습 수</span>
                                   <span className="text-white font-semibold text-sm">
                     {(() => {
-                      // 총 AI 정보 개수를 사용하여 계산
-                      const totalCount = totalCountData?.total_count || 0
+                      // AI 정보 전체목록의 총 개수를 사용하여 계산
+                      const totalCount = allAIInfoData?.length || 0
                       const totalLearned = learnedCountData?.learned_count || 0
-                      const maxPossible = totalCount * 2 // 총 정보 수 * 2
+                      const maxPossible = totalCount // 전체목록의 총 정보 수
                       const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
 
                       // 디버깅용 로그
-                      console.log('Debug - totalCountData:', totalCountData)
+                      console.log('Debug - allAIInfoData:', allAIInfoData)
                       console.log('Debug - learnedCountData:', learnedCountData)
                       console.log('Debug - totalCount:', totalCount)
                       console.log('Debug - totalLearned:', totalLearned)
@@ -534,21 +534,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">누적 총 용어 수</span>
-                <span className="text-white font-semibold text-sm">
-                  {(() => {
-                    // totalDaysData가 없으면 백엔드에서 직접 계산
-                    let totalDays = totalDaysData?.total_days || 0
-                    if (totalDays === 0) {
-                      // 하드코딩된 값 사용 (7월 21일부터 8월 3일까지 = 14일)
-                      totalDays = 14
-                    }
-                    const totalTermsLearned = stats?.total_terms_learned || 0
-                    const maxPossible = totalDays * 40 // 일 수 * 40
-                    const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
+                                 <span className="text-white font-semibold text-sm">
+                   {(() => {
+                     // AI 정보 전체목록의 총 개수 * 20 (각 카드당 평균 20개 용어)
+                     const totalCount = allAIInfoData?.length || 0
+                     const totalTermsLearned = stats?.total_terms_learned || 0
+                     const maxPossible = totalCount * 20 // 총 정보 수 * 20
+                     const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
 
-                    return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
-                  })()}
-                </span>
+                     return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
+                   })()}
+                 </span>
               </div>
             </div>
           </motion.div>
