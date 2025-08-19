@@ -543,37 +543,32 @@ export default function AdminAIInfoPage() {
     try {
       console.log('카테고리 변경 시작:', { date, index, oldCategory, newCategory })
       
-      // 현재 날짜의 AI 정보를 다시 가져오기
-      const currentDateData = await aiInfoAPI.getByDate(date)
-      if (!currentDateData.data || !currentDateData.data[index]) {
+      // allAIInfos에서 직접 해당 데이터 찾기
+      const existingDateGroup = allAIInfos.find(item => item.date === date)
+      if (!existingDateGroup || !existingDateGroup.infos[index]) {
         setError('해당 항목을 찾을 수 없습니다.')
         return
       }
       
-      const currentInfos = [...currentDateData.data]
-      console.log('현재 데이터:', currentInfos)
-      console.log('수정할 항목:', currentInfos[index])
+      console.log('기존 데이터 그룹:', existingDateGroup)
+      console.log('수정할 항목:', existingDateGroup.infos[index])
       
       // 해당 항목의 카테고리만 변경
-      currentInfos[index] = { ...currentInfos[index], category: newCategory }
-      console.log('수정된 데이터:', currentInfos)
+      const updatedInfos = [...existingDateGroup.infos]
+      updatedInfos[index] = { ...updatedInfos[index], category: newCategory }
+      console.log('수정된 데이터:', updatedInfos)
       
       // 수정된 데이터 저장
-      const saveResult = await aiInfoAPI.add({ date, infos: currentInfos })
+      const saveResult = await aiInfoAPI.add({ date, infos: updatedInfos })
       console.log('저장 결과:', saveResult)
       
-      // 잠시 대기 후 데이터 새로고침
-      setTimeout(async () => {
-        try {
-          // 데이터 새로고침
-          await refetchAIInfo()
-          await refetchDates()
-          await refetchAllAIInfo()
-          console.log('데이터 새로고침 완료')
-        } catch (refreshError) {
-          console.error('데이터 새로고침 오류:', refreshError)
-        }
-      }, 1000)
+      // 즉시 데이터 새로고침
+      try {
+        await refetchAllAIInfo()
+        console.log('데이터 새로고침 완료')
+      } catch (refreshError) {
+        console.error('데이터 새로고침 오류:', refreshError)
+      }
       
       setSuccess(`카테고리가 "${oldCategory || '미분류'}"에서 "${newCategory}"로 변경되었습니다!`)
     } catch (error) {
