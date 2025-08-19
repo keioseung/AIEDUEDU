@@ -311,9 +311,9 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   if (isLoadingCategories || isLoadingStats) {
     return (
       <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
-        <div className="flex flex-col items-center justify-center text-white">
+        <div className="flex flex-col items-center justify-center text-white -mt-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-          <p className="text-white/80 text-lg font-medium text-center">잠시만 기다려 주세요.</p>
+          <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려 주세요.</p>
         </div>
       </div>
     )
