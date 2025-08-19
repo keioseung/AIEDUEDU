@@ -564,13 +564,23 @@ export default function AdminAIInfoPage() {
       console.log('수정된 데이터:', currentInfos)
       
       // 수정된 데이터 저장
-      await aiInfoAPI.add({ date, infos: currentInfos })
+      const saveResult = await aiInfoAPI.add({ date, infos: currentInfos })
+      console.log('저장 결과:', saveResult)
       
-      // 데이터 새로고침
-      refetchAIInfo()
-      refetchDates()
-      refetchAllAIInfo()
-      setSuccess('카테고리가 변경되었습니다!')
+      // 잠시 대기 후 데이터 새로고침
+      setTimeout(async () => {
+        try {
+          // 데이터 새로고침
+          await refetchAIInfo()
+          await refetchDates()
+          await refetchAllAIInfo()
+          console.log('데이터 새로고침 완료')
+        } catch (refreshError) {
+          console.error('데이터 새로고침 오류:', refreshError)
+        }
+      }, 1000)
+      
+      setSuccess(`카테고리가 "${oldCategory || '미분류'}"에서 "${newCategory}"로 변경되었습니다!`)
     } catch (error) {
       console.error('카테고리 변경 오류:', error)
       setError('카테고리 변경에 실패했습니다.')
