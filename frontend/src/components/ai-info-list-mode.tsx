@@ -563,10 +563,10 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       </div>
 
              {/* AI 정보 목록 */}
-       <div className="space-y-4 w-full">
+       <div className="grid gap-4 w-full">
          {currentItems.map((info, index) => (
-           <div key={info.id} className="w-full max-w-none bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 backdrop-blur-xl rounded-xl p-4 border-2 border-purple-600/50 shadow-lg shadow-purple-900/40">
-                         <AIInfoCard
+           <div key={info.id} className="relative">
+             <AIInfoCard
                info={{
                  title: info.title,
                  content: info.content,
@@ -581,9 +581,9 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
                searchQuery={searchQuery}
              />
-          </div>
-        ))}
-      </div>
+           </div>
+         ))}
+       </div>
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
@@ -594,8 +594,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             disabled={currentPage === 1}
             className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
               currentPage === 1
-                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-slate-800/20 via-purple-700/30 to-slate-800/20'
-                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-slate-800/40 hover:via-purple-700/50 hover:to-slate-800/40 active:from-slate-800/60 active:via-purple-700/70 active:to-slate-800/60 backdrop-blur-xl'
+                ? 'text-white/30 cursor-not-allowed'
+                : 'text-white/70 hover:text-white'
             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
@@ -639,8 +639,8 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
             disabled={currentPage === totalPages}
             className={`p-2 rounded-lg transition-all min-h-[40px] min-w-[40px] touch-manipulation webview-button ${
               currentPage === totalPages
-                ? 'text-white/30 cursor-not-allowed bg-gradient-to-br from-slate-800/20 via-purple-700/30 to-slate-800/20'
-                : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-slate-800/40 hover:via-purple-700/50 hover:to-slate-800/40 active:from-slate-800/60 active:via-purple-700/70 active:to-slate-800/60 backdrop-blur-xl'
+                ? 'text-white/30 cursor-not-allowed'
+                : 'text-white/70 hover:text-white'
             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
