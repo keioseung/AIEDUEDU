@@ -329,13 +329,13 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         {/* 카테고리 사이드바 */}
         <div className="lg:col-span-1">
-          <div className="bg-gradient-to-br from-purple-900/80 via-purple-800/90 to-purple-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 shadow-2xl shadow-purple-900/40 p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <div className="bg-gradient-to-br from-purple-900/80 via-purple-800/90 to-purple-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 shadow-2xl shadow-purple-900/40 p-4">
+            <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <FaFilter className="text-purple-300" />
               카테고리 목록
             </h3>
             
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {categories.map((category) => {
                 const stats = categoryStats[category] || { count: 0, dates: [] }
                 const isExpanded = expandedCategories.has(category)
