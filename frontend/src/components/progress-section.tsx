@@ -308,10 +308,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   // 날짜 포맷 함수 (컴팩트 형식)
   const formatCompactDate = (dateString: string) => {
     const date = new Date(dateString);
-    const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    return `${year}년${month < 10 ? '0' : ''}${month}월${day < 10 ? '0' : ''}${day}일`;
+    return `${month < 10 ? '0' : ''}${month}월${day < 10 ? '0' : ''}${day}일`;
   };
 
   return (
