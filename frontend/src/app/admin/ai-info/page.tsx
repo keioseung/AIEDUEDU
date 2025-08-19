@@ -546,16 +546,25 @@ export default function AdminAIInfoPage() {
     }
     
     try {
-      const existingData = allAIInfos.find(item => item.date === date)
-      if (!existingData) {
-        setError('해당 날짜의 데이터를 찾을 수 없습니다.')
+      console.log('카테고리 변경 시작:', { date, index, oldCategory, newCategory })
+      
+      // 현재 날짜의 AI 정보를 다시 가져오기
+      const currentDateData = await aiInfoAPI.getByDate(date)
+      if (!currentDateData.data || !currentDateData.data[index]) {
+        setError('해당 항목을 찾을 수 없습니다.')
         return
       }
       
-      const updatedInfos = [...existingData.infos]
-      updatedInfos[index] = { ...updatedInfos[index], category: newCategory }
+      const currentInfos = [...currentDateData.data]
+      console.log('현재 데이터:', currentInfos)
+      console.log('수정할 항목:', currentInfos[index])
       
-      await aiInfoAPI.add({ date, infos: updatedInfos })
+      // 해당 항목의 카테고리만 변경
+      currentInfos[index] = { ...currentInfos[index], category: newCategory }
+      console.log('수정된 데이터:', currentInfos)
+      
+      // 수정된 데이터 저장
+      await aiInfoAPI.add({ date, infos: currentInfos })
       
       // 데이터 새로고침
       refetchAIInfo()
@@ -563,6 +572,7 @@ export default function AdminAIInfoPage() {
       refetchAllAIInfo()
       setSuccess('카테고리가 변경되었습니다!')
     } catch (error) {
+      console.error('카테고리 변경 오류:', error)
       setError('카테고리 변경에 실패했습니다.')
     }
   }
