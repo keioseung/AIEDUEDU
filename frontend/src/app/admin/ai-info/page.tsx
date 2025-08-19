@@ -537,7 +537,7 @@ export default function AdminAIInfoPage() {
   const filteredAIInfos = allAIInfos
     .map(dateGroup => ({
       ...dateGroup,
-      infos: dateGroup.infos.filter(info => {
+      infos: dateGroup.infos.filter((info: AIInfoItem) => {
         const matchesSearch = !searchTerm || 
           info.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           info.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
