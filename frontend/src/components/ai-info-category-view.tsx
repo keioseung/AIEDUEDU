@@ -509,9 +509,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
             </div>
           ) : (
             <div className="text-center py-16">
-              <FaRobot className="text-6xl text-white/30 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white/70 mb-2">카테고리를 선택하세요</h3>
-              <p className="text-white/50">왼쪽에서 원하는 AI 정보 카테고리를 선택하면 해당 정보를 볼 수 있습니다.</p>
+              {/* 안내 문구와 로봇 아이콘 삭제 */}
             </div>
           )}
         </div>
