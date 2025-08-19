@@ -523,57 +523,57 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         // 학습 추이 그래프 모드
         <div className="space-y-4 px-0">
           {/* 기간 선택 및 표시 */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
-                <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50 relative z-20">
-                  <button
-                    type="button"
-                    onClick={() => handlePeriodChange('week')}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                      periodType === 'week'
-                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                    }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    주간
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePeriodChange('month')}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                      periodType === 'month'
-                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                    }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    월간
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePeriodChange('custom')}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
-                      periodType === 'custom'
-                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                        : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
-                    }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    사용자 정의
-                  </button>
-                </div>
+          <div className="flex flex-col gap-3">
+            {/* 기간 선택 */}
+            <div className="flex justify-center">
+              <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50 relative z-20">
+                <button
+                  type="button"
+                  onClick={() => handlePeriodChange('week')}
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                    periodType === 'week'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                  }`}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  주간
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePeriodChange('month')}
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                    periodType === 'month'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                  }`}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  월간
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePeriodChange('custom')}
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                    periodType === 'custom'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
+                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                  }`}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  사용자 정의
+                </button>
               </div>
             </div>
             
             {/* 현재 기간 표시 */}
-            <div className="text-white/80 text-sm font-medium bg-gradient-to-r from-purple-900/40 via-purple-800/50 to-purple-900/40 px-3 py-2 rounded-lg border border-purple-500/30 backdrop-blur-xl">
-              <span className="text-purple-200">📅</span> {periodStats?.start_date} ~ {periodStats?.end_date}
+            <div className="flex justify-center">
+              <div className="text-white/80 text-sm font-medium bg-gradient-to-r from-purple-900/40 via-purple-800/50 to-purple-900/40 px-4 py-2 rounded-lg border border-purple-500/30 backdrop-blur-xl">
+                <span className="text-purple-200">📅</span> {periodStats?.start_date} ~ {periodStats?.end_date}
+              </div>
             </div>
           </div>
-          
+
           {/* 사용자 정의 기간 설정 */}
           {periodType === 'custom' && (
             <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50">
@@ -856,3 +856,4 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 }
 
 export default ProgressSection 
+
