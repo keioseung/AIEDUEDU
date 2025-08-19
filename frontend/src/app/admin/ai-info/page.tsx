@@ -99,6 +99,8 @@ export default function AdminAIInfoPage() {
     queryFn: async () => {
       if (!date) return []
       const res = await aiInfoAPI.getByDate(date)
+      console.log('getByDate Response for', date, ':', res)
+      console.log('getByDate Data for', date, ':', res.data)
       return res.data as AIInfoItem[]
     },
     enabled: !!date,
@@ -117,6 +119,37 @@ export default function AdminAIInfoPage() {
       if (Array.isArray(res.data)) {
         console.log('First Item:', res.data[0])
       }
+      
+      // getAll이 실패하면 getAllDates로 각 날짜별로 데이터를 수집
+      if (!res.data || res.data.length === 0) {
+        console.log('getAll 실패, getAllDates로 대체 시도...')
+        try {
+          const datesRes = await aiInfoAPI.getAllDates()
+          if (datesRes.data && datesRes.data.length > 0) {
+            console.log('getAllDates 성공, 각 날짜별로 데이터 수집...')
+            const allData = []
+            for (const dateItem of datesRes.data.slice(0, 3)) { // 처음 3개만 테스트
+              try {
+                const dateData = await aiInfoAPI.getByDate(dateItem)
+                if (dateData.data && dateData.data.length > 0) {
+                  allData.push({
+                    date: dateItem,
+                    infos: dateData.data
+                  })
+                  console.log(`날짜 ${dateItem} 데이터:`, dateData.data)
+                }
+              } catch (error) {
+                console.log(`날짜 ${dateItem} 데이터 가져오기 실패:`, error)
+              }
+            }
+            console.log('수집된 전체 데이터:', allData)
+            return allData
+          }
+        } catch (error) {
+          console.log('getAllDates로 대체 시도 실패:', error)
+        }
+      }
+      
       return res.data as Array<{date: string, infos: AIInfoItem[]}>
     },
     enabled: true, // 항상 활성화
