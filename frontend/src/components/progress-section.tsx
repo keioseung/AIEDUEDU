@@ -523,17 +523,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         // 학습 추이 그래프 모드
         <div className="space-y-4 px-0">
           {/* 기간 선택 및 표시 */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {/* 기간 선택 */}
             <div className="flex justify-center">
-              <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-xl p-1.5 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50 relative z-20">
+              <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-lg p-1 border border-purple-600/50 shadow-lg shadow-purple-900/50">
                 <button
                   type="button"
                   onClick={() => handlePeriodChange('week')}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
                     periodType === 'week'
-                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
+                      : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
                   }`}
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
@@ -542,10 +542,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <button
                   type="button"
                   onClick={() => handlePeriodChange('month')}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
                     periodType === 'month'
-                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
+                      : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
                   }`}
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
@@ -554,10 +554,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <button
                   type="button"
                   onClick={() => handlePeriodChange('custom')}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 cursor-pointer touch-manipulation min-w-[60px] min-h-[36px] relative z-30 ${
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
                     periodType === 'custom'
-                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg transform scale-105 border border-purple-400/50'
-                      : 'text-white/70 hover:text-white hover:bg-gradient-to-br hover:from-purple-800/40 hover:via-purple-700/50 hover:to-purple-800/40 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
+                      : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
                   }`}
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
@@ -568,8 +568,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             
             {/* 현재 기간 표시 */}
             <div className="flex justify-center">
-              <div className="text-white/80 text-sm font-medium bg-gradient-to-r from-purple-900/40 via-purple-800/50 to-purple-900/40 px-4 py-2 rounded-lg border border-purple-500/30 backdrop-blur-xl">
-                <span className="text-purple-200">📅</span> {periodStats?.start_date} ~ {periodStats?.end_date}
+              <div className="text-white/80 text-xs font-medium bg-gradient-to-r from-purple-900/30 via-purple-800/40 to-purple-900/30 px-3 py-1.5 rounded-md border border-purple-500/20 backdrop-blur-xl">
+                <span className="text-purple-200 mr-1">📅</span> {periodStats?.start_date} ~ {periodStats?.end_date}
               </div>
             </div>
           </div>
