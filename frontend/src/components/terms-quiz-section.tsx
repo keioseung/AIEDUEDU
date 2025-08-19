@@ -376,7 +376,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        
                        {/* AI 정보 로딩 중 표시 */}
                        {isLoadingAIInfo && (
-                         <div className="flex items-center gap-2 text-white/70">
+                         <div className="flex items-center justify-center gap-2 text-white/70">
                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                            <div className="text-white/80 text-sm font-medium">잠시만 기다려 주세요.</div>
                          </div>
@@ -476,9 +476,9 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       {/* 로딩 상태 */}
       {isLoading ? (
         <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
-          <div className="text-center text-white">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
+          <div className="flex flex-col items-center justify-center text-white">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+            <p className="text-white/80 text-lg font-medium text-center">잠시만 기다려 주세요.</p>
           </div>
         </div>
       ) : (
