@@ -310,28 +310,30 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       
 
       {/* 모드 선택 */}
-      <div className="flex items-center justify-center mb-6">
-        <div className="bg-white/10 backdrop-blur-xl rounded-xl p-1 border border-white/20">
-          <button
-            onClick={() => setViewMode('cards')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              viewMode === 'cards'
-                ? 'bg-white/20 text-white shadow-sm'
-                : 'text-white/70 hover:text-white/90'
-            }`}
-          >
-            📊 학습 추이 카드
-          </button>
-          <button
-            onClick={() => setViewMode('graph')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              viewMode === 'graph'
-                ? 'bg-white/20 text-white shadow-sm'
-                : 'text-white/70 hover:text-white/90'
-            }`}
-          >
-            📈 학습 추이 그래프
-          </button>
+      <div className="flex justify-center mb-6">
+        <div className="glass backdrop-blur-xl rounded-2xl p-1.5 shadow-xl border border-white/10">
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => setViewMode('cards')}
+              className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                viewMode === 'cards'
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
+              }`}
+            >
+              📊 학습 추이 카드
+            </button>
+            <button
+              onClick={() => setViewMode('graph')}
+              className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                viewMode === 'graph'
+                  ? 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg transform scale-105'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
+              }`}
+            >
+              📈 학습 추이 그래프
+            </button>
+          </div>
         </div>
       </div>
 
