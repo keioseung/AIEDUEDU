@@ -305,6 +305,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const maxTerms = totalTerms;
   const maxQuiz = 100;
 
+  // 날짜 포맷 함수 (컴팩트 형식)
+  const formatCompactDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}년${month < 10 ? '0' : ''}${month}월${day < 10 ? '0' : ''}${day}일`;
+  };
+
   return (
     <div className="space-y-8 relative">
       
@@ -523,50 +532,54 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         // 학습 추이 그래프 모드
         <div className="space-y-4 px-0">
           {/* 기간 선택 및 표시 */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2">
             {/* 기간 선택 */}
-            <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-lg p-1 border border-purple-600/50 shadow-lg shadow-purple-900/50">
-              <button
-                type="button"
-                onClick={() => handlePeriodChange('week')}
-                className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
-                  periodType === 'week'
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
-                    : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
-                }`}
-                style={{ WebkitTapHighlightColor: 'transparent' }}
-              >
-                주간
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePeriodChange('month')}
-                className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
-                  periodType === 'month'
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
-                    : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
-                }`}
-                style={{ WebkitTapHighlightColor: 'transparent' }}
-              >
-                월간
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePeriodChange('custom')}
-                className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
-                  periodType === 'custom'
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
-                    : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
-                }`}
-                style={{ WebkitTapHighlightColor: 'transparent' }}
-              >
-                사용자 정의
-              </button>
+            <div className="flex justify-center">
+              <div className="flex bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 backdrop-blur-2xl rounded-lg p-1 border border-purple-600/50 shadow-lg shadow-purple-900/50">
+                <button
+                  type="button"
+                  onClick={() => handlePeriodChange('week')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
+                    periodType === 'week'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
+                      : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
+                  }`}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  주간
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePeriodChange('month')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
+                    periodType === 'month'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
+                      : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
+                  }`}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  월간
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePeriodChange('custom')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer touch-manipulation min-w-[50px] ${
+                    periodType === 'custom'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md transform scale-105'
+                      : 'text-white/70 hover:text-white hover:bg-purple-800/40 active:bg-purple-700/60'
+                  }`}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  사용자정의
+                </button>
+              </div>
             </div>
             
             {/* 현재 기간 표시 */}
-            <div className="text-white/80 text-xs font-medium bg-gradient-to-r from-purple-900/30 via-purple-800/40 to-purple-900/30 px-3 py-1.5 rounded-md border border-purple-500/20 backdrop-blur-xl">
-              <span className="text-purple-200 mr-1">📅</span> {periodStats?.start_date} ~ {periodStats?.end_date}
+            <div className="flex justify-center">
+              <div className="text-white/80 text-xs font-medium bg-gradient-to-r from-purple-900/30 via-purple-800/40 to-purple-900/30 px-3 py-1.5 rounded-md border border-purple-500/20 backdrop-blur-xl">
+                <span className="text-purple-200 mr-1">📅</span> {formatCompactDate(periodStats?.start_date)} ~ {formatCompactDate(periodStats?.end_date)}
+              </div>
             </div>
           </div>
 
