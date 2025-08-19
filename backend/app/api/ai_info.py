@@ -316,18 +316,24 @@ def get_total_ai_info_days(db: Session = Depends(get_db)):
 
 @router.get("/total-count", response_model=dict)
 def get_total_ai_info_count(db: Session = Depends(get_db)):
-    """등록된 AI 정보 날짜 수를 반환합니다 (각 날짜당 최대 2개의 카드)."""
+    """AI 정보 전체목록의 총 카드 수를 반환합니다."""
     try:
-        # 등록된 날짜 수를 세기 (info1_title과 info1_content가 있는 레코드만)
-        total_dates = db.query(AIInfo).filter(
-            AIInfo.info1_title != None,
-            AIInfo.info1_title != "",
-            AIInfo.info1_content != None,
-            AIInfo.info1_content != ""
-        ).count()
+        # AI 정보 전체목록 가져오기 (실제 카드 수 계산)
+        total_cards = 0
+        ai_infos = db.query(AIInfo).all()
         
-        # 각 날짜당 최대 2개의 카드이므로 * 2
-        total_cards = total_dates * 2
+        for ai_info in ai_infos:
+            # info1
+            if ai_info.info1_title and ai_info.info1_content:
+                total_cards += 1
+            
+            # info2
+            if ai_info.info2_title and ai_info.info2_content:
+                total_cards += 1
+            
+            # info3
+            if ai_info.info3_title and ai_info.info3_content:
+                total_cards += 1
         
         return {"total_count": total_cards}
     except Exception as e:
