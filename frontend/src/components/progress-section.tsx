@@ -439,18 +439,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">누적 총 학습 수</span>
                                   <span className="text-white font-semibold text-sm">
                     {(() => {
-                      // AI 정보 전체목록의 총 개수를 사용하여 계산
-                      const totalCount = allAIInfoData?.length || 0
+                      // AI 정보 전체목록의 총 개수 (AI 정보 탭에서 "총 60개 정보"로 표시되는 값과 동일)
+                      const totalInfoCount = allAIInfoData?.length || 0
                       const totalLearned = learnedCountData?.learned_count || 0
-                      const maxPossible = totalCount // 전체목록의 총 정보 수
+                      const maxPossible = totalInfoCount
                       const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
-
-                      // 디버깅용 로그
-                      console.log('Debug - allAIInfoData:', allAIInfoData)
-                      console.log('Debug - learnedCountData:', learnedCountData)
-                      console.log('Debug - totalCount:', totalCount)
-                      console.log('Debug - totalLearned:', totalLearned)
-                      console.log('Debug - maxPossible:', maxPossible)
 
                       return `${totalLearned}/${maxPossible} (${percentage}%)`
                     })()}
@@ -535,15 +528,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">누적 총 용어 수</span>
                                  <span className="text-white font-semibold text-sm">
-                   {(() => {
-                     // AI 정보 전체목록의 총 개수 * 20 (각 카드당 평균 20개 용어)
-                     const totalCount = allAIInfoData?.length || 0
-                     const totalTermsLearned = stats?.total_terms_learned || 0
-                     const maxPossible = totalCount * 20 // 총 정보 수 * 20
-                     const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
+                                       {(() => {
+                      // AI 정보 전체목록의 총 개수 * 20 (AI 정보 탭에서 "총 60개 정보" × 20)
+                      const totalInfoCount = allAIInfoData?.length || 0
+                      const totalTermsLearned = stats?.total_terms_learned || 0
+                      const maxPossible = totalInfoCount * 20 // 총 정보 수 × 20
+                      const percentage = maxPossible > 0 ? Math.round((totalTermsLearned / maxPossible) * 100) : 0
 
-                     return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
-                   })()}
+                      return `${totalTermsLearned}/${maxPossible} (${percentage}%)`
+                    })()}
                  </span>
               </div>
             </div>
