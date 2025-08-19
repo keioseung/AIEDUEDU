@@ -70,6 +70,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     },
   })
 
+  // AI 정보의 총 개수 가져오기
+  const { data: totalCountData } = useQuery({
+    queryKey: ['ai-info-total-count'],
+    queryFn: async () => {
+      try {
+        const response = await aiInfoAPI.getTotalCount()
+        return response.data
+      } catch (error) {
+        console.log('총 AI 정보 개수 가져오기 실패:', error)
+        return { total_count: 0 }
+      }
+    },
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
   // 기간별 데이터 계산
   const getPeriodDates = () => {
     const today = new Date()
@@ -407,14 +423,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">누적 총 학습 수</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // totalDaysData가 없으면 백엔드에서 직접 계산
-                    let totalDays = totalDaysData?.total_days || 0
-                    if (totalDays === 0) {
-                      // 하드코딩된 값 사용 (7월 21일부터 8월 3일까지 = 14일)
-                      totalDays = 14
-                    }
+                    // 총 AI 정보 개수를 사용하여 계산
+                    const totalCount = totalCountData?.total_count || 0
                     const totalLearned = stats?.total_ai_info_available || stats?.total_learned || 0
-                    const maxPossible = totalDays * 2 // 일 수 * 2
+                    const maxPossible = totalCount * 2 // 총 정보 수 * 2
                     const percentage = maxPossible > 0 ? Math.round((totalLearned / maxPossible) * 100) : 0
 
                     return `${totalLearned}/${maxPossible} (${percentage}%)`

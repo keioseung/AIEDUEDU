@@ -314,6 +314,27 @@ def get_total_ai_info_days(db: Session = Depends(get_db)):
     total_days = db.query(AIInfo).count()
     return {"total_days": total_days}
 
+@router.get("/total-count")
+def get_total_ai_info_count(db: Session = Depends(get_db)):
+    """AI 정보의 총 개수를 반환합니다 (info1, info2, info3 중 내용이 있는 것만)."""
+    try:
+        all_ai_info = db.query(AIInfo).all()
+        total_count = 0
+        
+        for ai_info in all_ai_info:
+            # info1, info2, info3 중 내용이 있는 것만 카운트
+            if ai_info.info1_title and ai_info.info1_content:
+                total_count += 1
+            if ai_info.info2_title and ai_info.info2_content:
+                total_count += 1
+            if ai_info.info3_title and ai_info.info3_content:
+                total_count += 1
+        
+        return {"total_count": total_count}
+    except Exception as e:
+        print(f"Error getting total AI info count: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get total AI info count: {str(e)}")
+
 @router.get("/terms-quiz/{session_id}")
 def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
     """사용자가 학습한 날짜의 모든 용어로 퀴즈를 생성합니다."""
