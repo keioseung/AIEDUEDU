@@ -320,13 +320,13 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* 헤더 */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         {/* 기존 헤더 내용 제거 - 검색 및 필터는 카테고리 목록 밑으로 이동 */}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         {/* 카테고리 사이드바 */}
         <div className="lg:col-span-1">
           <div className="bg-gradient-to-br from-purple-900/80 via-purple-800/90 to-purple-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 shadow-2xl shadow-purple-900/40 p-6">

@@ -520,15 +520,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       ) : (
         // 학습 추이 그래프 모드
         <div className="space-y-4 px-0">
+          {/* 기간 선택 및 표시 */}
           <div className="flex items-center justify-between">
-            <h3 className="text-white font-semibold text-base ml-1">기간별 학습 추이</h3>
-            <div className="text-white/60 text-xs mr-2">
-              {periodStats?.start_date} ~ {periodStats?.end_date}
-            </div>
-          </div>
-          
-          {/* 기간 선택 */}
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between relative z-10">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-white/80 text-sm font-medium ml-1 md:ml-2">기간:</span>
@@ -571,6 +564,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   </button>
                 </div>
               </div>
+            </div>
+            
+            {/* 현재 기간 표시 */}
+            <div className="text-white/80 text-sm font-medium bg-gradient-to-r from-purple-900/40 via-purple-800/50 to-purple-900/40 px-3 py-2 rounded-lg border border-purple-500/30 backdrop-blur-xl">
+              <span className="text-purple-200">📅</span> {periodStats?.start_date} ~ {periodStats?.end_date}
             </div>
           </div>
           
