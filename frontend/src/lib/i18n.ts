@@ -426,7 +426,7 @@ const en: Record<string, string> = {
   'nav.ai.info': 'AI Info',
   'nav.quiz': 'Quiz',
   'nav.progress': 'Progress',
-  'nav.terms': 'Terms Learning',
+  'nav.terms': 'Terms',
   'nav.admin': 'Admin',
   'nav.logout': 'Logout',
   
@@ -489,8 +489,8 @@ const en: Record<string, string> = {
   'category.header.updated.days': 'Updated over {days} days',
   
   // AI Info Mode
-  'ai.info.mode.date': 'By Date',
-  'ai.info.mode.category': 'By Category',
+  'ai.info.mode.date': 'Date',
+  'ai.info.mode.category': 'Category',
   'ai.info.mode.full': 'Full List',
   
   // AI Info Card UI
