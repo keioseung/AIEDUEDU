@@ -534,11 +534,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
            const totalDates = aiInfoDates?.length || 0
            const totalTerms = totalDates * 40
            
-           // 용어 학습 완료 수를 직접 계산 (백엔드 stats 대신)
+           // 용어 학습 완료 수를 계산 (localStorage + 백엔드 데이터 통합)
            let totalTermsLearned = 0
+           
+           // 방법 1: localStorage에서 계산 시도
            if (typeof window !== 'undefined') {
              try {
-               // 방법 1: userProgress에서 계산
                const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                const sessionProgress = userProgress[sessionId]
                if (sessionProgress) {
@@ -594,11 +595,19 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                  }
                })
                
-               console.log('최종 계산된 총 용어 학습 수:', totalTermsLearned)
+               console.log('localStorage에서 계산된 총 용어 학습 수:', totalTermsLearned)
              } catch (error) {
                console.error('로컬 스토리지 데이터 파싱 오류:', error)
              }
            }
+           
+           // 방법 3: localStorage에서 계산이 0이면 백엔드 데이터 사용
+           if (totalTermsLearned === 0 && stats?.total_terms_learned) {
+             totalTermsLearned = stats.total_terms_learned
+             console.log('localStorage에서 데이터를 찾을 수 없어 백엔드 데이터 사용:', totalTermsLearned)
+           }
+           
+           console.log('최종 계산된 총 용어 학습 수:', totalTermsLearned)
            
            const percentage = totalTerms > 0 ? Math.round((totalTermsLearned / totalTerms) * 100) : 0
 
