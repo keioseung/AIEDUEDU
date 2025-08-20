@@ -550,10 +550,10 @@ export default function IntroPage() {
                          <div className="bg-gradient-to-br from-slate-800/95 via-purple-900/95 to-slate-800/95 rounded-3xl h-full w-full flex items-center justify-center">
                            <div className="text-white/90 text-sm md:text-base font-medium leading-relaxed px-4 text-center relative z-10 animate-text-fade-in">
                              {[
-                               "최신 AI 트렌드와\n기술 동향을 매일 업데이트하여 제공합니다.",
-                               "AI 학습에 필수적인\n핵심 용어들을 체계적으로 정리했습니다.",
-                               "학습한 내용을 다양한\n퀴즈로 점검하여 확실한 이해를 확인합니다.",
-                               "개인별 학습 진행 상황을\n체계적으로 추적하고 목표를 달성합니다."
+                               t('welcome.ai.info.click.description'),
+                               t('welcome.terms.click.description'),
+                               t('welcome.quiz.click.description'),
+                               t('welcome.progress.click.description')
                              ][clickedStat]}
                            </div>
                          </div>

@@ -34,6 +34,12 @@ const ko: Record<string, string> = {
   'welcome.progress.description': '개인별 학습 진행률을 체계적으로 관리하세요. 학습 현황을 한눈에 파악하고, 목표 달성을 위한 맞춤형 학습 계획을 세울 수 있습니다.',
   'welcome.terms.description': 'AI 세계의 핵심 개념을 쉽게 이해하세요. 복잡한 AI 용어들을 체계적으로 정리하고, 실무에서 활용할 수 있는 지식을 쌓을 수 있습니다.',
   
+  // 웰컴페이지 아이콘 클릭 시 텍스트 상자
+  'welcome.ai.info.click.description': '최신 AI 트렌드와\n기술 동향을 매일 업데이트하여 제공합니다.',
+  'welcome.terms.click.description': 'AI 학습에 필수적인\n핵심 용어들을 체계적으로 정리했습니다.',
+  'welcome.quiz.click.description': '학습한 내용을 다양한\n퀴즈로 점검하여 확실한 이해를 확인합니다.',
+  'welcome.progress.click.description': '개인별 학습 진행 상황을\n체계적으로 추적하고 목표를 달성합니다.',
+  
   // 네비게이션
   'nav.dashboard': '대시보드',
   'nav.ai.info': 'AI 정보',
@@ -362,6 +368,12 @@ const en: Record<string, string> = {
   'welcome.progress.description': 'Systematically manage your personal learning progress. Get a comprehensive view of your learning status and create customized learning plans to achieve your goals.',
   'welcome.terms.description': 'Easily understand core concepts of the AI world. Systematically organize complex AI terms and build knowledge that can be applied in practical work.',
   
+  // Welcome page icon click text box
+  'welcome.ai.info.click.description': 'Provides daily updates on\nlatest AI trends and technology developments.',
+  'welcome.terms.click.description': 'Systematically organized\nessential AI learning terms.',
+  'welcome.quiz.click.description': 'Check your learning with various\nquizzes to ensure solid understanding.',
+  'welcome.progress.click.description': 'Systematically track your\npersonal learning progress and achieve goals.',
+  
   // Navigation
   'nav.dashboard': 'Dashboard',
   'nav.ai.info': 'AI Info',
@@ -686,6 +698,12 @@ const ja: Record<string, string> = {
   
   // ウェルカムページアイコン説明
   'welcome.ai.info.description': '毎日新しいAI情報で知識を積み重ねましょう。最新のAIトレンドと技術動向を把握し、実務にすぐに適用できるインサイトを得ることができます。',
+  
+  // ウェルカムページアイコンクリック時テキストボックス
+  'welcome.ai.info.click.description': '最新のAIトレンドと\n技術動向を毎日更新して提供します。',
+  'welcome.terms.click.description': 'AI学習に必須な\n核心用語を体系的に整理しました。',
+  'welcome.quiz.click.description': '学習した内容を様々な\nクイズで確認し確実な理解を確認します。',
+  'welcome.progress.click.description': '個人別学習進捗状況を\n体系的に追跡し目標を達成します。',
   'welcome.quiz.description': '実践クイズで学習した内容を確認しましょう。様々な難易度の問題を通じてAI知識を体系的に整理し、弱点を補完できます。',
   'welcome.progress.description': '個人別学習進捗を体系的に管理しましょう。学習状況を一目で把握し、目標達成のためのカスタマイズされた学習計画を立てることができます。',
   'welcome.terms.description': 'AI世界の核心概念を簡単に理解しましょう。複雑なAI用語を体系的に整理し、実務で活用できる知識を積み重ねることができます。',
@@ -1017,6 +1035,12 @@ const zh: Record<string, string> = {
   'welcome.quiz.description': '通过实践测验检查学习内容。通过各种难度的问题系统整理AI知识，识别需要改进的领域。',
   'welcome.progress.description': '系统管理个人学习进度。全面了解学习状况，制定实现目标的定制化学习计划。',
   'welcome.terms.description': '轻松理解AI世界的核心概念。系统整理复杂的AI术语，积累可以在实际工作中应用的知识。',
+  
+  // 欢迎页面图标点击文本框
+  'welcome.ai.info.click.description': '每日更新最新AI趋势\n和技术发展动态。',
+  'welcome.terms.click.description': '系统整理AI学习\n必备核心术语。',
+  'welcome.quiz.click.description': '通过各种测验检查\n学习内容确保深入理解。',
+  'welcome.progress.click.description': '系统跟踪个人\n学习进度并实现目标。',
   
   // 导航
   'nav.dashboard': '仪表板',
