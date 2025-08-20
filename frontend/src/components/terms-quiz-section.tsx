@@ -103,9 +103,11 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       
       // 현재 문제가 삭제된 문제인 경우 다음 문제로 이동
       if (currentQuiz && currentQuiz.id === quizId) {
-        if (currentQuizIndex < (quizData?.quizzes?.length || 0) - 1) {
+        const remainingQuizzes = wrongAnswerNotes.filter(q => q.id !== quizId)
+        
+        if (currentQuizIndex < remainingQuizzes.length) {
           // 다음 문제가 있으면 다음 문제로 이동
-          setCurrentQuizIndex(currentQuizIndex + 1)
+          setCurrentQuizIndex(currentQuizIndex)
         } else if (currentQuizIndex > 0) {
           // 다음 문제가 없고 이전 문제가 있으면 이전 문제로 이동
           setCurrentQuizIndex(currentQuizIndex - 1)
@@ -113,8 +115,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
           // 마지막 문제였으면 퀴즈 완료 상태로 설정
           const finalScoreData = {
             score: score,
-            total: (quizData?.quizzes?.length || 0) - 1, // 삭제된 문제 제외
-            percentage: Math.round((score / Math.max((quizData?.quizzes?.length || 0) - 1, 1)) * 100)
+            total: remainingQuizzes.length,
+            percentage: remainingQuizzes.length > 0 ? Math.round((score / remainingQuizzes.length) * 100) : 0
           }
           setFinalScore(finalScoreData)
           setQuizCompleted(true)
@@ -140,6 +142,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     })
     
     // 현재 문제 상태 그대로 유지 (selectedAnswer, showResult 등 변경하지 않음)
+    // 오답 노트 모드일 때는 quizData를 수동으로 업데이트하지 않음
   }
 
   // 각 날짜별 AI 정보 가져오기
@@ -207,7 +210,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
   // 퀴즈 데이터 가져오기 (선택된 제목이 있으면 해당 내용의 용어로, 없으면 날짜별로)
   const { data: quizData, isLoading, refetch } = useQuery<TermsQuizResponse>({
-    queryKey: ['terms-quiz', selectedDate, selectedQuizTitle, selectedAIInfo?.id, wrongAnswerNotes.length],
+    queryKey: ['terms-quiz', selectedDate, selectedQuizTitle, selectedAIInfo?.id],
     queryFn: async () => {
       if (selectedQuizTitle === '오답 노트') {
         // 오답 노트 모드: 저장된 오답 문제들로 퀴즈 생성
