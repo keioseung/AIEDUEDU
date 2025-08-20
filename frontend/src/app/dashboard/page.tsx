@@ -11,6 +11,7 @@ import AIInfoCategoryView from '@/components/ai-info-category-view'
 import TermsQuizSection from '@/components/terms-quiz-section'
 import ProgressSection from '@/components/progress-section'
 import LearnedTermsSection from '@/components/learned-terms-section'
+import LanguageSelector from '@/components/language-selector'
 import useAIInfo from '@/hooks/use-ai-info'
 import useUserProgress, { useUserStats } from '@/hooks/use-user-progress'
 import { useRouter } from 'next/navigation'
@@ -18,6 +19,7 @@ import { logout } from '@/lib/api'
 
 import { useQueryClient } from '@tanstack/react-query'
 import { userProgressAPI } from '@/lib/api'
+import { t, getCurrentLanguage, Language } from '@/lib/i18n'
 
 // 예시 용어 데이터
 const TERMS = [
@@ -59,7 +61,7 @@ function WeeklyBarGraph({ weeklyData }: { weeklyData: any[] }) {
                 <div style={{ height: `${termsHeight}px` }} className="w-full bg-gradient-to-t from-purple-500 to-pink-400" />
                 {/* AI 정보 */}
                 <div style={{ height: `${aiHeight}px` }} className="w-full bg-gradient-to-t from-blue-500 to-cyan-400 rounded-b-md" />
-                {day.isToday && <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs text-yellow-400 font-bold">오늘</div>}
+                {day.isToday && <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs text-yellow-400 font-bold">{t('dashboard.today')}</div>}
               </div>
               <div className="mt-1 text-xs text-white/70">{day.ai + day.terms + Math.round(day.quiz/10)}</div>
             </div>
@@ -67,7 +69,7 @@ function WeeklyBarGraph({ weeklyData }: { weeklyData: any[] }) {
         })}
       </div>
       <div className="flex justify-between mt-2 px-2 text-[10px] text-white/40">
-        <div>AI</div><div>용어</div><div>퀴즈</div>
+        <div>{t('dashboard.ai')}</div><div>{t('dashboard.terms')}</div><div>{t('dashboard.quiz')}</div>
       </div>
     </div>
   );
@@ -107,9 +109,9 @@ export default function DashboardPage() {
   // 환영 메시지 애니메이션
   const [currentWelcome, setCurrentWelcome] = useState(0)
   const welcomeMessages = [
-    "오늘도 AI 학습을 시작해보세요! 🚀",
-    "새로운 지식이 여러분을 기다리고 있어요! 💡",
-    "함께 성장하는 AI 여정을 떠나볼까요? 🌟"
+    t('dashboard.welcome.message.1'),
+    t('dashboard.welcome.message.2'),
+    t('dashboard.welcome.message.3')
   ]
 
   const handleRandomTerm = () => {
@@ -142,6 +144,17 @@ export default function DashboardPage() {
     refetchUserProgress()
     refetchUserStats()
   }, [selectedDate, refetchUserProgress, refetchUserStats])
+
+  // 언어 변경 감지
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      // 언어가 변경되면 컴포넌트를 다시 렌더링
+      setForceUpdate(prev => prev + 1)
+    }
+
+    window.addEventListener('languageChange', handleLanguageChange)
+    return () => window.removeEventListener('languageChange', handleLanguageChange)
+  }, [])
 
   useEffect(() => {
     const userStr = localStorage.getItem('currentUser')
@@ -313,7 +326,15 @@ export default function DashboardPage() {
     // 오늘 여부
     const isToday = dateStr === selectedDate;
     // 요일명
-    const days = ['월', '화', '수', '목', '금', '토', '일'];
+    const days = [
+      t('common.day.mon'),
+      t('common.day.tue'),
+      t('common.day.wed'),
+      t('common.day.thu'),
+      t('common.day.fri'),
+      t('common.day.sat'),
+      t('common.day.sun')
+    ];
     return {
       day: days[idx],
       ai,
@@ -403,6 +424,11 @@ export default function DashboardPage() {
           </button>
         </div>
 
+        {/* 언어 선택기 - 우측 상단 */}
+        <div className="absolute top-3 right-3 md:top-4 md:right-4">
+          <LanguageSelector />
+        </div>
+
         {/* 상단 아이콘과 제목 */}
         <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4 mb-4 md:mb-6 text-center md:text-left">
           <div className="relative">
@@ -439,31 +465,31 @@ export default function DashboardPage() {
             {[
               { 
                 id: 'ai', 
-                label: 'AI 정보', 
+                label: t('nav.ai.info'), 
                 gradient: 'from-blue-600 via-purple-600 to-indigo-600',
                 hoverGradient: 'from-blue-500 via-purple-500 to-indigo-500',
-                description: 'AI 정보 학습'
+                description: t('dashboard.tab.ai.description')
               },
               { 
                 id: 'quiz', 
-                label: '용어 퀴즈', 
+                label: t('nav.quiz'), 
                 gradient: 'from-purple-600 via-pink-600 to-rose-600',
                 hoverGradient: 'from-purple-500 via-pink-500 to-rose-500',
-                description: '용어 퀴즈 풀기'
+                description: t('dashboard.tab.quiz.description')
               },
               { 
                 id: 'progress', 
-                label: '진행률', 
+                label: t('nav.progress'), 
                 gradient: 'from-emerald-600 via-teal-600 to-cyan-600',
                 hoverGradient: 'from-emerald-500 via-teal-500 to-cyan-500',
-                description: '학습 진행 상황'
+                description: t('dashboard.tab.progress.description')
               },
               { 
                 id: 'term', 
-                label: '용어 학습', 
+                label: t('nav.terms'), 
                 gradient: 'from-amber-600 via-orange-600 to-red-600',
                 hoverGradient: 'from-amber-500 via-orange-500 to-red-500',
-                description: '용어 카드 학습'
+                description: t('dashboard.tab.terms.description')
               }
             ].map((tab) => (
               <button

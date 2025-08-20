@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { FaRobot, FaArrowRight, FaBrain, FaRocket, FaChartLine, FaTrophy } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
+import LanguageSelector from '@/components/language-selector'
+import { t, getCurrentLanguage, Language } from '@/lib/i18n'
 
 export default function IntroPage() {
   const router = useRouter()
@@ -14,12 +16,13 @@ export default function IntroPage() {
   const [clickedCard, setClickedCard] = useState<number | null>(null)
   const [clickedStat, setClickedStat] = useState<number | null>(null)
   
-  const fullText = "AI Mastery Hub"
+  const [currentLanguage, setCurrentLanguage] = useState<Language>(getCurrentLanguage())
+  const fullText = t('app.title')
   const taglines = [
-    "매일 새로운 AI 정보로 지식을 쌓아보세요.",
-    "실전 퀴즈로 학습한 내용을 점검하세요.",
-    "개인별 학습 진행률을 체계적으로 관리하세요.",
-    "AI 세계의 핵심 개념을 쉽게 이해하세요."
+    t('app.tagline.1'),
+    t('app.tagline.2'),
+    t('app.tagline.3'),
+    t('app.tagline.4')
   ]
   const [currentTagline, setCurrentTagline] = useState(0)
 
@@ -55,6 +58,16 @@ export default function IntroPage() {
       return () => clearInterval(interval)
     }
   }, [isTyping, taglines.length])
+
+  // 언어 변경 감지
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setCurrentLanguage(getCurrentLanguage())
+    }
+
+    window.addEventListener('languageChange', handleLanguageChange)
+    return () => window.removeEventListener('languageChange', handleLanguageChange)
+  }, [])
 
   // 마우스 위치 추적 (데스크톱에서만)
   useEffect(() => {
@@ -138,6 +151,11 @@ export default function IntroPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* 언어 선택기 - 우측 상단 */}
+      <div className="absolute top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
+      
       {/* 고급스러운 배경 효과 - 정적으로만 유지 */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
@@ -231,13 +249,13 @@ export default function IntroPage() {
           <div className="text-center mb-6 md:mb-8 lg:mb-12 max-w-5xl mx-auto px-1">
             <h2 className="text-lg md:text-xl lg:text-3xl xl:text-4xl font-bold text-white mb-3 md:mb-4 leading-tight mobile-text text-center">
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent block mb-2 md:mb-3">
-                매일 업데이트되는 AI 정보
+                {t('app.feature.ai.info')}
               </span>
               <span className="text-white/90 block mb-2 md:mb-3">
-                관련 용어를 학습
+                {t('app.feature.terms')}
               </span>
               <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent block">
-                실전 퀴즈로 지식을 점검
+                {t('app.feature.quiz')}
               </span>
             </h2>
 
@@ -249,7 +267,7 @@ export default function IntroPage() {
               className="group px-6 md:px-10 lg:px-12 py-3 md:py-4 lg:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-base md:text-lg lg:text-xl rounded-xl font-bold shadow-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center gap-2 md:gap-3 animate-fade-in hover:scale-105 active:scale-95 relative overflow-hidden animate-button-glow touch-optimized mobile-touch-target"
               onClick={() => router.push('/auth')}
             >
-              <span className="relative z-10">지금 시작하기</span>
+              <span className="relative z-10">{t('app.start.button')}</span>
               <FaArrowRight className="group-hover:translate-x-2 transition-transform duration-200 relative z-10" />
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             </button>
@@ -284,8 +302,8 @@ export default function IntroPage() {
                      </div>
                    </div>
                    <div className="relative z-10">
-                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">매일 새로운</div>
-                     <div className="text-white font-bold text-sm md:text-base mb-1">AI 정보</div>
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">{t('app.stats.ai.info.label')}</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">{t('app.stats.ai.info.title')}</div>
                    </div>
                    
                                        {/* 고급스러운 선택 효과 */}
@@ -346,8 +364,8 @@ export default function IntroPage() {
                      </div>
                    </div>
                    <div className="relative z-10">
-                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">핵심 개념</div>
-                     <div className="text-white font-bold text-sm md:text-base mb-1">관련 용어</div>
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">{t('app.stats.terms.label')}</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">{t('app.stats.terms.title')}</div>
                    </div>
                    
                                        {/* 고급스러운 선택 효과 */}
@@ -411,8 +429,8 @@ export default function IntroPage() {
                      </div>
                    </div>
                    <div className="relative z-10">
-                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">지식 점검</div>
-                     <div className="text-white font-bold text-sm md:text-base mb-1">실전 퀴즈</div>
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">{t('app.stats.quiz.label')}</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">{t('app.stats.quiz.title')}</div>
                    </div>
                    
                                        {/* 고급스러운 선택 효과 */}
@@ -473,8 +491,8 @@ export default function IntroPage() {
                      </div>
                    </div>
                    <div className="relative z-10">
-                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">학습 현황</div>
-                     <div className="text-white font-bold text-sm md:text-base mb-1">진행률</div>
+                     <div className="text-white/70 text-xs md:text-sm font-medium mb-1">{t('app.stats.progress.label')}</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">{t('app.stats.progress.title')}</div>
                    </div>
                    
                                        {/* 고급스러운 선택 효과 */}

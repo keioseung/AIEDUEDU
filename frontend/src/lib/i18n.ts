@@ -1,0 +1,672 @@
+export type Language = 'ko' | 'en' | 'ja' | 'zh'
+
+export interface Translations {
+  ko: Record<string, string>
+  en: Record<string, string>
+  ja: Record<string, string>
+  zh: Record<string, string>
+}
+
+// 한국어 (기본 언어)
+const ko: Record<string, string> = {
+  // 메인 페이지
+  'app.title': 'AI Mastery Hub',
+  'app.tagline.1': '매일 새로운 AI 정보로 지식을 쌓아보세요.',
+  'app.tagline.2': '실전 퀴즈로 학습한 내용을 점검하세요.',
+  'app.tagline.3': '개인별 학습 진행률을 체계적으로 관리하세요.',
+  'app.tagline.4': 'AI 세계의 핵심 개념을 쉽게 이해하세요.',
+  'app.feature.ai.info': '매일 업데이트되는 AI 정보',
+  'app.feature.terms': '관련 용어를 학습',
+  'app.feature.quiz': '실전 퀴즈로 지식을 점검',
+  'app.start.button': '지금 시작하기',
+  'app.stats.ai.info.label': '매일 새로운',
+  'app.stats.ai.info.title': 'AI 정보',
+  'app.stats.quiz.label': '실전 퀴즈로',
+  'app.stats.quiz.title': '지식 점검',
+  'app.stats.progress.label': '개인별',
+  'app.stats.progress.title': '학습 진행률',
+  'app.stats.terms.label': 'AI 용어',
+  'app.stats.terms.title': '체계 학습',
+  
+  // 네비게이션
+  'nav.dashboard': '대시보드',
+  'nav.ai.info': 'AI 정보',
+  'nav.quiz': '퀴즈',
+  'nav.progress': '진행률',
+  'nav.terms': '학습한 용어',
+  'nav.admin': '관리자',
+  'nav.logout': '로그아웃',
+  
+  // 대시보드
+  'dashboard.title': '대시보드',
+  'dashboard.welcome': 'AI Mastery Hub에 오신 것을 환영합니다!',
+  'dashboard.today': '오늘',
+  'dashboard.weekly': '주간',
+  'dashboard.monthly': '월간',
+  'dashboard.total': '전체',
+  'dashboard.ai': 'AI',
+  'dashboard.terms': '용어',
+  'dashboard.quiz': '퀴즈',
+  'dashboard.tab.ai.description': 'AI 정보 학습',
+  'dashboard.tab.quiz.description': '용어 퀴즈 풀기',
+  'dashboard.tab.progress.description': '학습 진행 상황',
+  'dashboard.tab.terms.description': '용어 카드 학습',
+  'dashboard.welcome.message.1': '오늘도 AI 학습을 시작해보세요! 🚀',
+  'dashboard.welcome.message.2': '새로운 지식이 여러분을 기다리고 있어요! 💡',
+  'dashboard.welcome.message.3': '함께 성장하는 AI 여정을 떠나볼까요? 🌟',
+  
+  // AI 정보
+  'ai.info.title': 'AI 정보',
+  'ai.info.daily': '일일 AI 정보',
+  'ai.info.category': '카테고리별',
+  'ai.info.list': '목록 보기',
+  'ai.info.favorite': '즐겨찾기',
+  'ai.info.search': '검색',
+  'ai.info.filter': '필터',
+  'ai.info.sort': '정렬',
+  'ai.info.date': '날짜',
+  'ai.info.title': '제목',
+  'ai.info.content': '내용',
+  'ai.info.terms': '용어',
+  'ai.info.category': '카테고리',
+  'ai.info.subcategory': '하위 카테고리',
+  
+  // 퀴즈
+  'quiz.title': '퀴즈',
+  'quiz.start': '퀴즈 시작',
+  'quiz.question': '문제',
+  'quiz.answer': '답변',
+  'quiz.correct': '정답',
+  'quiz.incorrect': '오답',
+  'quiz.explanation': '설명',
+  'quiz.score': '점수',
+  'quiz.complete': '완료',
+  'quiz.retry': '다시 시도',
+  'quiz.next': '다음',
+  'quiz.previous': '이전',
+  'quiz.finish': '마치기',
+  'quiz.wrong.notes': '오답 노트',
+  'quiz.achievement': '성취',
+  
+  // 진행률
+  'progress.title': '학습 진행률',
+  'progress.overall': '전체 진행률',
+  'progress.ai.info': 'AI 정보 학습',
+  'progress.terms': '용어 학습',
+  'progress.quiz': '퀴즈 점수',
+  'progress.streak': '연속 학습',
+  'progress.today': '오늘',
+  'progress.week': '이번 주',
+  'progress.month': '이번 달',
+  'progress.year': '올해',
+  
+  // 용어 학습
+  'terms.title': '학습한 용어',
+  'terms.learned': '학습 완료',
+  'terms.favorite': '즐겨찾기',
+  'terms.search': '검색',
+  'terms.sort': '정렬',
+  'terms.filter': '필터',
+  'terms.export': '내보내기',
+  'terms.import': '가져오기',
+  'terms.auto.play': '자동 재생',
+  'terms.speed': '속도',
+  'terms.shuffle': '섞기',
+  
+  // 관리자
+  'admin.title': '관리자 대시보드',
+  'admin.welcome': 'AI Mastery Hub를 관리하세요!',
+  'admin.ai.info.manage': 'AI 정보 관리',
+  'admin.user.manage': '회원 관리',
+  'admin.system.manage': '시스템 관리',
+  'admin.stats': '사용자 통계',
+  'admin.logs': '로그 관리',
+  'admin.quiz.manage': '퀴즈 관리',
+  'admin.prompt.manage': '프롬프트 관리',
+  
+  // 공통
+  'common.loading': '로딩 중...',
+  'common.error': '오류가 발생했습니다',
+  'common.success': '성공',
+  'common.cancel': '취소',
+  'common.confirm': '확인',
+  'common.save': '저장',
+  'common.edit': '수정',
+  'common.delete': '삭제',
+  'common.add': '추가',
+  'common.search': '검색',
+  'common.filter': '필터',
+  'common.sort': '정렬',
+  'common.refresh': '새로고침',
+  'common.back': '뒤로',
+  'common.next': '다음',
+  'common.previous': '이전',
+  'common.close': '닫기',
+  'common.yes': '예',
+  'common.no': '아니오',
+  'common.ok': '확인',
+  'common.day.mon': '월',
+  'common.day.tue': '화',
+  'common.day.wed': '수',
+  'common.day.thu': '목',
+  'common.day.fri': '금',
+  'common.day.sat': '토',
+  'common.day.sun': '일',
+  
+  // 언어 선택
+  'language.ko': '한국어',
+  'language.en': 'English',
+  'language.ja': '日本語',
+  'language.zh': '中文',
+  'language.select': '언어 선택',
+}
+
+// 영어
+const en: Record<string, string> = {
+  // Main page
+  'app.title': 'AI Mastery Hub',
+  'app.tagline.1': 'Build knowledge with new AI information every day.',
+  'app.tagline.2': 'Check your learning with practical quizzes.',
+  'app.tagline.3': 'Systematically manage your personal learning progress.',
+  'app.tagline.4': 'Easily understand core concepts of the AI world.',
+  'app.feature.ai.info': 'Daily updated AI information',
+  'app.feature.terms': 'Learn related terms',
+  'app.feature.quiz': 'Check knowledge with practical quizzes',
+  'app.start.button': 'Start Now',
+  'app.stats.ai.info.label': 'Daily New',
+  'app.stats.ai.info.title': 'AI Info',
+  'app.stats.quiz.label': 'Practical',
+  'app.stats.quiz.title': 'Quiz Check',
+  'app.stats.progress.label': 'Personal',
+  'app.stats.progress.title': 'Progress',
+  'app.stats.terms.label': 'AI Terms',
+  'app.stats.terms.title': 'Systematic',
+  
+  // Navigation
+  'nav.dashboard': 'Dashboard',
+  'nav.ai.info': 'AI Info',
+  'nav.quiz': 'Quiz',
+  'nav.progress': 'Progress',
+  'nav.terms': 'Learned Terms',
+  'nav.admin': 'Admin',
+  'nav.logout': 'Logout',
+  
+  // Dashboard
+  'dashboard.title': 'Dashboard',
+  'dashboard.welcome': 'Welcome to AI Mastery Hub!',
+  'dashboard.today': 'Today',
+  'dashboard.weekly': 'Weekly',
+  'dashboard.monthly': 'Monthly',
+  'dashboard.total': 'Total',
+  'dashboard.ai': 'AI',
+  'dashboard.terms': 'Terms',
+  'dashboard.quiz': 'Quiz',
+  'dashboard.tab.ai.description': 'AI Info Learning',
+  'dashboard.tab.quiz.description': 'Take Terms Quiz',
+  'dashboard.tab.progress.description': 'Learning Progress',
+  'dashboard.tab.terms.description': 'Terms Card Learning',
+  'dashboard.welcome.message.1': 'Start your AI learning today! 🚀',
+  'dashboard.welcome.message.2': 'New knowledge is waiting for you! 💡',
+  'dashboard.welcome.message.3': 'Shall we embark on a growing AI journey together? 🌟',
+  
+  // AI Info
+  'ai.info.title': 'AI Information',
+  'ai.info.daily': 'Daily AI Info',
+  'ai.info.category': 'By Category',
+  'ai.info.list': 'List View',
+  'ai.info.favorite': 'Favorites',
+  'ai.info.search': 'Search',
+  'ai.info.filter': 'Filter',
+  'ai.info.sort': 'Sort',
+  'ai.info.date': 'Date',
+  'ai.info.title': 'Title',
+  'ai.info.content': 'Content',
+  'ai.info.terms': 'Terms',
+  'ai.info.category': 'Category',
+  'ai.info.subcategory': 'Subcategory',
+  
+  // Quiz
+  'quiz.title': 'Quiz',
+  'quiz.start': 'Start Quiz',
+  'quiz.question': 'Question',
+  'quiz.answer': 'Answer',
+  'quiz.correct': 'Correct',
+  'quiz.incorrect': 'Incorrect',
+  'quiz.explanation': 'Explanation',
+  'quiz.score': 'Score',
+  'quiz.complete': 'Complete',
+  'quiz.retry': 'Retry',
+  'quiz.next': 'Next',
+  'quiz.previous': 'Previous',
+  'quiz.finish': 'Finish',
+  'quiz.wrong.notes': 'Wrong Answer Notes',
+  'quiz.achievement': 'Achievement',
+  
+  // Progress
+  'progress.title': 'Learning Progress',
+  'progress.overall': 'Overall Progress',
+  'progress.ai.info': 'AI Info Learning',
+  'progress.terms': 'Terms Learning',
+  'progress.quiz': 'Quiz Score',
+  'progress.streak': 'Learning Streak',
+  'progress.today': 'Today',
+  'progress.week': 'This Week',
+  'progress.month': 'This Month',
+  'progress.year': 'This Year',
+  
+  // Terms Learning
+  'terms.title': 'Learned Terms',
+  'terms.learned': 'Learned',
+  'terms.favorite': 'Favorites',
+  'terms.search': 'Search',
+  'terms.sort': 'Sort',
+  'terms.filter': 'Filter',
+  'terms.export': 'Export',
+  'terms.import': 'Import',
+  'terms.auto.play': 'Auto Play',
+  'terms.speed': 'Speed',
+  'terms.shuffle': 'Shuffle',
+  
+  // Admin
+  'admin.title': 'Admin Dashboard',
+  'admin.welcome': 'Manage AI Mastery Hub!',
+  'admin.ai.info.manage': 'AI Info Management',
+  'admin.user.manage': 'User Management',
+  'admin.system.manage': 'System Management',
+  'admin.stats': 'User Statistics',
+  'admin.logs': 'Log Management',
+  'admin.quiz.manage': 'Quiz Management',
+  'admin.prompt.manage': 'Prompt Management',
+  
+  // Common
+  'common.loading': 'Loading...',
+  'common.error': 'An error occurred',
+  'common.success': 'Success',
+  'common.cancel': 'Cancel',
+  'common.confirm': 'Confirm',
+  'common.save': 'Save',
+  'common.edit': 'Edit',
+  'common.delete': 'Delete',
+  'common.add': 'Add',
+  'common.search': 'Search',
+  'common.filter': 'Filter',
+  'common.sort': 'Sort',
+  'common.refresh': 'Refresh',
+  'common.back': 'Back',
+  'common.next': 'Next',
+  'common.previous': 'Previous',
+  'common.close': 'Close',
+  'common.yes': 'Yes',
+  'common.no': 'No',
+  'common.ok': 'OK',
+  'common.day.mon': 'Mon',
+  'common.day.tue': 'Tue',
+  'common.day.wed': 'Wed',
+  'common.day.thu': 'Thu',
+  'common.day.fri': 'Fri',
+  'common.day.sat': 'Sat',
+  'common.day.sun': 'Sun',
+  
+  // Language selection
+  'language.ko': '한국어',
+  'language.en': 'English',
+  'language.ja': '日本語',
+  'language.zh': '中文',
+  'language.select': 'Select Language',
+}
+
+// 일본어
+const ja: Record<string, string> = {
+  // メインページ
+  'app.title': 'AI Mastery Hub',
+  'app.tagline.1': '毎日新しいAI情報で知識を積み重ねましょう。',
+  'app.tagline.2': '実践クイズで学習した内容を確認しましょう。',
+  'app.tagline.3': '個人別学習進捗を体系的に管理しましょう。',
+  'app.tagline.4': 'AI世界の核心概念を簡単に理解しましょう。',
+  'app.feature.ai.info': '毎日更新されるAI情報',
+  'app.feature.terms': '関連用語を学習',
+  'app.feature.quiz': '実践クイズで知識を確認',
+  'app.start.button': '今すぐ始める',
+  'app.stats.ai.info.label': '毎日新しい',
+  'app.stats.ai.info.title': 'AI情報',
+  'app.stats.quiz.label': '実践クイズで',
+  'app.stats.quiz.title': '知識確認',
+  'app.stats.progress.label': '個人別',
+  'app.stats.progress.title': '学習進捗',
+  'app.stats.terms.label': 'AI用語',
+  'app.stats.terms.title': '体系的学習',
+  
+  // ナビゲーション
+  'nav.dashboard': 'ダッシュボード',
+  'nav.ai.info': 'AI情報',
+  'nav.quiz': 'クイズ',
+  'nav.progress': '進捗',
+  'nav.terms': '学習した用語',
+  'nav.admin': '管理者',
+  'nav.logout': 'ログアウト',
+  
+  // ダッシュボード
+  'dashboard.title': 'ダッシュボード',
+  'dashboard.welcome': 'AI Mastery Hubへようこそ！',
+  'dashboard.today': '今日',
+  'dashboard.weekly': '今週',
+  'dashboard.monthly': '今月',
+  'dashboard.total': '合計',
+  'dashboard.ai': 'AI',
+  'dashboard.terms': '用語',
+  'dashboard.quiz': 'クイズ',
+  'dashboard.tab.ai.description': 'AI情報学習',
+  'dashboard.tab.quiz.description': '用語クイズを解く',
+  'dashboard.tab.progress.description': '学習進捗状況',
+  'dashboard.tab.terms.description': '用語カード学習',
+  'dashboard.welcome.message.1': '今日もAI学習を始めましょう！🚀',
+  'dashboard.welcome.message.2': '新しい知識があなたを待っています！💡',
+  'dashboard.welcome.message.3': '一緒に成長するAIの旅に出発しましょうか？🌟',
+  
+  // AI情報
+  'ai.info.title': 'AI情報',
+  'ai.info.daily': '日次AI情報',
+  'ai.info.category': 'カテゴリ別',
+  'ai.info.list': 'リスト表示',
+  'ai.info.favorite': 'お気に入り',
+  'ai.info.search': '検索',
+  'ai.info.filter': 'フィルター',
+  'ai.info.sort': '並び替え',
+  'ai.info.date': '日付',
+  'ai.info.title': 'タイトル',
+  'ai.info.content': '内容',
+  'ai.info.terms': '用語',
+  'ai.info.category': 'カテゴリ',
+  'ai.info.subcategory': 'サブカテゴリ',
+  
+  // クイズ
+  'quiz.title': 'クイズ',
+  'quiz.start': 'クイズ開始',
+  'quiz.question': '問題',
+  'quiz.answer': '回答',
+  'quiz.correct': '正解',
+  'quiz.incorrect': '不正解',
+  'quiz.explanation': '説明',
+  'quiz.score': 'スコア',
+  'quiz.complete': '完了',
+  'quiz.retry': '再試行',
+  'quiz.next': '次へ',
+  'quiz.previous': '前へ',
+  'quiz.finish': '終了',
+  'quiz.wrong.notes': '不正解ノート',
+  'quiz.achievement': '達成',
+  
+  // 進捗
+  'progress.title': '学習進捗',
+  'progress.overall': '全体進捗',
+  'progress.ai.info': 'AI情報学習',
+  'progress.terms': '用語学習',
+  'progress.quiz': 'クイズスコア',
+  'progress.streak': '連続学習',
+  'progress.today': '今日',
+  'progress.week': '今週',
+  'progress.month': '今月',
+  'progress.year': '今年',
+  
+  // 用語学習
+  'terms.title': '学習した用語',
+  'terms.learned': '学習完了',
+  'terms.favorite': 'お気に入り',
+  'terms.search': '検索',
+  'terms.sort': '並び替え',
+  'terms.filter': 'フィルター',
+  'terms.export': 'エクスポート',
+  'terms.import': 'インポート',
+  'terms.auto.play': '自動再生',
+  'terms.speed': '速度',
+  'terms.shuffle': 'シャッフル',
+  
+  // 管理者
+  'admin.title': '管理者ダッシュボード',
+  'admin.welcome': 'AI Mastery Hubを管理しましょう！',
+  'admin.ai.info.manage': 'AI情報管理',
+  'admin.user.manage': 'ユーザー管理',
+  'admin.system.manage': 'システム管理',
+  'admin.stats': 'ユーザー統計',
+  'admin.logs': 'ログ管理',
+  'admin.quiz.manage': 'クイズ管理',
+  'admin.prompt.manage': 'プロンプト管理',
+  
+  // 共通
+  'common.loading': '読み込み中...',
+  'common.error': 'エラーが発生しました',
+  'common.success': '成功',
+  'common.cancel': 'キャンセル',
+  'common.confirm': '確認',
+  'common.save': '保存',
+  'common.edit': '編集',
+  'common.delete': '削除',
+  'common.add': '追加',
+  'common.search': '検索',
+  'common.filter': 'フィルター',
+  'common.sort': '並び替え',
+  'common.refresh': '更新',
+  'common.back': '戻る',
+  'common.next': '次へ',
+  'common.previous': '前へ',
+  'common.close': '閉じる',
+  'common.yes': 'はい',
+  'common.no': 'いいえ',
+  'common.ok': 'OK',
+  'common.day.mon': '月',
+  'common.day.tue': '火',
+  'common.day.wed': '水',
+  'common.day.thu': '木',
+  'common.day.fri': '金',
+  'common.day.sat': '土',
+  'common.day.sun': '日',
+  
+  // 言語選択
+  'language.ko': '한국어',
+  'language.en': 'English',
+  'language.ja': '日本語',
+  'language.zh': '中文',
+  'language.select': '言語選択',
+}
+
+// 중국어
+const zh: Record<string, string> = {
+  // 主页面
+  'app.title': 'AI Mastery Hub',
+  'app.tagline.1': '每天用新的AI信息积累知识。',
+  'app.tagline.2': '通过实践测验检查学习内容。',
+  'app.tagline.3': '系统管理个人学习进度。',
+  'app.tagline.4': '轻松理解AI世界的核心概念。',
+  'app.feature.ai.info': '每日更新的AI信息',
+  'app.feature.terms': '学习相关术语',
+  'app.feature.quiz': '通过实践测验检查知识',
+  'app.start.button': '立即开始',
+  'app.stats.ai.info.label': '每日新的',
+  'app.stats.ai.info.title': 'AI信息',
+  'app.stats.quiz.label': '实践测验',
+  'app.stats.quiz.title': '知识检查',
+  'app.stats.progress.label': '个性化',
+  'app.stats.progress.title': '学习进度',
+  'app.stats.terms.label': 'AI术语',
+  'app.stats.terms.title': '系统学习',
+  
+  // 导航
+  'nav.dashboard': '仪表板',
+  'nav.ai.info': 'AI信息',
+  'nav.quiz': '测验',
+  'nav.progress': '进度',
+  'nav.terms': '已学术语',
+  'nav.admin': '管理员',
+  'nav.logout': '登出',
+  
+  // 仪表板
+  'dashboard.title': '仪表板',
+  'dashboard.welcome': '欢迎来到AI Mastery Hub！',
+  'dashboard.today': '今天',
+  'dashboard.weekly': '本周',
+  'dashboard.monthly': '本月',
+  'dashboard.total': '总计',
+  'dashboard.ai': 'AI',
+  'dashboard.terms': '术语',
+  'dashboard.quiz': '测验',
+  'dashboard.tab.ai.description': 'AI信息学习',
+  'dashboard.tab.quiz.description': '术语测验',
+  'dashboard.tab.progress.description': '学习进度情况',
+  'dashboard.tab.terms.description': '术语卡片学习',
+  'dashboard.welcome.message.1': '今天也开始AI学习吧！🚀',
+  'dashboard.welcome.message.2': '新知识正在等待着你！💡',
+  'dashboard.welcome.message.3': '一起踏上成长的AI旅程吧？🌟',
+  
+  // AI信息
+  'ai.info.title': 'AI信息',
+  'ai.info.daily': '每日AI信息',
+  'ai.info.category': '按类别',
+  'ai.info.list': '列表视图',
+  'ai.info.favorite': '收藏',
+  'ai.info.search': '搜索',
+  'ai.info.filter': '筛选',
+  'ai.info.sort': '排序',
+  'ai.info.date': '日期',
+  'ai.info.title': '标题',
+  'ai.info.content': '内容',
+  'ai.info.terms': '术语',
+  'ai.info.category': '类别',
+  'ai.info.subcategory': '子类别',
+  
+  // 测验
+  'quiz.title': '测验',
+  'quiz.start': '开始测验',
+  'quiz.question': '问题',
+  'quiz.answer': '答案',
+  'quiz.correct': '正确',
+  'quiz.incorrect': '错误',
+  'quiz.explanation': '解释',
+  'quiz.score': '分数',
+  'quiz.complete': '完成',
+  'quiz.retry': '重试',
+  'quiz.next': '下一个',
+  'quiz.previous': '上一个',
+  'quiz.finish': '结束',
+  'quiz.wrong.notes': '错题笔记',
+  'quiz.achievement': '成就',
+  
+  // 进度
+  'progress.title': '学习进度',
+  'progress.overall': '总体进度',
+  'progress.ai.info': 'AI信息学习',
+  'progress.terms': '术语学习',
+  'progress.quiz': '测验分数',
+  'progress.streak': '连续学习',
+  'progress.today': '今天',
+  'progress.week': '本周',
+  'progress.month': '本月',
+  'progress.year': '今年',
+  
+  // 术语学习
+  'terms.title': '已学术语',
+  'terms.learned': '已学习',
+  'terms.favorite': '收藏',
+  'terms.search': '搜索',
+  'terms.sort': '排序',
+  'terms.filter': '筛选',
+  'terms.export': '导出',
+  'terms.import': '导入',
+  'terms.auto.play': '自动播放',
+  'terms.speed': '速度',
+  'terms.shuffle': '随机播放',
+  
+  // 管理员
+  'admin.title': '管理员仪表板',
+  'admin.welcome': '管理AI Mastery Hub！',
+  'admin.ai.info.manage': 'AI信息管理',
+  'admin.user.manage': '用户管理',
+  'admin.system.manage': '系统管理',
+  'admin.stats': '用户统计',
+  'admin.logs': '日志管理',
+  'admin.quiz.manage': '测验管理',
+  'admin.prompt.manage': '提示管理',
+  
+  // 通用
+  'common.loading': '加载中...',
+  'common.error': '发生错误',
+  'common.success': '成功',
+  'common.cancel': '取消',
+  'common.confirm': '确认',
+  'common.save': '保存',
+  'common.edit': '编辑',
+  'common.delete': '删除',
+  'common.add': '添加',
+  'common.search': '搜索',
+  'common.filter': '筛选',
+  'common.sort': '排序',
+  'common.refresh': '刷新',
+  'common.back': '返回',
+  'common.next': '下一个',
+  'common.previous': '上一个',
+  'common.close': '关闭',
+  'common.yes': '是',
+  'common.no': '否',
+  'common.ok': '确定',
+  'common.day.mon': '周一',
+  'common.day.tue': '周二',
+  'common.day.wed': '周三',
+  'common.day.thu': '周四',
+  'common.day.fri': '周五',
+  'common.day.sat': '周六',
+  'common.day.sun': '周日',
+  
+  // 语言选择
+  'language.ko': '한국어',
+  'language.en': 'English',
+  'language.ja': '日本語',
+  'language.zh': '中文',
+  'language.select': '选择语言',
+}
+
+export const translations: Translations = {
+  ko,
+  en,
+  ja,
+  zh,
+}
+
+// 언어별 플래그 이모지
+export const languageFlags: Record<Language, string> = {
+  ko: '🇰🇷',
+  en: '🇺🇸',
+  ja: '🇯🇵',
+  zh: '🇨🇳',
+}
+
+// 언어별 이름
+export const languageNames: Record<Language, string> = {
+  ko: '한국어',
+  en: 'English',
+  ja: '日本語',
+  zh: '中文',
+}
+
+// 언어 변경 함수
+export const changeLanguage = (language: Language) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('language', language)
+    // 언어 변경 이벤트 발생
+    window.dispatchEvent(new CustomEvent('languageChange', { detail: language }))
+  }
+}
+
+// 현재 언어 가져오기
+export const getCurrentLanguage = (): Language => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('language') as Language
+    if (saved && ['ko', 'en', 'ja', 'zh'].includes(saved)) {
+      return saved
+    }
+  }
+  return 'ko' // 기본값은 한국어
+}
+
+// 번역 함수
+export const t = (key: string, language: Language = getCurrentLanguage()): string => {
+  return translations[language][key] || translations.ko[key] || key
+}
