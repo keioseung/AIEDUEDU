@@ -113,11 +113,16 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             }
             setFinalScore(finalScoreData)
             setQuizCompleted(true)
-          } else if (currentQuizIndex >= newWrongAnswerNotes.length) {
-            // 현재 인덱스가 남은 문제 수보다 크면 마지막 문제로 이동
-            setCurrentQuizIndex(newWrongAnswerNotes.length - 1)
+          } else {
+            // 다음 문제가 있는 경우 다음 문제로 이동
+            if (currentQuizIndex < newWrongAnswerNotes.length) {
+              // 현재 인덱스가 남은 문제 범위 내에 있으면 그대로 유지
+              // (자동으로 다음 문제가 표시됨)
+            } else {
+              // 현재 인덱스가 남은 문제 수보다 크면 마지막 문제로 이동
+              setCurrentQuizIndex(newWrongAnswerNotes.length - 1)
+            }
           }
-          // currentQuizIndex가 남은 문제 범위 내에 있으면 그대로 유지 (자동으로 다음 문제 표시됨)
         }
       }
       
