@@ -376,6 +376,14 @@ const ko: Record<string, string> = {
   'progress.card.terms.daily.total': '일별 총 용어 수',
   'progress.card.terms.accumulated.total': '누적 총 용어 수',
   
+  // 진행률 그래프 카드 통계
+  'progress.graph.card.average': '평균',
+  'progress.graph.card.max': '최대',
+  'progress.graph.card.items': '개',
+  'progress.graph.y.axis.0': '0개',
+  'progress.graph.y.axis.1': '1개',
+  'progress.graph.y.axis.2': '2개',
+  
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': '주제 선택',
   'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
@@ -775,6 +783,14 @@ const en: Record<string, string> = {
   'progress.card.today.learning.count': 'Today\'s Learning Count',
   'progress.card.daily.total.info': 'Daily Total Info Count',
   'progress.card.accumulated.total.learning': 'Accumulated Total Learning',
+  
+  // Progress Graph Card Statistics
+  'progress.graph.card.average': 'Average',
+  'progress.graph.card.max': 'Max',
+  'progress.graph.card.items': 'items',
+  'progress.graph.y.axis.0': '0 items',
+  'progress.graph.y.axis.1': '1 item',
+  'progress.graph.y.axis.2': '2 items',
 }
 
 // 일본어
@@ -1139,6 +1155,14 @@ const ja: Record<string, string> = {
   'progress.card.quiz.score': 'クイズスコア',
   'progress.card.daily.accuracy': '日別正答率',
   'progress.card.daily.accumulated': '日別累積',
+  
+  // 進捗グラフカード統計
+  'progress.graph.card.average': '平均',
+  'progress.graph.card.max': '最大',
+  'progress.graph.card.items': '件',
+  'progress.graph.y.axis.0': '0件',
+  'progress.graph.y.axis.1': '1件',
+  'progress.graph.y.axis.2': '2件',
   
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': 'トピック選択',
@@ -1520,6 +1544,14 @@ const zh: Record<string, string> = {
   'progress.card.accumulated.score': '累计分数',
   'progress.card.terms.daily.total': '每日总术语数',
   'progress.card.terms.accumulated.total': '累计总术语数',
+  
+  // 进度图表卡片统计
+  'progress.graph.card.average': '平均',
+  'progress.graph.card.max': '最大',
+  'progress.graph.card.items': '个',
+  'progress.graph.y.axis.0': '0个',
+  'progress.graph.y.axis.1': '1个',
+  'progress.graph.y.axis.2': '2个',
   
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': '选择主题',
