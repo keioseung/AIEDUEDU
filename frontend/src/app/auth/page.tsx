@@ -320,7 +320,7 @@ export default function AuthPage() {
                     type="submit" 
                     className="w-full py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold shadow-lg hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 group hover:scale-105 active:scale-95 text-sm"
                   >
-                    <span>로그인</span>
+                    <span>{t('auth.login.button')}</span>
                     <FaArrowRight className="group-hover:translate-x-1 transition-transform text-xs" />
                   </button>
                 </form>
@@ -401,7 +401,7 @@ export default function AuthPage() {
                     type="submit" 
                     className="w-full py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold shadow-lg hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 group hover:scale-105 active:scale-95 text-sm"
                   >
-                    <span>회원가입</span>
+                    <span>{t('auth.register.button')}</span>
                     <FaArrowRight className="group-hover:translate-x-1 transition-transform text-xs" />
                   </button>
                 </form>
