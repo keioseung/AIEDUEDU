@@ -131,17 +131,20 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     
     // 삭제 후 즉시 다음 문제로 이동하기 위해 currentQuizIndex 조정
     if (isWrongAnswerMode) {
-      setTimeout(() => {
-        setWrongAnswerNotes(current => {
-          if (current.length === 0) return current
-          
-          // 현재 인덱스가 남은 문제 수보다 크면 조정
-          if (currentQuizIndex >= current.length) {
-            setCurrentQuizIndex(current.length - 1)
+      // 현재 문제가 삭제된 문제인지 확인
+      if (currentQuiz && currentQuiz.id === quizId) {
+        // 삭제된 문제의 인덱스를 찾아서 다음 문제로 이동
+        const currentIndex = wrongAnswerNotes.findIndex(quiz => quiz.id === quizId)
+        if (currentIndex !== -1) {
+          // 삭제 후 남은 문제들 중에서 다음 문제 선택
+          const remainingQuizzes = wrongAnswerNotes.filter(quiz => quiz.id !== quizId)
+          if (remainingQuizzes.length > 0) {
+            // 다음 문제가 있으면 다음 문제로, 마지막이면 마지막 문제로
+            const nextIndex = currentIndex < remainingQuizzes.length ? currentIndex : remainingQuizzes.length - 1
+            setCurrentQuizIndex(nextIndex)
           }
-          return current
-        })
-      }, 0)
+        }
+      }
     }
   }
 
