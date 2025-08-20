@@ -730,7 +730,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             
             {/* 현재 기간 표시 */}
             <div className="text-white/80 text-xs font-medium bg-gradient-to-r from-purple-900/30 via-purple-800/40 to-purple-900/30 px-3 py-1.5 rounded-md border border-purple-500/20 backdrop-blur-xl">
-              <span className="text-purple-200 mr-1">📅</span> {periodStats?.start_date ? formatCompactDate(periodStats.start_date) : '로딩 중'} ~ {periodStats?.end_date ? formatCompactDate(periodStats.end_date) : '로딩 중'}
+              <span className="text-purple-200 mr-1">📅</span> {periodStats?.start_date ? formatCompactDate(periodStats.start_date) : t('common.loading')} ~ {periodStats?.end_date ? formatCompactDate(periodStats.end_date) : t('common.loading')}
             </div>
           </div>
 
@@ -794,16 +794,16 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
-                      <span className="text-white font-semibold text-base">AI 정보 학습</span>
+                      <span className="text-white font-semibold text-base">{t('progress.card.ai.info.learning')}</span>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500/30 to-blue-600/30 rounded-full border border-blue-400/40">
-                        <span className="text-blue-200 text-xs font-medium">평균</span>
+                        <span className="text-blue-200 text-xs font-medium">{t('progress.graph.card.average')}</span>
                         <span className="text-blue-100 font-bold text-sm">
                           {calculateAverage(uniqueChartData, 'ai_info')}%
                         </span>
                       </div>
                     </div>
                     <span className="text-white/70 text-sm font-medium">
-                      최대: {maxAI}개
+                      {t('progress.graph.card.max')}: {maxAI}{t('progress.graph.card.items')}
                     </span>
                   </div>
                   <div className="w-full">
@@ -811,7 +811,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       {/* y축 라벨 */}
                       <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
                         {[maxAI, Math.round(maxAI/2), 0].map((v, i) => (
-                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}개</div>
+                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}{t('progress.graph.card.items')}</div>
                         ))}
                       </div>
 
@@ -867,14 +867,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
                       <span className="text-white font-semibold text-base">{t('progress.card.terms.learning')}</span>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/30 to-purple-600/30 rounded-full border border-purple-400/40">
-                        <span className="text-purple-200 text-xs font-medium">평균</span>
+                        <span className="text-purple-200 text-xs font-medium">{t('progress.graph.card.average')}</span>
                         <span className="text-purple-100 font-bold text-sm">
                           {calculateAverage(uniqueChartData, 'terms')}%
                         </span>
                       </div>
                     </div>
                     <span className="text-white/70 text-sm font-medium">
-                      최대: {maxTerms}개
+                      {t('progress.graph.card.max')}: {maxTerms}{t('progress.graph.card.items')}
                     </span>
                   </div>
                   <div className="w-full">
@@ -882,7 +882,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       {/* y축 라벨 */}
                       <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
                         {[maxTerms, Math.round(maxTerms/2), 0].map((v, i) => (
-                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}개</div>
+                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}{t('progress.graph.card.items')}</div>
                         ))}
                       </div>
 
@@ -936,16 +936,16 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
-                      <span className="text-white font-semibold text-base">퀴즈 점수</span>
+                      <span className="text-white font-semibold text-base">{t('progress.card.quiz.score')}</span>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500/30 to-emerald-500/30 rounded-full border border-green-400/40">
-                        <span className="text-green-200 text-xs font-medium">평균</span>
+                        <span className="text-green-200 text-xs font-medium">{t('progress.graph.card.average')}</span>
                         <span className="text-green-100 font-bold text-sm">
                           {calculateAverage(uniqueChartData, 'quiz_score')}%
                         </span>
                       </div>
                     </div>
                     <span className="text-white/70 text-sm font-medium">
-                      최대: {maxQuiz}%
+                      {t('progress.graph.card.max')}: {maxQuiz}%
                     </span>
                   </div>
                   <div className="w-full">
@@ -1005,7 +1005,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             ) : (
               <div className="text-center text-white/60 py-8">
                 <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-40" />
-                <p>선택한 기간에 학습 데이터가 없습니다.</p>
+                <p>{t('progress.graph.no.data')}</p>
               </div>
             )}
           </div>

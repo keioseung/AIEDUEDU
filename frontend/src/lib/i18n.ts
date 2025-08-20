@@ -384,6 +384,9 @@ const ko: Record<string, string> = {
   'progress.graph.y.axis.1': '1개',
   'progress.graph.y.axis.2': '2개',
   
+  // 진행률 그래프 메시지
+  'progress.graph.no.data': '선택한 기간에 학습 데이터가 없습니다.',
+  
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': '주제 선택',
   'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
@@ -792,6 +795,9 @@ const en: Record<string, string> = {
   'progress.graph.y.axis.0': '0 items',
   'progress.graph.y.axis.1': '1 item',
   'progress.graph.y.axis.2': '2 items',
+  
+  // Progress Graph Messages
+  'progress.graph.no.data': 'No learning data available for the selected period.',
 }
 
 // 일본어
@@ -1164,6 +1170,9 @@ const ja: Record<string, string> = {
   'progress.graph.y.axis.0': '0件',
   'progress.graph.y.axis.1': '1件',
   'progress.graph.y.axis.2': '2件',
+  
+  // 進捗グラフメッセージ
+  'progress.graph.no.data': '選択した期間に学習データがありません。',
   
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': 'トピック選択',
@@ -1553,6 +1562,9 @@ const zh: Record<string, string> = {
   'progress.graph.y.axis.0': '0个',
   'progress.graph.y.axis.1': '1个',
   'progress.graph.y.axis.2': '2个',
+  
+  // 进度图表消息
+  'progress.graph.no.data': '所选期间没有学习数据。',
   
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': '选择主题',
