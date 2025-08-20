@@ -20,7 +20,7 @@ const ko: Record<string, string> = {
   'app.feature.quiz': '실전 퀴즈로 지식을 점검',
   'app.start.button': '지금 시작하기',
   'app.stats.ai.info.label': '매일 새로운',
-  'app.stats.ai.info.title': 'AI 정보',
+  'app.stats.ai.info.section.title': 'AI 정보',
   'app.stats.quiz.label': '실전 퀴즈로',
   'app.stats.quiz.title': '지식 점검',
   'app.stats.progress.label': '개인별',
