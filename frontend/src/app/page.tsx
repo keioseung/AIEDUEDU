@@ -303,7 +303,7 @@ export default function IntroPage() {
                    </div>
                    <div className="relative z-10">
                      <div className="text-white/70 text-xs md:text-sm font-medium mb-1">{t('app.stats.ai.info.label')}</div>
-                     <div className="text-white font-bold text-sm md:text-base mb-1">{t('app.stats.ai.info.title')}</div>
+                     <div className="text-white font-bold text-sm md:text-base mb-1">{t('app.stats.ai.info.section.title')}</div>
                    </div>
                    
                                        {/* 고급스러운 선택 효과 */}
