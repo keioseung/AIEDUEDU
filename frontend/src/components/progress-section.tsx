@@ -541,11 +541,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                const sessionProgress = userProgress[sessionId]
                if (sessionProgress) {
+                 console.log('용어 학습 진행률 계산 - sessionProgress:', sessionProgress)
+                 
                  // 모든 날짜의 용어 학습 데이터 수집
                  Object.keys(sessionProgress).forEach(date => {
                    if (date !== '__stats__' && date !== 'terms_by_date') {
                      // 해당 날짜에 학습한 AI 정보의 인덱스들
                      const learnedIndices = sessionProgress[date] || []
+                     console.log(`날짜 ${date}의 학습된 AI 정보 인덱스:`, learnedIndices)
                      
                      // 각 학습된 AI 정보의 용어 학습 상태 확인
                      learnedIndices.forEach((infoIndex: number) => {
@@ -554,14 +557,19 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                        if (learnedTerms) {
                          try {
                            const terms = JSON.parse(learnedTerms)
+                           console.log(`날짜 ${date}, 인덱스 ${infoIndex}의 학습된 용어:`, terms)
                            totalTermsLearned += terms.length
                          } catch (error) {
                            console.error('용어 데이터 파싱 오류:', error)
                          }
+                       } else {
+                         console.log(`날짜 ${date}, 인덱스 ${infoIndex}의 용어 데이터 없음`)
                        }
                      })
                    }
                  })
+                 
+                 console.log('최종 계산된 총 용어 학습 수:', totalTermsLearned)
                }
              } catch (error) {
                console.error('로컬 스토리지 데이터 파싱 오류:', error)

@@ -118,15 +118,31 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             if (currentQuizIndex >= newWrongAnswerNotes.length) {
               // 현재 인덱스가 남은 문제 수보다 크면 마지막 문제로 이동
               setCurrentQuizIndex(newWrongAnswerNotes.length - 1)
+            } else {
+              // 현재 인덱스가 남은 문제 범위 내에 있으면 그대로 유지
+              // (React가 자동으로 다음 문제를 표시함)
             }
-            // currentQuizIndex가 남은 문제 범위 내에 있으면 그대로 유지
-            // (React가 자동으로 다음 문제를 표시함)
           }
         }
       }
       
       return newWrongAnswerNotes
     })
+    
+    // 삭제 후 즉시 다음 문제로 이동하기 위해 currentQuizIndex 조정
+    if (isWrongAnswerMode) {
+      setTimeout(() => {
+        setWrongAnswerNotes(current => {
+          if (current.length === 0) return current
+          
+          // 현재 인덱스가 남은 문제 수보다 크면 조정
+          if (currentQuizIndex >= current.length) {
+            setCurrentQuizIndex(current.length - 1)
+          }
+          return current
+        })
+      }, 0)
+    }
   }
 
   // 오답 노트에 퀴즈 추가하는 함수
