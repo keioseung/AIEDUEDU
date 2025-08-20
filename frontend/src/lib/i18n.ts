@@ -164,10 +164,6 @@ const ko: Record<string, string> = {
   'quiz.random': '랜덤',
   'quiz.topic.today': '오늘의 주제',
   'quiz.topic.selected': '선택된 주제',
-  'quiz.submit.answer': '답안 제출',
-  'quiz.next.question': '다음 문제',
-  'quiz.restart': '다시 시작',
-  'quiz.final.score': '최종 점수',
   'quiz.section.title': '퀴즈 도전',
   'quiz.topic.selection': '주제 선택',
   'quiz.score': '점수',
@@ -739,12 +735,6 @@ const en: Record<string, string> = {
   'progress.card.today.learning.count': 'Today\'s Learning Count',
   'progress.card.daily.total.info': 'Daily Total Info Count',
   'progress.card.accumulated.total.learning': 'Accumulated Total Learning',
-  'progress.card.terms.learning.count': 'Terms Learning',
-  'progress.card.learning.count': 'Learning Count',
-  'progress.card.daily.accuracy': 'Daily Accuracy',
-  'progress.card.daily.accumulated': 'Daily Accumulated',
-  'progress.card.accuracy': 'Accuracy',
-  'progress.card.accumulated.score': 'Accumulated Score',
 }
 
 // 일본어
