@@ -330,7 +330,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative z-10 flex items-center gap-2">
                 <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
-                <span className="text-xs">정렬순</span>
+                <span className="text-xs">{t('ai.info.sort')}</span>
               </span>
             </button>
 
@@ -473,7 +473,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative z-10 flex items-center gap-2">
                 <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
-                <span className="text-xs">{itemsPerPage}개</span>
+                <span className="text-xs">{itemsPerPage}{t('category.mode.count')}</span>
               </span>
             </button>
 
@@ -558,7 +558,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                 ? 'text-yellow-400 drop-shadow-sm' 
                 : 'text-white/30 border border-white/30 rounded-sm'
             }`} />
-            <span className="text-xs">즐겨찾기만</span>
+                                    <span className="text-xs">{t('ai.info.favorite')}</span>
           </button>
         </div>
       </div>

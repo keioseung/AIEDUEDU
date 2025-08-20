@@ -454,7 +454,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                          stroke={showFavoritesOnly ? 'none' : 'currentColor'} 
                          strokeWidth={showFavoritesOnly ? 0 : 2}
                        />
-                       <span className="text-xs font-medium">즐겨찾기</span>
+                       <span className="text-xs font-medium">{t('ai.info.favorite')}</span>
                      </button>
                   </div>
                 </div>
