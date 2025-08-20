@@ -779,8 +779,8 @@ const en: Record<string, string> = {
   'quiz.tab.new.achievement': 'New achievement gained!',
   
   // 진행률 탭 모드명
-  'progress.tab.trend.card': 'Learning Trend Card',
-  'progress.tab.trend.graph': 'Learning Trend Graph',
+  'progress.tab.trend.card': 'Trend Card',
+  'progress.tab.trend.graph': 'Trend Graph',
   
   // 진행률 탭 카드 내용
   'progress.card.ai.info.learning': 'AI Info Learning',
