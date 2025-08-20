@@ -640,6 +640,7 @@ const en: Record<string, string> = {
   'progress.card.learning.count': 'Learning Count',
   'progress.card.accumulated.score': 'Accumulated Score',
   'progress.card.accuracy': 'Accuracy Rate',
+  'progress.card.daily.accumulated': 'Daily Accumulated',
   'progress.card.quiz.score': 'Quiz Score',
   'progress.card.terms.learning': 'Terms Learning',
   'progress.card.terms.daily.total': 'Daily Total Terms Count',
