@@ -104,22 +104,20 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         
         // 현재 문제가 삭제된 문제인 경우 다음 문제로 이동
         if (currentQuiz && currentQuiz.id === quizId) {
-          if (currentQuizIndex < newWrongAnswerNotes.length) {
-            // 다음 문제가 있으면 다음 문제로 이동
-            setCurrentQuizIndex(currentQuizIndex)
-          } else if (currentQuizIndex > 0) {
-            // 다음 문제가 없고 이전 문제가 있으면 이전 문제로 이동
-            setCurrentQuizIndex(currentQuizIndex - 1)
-          } else {
-            // 마지막 문제였으면 퀴즈 완료 상태로 설정
+          if (newWrongAnswerNotes.length === 0) {
+            // 모든 문제가 삭제되었으면 퀴즈 완료
             const finalScoreData = {
               score: score,
-              total: newWrongAnswerNotes.length,
-              percentage: newWrongAnswerNotes.length > 0 ? Math.round((score / newWrongAnswerNotes.length) * 100) : 0
+              total: 0,
+              percentage: 0
             }
             setFinalScore(finalScoreData)
             setQuizCompleted(true)
+          } else if (currentQuizIndex >= newWrongAnswerNotes.length) {
+            // 현재 인덱스가 남은 문제 수보다 크면 마지막 문제로 이동
+            setCurrentQuizIndex(newWrongAnswerNotes.length - 1)
           }
+          // currentQuizIndex가 남은 문제 범위 내에 있으면 그대로 유지 (자동으로 다음 문제 표시됨)
         }
       }
       
