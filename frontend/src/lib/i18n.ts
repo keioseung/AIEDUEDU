@@ -645,7 +645,7 @@ const en: Record<string, string> = {
   'progress.card.accuracy': 'Accuracy Rate',
   'progress.card.daily.accumulated': 'Daily Accumulated',
   'progress.card.quiz.score': 'Quiz Score',
-  'progress.card.terms.learning': 'Terms Learning',
+  'progress.card.terms.learning': 'Terms',
   'progress.card.terms.daily.total': 'Daily Total Terms Count',
   'progress.card.terms.accumulated.total': 'Accumulated Total Terms Count',
   
@@ -783,7 +783,7 @@ const en: Record<string, string> = {
   'progress.tab.trend.graph': 'Trend Graph',
   
   // 진행률 탭 카드 내용
-  'progress.card.ai.info.learning': 'AI Info Learning',
+  'progress.card.ai.info.learning': 'AI Info',
   'progress.card.today.learning.count': 'Today\'s Learning Count',
   'progress.card.daily.total.info': 'Daily Total Info Count',
   'progress.card.accumulated.total.learning': 'Accumulated Total Learning',
