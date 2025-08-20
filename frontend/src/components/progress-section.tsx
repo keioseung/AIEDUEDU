@@ -400,7 +400,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 학습 수` : t('progress.card.today.learning.count')}
+                  {selectedDate ? `${selectedDate} ${t('progress.card.learning.count')}` : t('progress.card.today.learning.count')}
                 </span>
                 <span className="text-blue-400 font-bold text-base">
                   {(() => {
@@ -471,7 +471,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 학습 수` : t('progress.card.today.learning.count')}
+                  {selectedDate ? `${selectedDate} ${t('progress.card.learning.count')}` : t('progress.card.today.learning.count')}
                 </span>
                 <span className="text-purple-400 font-bold text-base">
                   {(() => {
@@ -636,7 +636,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 누적 점수` : t('progress.card.daily.accumulated')}
+                  {selectedDate ? `${selectedDate} ${t('progress.card.accumulated.score')}` : t('progress.card.daily.accumulated')}
                 </span>
                 <span className="text-green-400 font-bold text-base">
                   {(() => {
@@ -865,7 +865,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
-                      <span className="text-white font-semibold text-base">용어 학습</span>
+                      <span className="text-white font-semibold text-base">{t('progress.card.terms.learning')}</span>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/30 to-purple-600/30 rounded-full border border-purple-400/40">
                         <span className="text-purple-200 text-xs font-medium">평균</span>
                         <span className="text-purple-100 font-bold text-sm">

@@ -97,6 +97,8 @@ const ko: Record<string, string> = {
   'ai.info.mode.date': '날짜별',
   'ai.info.mode.category': '카테고리별',
   'ai.info.mode.full': '전체목록',
+  'ai.info.sort.options': '정렬 옵션',
+  'ai.info.items.per.page.select': '항목 수 선택',
   
 
   
@@ -449,6 +451,8 @@ const en: Record<string, string> = {
   'ai.info.terms': 'Terms',
   'ai.info.category': 'Category',
   'ai.info.subcategory': 'Subcategory',
+  'ai.info.sort.options': 'Sort Options',
+  'ai.info.items.per.page.select': 'Select Items Per Page',
   
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI Info List Mode',
@@ -589,6 +593,9 @@ const en: Record<string, string> = {
   'progress.quiz.daily.accumulated': 'Daily Accumulated',
   'progress.quiz.accuracy': 'Daily Accuracy',
   'progress.quiz.accumulated.score': 'Daily Accumulated',
+  'progress.card.learning.count': 'Learning Count',
+  'progress.card.accumulated.score': 'Accumulated Score',
+  'progress.card.terms.learning': 'Terms Learning',
   
   // Terms Learning
   'terms.title': 'Terms Learning',

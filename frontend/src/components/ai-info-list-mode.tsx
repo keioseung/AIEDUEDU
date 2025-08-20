@@ -348,7 +348,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                   }}
                 >
                   <div className="text-center mb-2">
-                    <div className="text-white/95 text-xs font-semibold mb-1">정렬 옵션</div>
+                    <div className="text-white/95 text-xs font-semibold mb-1">{t('ai.info.sort.options')}</div>
                     <div className="w-full bg-white/20 rounded-full h-0.5">
                       <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
                     </div>
@@ -491,7 +491,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                   }}
                 >
                   <div className="text-center mb-2">
-                    <div className="text-white/95 text-xs font-semibold mb-1">항목 수 선택</div>
+                    <div className="text-white/95 text-xs font-semibold mb-1">{t('ai.info.items.per.page.select')}</div>
                     <div className="w-full bg-white/20 rounded-full h-0.5">
                       <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
                     </div>
