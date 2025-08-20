@@ -28,12 +28,18 @@ const ko: Record<string, string> = {
   'app.stats.terms.label': 'AI 용어',
   'app.stats.terms.title': '체계 학습',
   
+  // 웰컴페이지 아이콘 설명
+  'welcome.ai.info.description': '매일 새로운 AI 정보로 지식을 쌓아보세요. 최신 AI 트렌드와 기술 동향을 파악하고, 실무에 바로 적용할 수 있는 인사이트를 얻을 수 있습니다.',
+  'welcome.quiz.description': '실전 퀴즈로 학습한 내용을 점검하세요. 다양한 난이도의 문제를 통해 AI 지식을 체계적으로 정리하고, 취약한 부분을 보완할 수 있습니다.',
+  'welcome.progress.description': '개인별 학습 진행률을 체계적으로 관리하세요. 학습 현황을 한눈에 파악하고, 목표 달성을 위한 맞춤형 학습 계획을 세울 수 있습니다.',
+  'welcome.terms.description': 'AI 세계의 핵심 개념을 쉽게 이해하세요. 복잡한 AI 용어들을 체계적으로 정리하고, 실무에서 활용할 수 있는 지식을 쌓을 수 있습니다.',
+  
   // 네비게이션
   'nav.dashboard': '대시보드',
   'nav.ai.info': 'AI 정보',
   'nav.quiz': '퀴즈',
   'nav.progress': '진행률',
-  'nav.terms': '학습한 용어',
+  'nav.terms': '용어 학습',
   'nav.admin': '관리자',
   'nav.logout': '로그아웃',
   
@@ -71,6 +77,48 @@ const ko: Record<string, string> = {
   'ai.info.category': '카테고리',
   'ai.info.subcategory': '하위 카테고리',
   
+  // AI 정보 모드
+  'ai.info.mode.date': '날짜별',
+  'ai.info.mode.category': '카테고리별',
+  'ai.info.mode.full': '전체목록',
+  
+  // 날짜 계산기
+  'date.calculator.today': '오늘',
+  'date.calculator.calendar': '달력',
+  
+  // 카테고리 모드
+  'category.mode.select': '카테고리 목록',
+  'category.mode.loading': '잠시만 기다려 주세요.',
+  'category.mode.count': '개',
+  
+  // AI 카테고리 이름
+  'category.image.generation': '이미지 생성 AI',
+  'category.chatbot.conversational': '챗봇/대화형 AI',
+  'category.text.generation': '텍스트 생성 AI',
+  'category.code.generation': '코드 생성 AI',
+  'category.audio.generation': '오디오 생성 AI',
+  'category.video.generation': '비디오 생성 AI',
+  'category.data.analysis': '데이터 분석 AI',
+  'category.automation': '자동화 AI',
+  
+  // 퀴즈 주제
+  'quiz.topic.selector': '주제선택',
+  'quiz.random': '랜덤',
+  'quiz.topic.today': '오늘의 주제',
+  'quiz.topic.selected': '선택된 주제',
+  
+  // 퀴즈 질문과 선택지
+  'quiz.question.meaning': '의 의미로 가장 적절한 것은?',
+  'quiz.question.wrong.note': '오답 노트',
+  'quiz.message.no.wrong.notes': '오답 노트에 등록된 문제가 없습니다.',
+  'quiz.message.wrong.notes.loaded': '오답 노트에서 {count}개 문제를 가져왔습니다.',
+  'quiz.message.no.terms.selected': '선택된 주제에 등록된 용어가 없습니다.',
+  'quiz.option.unrelated': '과 관련이 없는 설명입니다.',
+  'quiz.explanation.correct.meaning': '의 정확한 의미는:',
+  
+  // 로딩 메시지
+  'loading.please.wait': '잠시만 기다려 주세요.',
+  
   // 퀴즈
   'quiz.title': '퀴즈',
   'quiz.start': '퀴즈 시작',
@@ -100,8 +148,23 @@ const ko: Record<string, string> = {
   'progress.month': '이번 달',
   'progress.year': '올해',
   
-  // 용어 학습
-  'terms.title': '학습한 용어',
+  // 진행률 모드
+  'progress.mode.trend.card': '학습 추이 카드',
+  'progress.mode.trend.graph': '학습 추이 그래프',
+  
+  // 진행률 카드 내용
+  'progress.ai.info.learning': 'AI 정보 학습',
+  'progress.ai.info.today.count': '오늘 학습 수',
+  'progress.ai.info.daily.total': '일별 총 정보 수',
+  'progress.ai.info.accumulated.total': '누적 총 학습 수',
+  'progress.terms.learning.count': '학습 수',
+  'progress.quiz.daily.accuracy': '일일 정답률',
+  'progress.quiz.daily.accumulated': '일일 누적',
+  'progress.quiz.accuracy': '일일 정답률',
+  'progress.quiz.accumulated.score': '일일 누적',
+  
+  // 용어학습
+  'terms.title': '용어 학습',
   'terms.learned': '학습 완료',
   'terms.favorite': '즐겨찾기',
   'terms.search': '검색',
@@ -112,6 +175,25 @@ const ko: Record<string, string> = {
   'terms.auto.play': '자동 재생',
   'terms.speed': '속도',
   'terms.shuffle': '섞기',
+  
+  // 용어학습 필터/목록
+  'terms.filter.button': '필터',
+  'terms.list.button': '목록',
+  'terms.search.placeholder': '용어나 설명으로 검색...',
+  'terms.display.terms': '표시된 용어',
+  'terms.favorites': '즐겨찾기',
+  'terms.learning.progress': '학습진행률',
+  'terms.learning.complete': '학습완료',
+  
+  // 용어학습 필터/목록 메뉴
+  'terms.filter.menu.title': '필터 옵션',
+  'terms.filter.menu.category': '카테고리별',
+  'terms.filter.menu.difficulty': '난이도별',
+  'terms.filter.menu.status': '상태별',
+  'terms.list.menu.title': '목록 옵션',
+  'terms.list.menu.sort.by': '정렬 기준',
+  'terms.list.menu.sort.order': '정렬 순서',
+  'terms.list.menu.view.mode': '보기 모드',
   
   // 관리자
   'admin.title': '관리자 대시보드',
@@ -200,12 +282,18 @@ const en: Record<string, string> = {
   'app.stats.terms.label': 'AI Terms',
   'app.stats.terms.title': 'Systematic',
   
+  // Welcome page icon descriptions
+  'welcome.ai.info.description': 'Build knowledge with new AI information every day. Stay updated with the latest AI trends and technology developments, and gain insights that can be immediately applied to your work.',
+  'welcome.quiz.description': 'Check your learning with practical quizzes. Organize your AI knowledge systematically through various difficulty levels and identify areas for improvement.',
+  'welcome.progress.description': 'Systematically manage your personal learning progress. Get a comprehensive view of your learning status and create customized learning plans to achieve your goals.',
+  'welcome.terms.description': 'Easily understand core concepts of the AI world. Systematically organize complex AI terms and build knowledge that can be applied in practical work.',
+  
   // Navigation
   'nav.dashboard': 'Dashboard',
   'nav.ai.info': 'AI Info',
   'nav.quiz': 'Quiz',
   'nav.progress': 'Progress',
-  'nav.terms': 'Learned Terms',
+  'nav.terms': 'Terms Learning',
   'nav.admin': 'Admin',
   'nav.logout': 'Logout',
   
@@ -243,6 +331,48 @@ const en: Record<string, string> = {
   'ai.info.category': 'Category',
   'ai.info.subcategory': 'Subcategory',
   
+  // AI Info Mode
+  'ai.info.mode.date': 'By Date',
+  'ai.info.mode.category': 'By Category',
+  'ai.info.mode.full': 'Full List',
+  
+  // Date Calculator
+  'date.calculator.today': 'Today',
+  'date.calculator.calendar': 'Calendar',
+  
+  // Category Mode
+  'category.mode.select': 'Category List',
+  'category.mode.loading': 'Please wait a moment.',
+  'category.mode.count': 'items',
+  
+  // AI Category Names
+  'category.image.generation': 'Image Generation AI',
+  'category.chatbot.conversational': 'Chatbot/Conversational AI',
+  'category.text.generation': 'Text Generation AI',
+  'category.code.generation': 'Code Generation AI',
+  'category.audio.generation': 'Audio Generation AI',
+  'category.video.generation': 'Video Generation AI',
+  'category.data.analysis': 'Data Analysis AI',
+  'category.automation': 'Automation AI',
+  
+  // Quiz Topic
+  'quiz.topic.selector': 'Select Topic',
+  'quiz.random': 'Random',
+  'quiz.topic.today': 'Today\'s Topic',
+  'quiz.topic.selected': 'Selected Topic',
+  
+  // Quiz Questions and Options
+  'quiz.question.meaning': 'What is the most appropriate meaning of',
+  'quiz.question.wrong.note': 'Wrong Answer Notes',
+  'quiz.message.no.wrong.notes': 'No problems registered in wrong answer notes.',
+  'quiz.message.wrong.notes.loaded': 'Loaded {count} problems from wrong answer notes.',
+  'quiz.message.no.terms.selected': 'No terms registered for the selected topic.',
+  'quiz.option.unrelated': 'This description is unrelated to',
+  'quiz.explanation.correct.meaning': 'The correct meaning of',
+  
+  // Loading Message
+  'loading.please.wait': 'Please wait a moment.',
+  
   // Quiz
   'quiz.title': 'Quiz',
   'quiz.start': 'Start Quiz',
@@ -272,8 +402,23 @@ const en: Record<string, string> = {
   'progress.month': 'This Month',
   'progress.year': 'This Year',
   
+  // Progress Mode
+  'progress.mode.trend.card': 'Learning Trend Card',
+  'progress.mode.trend.graph': 'Learning Trend Graph',
+  
+  // Progress Card Content
+  'progress.ai.info.learning': 'AI Info Learning',
+  'progress.ai.info.today.count': 'Today\'s Learning Count',
+  'progress.ai.info.daily.total': 'Daily Total Info Count',
+  'progress.ai.info.accumulated.total': 'Accumulated Total Learning Count',
+  'progress.terms.learning.count': 'Learning Count',
+  'progress.quiz.daily.accuracy': 'Daily Accuracy',
+  'progress.quiz.daily.accumulated': 'Daily Accumulated',
+  'progress.quiz.accuracy': 'Daily Accuracy',
+  'progress.quiz.accumulated.score': 'Daily Accumulated',
+  
   // Terms Learning
-  'terms.title': 'Learned Terms',
+  'terms.title': 'Terms Learning',
   'terms.learned': 'Learned',
   'terms.favorite': 'Favorites',
   'terms.search': 'Search',
@@ -284,6 +429,25 @@ const en: Record<string, string> = {
   'terms.auto.play': 'Auto Play',
   'terms.speed': 'Speed',
   'terms.shuffle': 'Shuffle',
+  
+  // Terms Filter/List
+  'terms.filter.button': 'Filter',
+  'terms.list.button': 'List',
+  'terms.search.placeholder': 'Search by term or description...',
+  'terms.display.terms': 'Displayed Terms',
+  'terms.favorites': 'Favorites',
+  'terms.learning.progress': 'Learning Progress',
+  'terms.learning.complete': 'Learning Complete',
+  
+  // Terms Filter/List Menu
+  'terms.filter.menu.title': 'Filter Options',
+  'terms.filter.menu.category': 'By Category',
+  'terms.filter.menu.difficulty': 'By Difficulty',
+  'terms.filter.menu.status': 'By Status',
+  'terms.list.menu.title': 'List Options',
+  'terms.list.menu.sort.by': 'Sort By',
+  'terms.list.menu.sort.order': 'Sort Order',
+  'terms.list.menu.view.mode': 'View Mode',
   
   // Admin
   'admin.title': 'Admin Dashboard',
@@ -372,12 +536,18 @@ const ja: Record<string, string> = {
   'app.stats.terms.label': 'AI用語',
   'app.stats.terms.title': '体系的学習',
   
+  // ウェルカムページアイコン説明
+  'welcome.ai.info.description': '毎日新しいAI情報で知識を積み重ねましょう。最新のAIトレンドと技術動向を把握し、実務にすぐに適用できるインサイトを得ることができます。',
+  'welcome.quiz.description': '実践クイズで学習した内容を確認しましょう。様々な難易度の問題を通じてAI知識を体系的に整理し、弱点を補完できます。',
+  'welcome.progress.description': '個人別学習進捗を体系的に管理しましょう。学習状況を一目で把握し、目標達成のためのカスタマイズされた学習計画を立てることができます。',
+  'welcome.terms.description': 'AI世界の核心概念を簡単に理解しましょう。複雑なAI用語を体系的に整理し、実務で活用できる知識を積み重ねることができます。',
+  
   // ナビゲーション
   'nav.dashboard': 'ダッシュボード',
   'nav.ai.info': 'AI情報',
   'nav.quiz': 'クイズ',
   'nav.progress': '進捗',
-  'nav.terms': '学習した用語',
+  'nav.terms': '用語学習',
   'nav.admin': '管理者',
   'nav.logout': 'ログアウト',
   
@@ -415,7 +585,49 @@ const ja: Record<string, string> = {
   'ai.info.category': 'カテゴリ',
   'ai.info.subcategory': 'サブカテゴリ',
   
-  // クイズ
+  // AI Info Mode
+  'ai.info.mode.date': '日付別',
+  'ai.info.mode.category': 'カテゴリ別',
+  'ai.info.mode.full': '全リスト',
+  
+  // Date Calculator
+  'date.calculator.today': '今日',
+  'date.calculator.calendar': 'カレンダー',
+  
+  // Category Mode
+  'category.mode.select': 'カテゴリリスト',
+  'category.mode.loading': 'しばらくお待ちください。',
+  'category.mode.count': '件',
+  
+  // AI Category Names
+  'category.image.generation': '画像生成AI',
+  'category.chatbot.conversational': 'チャットボット/対話型AI',
+  'category.text.generation': 'テキスト生成AI',
+  'category.code.generation': 'コード生成AI',
+  'category.audio.generation': '音声生成AI',
+  'category.video.generation': '動画生成AI',
+  'category.data.analysis': 'データ分析AI',
+  'category.automation': '自動化AI',
+  
+  // Quiz Topic
+  'quiz.topic.selector': 'トピック選択',
+  'quiz.random': 'ランダム',
+  'quiz.topic.today': '今日のトピック',
+  'quiz.topic.selected': '選択されたトピック',
+  
+  // Quiz Questions and Options
+  'quiz.question.meaning': 'の意味として最も適切なものは？',
+  'quiz.question.wrong.note': '不正解ノート',
+  'quiz.message.no.wrong.notes': '不正解ノートに登録された問題がありません。',
+  'quiz.message.wrong.notes.loaded': '不正解ノートから{count}個の問題を読み込みました。',
+  'quiz.message.no.terms.selected': '選択されたトピックに登録された用語がありません。',
+  'quiz.option.unrelated': 'とは関係のない説明です。',
+  'quiz.explanation.correct.meaning': 'の正確な意味は：',
+  
+  // Loading Message
+  'loading.please.wait': 'しばらくお待ちください。',
+  
+  // Quiz
   'quiz.title': 'クイズ',
   'quiz.start': 'クイズ開始',
   'quiz.question': '問題',
@@ -432,7 +644,7 @@ const ja: Record<string, string> = {
   'quiz.wrong.notes': '不正解ノート',
   'quiz.achievement': '達成',
   
-  // 進捗
+  // Progress
   'progress.title': '学習進捗',
   'progress.overall': '全体進捗',
   'progress.ai.info': 'AI情報学習',
@@ -444,8 +656,23 @@ const ja: Record<string, string> = {
   'progress.month': '今月',
   'progress.year': '今年',
   
-  // 用語学習
-  'terms.title': '学習した用語',
+  // Progress Mode
+  'progress.mode.trend.card': '学習トレンドカード',
+  'progress.mode.trend.graph': '学習トレンドグラフ',
+  
+  // Progress Card Content
+  'progress.ai.info.learning': 'AI情報学習',
+  'progress.ai.info.today.count': '今日の学習数',
+  'progress.ai.info.daily.total': '日次総情報数',
+  'progress.ai.info.accumulated.total': '累積総学習数',
+  'progress.terms.learning.count': '学習数',
+  'progress.quiz.daily.accuracy': '日次正解率',
+  'progress.quiz.daily.accumulated': '日次累積',
+  'progress.quiz.accuracy': '日次正解率',
+  'progress.quiz.accumulated.score': '日次累積',
+  
+  // Terms Learning
+  'terms.title': '用語学習',
   'terms.learned': '学習完了',
   'terms.favorite': 'お気に入り',
   'terms.search': '検索',
@@ -457,7 +684,26 @@ const ja: Record<string, string> = {
   'terms.speed': '速度',
   'terms.shuffle': 'シャッフル',
   
-  // 管理者
+  // Terms Filter/List
+  'terms.filter.button': 'フィルター',
+  'terms.list.button': 'リスト',
+  'terms.search.placeholder': '用語や説明で検索...',
+  'terms.display.terms': '表示された用語',
+  'terms.favorites': 'お気に入り',
+  'terms.learning.progress': '学習進捗',
+  'terms.learning.complete': '学習完了',
+  
+  // Terms Filter/List Menu
+  'terms.filter.menu.title': 'フィルターオプション',
+  'terms.filter.menu.category': 'カテゴリ別',
+  'terms.filter.menu.difficulty': '難易度別',
+  'terms.filter.menu.status': '状態別',
+  'terms.list.menu.title': 'リストオプション',
+  'terms.list.menu.sort.by': '並び替え基準',
+  'terms.list.menu.sort.order': '並び替え順序',
+  'terms.list.menu.view.mode': '表示モード',
+  
+  // Admin
   'admin.title': '管理者ダッシュボード',
   'admin.welcome': 'AI Mastery Hubを管理しましょう！',
   'admin.ai.info.manage': 'AI情報管理',
@@ -544,12 +790,18 @@ const zh: Record<string, string> = {
   'app.stats.terms.label': 'AI术语',
   'app.stats.terms.title': '系统学习',
   
+  // 欢迎页面图标描述
+  'welcome.ai.info.description': '每天用新的AI信息积累知识。了解最新AI趋势和技术发展，获得可以立即应用到工作中的见解。',
+  'welcome.quiz.description': '通过实践测验检查学习内容。通过各种难度的问题系统整理AI知识，识别需要改进的领域。',
+  'welcome.progress.description': '系统管理个人学习进度。全面了解学习状况，制定实现目标的定制化学习计划。',
+  'welcome.terms.description': '轻松理解AI世界的核心概念。系统整理复杂的AI术语，积累可以在实际工作中应用的知识。',
+  
   // 导航
   'nav.dashboard': '仪表板',
   'nav.ai.info': 'AI信息',
   'nav.quiz': '测验',
   'nav.progress': '进度',
-  'nav.terms': '已学术语',
+  'nav.terms': '术语学习',
   'nav.admin': '管理员',
   'nav.logout': '登出',
   
@@ -587,7 +839,49 @@ const zh: Record<string, string> = {
   'ai.info.category': '类别',
   'ai.info.subcategory': '子类别',
   
-  // 测验
+  // AI Info Mode
+  'ai.info.mode.date': '按日期',
+  'ai.info.mode.category': '按类别',
+  'ai.info.mode.full': '全列表',
+  
+  // Date Calculator
+  'date.calculator.today': '今天',
+  'date.calculator.calendar': '日历',
+  
+  // Category Mode
+  'category.mode.select': '类别列表',
+  'category.mode.loading': '请稍候...',
+  'category.mode.count': '个',
+  
+  // AI Category Names
+  'category.image.generation': '图像生成AI',
+  'category.chatbot.conversational': '聊天机器人/对话型AI',
+  'category.text.generation': '文本生成AI',
+  'category.code.generation': '代码生成AI',
+  'category.audio.generation': '音频生成AI',
+  'category.video.generation': '视频生成AI',
+  'category.data.analysis': '数据分析AI',
+  'category.automation': '自动化AI',
+  
+  // Quiz Topic
+  'quiz.topic.selector': '选择主题',
+  'quiz.random': '随机',
+  'quiz.topic.today': '今日主题',
+  'quiz.topic.selected': '已选主题',
+  
+  // Quiz Questions and Options
+  'quiz.question.meaning': '的含义最恰当的是什么？',
+  'quiz.question.wrong.note': '错题笔记',
+  'quiz.message.no.wrong.notes': '错题笔记中没有注册的问题。',
+  'quiz.message.wrong.notes.loaded': '从错题笔记中加载了{count}个问题。',
+  'quiz.message.no.terms.selected': '选定主题没有注册术语。',
+  'quiz.option.unrelated': '与此无关的描述。',
+  'quiz.explanation.correct.meaning': '的正确含义是：',
+  
+  // Loading Message
+  'loading.please.wait': '请稍等片刻。',
+  
+  // Quiz
   'quiz.title': '测验',
   'quiz.start': '开始测验',
   'quiz.question': '问题',
@@ -616,8 +910,23 @@ const zh: Record<string, string> = {
   'progress.month': '本月',
   'progress.year': '今年',
   
+  // 进度模式
+  'progress.mode.trend.card': '学习趋势卡片',
+  'progress.mode.trend.graph': '学习趋势图',
+  
+  // 进度卡片内容
+  'progress.ai.info.learning': 'AI信息学习',
+  'progress.ai.info.today.count': '今日学习数',
+  'progress.ai.info.daily.total': '日总信息数',
+  'progress.ai.info.accumulated.total': '累计总学习数',
+  'progress.terms.learning.count': '学习数',
+  'progress.quiz.daily.accuracy': '日准确率',
+  'progress.quiz.daily.accumulated': '日累计',
+  'progress.quiz.accuracy': '日准确率',
+  'progress.quiz.accumulated.score': '日累计',
+  
   // 术语学习
-  'terms.title': '已学术语',
+  'terms.title': '术语学习',
   'terms.learned': '已学习',
   'terms.favorite': '收藏',
   'terms.search': '搜索',
@@ -628,6 +937,25 @@ const zh: Record<string, string> = {
   'terms.auto.play': '自动播放',
   'terms.speed': '速度',
   'terms.shuffle': '随机播放',
+  
+  // 术语过滤/列表
+  'terms.filter.button': '筛选',
+  'terms.list.button': '列表',
+  'terms.search.placeholder': '按术语或描述搜索...',
+  'terms.display.terms': '显示术语',
+  'terms.favorites': '收藏',
+  'terms.learning.progress': '学习进度',
+  'terms.learning.complete': '学习完成',
+  
+  // 术语过滤/列表菜单
+  'terms.filter.menu.title': '筛选选项',
+  'terms.filter.menu.category': '按类别',
+  'terms.filter.menu.difficulty': '按难度',
+  'terms.filter.menu.status': '按状态',
+  'terms.list.menu.title': '列表选项',
+  'terms.list.menu.sort.by': '排序依据',
+  'terms.list.menu.sort.order': '排序顺序',
+  'terms.list.menu.view.mode': '显示模式',
   
   // 管理员
   'admin.title': '管理员仪表板',
