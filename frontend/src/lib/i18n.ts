@@ -77,6 +77,16 @@ const ko: Record<string, string> = {
   'ai.info.category': '카테고리',
   'ai.info.subcategory': '하위 카테고리',
   
+  // AI 정보 목록 모드 UI
+  'ai.info.list.mode.title': 'AI 정보 목록 모드',
+  'ai.info.list.total.count': '총 {count}개 정보',
+  'ai.info.list.search.placeholder': '제목, 내용, 용어로 검색...',
+  'ai.info.search.placeholder': 'AI 정보 검색...',
+  
+  // 카테고리 헤더 문구
+  'category.header.total.infos': '총 {count}개 정보',
+  'category.header.updated.days': '{days}일간 업데이트',
+  
   // AI 정보 모드
   'ai.info.mode.date': '날짜별',
   'ai.info.mode.category': '카테고리별',
@@ -90,6 +100,21 @@ const ko: Record<string, string> = {
   'category.mode.select': '카테고리 목록',
   'category.mode.loading': '잠시만 기다려 주세요.',
   'category.mode.count': '개',
+  
+  // 카테고리 이름 (표시 문자열 기준)
+  'category.name.이미지 생성 AI': '이미지 생성 AI',
+  'category.name.챗봇/대화형 AI': '챗봇/대화형 AI',
+  'category.name.자연어 처리 AI': '자연어 처리 AI',
+  'category.name.음성 인식/합성 AI': '음성 인식/합성 AI',
+  'category.name.AI 응용 서비스': 'AI 응용 서비스',
+  'category.name.AI 보안/윤리': 'AI 보안/윤리',
+  'category.name.AI 개발 도구': 'AI 개발 도구',
+  'category.name.AI 창작 도구': 'AI 창작 도구',
+  'category.name.코딩/개발 도구': '코딩/개발 도구',
+  'category.name.음성/오디오 AI': '음성/오디오 AI',
+  'category.name.데이터 분석/ML': '데이터 분석/ML',
+  'category.name.AI 윤리/정책': 'AI 윤리/정책',
+  'category.name.AI 하드웨어/인프라': 'AI 하드웨어/인프라',
   
   // AI 카테고리 이름
   'category.image.generation': '이미지 생성 AI',
@@ -331,6 +356,16 @@ const en: Record<string, string> = {
   'ai.info.category': 'Category',
   'ai.info.subcategory': 'Subcategory',
   
+  // AI Info List Mode UI
+  'ai.info.list.mode.title': 'AI Info List Mode',
+  'ai.info.list.total.count': 'Total {count} items',
+  'ai.info.list.search.placeholder': 'Search by title, content, or term...',
+  'ai.info.search.placeholder': 'Search AI info...',
+  
+  // Category header phrases
+  'category.header.total.infos': 'Total {count} items',
+  'category.header.updated.days': 'Updated over {days} days',
+  
   // AI Info Mode
   'ai.info.mode.date': 'By Date',
   'ai.info.mode.category': 'By Category',
@@ -344,6 +379,21 @@ const en: Record<string, string> = {
   'category.mode.select': 'Category List',
   'category.mode.loading': 'Please wait a moment.',
   'category.mode.count': 'items',
+  
+  // Category names (display string based)
+  'category.name.이미지 생성 AI': 'Image Generation AI',
+  'category.name.챗봇/대화형 AI': 'Chatbot/Conversational AI',
+  'category.name.자연어 처리 AI': 'Natural Language Processing AI',
+  'category.name.음성 인식/합성 AI': 'Speech Recognition/Synthesis AI',
+  'category.name.AI 응용 서비스': 'AI Application Services',
+  'category.name.AI 보안/윤리': 'AI Security/Ethics',
+  'category.name.AI 개발 도구': 'AI Development Tools',
+  'category.name.AI 창작 도구': 'AI Creative Tools',
+  'category.name.코딩/개발 도구': 'Coding/Development Tools',
+  'category.name.음성/오디오 AI': 'Voice/Audio AI',
+  'category.name.데이터 분석/ML': 'Data Analysis/ML',
+  'category.name.AI 윤리/정책': 'AI Ethics/Policy',
+  'category.name.AI 하드웨어/인프라': 'AI Hardware/Infrastructure',
   
   // AI Category Names
   'category.image.generation': 'Image Generation AI',
@@ -585,6 +635,16 @@ const ja: Record<string, string> = {
   'ai.info.category': 'カテゴリ',
   'ai.info.subcategory': 'サブカテゴリ',
   
+  // AI Info List Mode UI
+  'ai.info.list.mode.title': 'AI情報リストモード',
+  'ai.info.list.total.count': '合計 {count} 件',
+  'ai.info.list.search.placeholder': 'タイトル、内容、用語で検索...',
+  'ai.info.search.placeholder': 'AI情報を検索...',
+  
+  // カテゴリヘッダー文句
+  'category.header.total.infos': '合計 {count} 件',
+  'category.header.updated.days': '{days}日間更新',
+  
   // AI Info Mode
   'ai.info.mode.date': '日付別',
   'ai.info.mode.category': 'カテゴリ別',
@@ -598,6 +658,21 @@ const ja: Record<string, string> = {
   'category.mode.select': 'カテゴリリスト',
   'category.mode.loading': 'しばらくお待ちください。',
   'category.mode.count': '件',
+  
+  // カテゴリ名（表示文字列ベース）
+  'category.name.이미지 생성 AI': '画像生成AI',
+  'category.name.챗봇/대화형 AI': 'チャットボット/対話型AI',
+  'category.name.자연어 처리 AI': '自然言語処理AI',
+  'category.name.음성 인식/합성 AI': '音声認識/合成AI',
+  'category.name.AI 응용 서비스': 'AI応用サービス',
+  'category.name.AI 보안/윤리': 'AIセキュリティ/倫理',
+  'category.name.AI 개발 도구': 'AI開発ツール',
+  'category.name.AI 창작 도구': 'AI創作ツール',
+  'category.name.코딩/개발 도구': 'コーディング/開発ツール',
+  'category.name.음성/오디오 AI': '音声/オーディオAI',
+  'category.name.데이터 분석/ML': 'データ分析/ML',
+  'category.name.AI 윤리/정책': 'AI倫理/政策',
+  'category.name.AI 하드웨어/인프라': 'AIハードウェア/インフラ',
   
   // AI Category Names
   'category.image.generation': '画像生成AI',
@@ -839,6 +914,16 @@ const zh: Record<string, string> = {
   'ai.info.category': '类别',
   'ai.info.subcategory': '子类别',
   
+  // AI Info List Mode UI
+  'ai.info.list.mode.title': 'AI 信息列表模式',
+  'ai.info.list.total.count': '共 {count} 个信息',
+  'ai.info.list.search.placeholder': '按标题、内容或术语搜索...',
+  'ai.info.search.placeholder': '搜索 AI 信息...',
+  
+  // 分类头部短语
+  'category.header.total.infos': '共 {count} 个信息',
+  'category.header.updated.days': '在 {days} 天内更新',
+  
   // AI Info Mode
   'ai.info.mode.date': '按日期',
   'ai.info.mode.category': '按类别',
@@ -852,6 +937,21 @@ const zh: Record<string, string> = {
   'category.mode.select': '类别列表',
   'category.mode.loading': '请稍候...',
   'category.mode.count': '个',
+  
+  // 分类名称（基于显示字符串）
+  'category.name.이미지 생성 AI': '图像生成AI',
+  'category.name.챗봇/대화형 AI': '聊天机器人/对话型AI',
+  'category.name.자연어 처리 AI': '自然语言处理AI',
+  'category.name.음성 인식/합성 AI': '语音识别/合成AI',
+  'category.name.AI 응용 서비스': 'AI应用服务',
+  'category.name.AI 보안/윤리': 'AI安全/伦理',
+  'category.name.AI 개발 도구': 'AI开发工具',
+  'category.name.AI 창작 도구': 'AI创作工具',
+  'category.name.코딩/개발 도구': '编码/开发工具',
+  'category.name.음성/오디오 AI': '语音/音频AI',
+  'category.name.데이터 분석/ML': '数据分析/机器学习',
+  'category.name.AI 윤리/정책': 'AI伦理/政策',
+  'category.name.AI 하드웨어/인프라': 'AI硬件/基础设施',
   
   // AI Category Names
   'category.image.generation': '图像生成AI',
@@ -941,7 +1041,7 @@ const zh: Record<string, string> = {
   // 术语过滤/列表
   'terms.filter.button': '筛选',
   'terms.list.button': '列表',
-  'terms.search.placeholder': '按术语或描述搜索...',
+  'terms.search.placeholder': '用语或描述搜索...',
   'terms.display.terms': '显示术语',
   'terms.favorites': '收藏',
   'terms.learning.progress': '学习进度',

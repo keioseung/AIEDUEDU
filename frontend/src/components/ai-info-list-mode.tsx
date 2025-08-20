@@ -7,6 +7,7 @@ import { Settings, ChevronRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import AIInfoCard from './ai-info-card'
+import { t } from '@/lib/i18n'
 
 interface AIInfoItem {
   id: string
@@ -252,7 +253,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
             <div className="flex flex-col items-center justify-center text-white -mt-8">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-              <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려 주세요.</p>
+              <p className="text-white/80 text-lg font-medium whitespace-nowrap">{t('loading.please.wait')}</p>
             </div>
           </div>
         )
@@ -287,10 +288,10 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
           <FaRobot className="text-blue-400" />
-          AI 정보 목록 모드
+          {t('ai.info.list.mode.title')}
         </h2>
         <div className="text-white/60 text-sm">
-          총 {filteredAIInfo.length}개 정보
+          {t('ai.info.list.total.count').replace('{count}', String(filteredAIInfo.length))}
         </div>
       </div>
 
@@ -301,7 +302,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-sm font-light drop-shadow-sm z-10" />
           <input
             type="text"
-            placeholder="제목, 내용, 용어로 검색..."
+            placeholder={t('ai.info.list.search.placeholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 shadow-lg shadow-purple-900/30 backdrop-blur-xl"

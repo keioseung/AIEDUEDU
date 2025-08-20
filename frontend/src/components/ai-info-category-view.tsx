@@ -6,6 +6,7 @@ import { FaRobot, FaFilter, FaSearch, FaChevronDown, FaChevronRight, FaStar, FaC
 import { Image, MessageSquare, Brain, Zap, Globe, Shield, Settings, Palette } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
+import { t } from '@/lib/i18n'
 import AIInfoCard from './ai-info-card'
 
 interface AIInfoItem {
@@ -313,7 +314,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
       <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
         <div className="flex flex-col items-center justify-center text-white -mt-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-          <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려 주세요.</p>
+          <p className="text-white/80 text-lg font-medium whitespace-nowrap">{t('loading.please.wait')}</p>
         </div>
       </div>
     )
@@ -354,11 +355,11 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                      >
                        <div className="flex items-center gap-3">
                          <FaRobot className="text-lg" />
-                         <span className="font-medium">{category}</span>
+                         <span className="font-medium">{t(`category.name.${category}`)}</span>
                        </div>
                                                <div className="flex items-center gap-2">
                           <span className="text-sm bg-purple-600/40 text-purple-100 px-2 py-1 rounded-full border border-purple-500/30">
-                            {stats.count}개
+                            {stats.count}{t('category.mode.count')}
                           </span>
                           <button
                             onClick={(e) => {
@@ -398,16 +399,16 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                <div className={`category-header rounded-2xl p-6 text-white ${getCategoryStyle(selectedCategory).bgColor} border ${getCategoryStyle(selectedCategory).borderColor}`}>
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
                   <div>
-                    <h3 className="text-xl font-bold mb-2">{selectedCategory}</h3>
+                    <h3 className="text-xl font-bold mb-2">{t(`category.name.${selectedCategory}`)}</h3>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="flex items-center gap-2">
                         <FaRobot />
-                        총 {filteredAIInfo.length}개 정보
+                        {t('category.header.total.infos').replace('{count}', String(filteredAIInfo.length))}
                       </span>
                       {categoryStats[selectedCategory] && (
                         <span className="flex items-center gap-2">
                           <FaCalendar />
-                          {categoryStats[selectedCategory].dates.length}일간 업데이트
+                          {t('category.header.updated.days').replace('{days}', String(categoryStats[selectedCategory].dates.length))}
                         </span>
                       )}
                     </div>
@@ -419,7 +420,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                       <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-sm font-light drop-shadow-sm z-10" />
                       <input
                         type="text"
-                        placeholder="AI 정보 검색..."
+                        placeholder={t('ai.info.search.placeholder')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="pl-10 pr-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/40 transition-all duration-200 backdrop-blur-sm"
@@ -464,7 +465,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
                 <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
                   <div className="text-center text-white">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-                    <p className="text-white/80 text-lg font-medium whitespace-nowrap overflow-hidden">잠시만 기다려 주세요.</p>
+                    <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려 주세요.</p>
                   </div>
                 </div>
               ) : filteredAIInfo.length > 0 ? (

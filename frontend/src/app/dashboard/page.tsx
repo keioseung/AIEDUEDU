@@ -549,7 +549,7 @@ export default function DashboardPage() {
                           : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
                       }`}
                     >
-                      📅 날짜별
+                      📅 {t('ai.info.mode.date')}
                     </button>
                     <button
                       onClick={() => setAiInfoMode('category')}
@@ -559,7 +559,7 @@ export default function DashboardPage() {
                           : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
                       }`}
                     >
-                      🏷️ 카테고리별
+                      🏷️ {t('ai.info.mode.category')}
                     </button>
                     <button
                       onClick={() => setAiInfoMode('list')}
@@ -569,7 +569,7 @@ export default function DashboardPage() {
                           : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
                       }`}
                     >
-                      📚 전체목록
+                      📚 {t('ai.info.mode.full')}
                     </button>
                   </div>
                 </div>
@@ -591,7 +591,7 @@ export default function DashboardPage() {
                           style={{ minWidth: 110 }} 
                         />
                         <div className="px-2 py-1.5 rounded-lg bg-gradient-to-r from-purple-500/80 to-pink-500/80 text-white font-semibold text-xs shadow-sm border border-purple-400/30">
-                          {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : new Date(selectedDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                          {selectedDate === new Date().toISOString().split('T')[0] ? t('date.calculator.today') : new Date(selectedDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                         </div>
                       </div>
                     </div>
