@@ -7,6 +7,7 @@ import { useUpdateUserProgress, useCheckAchievements, useUpdateTermProgress, use
 import { useQueryClient } from '@tanstack/react-query'
 import type { AIInfoItem, TermItem } from '@/types'
 import { userProgressAPI } from '@/lib/api'
+import { t } from '@/lib/i18n'
 
 interface AIInfoCardProps {
   info: AIInfoItem
@@ -447,7 +448,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
               {highlightText(info.title, searchQuery || '')}
             </h3>
             <p className="text-white/60 text-xs md:text-sm">
-              {isLearned ? '학습 완료' : '학습 필요'}
+              {isLearned ? t('ai.info.card.learning.complete') : t('ai.info.card.learning.required')}
             </p>
           </div>
         </div>
@@ -475,7 +476,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             onClick={() => setIsExpanded(!isExpanded)}
             className="btn mt-2 text-xs px-3 py-1.5 md:py-2 touch-optimized"
           >
-            {isExpanded ? '접기' : '더보기'}
+            {isExpanded ? t('ai.info.card.collapse') : t('ai.info.card.expand')}
           </button>
         )}
       </div>
@@ -488,12 +489,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             className="flex items-center gap-2 text-blue-300 hover:text-blue-200 text-sm font-medium mb-3 touch-optimized mobile-touch-target"
           >
             <Brain className="w-4 h-4" />
-            <span className="hidden sm:inline">{showTerms ? '용어 학습 숨기기' : '관련 용어 학습하기'}</span>
-            <span className="sm:hidden">{showTerms ? '숨기기' : '용어 학습'}</span>
+            <span className="hidden sm:inline">{showTerms ? t('ai.info.card.terms.learning.hide') : t('ai.info.card.terms.learning.show')}</span>
+            <span className="sm:hidden">{showTerms ? t('ai.info.card.terms.hide') : t('ai.info.card.terms.learning.short')}</span>
             {/* 항상 완료 개수 표시 */}
             {hasTerms && (
               <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">
-                {actualLearnedTerms.size}개 완료
+                {actualLearnedTerms.size}{t('ai.info.card.terms.complete.count')}
               </span>
             )}
           </button>
@@ -513,7 +514,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 <div className="mb-3">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-white/60">{currentTermIndex + 1} / {info.terms?.length || 0}</span>
-                    <span className="text-xs text-green-400 font-bold">{actualLearnedTerms.size}개 학습완료</span>
+                    <span className="text-xs text-green-400 font-bold">{actualLearnedTerms.size}{t('ai.info.card.terms.learning.complete.count')}</span>
                   </div>
                   <div className="w-full bg-white/20 rounded-full h-2">
                     <div
@@ -533,7 +534,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 
                 {/* 스와이프 안내 */}
                 <div className="text-center mb-3">
-                  <p className="text-xs text-white/50">← 스와이프하여 용어 이동 →</p>
+                  <p className="text-xs text-white/50">{t('ai.info.card.terms.swipe.guide')}</p>
                 </div>
                 
                 {/* 이전/다음 버튼 */}
@@ -543,13 +544,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                     className="flex-1 flex items-center justify-center gap-1 px-3 py-2 md:py-3 bg-blue-400/80 text-white rounded-lg hover:bg-blue-500 transition text-sm font-medium touch-optimized mobile-touch-target"
                   >
                     <ChevronLeft className="w-4 h-4" />
-                    <span className="hidden sm:inline">이전</span>
+                    <span className="hidden sm:inline">{t('ai.info.card.terms.previous')}</span>
                   </button>
                   <button
                     onClick={handleNextTerm}
                     className="flex-1 flex items-center justify-center gap-1 px-3 py-2 md:py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium touch-optimized mobile-touch-target"
                   >
-                    <span className="hidden sm:inline">다음</span>
+                    <span className="hidden sm:inline">{t('ai.info.card.terms.next')}</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -608,7 +609,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 {actualLearnedTerms.size === info.terms?.length && info.terms.length > 0 && (
                   <div className="mt-3 md:mt-4 text-center animate-bounce">
                     <span className="inline-block bg-green-500 text-white px-3 md:px-4 py-2 rounded-full font-bold shadow text-sm mobile-text">
-                      🎉 모든 용어 학습 완료!
+                      {t('ai.info.card.terms.all.complete')}
                     </span>
                   </div>
                 )}
@@ -632,8 +633,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span className="hidden sm:inline">{isLearned ? '학습완료' : '학습완료'}</span>
-          <span className="sm:hidden">{isLearned ? '완료' : '학습'}</span>
+          <span className="hidden sm:inline">{isLearned ? t('ai.info.card.learning.button') : t('ai.info.card.learning.button')}</span>
+          <span className="sm:hidden">{isLearned ? t('ai.info.card.complete.button') : t('ai.info.card.learning.button.short')}</span>
         </button>
       </div>
 
@@ -648,7 +649,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           >
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 animate-pulse" />
-              <span className="font-bold text-sm">🎉 학습 완료!</span>
+              <span className="font-bold text-sm">{t('ai.info.card.learning.complete.notification')}</span>
             </div>
           </motion.div>
         )}
@@ -666,8 +667,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             <div className="flex items-center gap-2 md:gap-3">
               <Trophy className="w-5 h-5 md:w-6 md:h-6 animate-bounce" />
               <div>
-                <div className="font-bold text-base md:text-lg">🎉 성취 달성!</div>
-                <div className="text-xs md:text-sm opacity-90">새로운 성취를 획득했습니다!</div>
+                <div className="font-bold text-base md:text-lg">{t('ai.info.card.achievement.notification')}</div>
+                <div className="text-xs md:text-sm opacity-90">{t('ai.info.card.new.achievement')}</div>
               </div>
             </div>
           </motion.div>
