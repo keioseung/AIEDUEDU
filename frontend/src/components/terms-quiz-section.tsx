@@ -95,6 +95,21 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   // 오답 노트에서 퀴즈 제거하는 함수
   const removeFromWrongAnswerNotes = (quizId: number) => {
     setWrongAnswerNotes(prev => prev.filter(quiz => quiz.id !== quizId))
+    
+    // 오답 노트 모드에서 문제를 삭제한 후 상태 초기화
+    if (isWrongAnswerMode) {
+      setSelectedAnswer(null)
+      setShowResult(false)
+      
+      // 현재 문제가 삭제된 문제인 경우 다음 문제로 이동
+      if (currentQuiz && currentQuiz.id === quizId) {
+        if (currentQuizIndex < (quizData?.quizzes?.length || 0) - 1) {
+          setCurrentQuizIndex(currentQuizIndex + 1)
+        } else if (currentQuizIndex > 0) {
+          setCurrentQuizIndex(currentQuizIndex - 1)
+        }
+      }
+    }
   }
 
   // 오답 노트에 퀴즈 추가하는 함수
