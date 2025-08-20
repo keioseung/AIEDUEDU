@@ -700,7 +700,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 }`}
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
-                주간
+                {t('progress.period.weekly')}
               </button>
               <button
                 type="button"
@@ -712,7 +712,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 }`}
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
-                월간
+                {t('progress.period.monthly')}
               </button>
               <button
                 type="button"
@@ -724,7 +724,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 }`}
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
-                사용자정의
+                {t('progress.period.custom')}
               </button>
             </div>
             
@@ -738,7 +738,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           {periodType === 'custom' && (
             <div className="flex flex-col gap-3 relative z-20 bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 rounded-xl p-4 border-2 border-purple-600/50 mt-4 shadow-2xl shadow-purple-900/50">
               <div className="text-center">
-                <span className="text-white/80 text-sm font-medium">사용자 정의 기간 설정</span>
+                <span className="text-white/80 text-sm font-medium">{t('progress.period.settings')}</span>
               </div>
               <div className="flex flex-col gap-3">
                 <div className="w-full">

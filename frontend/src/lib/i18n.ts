@@ -228,6 +228,12 @@ const ko: Record<string, string> = {
   'progress.mode.trend.card': '학습 추이 카드',
   'progress.mode.trend.graph': '학습 추이 그래프',
   
+  // 진행률 기간 선택
+  'progress.period.weekly': '주간',
+  'progress.period.monthly': '월간',
+  'progress.period.custom': '사용자정의',
+  'progress.period.settings': '사용자 정의 기간 설정',
+  
   // 진행률 카드 내용
   'progress.ai.info.learning': 'AI 정보 학습',
   'progress.ai.info.today.count': '오늘 학습 수',
@@ -607,6 +613,12 @@ const en: Record<string, string> = {
   'progress.mode.trend.card': 'Learning Trend Card',
   'progress.mode.trend.graph': 'Learning Trend Graph',
   
+  // Progress Period Selection
+  'progress.period.weekly': 'Weekly',
+  'progress.period.monthly': 'Monthly',
+  'progress.period.custom': 'Custom',
+  'progress.period.settings': 'Custom Period Settings',
+  
   // Progress Card Content
   'progress.ai.info.learning': 'AI Info Learning',
   'progress.ai.info.today.count': 'Today\'s Learning Count',
@@ -977,6 +989,12 @@ const ja: Record<string, string> = {
   // Progress Mode
   'progress.mode.trend.card': '学習トレンドカード',
   'progress.mode.trend.graph': '学習トレンドグラフ',
+  
+  // Progress Period Selection
+  'progress.period.weekly': '週間',
+  'progress.period.monthly': '月間',
+  'progress.period.custom': 'カスタム',
+  'progress.period.settings': 'カスタム期間設定',
   
   // Progress Card Content
   'progress.ai.info.learning': 'AI情報学習',
@@ -1351,6 +1369,12 @@ const zh: Record<string, string> = {
   // 进度模式
   'progress.mode.trend.card': '学习趋势卡片',
   'progress.mode.trend.graph': '学习趋势图',
+  
+  // 进度期间选择
+  'progress.period.weekly': '周',
+  'progress.period.monthly': '月',
+  'progress.period.custom': '自定义',
+  'progress.period.settings': '自定义期间设置',
   
   // 进度卡片内容
   'progress.ai.info.learning': 'AI信息学习',
