@@ -107,13 +107,13 @@ function QuizSection({ sessionId }: QuizSectionProps) {
     <section className="mb-8">
       <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
         <HelpCircle className="w-8 h-8" />
-        퀴즈 도전
+        {t('quiz.section.title')}
       </h2>
 
       <div className="glass rounded-2xl p-8">
         {/* 주제 선택 */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-white mb-4">주제 선택</h3>
+          <h3 className="text-xl font-semibold text-white mb-4">{t('quiz.topic.selection')}</h3>
           <div className="flex flex-wrap gap-3">
             {topics?.map((topic) => (
               <button
@@ -145,7 +145,7 @@ function QuizSection({ sessionId }: QuizSectionProps) {
                 {currentQuizIndex + 1} / {quizzes.length}
               </span>
               <span className="text-white font-semibold">
-                점수: {score} / {quizzes.length}
+                {t('quiz.score')}: {score} / {quizzes.length}
               </span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
@@ -196,7 +196,7 @@ function QuizSection({ sessionId }: QuizSectionProps) {
                 className="p-4 rounded-lg bg-white/10 border border-white/20"
               >
                 <h4 className="text-lg font-semibold text-white mb-2">
-                  {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
+                  {selectedAnswer === currentQuiz.correct ? t('quiz.correct') : t('quiz.incorrect')}
                 </h4>
                 <p className="text-white/80">{currentQuiz.explanation}</p>
               </motion.div>
@@ -210,7 +210,7 @@ function QuizSection({ sessionId }: QuizSectionProps) {
                   disabled={selectedAnswer === null}
                   className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  답안 제출
+                  {t('quiz.submit.answer')}
                 </button>
               ) : (
                 <>
@@ -219,27 +219,27 @@ function QuizSection({ sessionId }: QuizSectionProps) {
                       onClick={handleNextQuiz}
                       className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600"
                     >
-                      다음 문제
+                      {t('quiz.next.question')}
                     </button>
                   ) : (
-                    <div className="flex-1 text-center">
-                      <h3 className="text-xl font-bold text-white mb-2">퀴즈 완료!</h3>
-                      <p className="text-white/70">
-                        최종 점수: {score} / {quizzes?.length}
-                      </p>
-                      {quizCompleted && (
-                        <p className="text-green-400 text-sm mt-2">
-                          점수가 저장되었습니다! 🎉
+                                          <div className="flex-1 text-center">
+                        <h3 className="text-xl font-bold text-white mb-2">{t('quiz.complete')}</h3>
+                        <p className="text-white/70">
+                          {t('quiz.final.score')}: {score} / {quizzes?.length}
                         </p>
-                      )}
-                    </div>
+                        {quizCompleted && (
+                          <p className="text-green-400 text-sm mt-2">
+                            {t('quiz.score.saved')}
+                          </p>
+                        )}
+                      </div>
                   )}
                   <button
                     onClick={handleResetQuiz}
                     className="px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 flex items-center gap-2"
                   >
                     <RotateCcw className="w-4 h-4" />
-                    다시 시작
+                    {t('quiz.restart')}
                   </button>
                 </>
               )}
@@ -249,7 +249,7 @@ function QuizSection({ sessionId }: QuizSectionProps) {
           <div className="text-center py-12">
             <HelpCircle className="w-16 h-16 text-white/50 mx-auto mb-4" />
             <p className="text-white/70 text-lg">
-              선택한 주제에 대한 퀴즈가 없습니다.
+              {t('quiz.no.quizzes')}
             </p>
           </div>
         )}

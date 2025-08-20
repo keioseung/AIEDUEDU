@@ -98,6 +98,8 @@ const ko: Record<string, string> = {
   'ai.info.mode.category': '카테고리별',
   'ai.info.mode.full': '전체목록',
   
+
+  
   // AI 정보 카드 UI
   'ai.info.card.learning.complete': '학습 완료',
   'ai.info.card.learning.required': '학습 필요',
@@ -160,6 +162,14 @@ const ko: Record<string, string> = {
   'quiz.random': '랜덤',
   'quiz.topic.today': '오늘의 주제',
   'quiz.topic.selected': '선택된 주제',
+  'quiz.submit.answer': '답안 제출',
+  'quiz.next.question': '다음 문제',
+  'quiz.restart': '다시 시작',
+  'quiz.complete': '퀴즈 완료!',
+  'quiz.final.score': '최종 점수',
+  'quiz.correct': '정답입니다! 🎉',
+  'quiz.incorrect': '틀렸습니다 😅',
+  'quiz.no.quizzes': '선택한 주제에 대한 퀴즈가 없습니다.',
   
   // 퀴즈 질문과 선택지
   'quiz.question.meaning': '의 의미로 가장 적절한 것은?',
@@ -546,6 +556,12 @@ const en: Record<string, string> = {
   'quiz.finish': 'Finish',
   'quiz.wrong.notes': 'Wrong Answer Notes',
   'quiz.achievement': 'Achievement',
+  'quiz.submit.answer': 'Submit Answer',
+  'quiz.next.question': 'Next Question',
+  'quiz.restart': 'Restart',
+  'quiz.final.score': 'Final Score',
+  'quiz.score.saved': 'Score saved! 🎉',
+  'quiz.no.quizzes': 'No quizzes available for the selected topic.',
   
   // Progress
   'progress.title': 'Learning Progress',
