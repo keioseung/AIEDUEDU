@@ -326,17 +326,17 @@ export default function AuthPage() {
                 </form>
               ) : (
                 <form onSubmit={handleRegister} className="space-y-4">
-                  <div>
-                    <label className="block text-white/80 text-xs font-medium mb-1.5 flex items-center gap-1.5">
-                      <FaUser className="text-purple-400 text-xs" />
-                      아이디
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="아이디를 입력하세요"
-                      value={username}
-                      onChange={e => setUsername(e.target.value)}
-                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
+                                     <div>
+                     <label className="block text-white/80 text-xs font-medium mb-1.5 flex items-center gap-1.5">
+                       <FaUser className="text-purple-400 text-xs" />
+                       {t('auth.username')}
+                     </label>
+                     <input
+                       type="text"
+                       placeholder={t('auth.username.placeholder')}
+                       value={username}
+                       onChange={e => setUsername(e.target.value)}
+                       className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
                       style={{
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
@@ -355,18 +355,18 @@ export default function AuthPage() {
                       }}
                     />
                   </div>
-                  <div>
-                    <label className="block text-white/80 text-xs font-medium mb-1.5 flex items-center gap-1.5">
-                      <FaLock className="text-purple-400 text-xs" />
-                      비밀번호
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="비밀번호를 입력하세요"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="w-full p-3 pr-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
+                                     <div>
+                     <label className="block text-white/80 text-xs font-medium mb-1.5 flex items-center gap-1.5">
+                       <FaLock className="text-purple-400 text-xs" />
+                       {t('auth.password')}
+                     </label>
+                     <div className="relative">
+                       <input
+                         type={showPassword ? "text" : "password"}
+                         placeholder={t('auth.password.placeholder')}
+                         value={password}
+                         onChange={e => setPassword(e.target.value)}
+                         className="w-full p-3 pr-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
                         style={{
                           WebkitAppearance: 'none',
                           MozAppearance: 'none',
