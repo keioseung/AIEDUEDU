@@ -619,6 +619,7 @@ const en: Record<string, string> = {
   'progress.quiz.accumulated.score': 'Daily Accumulated',
   'progress.card.learning.count': 'Learning Count',
   'progress.card.accumulated.score': 'Accumulated Score',
+  'progress.card.accuracy': 'Accuracy Rate',
   'progress.card.terms.learning': 'Terms Learning',
   'progress.card.terms.daily.total': 'Daily Total Terms Count',
   'progress.card.terms.accumulated.total': 'Accumulated Total Terms Count',
@@ -987,6 +988,8 @@ const ja: Record<string, string> = {
   'progress.quiz.daily.accumulated': '日次累積',
   'progress.quiz.accuracy': '日次正解率',
   'progress.quiz.accumulated.score': '日次累積',
+  'progress.card.accuracy': '正答率',
+  'progress.card.accumulated.score': '累積スコア',
   'progress.card.terms.daily.total': '日次総用語数',
   'progress.card.terms.accumulated.total': '累積総用語数',
   
@@ -1116,8 +1119,6 @@ const ja: Record<string, string> = {
   'progress.card.quiz.score': 'クイズスコア',
   'progress.card.daily.accuracy': '日別正答率',
   'progress.card.daily.accumulated': '日別累積',
-  'progress.card.accuracy': '正答率',
-  'progress.card.accumulated.score': '累積スコア',
   
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': 'トピック選択',
