@@ -653,7 +653,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 정답률` : t('progress.card.daily.accuracy')}
+                  {selectedDate ? `${selectedDate} ${t('progress.card.accuracy')}` : t('progress.card.daily.accuracy')}
                 </span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
