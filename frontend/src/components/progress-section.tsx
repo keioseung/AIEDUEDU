@@ -538,6 +538,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
            let totalTermsLearned = 0
            if (typeof window !== 'undefined') {
              try {
+               // 방법 1: userProgress에서 계산
                const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                const sessionProgress = userProgress[sessionId]
                if (sessionProgress) {
@@ -568,9 +569,32 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                      })
                    }
                  })
-                 
-                 console.log('최종 계산된 총 용어 학습 수:', totalTermsLearned)
                }
+               
+               // 방법 2: localStorage의 모든 키를 검색하여 learnedTerms 패턴 찾기
+               const allKeys = Object.keys(localStorage)
+               const learnedTermsKeys = allKeys.filter(key => 
+                 key.startsWith(`learnedTerms_${sessionId}_`) && 
+                 key.includes('_') && 
+                 key.split('_').length >= 4
+               )
+               
+               console.log('발견된 learnedTerms 키들:', learnedTermsKeys)
+               
+               // 각 키에서 용어 데이터 추출
+               learnedTermsKeys.forEach(key => {
+                 try {
+                   const terms = JSON.parse(localStorage.getItem(key) || '[]')
+                   if (Array.isArray(terms)) {
+                     console.log(`키 ${key}에서 발견된 용어:`, terms)
+                     totalTermsLearned += terms.length
+                   }
+                 } catch (error) {
+                   console.error(`키 ${key} 파싱 오류:`, error)
+                 }
+               })
+               
+               console.log('최종 계산된 총 용어 학습 수:', totalTermsLearned)
              } catch (error) {
                console.error('로컬 스토리지 데이터 파싱 오류:', error)
              }
