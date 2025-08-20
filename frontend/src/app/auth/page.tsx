@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { FaRobot, FaUser, FaLock, FaEye, FaEyeSlash, FaArrowRight, FaStar } from 'react-icons/fa'
 import { User } from '@/types'
 import { authAPI } from '@/lib/api'
+import { t, getCurrentLanguage, Language } from '@/lib/i18n'
+import LanguageSelector from '@/components/language-selector'
 
 export default function AuthPage() {
   const [tab, setTab] = useState<'login' | 'register'>('login')
@@ -16,6 +18,7 @@ export default function AuthPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isTabTransitioning, setIsTabTransitioning] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [forceUpdate, setForceUpdate] = useState(0)
   const router = useRouter()
 
   // 모바일 감지
@@ -27,6 +30,16 @@ export default function AuthPage() {
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+  
+  // 언어 변경 감지
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      // 언어가 변경되면 컴포넌트를 강제로 리렌더링
+      setForceUpdate(prev => prev + 1)
+    }
+    window.addEventListener('languageChange', handleLanguageChange)
+    return () => window.removeEventListener('languageChange', handleLanguageChange)
   }, [])
 
   // 마우스 위치 추적 (데스크톱에서만)
@@ -44,7 +57,7 @@ export default function AuthPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!username || !password) {
-      setError('모든 필드를 입력하세요.')
+      setError(t('auth.error.all.fields'))
       return
     }
     
@@ -58,12 +71,12 @@ export default function AuthPage() {
     } catch (error: any) {
       if (error.response?.data?.detail) {
         if (error.response.data.detail === 'Username already registered') {
-          setError('이미 존재하는 아이디입니다.')
+          setError(t('auth.error.username.exists'))
         } else {
           setError(error.response.data.detail)
         }
       } else {
-        setError('회원가입 중 오류가 발생했습니다.')
+        setError(t('auth.error.register.failed'))
       }
     }
   }
@@ -93,7 +106,7 @@ export default function AuthPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!username || !password) {
-      setError('모든 필드를 입력하세요.')
+      setError(t('auth.error.all.fields'))
       return
     }
     
@@ -109,12 +122,12 @@ export default function AuthPage() {
     } catch (error: any) {
       if (error.response?.data?.detail) {
         if (error.response.data.detail === 'Incorrect username or password') {
-          setError('아이디 또는 비밀번호가 올바르지 않습니다.')
+          setError(t('auth.error.incorrect.credentials'))
         } else {
           setError(error.response.data.detail)
         }
       } else {
-        setError('로그인 중 오류가 발생했습니다.')
+        setError(t('auth.error.login.failed'))
       }
     }
   }
@@ -175,6 +188,11 @@ export default function AuthPage() {
               </svg>
             </button>
           </div>
+          
+          {/* 언어 선택기 */}
+          <div className="absolute top-3 right-3 md:top-4 md:right-4 z-20">
+            <LanguageSelector />
+          </div>
 
           {/* 로고 및 제목 */}
           <div className="text-center mb-6">
@@ -189,9 +207,9 @@ export default function AuthPage() {
               </div>
             </div>
             <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-xl tracking-tight leading-tight mb-1">
-              AI Mastery Hub
+              {t('auth.title')}
             </h1>
-            <p className="text-purple-300 text-sm font-medium">지금 시작하고 AI 세계를 탐험하세요.</p>
+            <p className="text-purple-300 text-sm font-medium">{t('auth.subtitle')}</p>
           </div>
 
           {/* 인증 카드 */}
@@ -209,7 +227,7 @@ export default function AuthPage() {
                   onClick={() => handleTabChange('login')}
                   disabled={isTabTransitioning}
                 >
-                  로그인
+                  {t('auth.login')}
                 </button>
                 <button
                   className={`flex-1 py-2.5 px-3 rounded-lg font-bold text-sm transition-all duration-300 ${
@@ -220,7 +238,7 @@ export default function AuthPage() {
                   onClick={() => handleTabChange('register')}
                   disabled={isTabTransitioning}
                 >
-                  회원가입
+                  {t('auth.register')}
                 </button>
               </div>
 
@@ -231,11 +249,11 @@ export default function AuthPage() {
                   <div>
                     <label className="block text-white/80 text-xs font-medium mb-1.5 flex items-center gap-1.5">
                       <FaUser className="text-purple-400 text-xs" />
-                      아이디
+                      {t('auth.username')}
                     </label>
                     <input
                       type="text"
-                      placeholder="아이디를 입력하세요"
+                      placeholder={t('auth.username.placeholder')}
                       value={username}
                       onChange={e => setUsername(e.target.value)}
                       className="w-full p-3 bg-purple-900/40 border-2 border-purple-500/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/70 text-sm min-h-[44px]"
@@ -260,12 +278,12 @@ export default function AuthPage() {
                   <div>
                     <label className="block text-white/80 text-xs font-medium mb-1.5 flex items-center gap-1.5">
                       <FaLock className="text-purple-400 text-xs" />
-                      비밀번호
+                      {t('auth.password')}
                     </label>
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
-                        placeholder="비밀번호를 입력하세요"
+                        placeholder={t('auth.password.placeholder')}
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         className="w-full p-3 pr-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"

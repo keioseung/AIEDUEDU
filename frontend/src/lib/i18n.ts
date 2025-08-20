@@ -153,6 +153,24 @@ const ko: Record<string, string> = {
   'common.day.sat': '토',
   'common.day.sun': '일',
   
+  // 인증
+  'auth.title': 'AI Mastery Hub',
+  'auth.subtitle': '지금 시작하고 AI 세계를 탐험하세요.',
+  'auth.login': '로그인',
+  'auth.register': '회원가입',
+  'auth.username': '아이디',
+  'auth.username.placeholder': '아이디를 입력하세요',
+  'auth.password': '비밀번호',
+  'auth.password.placeholder': '비밀번호를 입력하세요',
+  'auth.login.button': '로그인',
+  'auth.register.button': '회원가입',
+  'auth.error.all.fields': '모든 필드를 입력하세요.',
+  'auth.error.username.exists': '이미 존재하는 아이디입니다.',
+  'auth.error.login.failed': '로그인 중 오류가 발생했습니다.',
+  'auth.error.register.failed': '회원가입 중 오류가 발생했습니다.',
+  'auth.error.incorrect.credentials': '아이디 또는 비밀번호가 올바르지 않습니다.',
+  'auth.back': '뒤로 가기',
+  
   // 언어 선택
   'language.ko': '한국어',
   'language.en': 'English',
@@ -306,6 +324,24 @@ const en: Record<string, string> = {
   'common.day.fri': 'Fri',
   'common.day.sat': 'Sat',
   'common.day.sun': 'Sun',
+  
+  // Authentication
+  'auth.title': 'AI Mastery Hub',
+  'auth.subtitle': 'Start now and explore the AI world.',
+  'auth.login': 'Login',
+  'auth.register': 'Register',
+  'auth.username': 'Username',
+  'auth.username.placeholder': 'Enter your username',
+  'auth.password': 'Password',
+  'auth.password.placeholder': 'Enter your password',
+  'auth.login.button': 'Login',
+  'auth.register.button': 'Register',
+  'auth.error.all.fields': 'Please fill in all fields.',
+  'auth.error.username.exists': 'Username already exists.',
+  'auth.error.login.failed': 'An error occurred during login.',
+  'auth.error.register.failed': 'An error occurred during registration.',
+  'auth.error.incorrect.credentials': 'Incorrect username or password.',
+  'auth.back': 'Back',
   
   // Language selection
   'language.ko': '한국어',
@@ -461,6 +497,24 @@ const ja: Record<string, string> = {
   'common.day.sat': '土',
   'common.day.sun': '日',
   
+  // 認証
+  'auth.title': 'AI Mastery Hub',
+  'auth.subtitle': '今すぐ始めてAI世界を探検しましょう。',
+  'auth.login': 'ログイン',
+  'auth.register': '会員登録',
+  'auth.username': 'ユーザー名',
+  'auth.username.placeholder': 'ユーザー名を入力してください',
+  'auth.password': 'パスワード',
+  'auth.password.placeholder': 'パスワードを入力してください',
+  'auth.login.button': 'ログイン',
+  'auth.register.button': '会員登録',
+  'auth.error.all.fields': 'すべてのフィールドを入力してください。',
+  'auth.error.username.exists': '既に存在するユーザー名です。',
+  'auth.error.login.failed': 'ログイン中にエラーが発生しました。',
+  'auth.error.register.failed': '会員登録中にエラーが発生しました。',
+  'auth.error.incorrect.credentials': 'ユーザー名またはパスワードが正しくありません。',
+  'auth.back': '戻る',
+  
   // 言語選択
   'language.ko': '한국어',
   'language.en': 'English',
@@ -614,6 +668,24 @@ const zh: Record<string, string> = {
   'common.day.fri': '周五',
   'common.day.sat': '周六',
   'common.day.sun': '周日',
+  
+  // 认证
+  'auth.title': 'AI Mastery Hub',
+  'auth.subtitle': '立即开始探索AI世界。',
+  'auth.login': '登录',
+  'auth.register': '注册',
+  'auth.username': '用户名',
+  'auth.username.placeholder': '请输入用户名',
+  'auth.password': '密码',
+  'auth.password.placeholder': '请输入密码',
+  'auth.login.button': '登录',
+  'auth.register.button': '注册',
+  'auth.error.all.fields': '请填写所有字段。',
+  'auth.error.username.exists': '用户名已存在。',
+  'auth.error.login.failed': '登录时发生错误。',
+  'auth.error.register.failed': '注册时发生错误。',
+  'auth.error.incorrect.credentials': '用户名或密码不正确。',
+  'auth.back': '返回',
   
   // 语言选择
   'language.ko': '한국어',
