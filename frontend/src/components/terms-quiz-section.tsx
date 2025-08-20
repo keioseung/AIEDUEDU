@@ -114,6 +114,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
   // 오답 노트에 퀴즈 추가하는 함수
   const addToWrongAnswerNotes = (quiz: TermsQuiz) => {
+    if (!quiz) return // quiz가 없으면 함수 종료
+    
     setWrongAnswerNotes(prev => {
       // 이미 존재하는지 확인
       const exists = prev.some(q => q.id === quiz.id)
@@ -716,8 +718,9 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                           </button>
                         ) : (
                           <button
-                            onClick={() => addToWrongAnswerNotes(currentQuiz)}
-                            className="px-6 py-4 bg-gradient-to-br from-red-500/20 via-red-600/25 to-red-500/20 text-red-200 rounded-2xl hover:from-red-600/30 hover:via-red-700/35 hover:to-red-600/30 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-400/30 hover:border-red-400/50 transition-all duration-300 shadow-lg hover:shadow-xl"
+                            onClick={() => currentQuiz && addToWrongAnswerNotes(currentQuiz)}
+                            disabled={!currentQuiz}
+                            className="px-6 py-4 bg-gradient-to-br from-red-500/20 via-red-600/25 to-red-500/20 text-red-200 rounded-2xl hover:from-red-600/30 hover:via-red-700/35 hover:to-red-600/30 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-400/30 hover:border-red-400/50 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <BookOpen className="w-5 h-5" />
                             <span className="hidden sm:inline">오답 노트 등록</span>
