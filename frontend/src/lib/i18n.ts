@@ -100,7 +100,17 @@ const ko: Record<string, string> = {
   'ai.info.sort.options': '정렬 옵션',
   'ai.info.items.per.page.select': '항목 수 선택',
   
-
+  // AI 정보 정렬 옵션
+  'ai.info.sort.by.date': '날짜순',
+  'ai.info.sort.by.title': '제목순',
+  'ai.info.sort.by.category': '카테고리순',
+  'ai.info.sort.by.favorite': '즐겨찾기순',
+  
+  // AI 정보 항목 수 옵션
+  'ai.info.items.10': '10개',
+  'ai.info.items.20': '20개',
+  'ai.info.items.50': '50개',
+  'ai.info.items.100': '100개',
   
   // AI 정보 카드 UI
   'ai.info.card.learning.complete': '학습 완료',
@@ -455,6 +465,18 @@ const en: Record<string, string> = {
   'ai.info.subcategory': 'Subcategory',
   'ai.info.sort.options': 'Sort Options',
   'ai.info.items.per.page.select': 'Select Items Per Page',
+  
+  // AI Info Sort Options
+  'ai.info.sort.by.date': 'By Date',
+  'ai.info.sort.by.title': 'By Title',
+  'ai.info.sort.by.category': 'By Category',
+  'ai.info.sort.by.favorite': 'By Favorite',
+  
+  // AI Info Items Count Options
+  'ai.info.items.10': '10 items',
+  'ai.info.items.20': '20 items',
+  'ai.info.items.50': '50 items',
+  'ai.info.items.100': '100 items',
   
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI Info List Mode',
@@ -812,6 +834,19 @@ const ja: Record<string, string> = {
   'ai.info.sort': '並び替え',
   'ai.info.sort.options': '並び替えオプション',
   'ai.info.items.per.page.select': 'ページあたりの項目数選択',
+  
+  // AI情報並び替えオプション
+  'ai.info.sort.by.date': '日付順',
+  'ai.info.sort.by.title': 'タイトル順',
+  'ai.info.sort.by.category': 'カテゴリ順',
+  'ai.info.sort.by.favorite': 'お気に入り順',
+  
+  // AI情報項目数オプション
+  'ai.info.items.10': '10件',
+  'ai.info.items.20': '20件',
+  'ai.info.items.50': '50件',
+  'ai.info.items.100': '100件',
+  
   'ai.info.date': '日付',
   'ai.info.field.title': 'タイトル',
   'ai.info.content': '内容',
@@ -1173,6 +1208,19 @@ const zh: Record<string, string> = {
   'ai.info.sort': '排序',
   'ai.info.sort.options': '排序选项',
   'ai.info.items.per.page.select': '选择每页项目数',
+  
+  // AI信息排序选项
+  'ai.info.sort.by.date': '按日期',
+  'ai.info.sort.by.title': '按标题',
+  'ai.info.sort.by.category': '按类别',
+  'ai.info.sort.by.favorite': '按收藏',
+  
+  // AI信息项目数选项
+  'ai.info.items.10': '10个',
+  'ai.info.items.20': '20个',
+  'ai.info.items.50': '50个',
+  'ai.info.items.100': '100个',
+  
   'ai.info.date': '日期',
   'ai.info.field.title': '标题',
   'ai.info.content': '内容',
