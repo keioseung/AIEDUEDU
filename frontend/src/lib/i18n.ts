@@ -58,7 +58,7 @@ const ko: Record<string, string> = {
   // AI 정보
   'ai.info.title': 'AI 정보',
   'ai.info.daily': '일일 AI 정보',
-  'ai.info.category': '카테고리별',
+  'ai.info.category.view': '카테고리별',
   'ai.info.list': '목록 보기',
   'ai.info.favorite': '즐겨찾기',
   'ai.info.search': '검색',
