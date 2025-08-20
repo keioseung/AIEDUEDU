@@ -544,16 +544,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                  // 모든 날짜의 용어 학습 데이터 수집
                  Object.keys(sessionProgress).forEach(date => {
                    if (date !== '__stats__' && date !== 'terms_by_date') {
-                     const learnedTermsKey = `learnedTerms_${sessionId}_${date}`
-                     const learnedTerms = localStorage.getItem(learnedTermsKey)
-                     if (learnedTerms) {
-                       try {
-                         const terms = JSON.parse(learnedTerms)
-                         totalTermsLearned += terms.length
-                       } catch (error) {
-                         console.error('용어 데이터 파싱 오류:', error)
+                     // 해당 날짜에 학습한 AI 정보의 인덱스들
+                     const learnedIndices = sessionProgress[date] || []
+                     
+                     // 각 학습된 AI 정보의 용어 학습 상태 확인
+                     learnedIndices.forEach((infoIndex: number) => {
+                       const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
+                       const learnedTerms = localStorage.getItem(learnedTermsKey)
+                       if (learnedTerms) {
+                         try {
+                           const terms = JSON.parse(learnedTerms)
+                           totalTermsLearned += terms.length
+                         } catch (error) {
+                           console.error('용어 데이터 파싱 오류:', error)
+                         }
                        }
-                     }
+                     })
                    }
                  })
                }
