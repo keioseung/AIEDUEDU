@@ -51,6 +51,9 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const [finalScore, setFinalScore] = useState<{score: number, total: number, percentage: number} | null>(null)
   const [selectedQuizTitle, setSelectedQuizTitle] = useState('오늘의 주제') // 기본값 오늘의 주제
   const [showQuizTitleSelector, setShowQuizTitleSelector] = useState(false)
+  const [wrongAnswerNotes, setWrongAnswerNotes] = useState<TermsQuiz[]>([])
+  const [isWrongAnswerMode, setIsWrongAnswerMode] = useState(false)
+  const [showWrongAnswerAdded, setShowWrongAnswerAdded] = useState(false)
   const updateQuizScoreMutation = useUpdateQuizScore()
   const checkAchievementsMutation = useCheckAchievements()
 
@@ -88,6 +91,25 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
   })
+
+  // 오답 노트에서 퀴즈 제거하는 함수
+  const removeFromWrongAnswerNotes = (quizId: number) => {
+    setWrongAnswerNotes(prev => prev.filter(quiz => quiz.id !== quizId))
+  }
+
+  // 오답 노트에 퀴즈 추가하는 함수
+  const addToWrongAnswerNotes = (quiz: TermsQuiz) => {
+    setWrongAnswerNotes(prev => {
+      // 이미 존재하는지 확인
+      const exists = prev.some(q => q.id === quiz.id)
+      if (!exists) {
+        setShowWrongAnswerAdded(true)
+        setTimeout(() => setShowWrongAnswerAdded(false), 2000)
+        return [...prev, quiz]
+      }
+      return prev
+    })
+  }
 
   // 각 날짜별 AI 정보 가져오기
   const { data: dateBasedAIInfo = [], isLoading: isLoadingDateBased } = useQuery<AIInfoItem[]>({
@@ -154,9 +176,25 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
   // 퀴즈 데이터 가져오기 (선택된 제목이 있으면 해당 내용의 용어로, 없으면 날짜별로)
   const { data: quizData, isLoading, refetch } = useQuery<TermsQuizResponse>({
-    queryKey: ['terms-quiz', selectedDate, selectedQuizTitle, selectedAIInfo?.id],
+    queryKey: ['terms-quiz', selectedDate, selectedQuizTitle, selectedAIInfo?.id, wrongAnswerNotes.length],
     queryFn: async () => {
-      if (selectedQuizTitle !== '오늘의 주제' && selectedAIInfo) {
+      if (selectedQuizTitle === '오답 노트') {
+        // 오답 노트 모드: 저장된 오답 문제들로 퀴즈 생성
+        if (wrongAnswerNotes.length === 0) {
+          return { quizzes: [], total_terms: 0, message: "오답 노트에 등록된 문제가 없습니다." }
+        }
+
+        // 오답 노트에서 퀴즈 생성 (최대 10개)
+        const shuffledQuizzes = wrongAnswerNotes
+          .sort(() => Math.random() - 0.5)
+          .slice(0, Math.min(10, wrongAnswerNotes.length))
+
+        return {
+          quizzes: shuffledQuizzes,
+          total_terms: wrongAnswerNotes.length,
+          message: `오답 노트에서 ${shuffledQuizzes.length}개 문제를 가져왔습니다.`
+        }
+      } else if (selectedQuizTitle !== '오늘의 주제' && selectedAIInfo) {
         // 선택된 제목의 용어로 퀴즈 생성
         const terms = selectedAIInfo.terms || []
         if (terms.length === 0) {
@@ -211,7 +249,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         return response.data
       }
     },
-    enabled: !!selectedDate && (selectedQuizTitle === '오늘의 주제' || !!selectedAIInfo),
+    enabled: !!selectedDate && (selectedQuizTitle === '오늘의 주제' || selectedQuizTitle === '오답 노트' || !!selectedAIInfo),
   })
 
   const currentQuiz = quizData?.quizzes?.[currentQuizIndex]
@@ -290,6 +328,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const handleQuizTitleChange = (title: string) => {
     setSelectedQuizTitle(title)
     setShowQuizTitleSelector(false)
+    
+    // 오답 노트 모드 설정
+    if (title === '오답 노트') {
+      setIsWrongAnswerMode(true)
+    } else {
+      setIsWrongAnswerMode(false)
+    }
+    
     // 주제가 변경되면 퀴즈 재시작
     setCurrentQuizIndex(0)
     setSelectedAnswer(null)
@@ -382,29 +428,50 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                          </div>
                        )}
                        
-                       {/* AI 정보 목록 */}
-                       {!isLoadingAIInfo && (
-                         <div className="space-y-1.5 max-h-40 overflow-y-auto custom-scrollbar">
-                           {/* 오늘의 주제 옵션 추가 */}
-                           <button
-                             onClick={() => handleQuizTitleChange('오늘의 주제')}
-                             className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 hover:from-emerald-500/50 hover:via-emerald-400/55 hover:to-emerald-500/50 transition-all duration-200 group border border-emerald-400/50 hover:border-emerald-400/70"
-                           >
-                             <div className="flex items-center justify-between">
-                               <div className="flex-1 min-w-0">
-                                 <div className="text-emerald-100 font-semibold text-xs group-hover:text-emerald-50 transition-colors leading-tight flex items-center gap-2">
-                                   <Zap className="w-3 h-3" />
-                                   오늘의 주제
+                                                  {/* AI 정보 목록 */}
+                           {!isLoadingAIInfo && (
+                             <div className="space-y-1.5 max-h-40 overflow-y-auto custom-scrollbar">
+                               {/* 오답 노트 옵션 추가 */}
+                               <button
+                                 onClick={() => handleQuizTitleChange('오답 노트')}
+                                 className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-red-600/30 via-red-500/35 to-red-600/30 hover:from-red-500/50 hover:via-red-400/55 hover:to-red-500/50 transition-all duration-200 group border border-red-400/50 hover:border-red-400/70"
+                               >
+                                 <div className="flex items-center justify-between">
+                                   <div className="flex-1 min-w-0">
+                                     <div className="text-red-100 font-semibold text-xs group-hover:text-red-50 transition-colors leading-tight flex items-center gap-2">
+                                       <BookOpen className="w-3 h-3" />
+                                       오답 노트
+                                     </div>
+                                     <div className="text-red-100/80 text-xs mt-0.5 leading-tight">
+                                       {wrongAnswerNotes.length}개 문제
+                                     </div>
+                                   </div>
+                                   <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                     <ChevronRight className="w-3 h-3 text-red-200" />
+                                   </div>
                                  </div>
-                                 <div className="text-emerald-100/80 text-xs mt-0.5 leading-tight">
-                                   날짜별 퀴즈
+                               </button>
+                               
+                               {/* 오늘의 주제 옵션 추가 */}
+                               <button
+                                 onClick={() => handleQuizTitleChange('오늘의 주제')}
+                                 className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 hover:from-emerald-500/50 hover:via-emerald-400/55 hover:to-emerald-500/50 transition-all duration-200 group border border-emerald-400/50 hover:border-emerald-400/70"
+                               >
+                                 <div className="flex items-center justify-between">
+                                   <div className="flex-1 min-w-0">
+                                     <div className="text-emerald-100 font-semibold text-xs group-hover:text-emerald-50 transition-colors leading-tight flex items-center gap-2">
+                                       <Zap className="w-3 h-3" />
+                                       오늘의 주제
+                                     </div>
+                                     <div className="text-emerald-100/80 text-xs mt-0.5 leading-tight">
+                                       날짜별 퀴즈
+                                     </div>
+                                   </div>
+                                   <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                     <ChevronRight className="w-3 h-3 text-emerald-200" />
+                                   </div>
                                  </div>
-                               </div>
-                               <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                 <ChevronRight className="w-3 h-3 text-emerald-200" />
-                               </div>
-                             </div>
-                           </button>
+                               </button>
                            
                            {actualAIInfo.length > 0 ? (
                              actualAIInfo.map((info, index) => (
@@ -489,18 +556,22 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
               <div className="text-center text-white">
                 <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-70" />
                 <h3 className="text-lg md:text-xl font-bold mb-3 mobile-text">
-                  {selectedQuizTitle === '오늘의 주제' ? '등록된 용어가 없습니다' : '선택된 주제에 용어가 없습니다'}
+                  {selectedQuizTitle === '오답 노트' ? '오답 노트가 비어있습니다' :
+                   selectedQuizTitle === '오늘의 주제' ? '등록된 용어가 없습니다' : '선택된 주제에 용어가 없습니다'}
                 </h3>
                 <p className="text-white/80 mb-4 text-base mobile-text">
                   {quizData?.message || 
-                    (selectedQuizTitle === '오늘의 주제' 
+                    (selectedQuizTitle === '오답 노트'
+                      ? '오답 노트에 등록된 문제가 없습니다. 퀴즈를 풀면서 틀린 문제를 오답 노트에 등록해보세요!'
+                      : selectedQuizTitle === '오늘의 주제' 
                       ? `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
                       : `"${selectedQuizTitle}" 주제에 등록된 용어가 없습니다. 다른 주제를 선택하거나 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
                     )
                   }
                 </p>
                 <div className="text-sm text-white/60 mobile-text">
-                  {selectedQuizTitle === '오늘의 주제' ? `선택한 날짜: ${selectedDate}` : `선택한 주제: ${selectedQuizTitle}`}
+                  {selectedQuizTitle === '오답 노트' ? '오답 노트 모드' :
+                   selectedQuizTitle === '오늘의 주제' ? `선택한 날짜: ${selectedDate}` : `선택한 주제: ${selectedQuizTitle}`}
                 </div>
               </div>
             </div>
@@ -575,6 +646,23 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                     )}
                   </AnimatePresence>
 
+                  {/* 오답 노트 등록 피드백 */}
+                  <AnimatePresence>
+                    {showWrongAnswerAdded && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="p-4 rounded-xl bg-gradient-to-br from-red-500/20 via-red-600/25 to-red-500/20 border border-red-400/30 shadow-lg shadow-red-500/20"
+                      >
+                        <div className="flex items-center gap-3 text-red-200">
+                          <BookOpen className="w-5 h-5" />
+                          <span className="font-semibold text-sm">오답 노트에 등록되었습니다!</span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   {/* 액션 버튼 */}
                   <div className="flex flex-col sm:flex-row gap-3">
                     {!showResult ? (
@@ -602,14 +690,25 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                             퀴즈 완료하기
                           </button>
                         )}
-                        <button
-                          onClick={handleResetQuiz}
-                          className="px-6 py-4 bg-gradient-to-br from-white/10 via-white/15 to-white/10 text-white rounded-2xl hover:from-white/15 hover:via-white/20 hover:to-white/15 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-white/25 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-xl"
-                        >
-                          <RotateCcw className="w-5 h-5" />
-                          <span className="hidden sm:inline">다시 시작</span>
-                          <span className="sm:hidden">재시작</span>
-                        </button>
+                        {isWrongAnswerMode ? (
+                          <button
+                            onClick={() => removeFromWrongAnswerNotes(currentQuiz.id)}
+                            className="px-6 py-4 bg-gradient-to-br from-red-600/30 via-red-700/35 to-red-600/30 text-red-100 rounded-2xl hover:from-red-700/40 hover:via-red-800/45 hover:to-red-700/40 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-500/40 hover:border-red-500/60 transition-all duration-300 shadow-lg hover:shadow-xl"
+                          >
+                            <XCircle className="w-5 h-5" />
+                            <span className="hidden sm:inline">오답 노트에서 삭제</span>
+                            <span className="sm:hidden">삭제</span>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => addToWrongAnswerNotes(currentQuiz)}
+                            className="px-6 py-4 bg-gradient-to-br from-red-500/20 via-red-600/25 to-red-500/20 text-red-200 rounded-2xl hover:from-red-600/30 hover:via-red-700/35 hover:to-red-600/30 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-400/30 hover:border-red-400/50 transition-all duration-300 shadow-lg hover:shadow-xl"
+                          >
+                            <BookOpen className="w-5 h-5" />
+                            <span className="hidden sm:inline">오답 노트 등록</span>
+                            <span className="sm:hidden">오답 등록</span>
+                          </button>
+                        )}
                       </>
                     )}
                   </div>
