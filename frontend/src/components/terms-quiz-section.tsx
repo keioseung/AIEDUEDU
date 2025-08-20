@@ -94,35 +94,37 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
 
   // 오답 노트에서 퀴즈 제거하는 함수
   const removeFromWrongAnswerNotes = (quizId: number) => {
-    setWrongAnswerNotes(prev => prev.filter(quiz => quiz.id !== quizId))
-    
-    // 오답 노트 모드에서 문제를 삭제한 후 상태 초기화
-    if (isWrongAnswerMode) {
-      setSelectedAnswer(null)
-      setShowResult(false)
+    setWrongAnswerNotes(prev => {
+      const newWrongAnswerNotes = prev.filter(quiz => quiz.id !== quizId)
       
-      // 현재 문제가 삭제된 문제인 경우 다음 문제로 이동
-      if (currentQuiz && currentQuiz.id === quizId) {
-        const remainingQuizzes = wrongAnswerNotes.filter(q => q.id !== quizId)
+      // 오답 노트 모드에서 문제를 삭제한 후 상태 초기화
+      if (isWrongAnswerMode) {
+        setSelectedAnswer(null)
+        setShowResult(false)
         
-        if (currentQuizIndex < remainingQuizzes.length) {
-          // 다음 문제가 있으면 다음 문제로 이동
-          setCurrentQuizIndex(currentQuizIndex)
-        } else if (currentQuizIndex > 0) {
-          // 다음 문제가 없고 이전 문제가 있으면 이전 문제로 이동
-          setCurrentQuizIndex(currentQuizIndex - 1)
-        } else {
-          // 마지막 문제였으면 퀴즈 완료 상태로 설정
-          const finalScoreData = {
-            score: score,
-            total: remainingQuizzes.length,
-            percentage: remainingQuizzes.length > 0 ? Math.round((score / remainingQuizzes.length) * 100) : 0
+        // 현재 문제가 삭제된 문제인 경우 다음 문제로 이동
+        if (currentQuiz && currentQuiz.id === quizId) {
+          if (currentQuizIndex < newWrongAnswerNotes.length) {
+            // 다음 문제가 있으면 다음 문제로 이동
+            setCurrentQuizIndex(currentQuizIndex)
+          } else if (currentQuizIndex > 0) {
+            // 다음 문제가 없고 이전 문제가 있으면 이전 문제로 이동
+            setCurrentQuizIndex(currentQuizIndex - 1)
+          } else {
+            // 마지막 문제였으면 퀴즈 완료 상태로 설정
+            const finalScoreData = {
+              score: score,
+              total: newWrongAnswerNotes.length,
+              percentage: newWrongAnswerNotes.length > 0 ? Math.round((score / newWrongAnswerNotes.length) * 100) : 0
+            }
+            setFinalScore(finalScoreData)
+            setQuizCompleted(true)
           }
-          setFinalScore(finalScoreData)
-          setQuizCompleted(true)
         }
       }
-    }
+      
+      return newWrongAnswerNotes
+    })
   }
 
   // 오답 노트에 퀴즈 추가하는 함수
