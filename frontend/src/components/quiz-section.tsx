@@ -6,6 +6,7 @@ import { HelpCircle, CheckCircle, XCircle, RotateCcw } from 'lucide-react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { quizAPI, userProgressAPI } from '@/lib/api'
 import type { Quiz } from '@/types'
+import { t } from '@/lib/i18n'
 
 interface QuizSectionProps {
   sessionId: string
