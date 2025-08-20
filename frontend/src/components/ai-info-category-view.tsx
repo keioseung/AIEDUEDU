@@ -333,7 +333,7 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
           <div className="bg-gradient-to-br from-purple-900/80 via-purple-800/90 to-purple-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 shadow-2xl shadow-purple-900/40 p-4">
             <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <FaFilter className="text-purple-300" />
-              카테고리 목록
+              {t('category.mode.select')}
             </h3>
             
             <div className="space-y-1.5">

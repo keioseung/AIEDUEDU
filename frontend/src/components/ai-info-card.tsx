@@ -426,10 +426,10 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       {/* 카테고리 배지 */}
       {info.category && (
         <div className="mb-3 md:mb-4">
-          <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border ${getCategoryStyle(info.category).bgColor} ${getCategoryStyle(info.category).borderColor} ${getCategoryStyle(info.category).textColor} backdrop-blur-sm shadow-lg`}>
-            {getCategoryStyle(info.category).icon}
-            <span className="text-sm font-medium">{info.category}</span>
-          </div>
+                     <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border ${getCategoryStyle(info.category).bgColor} ${getCategoryStyle(info.category).borderColor} ${getCategoryStyle(info.category).textColor} backdrop-blur-sm shadow-lg`}>
+             {getCategoryStyle(info.category).icon}
+             <span className="text-sm font-medium">{t(`category.name.${info.category}`)}</span>
+           </div>
         </div>
       )}
       
