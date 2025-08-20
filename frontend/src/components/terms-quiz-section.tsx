@@ -104,9 +104,20 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       // 현재 문제가 삭제된 문제인 경우 다음 문제로 이동
       if (currentQuiz && currentQuiz.id === quizId) {
         if (currentQuizIndex < (quizData?.quizzes?.length || 0) - 1) {
+          // 다음 문제가 있으면 다음 문제로 이동
           setCurrentQuizIndex(currentQuizIndex + 1)
         } else if (currentQuizIndex > 0) {
+          // 다음 문제가 없고 이전 문제가 있으면 이전 문제로 이동
           setCurrentQuizIndex(currentQuizIndex - 1)
+        } else {
+          // 마지막 문제였으면 퀴즈 완료 상태로 설정
+          const finalScoreData = {
+            score: score,
+            total: (quizData?.quizzes?.length || 0) - 1, // 삭제된 문제 제외
+            percentage: Math.round((score / Math.max((quizData?.quizzes?.length || 0) - 1, 1)) * 100)
+          }
+          setFinalScore(finalScoreData)
+          setQuizCompleted(true)
         }
       }
     }
@@ -116,6 +127,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const addToWrongAnswerNotes = (quiz: TermsQuiz) => {
     if (!quiz) return // quiz가 없으면 함수 종료
     
+    // 현재 상태 유지 (문제 이동 방지)
     setWrongAnswerNotes(prev => {
       // 이미 존재하는지 확인
       const exists = prev.some(q => q.id === quiz.id)
@@ -126,6 +138,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
       }
       return prev
     })
+    
+    // 현재 문제 상태 그대로 유지 (selectedAnswer, showResult 등 변경하지 않음)
   }
 
   // 각 날짜별 AI 정보 가져오기
