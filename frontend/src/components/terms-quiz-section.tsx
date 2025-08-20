@@ -145,6 +145,11 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
           }
         }
       }
+      
+      // 문제 삭제 후 진행 상황 업데이트를 위해 quizData 강제 리페치
+      setTimeout(() => {
+        refetch()
+      }, 100)
     }
   }
 
