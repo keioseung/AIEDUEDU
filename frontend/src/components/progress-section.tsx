@@ -533,7 +533,35 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
            // AI 정보 날짜 목록의 총 개수 × 40 (각 날짜당 2개 카드 × 20개 용어)
            const totalDates = aiInfoDates?.length || 0
            const totalTerms = totalDates * 40
-           const totalTermsLearned = stats?.total_terms_learned || 0
+           
+           // 용어 학습 완료 수를 직접 계산 (백엔드 stats 대신)
+           let totalTermsLearned = 0
+           if (typeof window !== 'undefined') {
+             try {
+               const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+               const sessionProgress = userProgress[sessionId]
+               if (sessionProgress) {
+                 // 모든 날짜의 용어 학습 데이터 수집
+                 Object.keys(sessionProgress).forEach(date => {
+                   if (date !== '__stats__' && date !== 'terms_by_date') {
+                     const learnedTermsKey = `learnedTerms_${sessionId}_${date}`
+                     const learnedTerms = localStorage.getItem(learnedTermsKey)
+                     if (learnedTerms) {
+                       try {
+                         const terms = JSON.parse(learnedTerms)
+                         totalTermsLearned += terms.length
+                       } catch (error) {
+                         console.error('용어 데이터 파싱 오류:', error)
+                       }
+                     }
+                   }
+                 })
+               }
+             } catch (error) {
+               console.error('로컬 스토리지 데이터 파싱 오류:', error)
+             }
+           }
+           
            const percentage = totalTerms > 0 ? Math.round((totalTermsLearned / totalTerms) * 100) : 0
 
            return `${totalTermsLearned}/${totalTerms} (${percentage}%)`
