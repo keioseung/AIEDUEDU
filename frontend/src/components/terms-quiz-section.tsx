@@ -6,6 +6,7 @@ import { HelpCircle, CheckCircle, XCircle, RotateCcw, BookOpen, Target, Trophy, 
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import { useUpdateQuizScore, useCheckAchievements } from '@/hooks/use-user-progress'
+import { t } from '@/lib/i18n'
 
 interface TermsQuizSectionProps {
   sessionId: string
@@ -49,7 +50,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const [showQuizComplete, setShowQuizComplete] = useState(false)
   const [showAchievement, setShowAchievement] = useState(false)
   const [finalScore, setFinalScore] = useState<{score: number, total: number, percentage: number} | null>(null)
-  const [selectedQuizTitle, setSelectedQuizTitle] = useState('오늘의 주제') // 기본값 오늘의 주제
+  const [selectedQuizTitle, setSelectedQuizTitle] = useState(t('quiz.tab.today.topic')) // 기본값 오늘의 주제
   const [showQuizTitleSelector, setShowQuizTitleSelector] = useState(false)
   const [wrongAnswerNotes, setWrongAnswerNotes] = useState<TermsQuiz[]>([])
   const [isWrongAnswerMode, setIsWrongAnswerMode] = useState(false)
@@ -217,7 +218,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const isLoadingAIInfo = isLoadingAll || isLoadingDates || isLoadingDateBased
 
   // 퀴즈 주제 옵션들 (AI 정보 제목들)
-  const quizTitleOptions = ['오늘의 주제', ...actualAIInfo.map(info => info.title)]
+  const quizTitleOptions = [t('quiz.tab.today.topic'), ...actualAIInfo.map(info => info.title)]
 
   // 디버깅을 위한 로그
   console.log('AI 정보 상태:', { 
@@ -232,7 +233,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   console.log('selectedQuizTitle:', selectedQuizTitle)
 
   // 선택된 제목에 해당하는 AI 정보 찾기
-  const selectedAIInfo = selectedQuizTitle !== '오늘의 주제' 
+  const selectedAIInfo = selectedQuizTitle !== t('quiz.tab.today.topic') 
     ? actualAIInfo.find(info => info.title === selectedQuizTitle)
     : null
 
@@ -240,7 +241,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const { data: quizData, isLoading, refetch } = useQuery<TermsQuizResponse>({
     queryKey: ['terms-quiz', selectedDate, selectedQuizTitle, selectedAIInfo?.id],
     queryFn: async () => {
-      if (selectedQuizTitle === '오답 노트') {
+      if (selectedQuizTitle === t('quiz.tab.wrong.notes')) {
         // 오답 노트 모드: 저장된 오답 문제들로 퀴즈 생성
         if (wrongAnswerNotes.length === 0) {
           return { quizzes: [], total_terms: 0, message: "오답 노트에 등록된 문제가 없습니다." }
@@ -256,7 +257,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
           total_terms: wrongAnswerNotes.length,
           message: `오답 노트에서 ${shuffledQuizzes.length}개 문제를 가져왔습니다.`
         }
-      } else if (selectedQuizTitle !== '오늘의 주제' && selectedAIInfo) {
+      } else if (selectedQuizTitle !== t('quiz.tab.today.topic') && selectedAIInfo) {
         // 선택된 제목의 용어로 퀴즈 생성
         const terms = selectedAIInfo.terms || []
         if (terms.length === 0) {
@@ -311,7 +312,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         return response.data
       }
     },
-    enabled: !!selectedDate && (selectedQuizTitle === '오늘의 주제' || selectedQuizTitle === '오답 노트' || !!selectedAIInfo),
+    enabled: !!selectedDate && (selectedQuizTitle === t('quiz.tab.today.topic') || selectedQuizTitle === t('quiz.tab.wrong.notes') || !!selectedAIInfo),
   })
 
   const currentQuiz = quizData?.quizzes?.[currentQuizIndex]
@@ -392,7 +393,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
     setShowQuizTitleSelector(false)
     
     // 오답 노트 모드 설정
-    if (title === '오답 노트') {
+    if (title === t('quiz.tab.wrong.notes')) {
       setIsWrongAnswerMode(true)
     } else {
       setIsWrongAnswerMode(false)
@@ -458,7 +459,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                    <span className="relative z-10 flex items-center gap-2">
                      <Settings className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-180 transition-transform duration-300" />
-                     <span className="text-sm">주제 선택</span>
+                     <span className="text-sm">{t('quiz.tab.select.topic')}</span>
                    </span>
                  </button>
 
@@ -476,7 +477,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        }}
                      >
                        <div className="text-center mb-2">
-                         <div className="text-white/95 text-xs font-semibold mb-1">주제 선택</div>
+                         <div className="text-white/95 text-xs font-semibold mb-1">{t('quiz.tab.select.topic')}</div>
                          <div className="w-full bg-white/20 rounded-full h-0.5">
                            <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
                          </div>
@@ -486,7 +487,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                        {isLoadingAIInfo && (
                          <div className="flex items-center justify-center gap-2 text-white/70">
                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                           <div className="text-white/80 text-sm font-medium whitespace-nowrap">잠시만 기다려 주세요.</div>
+                           <div className="text-white/80 text-sm font-medium whitespace-nowrap">{t('loading.please.wait')}</div>
                          </div>
                        )}
                        
@@ -495,14 +496,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                              <div className="space-y-1.5 max-h-40 overflow-y-auto custom-scrollbar">
                                {/* 오답 노트 옵션 추가 */}
                                <button
-                                 onClick={() => handleQuizTitleChange('오답 노트')}
+                                 onClick={() => handleQuizTitleChange(t('quiz.tab.wrong.notes'))}
                                  className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-red-600/30 via-red-500/35 to-red-600/30 hover:from-red-500/50 hover:via-red-400/55 hover:to-red-500/50 transition-all duration-200 group border border-red-400/50 hover:border-red-400/70"
                                >
                                  <div className="flex items-center justify-between">
                                    <div className="flex-1 min-w-0">
                                      <div className="text-red-100 font-semibold text-xs group-hover:text-red-50 transition-colors leading-tight flex items-center gap-2">
                                        <BookOpen className="w-3 h-3" />
-                                       오답 노트
+                                       {t('quiz.tab.wrong.notes')}
                                      </div>
                                      <div className="text-red-100/80 text-xs mt-0.5 leading-tight">
                                        {wrongAnswerNotes.length}개 문제
@@ -516,14 +517,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                                
                                {/* 오늘의 주제 옵션 추가 */}
                                <button
-                                 onClick={() => handleQuizTitleChange('오늘의 주제')}
+                                 onClick={() => handleQuizTitleChange(t('quiz.tab.today.topic'))}
                                  className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-emerald-600/30 via-emerald-500/35 to-emerald-600/30 hover:from-emerald-500/50 hover:via-emerald-400/55 hover:to-emerald-500/50 transition-all duration-200 group border border-emerald-400/50 hover:border-emerald-400/70"
                                >
                                  <div className="flex items-center justify-between">
                                    <div className="flex-1 min-w-0">
                                      <div className="text-emerald-100 font-semibold text-xs group-hover:text-emerald-50 transition-colors leading-tight flex items-center gap-2">
                                        <Zap className="w-3 h-3" />
-                                       오늘의 주제
+                                       {t('quiz.tab.today.topic')}
                                      </div>
                                      <div className="text-emerald-100/80 text-xs mt-0.5 leading-tight">
                                        날짜별 퀴즈
@@ -559,7 +560,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                              ))
                            ) : (
                              <div className="text-center py-4">
-                               <div className="text-white/80 text-xs font-medium">사용 가능한 주제가 없습니다</div>
+                               <div className="text-white/80 text-xs font-medium">{t('quiz.tab.no.topics.available')}</div>
                              </div>
                            )}
                          </div>
@@ -584,7 +585,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                  <span className="relative z-10 flex items-center gap-2">
                    <Sparkles className="w-4 h-4 md:w-5 md:h-5 group-hover:animate-pulse" />
-                   <span className="text-sm">랜덤</span>
+                   <span className="text-sm">{t('quiz.tab.random')}</span>
                  </span>
                </button>
             </div>
@@ -594,7 +595,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
           <div className="mt-4 pt-3 border-t border-purple-500/20">
             <div className="flex items-center gap-2 text-white/80 text-sm font-medium">
               <Target className="w-4 h-4 text-purple-400" />
-              <span>선택된 주제: <span className="text-white font-semibold bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent">{selectedQuizTitle}</span></span>
+              <span>{t('quiz.tab.selected.topic')}: <span className="text-white font-semibold bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent">{selectedQuizTitle}</span></span>
             </div>
           </div>
         </div>
@@ -607,7 +608,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
         <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
           <div className="flex flex-col items-center justify-center text-white -mt-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-            <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려 주세요.</p>
+            <p className="text-white/80 text-lg font-medium whitespace-nowrap">{t('loading.please.wait')}</p>
           </div>
         </div>
       ) : (
@@ -618,22 +619,22 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
               <div className="text-center text-white">
                 <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-70" />
                 <h3 className="text-lg md:text-xl font-bold mb-3 mobile-text">
-                  {selectedQuizTitle === '오답 노트' ? '오답 노트가 비어있습니다' :
-                   selectedQuizTitle === '오늘의 주제' ? '등록된 용어가 없습니다' : '선택된 주제에 용어가 없습니다'}
+                  {selectedQuizTitle === t('quiz.tab.wrong.notes') ? '오답 노트가 비어있습니다' :
+                   selectedQuizTitle === t('quiz.tab.today.topic') ? t('quiz.tab.no.terms.message') : t('quiz.tab.no.terms.selected.message')}
                 </h3>
                 <p className="text-white/80 mb-4 text-base mobile-text">
                   {quizData?.message || 
-                    (selectedQuizTitle === '오답 노트'
-                      ? '오답 노트에 등록된 문제가 없습니다. 퀴즈를 풀면서 틀린 문제를 오답 노트에 등록해보세요!'
-                      : selectedQuizTitle === '오늘의 주제' 
-                      ? `${selectedDate} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
-                      : `"${selectedQuizTitle}" 주제에 등록된 용어가 없습니다. 다른 주제를 선택하거나 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!`
+                    (selectedQuizTitle === t('quiz.tab.wrong.notes')
+                      ? t('quiz.tab.no.wrong.notes.message')
+                      : selectedQuizTitle === t('quiz.tab.today.topic') 
+                      ? t('quiz.tab.no.terms.date.message').replace('{date}', selectedDate)
+                      : t('quiz.tab.no.terms.topic.message').replace('{topic}', selectedQuizTitle)
                     )
                   }
                 </p>
                 <div className="text-sm text-white/60 mobile-text">
-                  {selectedQuizTitle === '오답 노트' ? '오답 노트 모드' :
-                   selectedQuizTitle === '오늘의 주제' ? `선택한 날짜: ${selectedDate}` : `선택한 주제: ${selectedQuizTitle}`}
+                  {selectedQuizTitle === t('quiz.tab.wrong.notes') ? t('quiz.tab.wrong.notes.mode') :
+                   selectedQuizTitle === t('quiz.tab.today.topic') ? t('quiz.tab.selected.date').replace('{date}', selectedDate) : t('quiz.tab.selected.topic.info').replace('{topic}', selectedQuizTitle)}
                 </div>
               </div>
             </div>
@@ -719,7 +720,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                       >
                         <div className="flex items-center gap-3 text-red-200">
                           <BookOpen className="w-5 h-5" />
-                          <span className="font-semibold text-sm">오답 노트에 등록되었습니다!</span>
+                          <span className="font-semibold text-sm">{t('quiz.tab.wrong.note.added')}</span>
                         </div>
                       </motion.div>
                     )}
@@ -742,14 +743,14 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                             onClick={handleNextQuiz}
                             className="flex-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 text-white py-4 rounded-2xl font-bold hover:from-emerald-500 hover:via-green-600 hover:to-emerald-700 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-emerald-300/30"
                           >
-                            다음 문제
+                            {t('quiz.tab.next.question')}
                           </button>
                         ) : (
                           <button
                             onClick={handleNextQuiz}
                             className="flex-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white py-4 rounded-2xl font-bold hover:from-amber-500 hover:via-yellow-600 hover:to-orange-600 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-amber-300/30"
                           >
-                            퀴즈 완료하기
+                            {t('quiz.tab.complete.quiz')}
                           </button>
                         )}
                         {isWrongAnswerMode ? (
@@ -758,8 +759,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                             className="px-6 py-4 bg-gradient-to-br from-red-600/30 via-red-700/35 to-red-600/30 text-red-100 rounded-2xl hover:from-red-700/40 hover:via-red-800/45 hover:to-red-700/40 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-500/40 hover:border-red-500/60 transition-all duration-300 shadow-lg hover:shadow-xl"
                           >
                             <XCircle className="w-5 h-5" />
-                            <span className="hidden sm:inline">오답 노트에서 삭제</span>
-                            <span className="sm:hidden">삭제</span>
+                            <span className="hidden sm:inline">{t('quiz.tab.remove.from.wrong.notes')}</span>
+                            <span className="sm:hidden">{t('quiz.tab.remove')}</span>
                           </button>
                         ) : (
                           <button
@@ -768,8 +769,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                             className="px-6 py-4 bg-gradient-to-br from-red-500/20 via-red-600/25 to-red-500/20 text-red-200 rounded-2xl hover:from-red-600/30 hover:via-red-700/35 hover:to-red-600/30 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-400/30 hover:border-red-400/50 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <BookOpen className="w-5 h-5" />
-                            <span className="hidden sm:inline">오답 노트 등록</span>
-                            <span className="sm:hidden">오답 등록</span>
+                            <span className="hidden sm:inline">{t('quiz.tab.add.to.wrong.notes')}</span>
+                            <span className="sm:hidden">{t('quiz.tab.add.wrong.note')}</span>
                           </button>
                         )}
                       </>
@@ -794,7 +795,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                     </div>
                     
                     <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
-                      퀴즈 완료!
+                      {t('quiz.tab.quiz.completed')}
                     </h3>
                     
                     <div className="text-2xl md:text-3xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">
@@ -816,8 +817,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                       className="px-8 md:px-10 py-4 bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 text-white rounded-2xl font-bold hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 border border-purple-400/30"
                     >
                       <RotateCcw className="w-5 h-5" />
-                      <span className="hidden sm:inline">다시 도전</span>
-                      <span className="sm:hidden">재도전</span>
+                      <span className="hidden sm:inline">{t('quiz.tab.try.again')}</span>
+                      <span className="sm:hidden">{t('quiz.tab.re.try')}</span>
                     </button>
                   </div>
                 </motion.div>
@@ -839,8 +840,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             <div className="flex items-center gap-3 md:gap-4">
               <Award className="w-6 h-6 md:w-7 md:h-7 animate-bounce" />
               <div>
-                <div className="font-bold text-lg md:text-xl">🎉 퀴즈 완료!</div>
-                <div className="text-sm md:text-base opacity-95 font-medium">성적이 저장되었습니다!</div>
+                <div className="font-bold text-lg md:text-xl">{t('quiz.tab.quiz.completed')}</div>
+                <div className="text-sm md:text-base opacity-95 font-medium">{t('quiz.tab.score.saved')}</div>
               </div>
             </div>
           </motion.div>
@@ -859,8 +860,8 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
             <div className="flex items-center gap-3 md:gap-4">
               <Trophy className="w-6 h-6 md:w-7 md:h-7 animate-bounce" />
               <div>
-                <div className="font-bold text-lg md:text-xl">🎉 성취 달성!</div>
-                <div className="text-sm md:text-base opacity-95 font-medium">새로운 성취를 획득했습니다!</div>
+                <div className="font-bold text-lg md:text-xl">{t('quiz.tab.achievement.achieved')}</div>
+                <div className="text-sm md:text-base opacity-95 font-medium">{t('quiz.tab.new.achievement')}</div>
               </div>
             </div>
           </motion.div>

@@ -6,6 +6,7 @@ import { BarChart3, TrendingUp, BookOpen, Target, Calendar, ChevronLeft, Chevron
 import { useUserStats } from '@/hooks/use-user-progress'
 import { userProgressAPI, aiInfoAPI } from '@/lib/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { t } from '@/lib/i18n'
 
 interface ProgressSectionProps {
   sessionId: string
@@ -362,7 +363,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
               }`}
             >
-              📊 학습 추이 카드
+              📊 {t('progress.tab.trend.card')}
             </button>
             <button
               onClick={() => setViewMode('graph')}
@@ -372,7 +373,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
               }`}
             >
-              📈 학습 추이 그래프
+              📈 {t('progress.tab.trend.graph')}
             </button>
           </div>
         </div>
@@ -392,14 +393,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <BookOpen className="w-4 h-4 text-blue-400" />
-                <h3 className="text-white font-semibold text-sm">AI 정보 학습</h3>
+                <h3 className="text-white font-semibold text-sm">{t('progress.card.ai.info.learning')}</h3>
               </div>
               <TrendingUp className="w-3 h-3 text-blue-400" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
+                  {selectedDate ? `${selectedDate} 학습 수` : t('progress.card.today.learning.count')}
                 </span>
                 <span className="text-blue-400 font-bold text-base">
                   {(() => {
@@ -433,11 +434,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">일별 총 정보 수</span>
+                <span className="text-white/70 text-xs">{t('progress.card.daily.total.info')}</span>
                 <span className="text-blue-400 font-bold text-sm">{totalAIInfo}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">누적 총 학습 수</span>
+                <span className="text-white/70 text-xs">{t('progress.card.accumulated.total.learning')}</span>
                        <span className="text-white font-semibold text-sm">
          {(() => {
            // AI 정보 날짜 목록의 총 개수 × 2 (각 날짜당 2개 카드)
@@ -463,14 +464,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <Target className="w-4 h-4 text-purple-400" />
-                <h3 className="text-white font-semibold text-sm">용어 학습</h3>
+                <h3 className="text-white font-semibold text-sm">{t('progress.card.terms.learning.count')}</h3>
               </div>
               <TrendingUp className="w-3 h-3 text-purple-400" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 학습 수` : '오늘 학습 수'}
+                  {selectedDate ? `${selectedDate} 학습 수` : t('progress.card.today.learning.count')}
                 </span>
                 <span className="text-purple-400 font-bold text-base">
                   {(() => {
@@ -628,14 +629,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <BarChart3 className="w-4 h-4 text-green-400" />
-                <h3 className="text-white font-semibold text-sm">퀴즈 점수</h3>
+                <h3 className="text-white font-semibold text-sm">{t('progress.card.quiz.score')}</h3>
               </div>
               <TrendingUp className="w-3 h-3 text-green-400" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 누적 점수` : '오늘 누적 점수'}
+                  {selectedDate ? `${selectedDate} 누적 점수` : t('progress.card.daily.accumulated')}
                 </span>
                 <span className="text-green-400 font-bold text-base">
                   {(() => {
@@ -652,7 +653,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} 정답률` : '오늘 정답률'}
+                  {selectedDate ? `${selectedDate} 정답률` : t('progress.card.daily.accuracy')}
                 </span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {

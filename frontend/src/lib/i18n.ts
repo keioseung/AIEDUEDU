@@ -284,6 +284,55 @@ const ko: Record<string, string> = {
   'language.ja': '日本語',
   'language.zh': '中文',
   'language.select': '언어 선택',
+  
+  // 퀴즈 탭 UI 요소
+  'quiz.tab.topic.selector': '주제 선택',
+  'quiz.tab.random': '랜덤',
+  'quiz.tab.selected.topic': '선택된 주제',
+  'quiz.tab.today.topic': '오늘의 주제',
+  'quiz.tab.wrong.notes': '오답 노트',
+  'quiz.tab.no.terms.message': '등록된 용어가 없습니다',
+  'quiz.tab.no.terms.selected.message': '선택된 주제에 용어가 없습니다',
+  'quiz.tab.no.wrong.notes.message': '오답 노트에 등록된 문제가 없습니다. 퀴즈를 풀면서 틀린 문제를 오답 노트에 등록해보세요!',
+  'quiz.tab.no.terms.date.message': '{date} 날짜에 등록된 용어가 없습니다. 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!',
+  'quiz.tab.no.terms.topic.message': '"{topic}" 주제에 등록된 용어가 없습니다. 다른 주제를 선택하거나 관리자가 용어를 등록한 후 퀴즈를 풀어보세요!',
+  'quiz.tab.wrong.notes.mode': '오답 노트 모드',
+  'quiz.tab.selected.date': '선택한 날짜: {date}',
+  'quiz.tab.selected.topic.info': '선택한 주제: {topic}',
+  
+  // 진행률 탭 모드명
+  'progress.tab.trend.card': '학습 추이 카드',
+  'progress.tab.trend.graph': '학습 추이 그래프',
+  
+  // 진행률 탭 카드 내용
+  'progress.card.ai.info.learning': 'AI 정보 학습',
+  'progress.card.today.learning.count': '오늘 학습 수',
+  'progress.card.daily.total.info': '일별 총 정보 수',
+  'progress.card.accumulated.total.learning': '누적 총 학습 수',
+  'progress.card.terms.learning.count': '용어 학습',
+  'progress.card.learning.count': '학습 수',
+  'progress.card.quiz.score': '퀴즈 점수',
+  'progress.card.daily.accuracy': '일일 정답률',
+  'progress.card.daily.accumulated': '일일 누적',
+  'progress.card.accuracy': '정답률',
+  'progress.card.accumulated.score': '누적 점수',
+  
+  // 퀴즈 탭 추가 UI 요소
+  'quiz.tab.select.topic': '주제 선택',
+  'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
+  'quiz.tab.wrong.note.added': '오답 노트에 등록되었습니다!',
+  'quiz.tab.next.question': '다음 문제',
+  'quiz.tab.complete.quiz': '퀴즈 완료하기',
+  'quiz.tab.remove.from.wrong.notes': '오답 노트에서 삭제',
+  'quiz.tab.remove': '삭제',
+  'quiz.tab.add.to.wrong.notes': '오답 노트 등록',
+  'quiz.tab.add.wrong.note': '오답 등록',
+  'quiz.tab.quiz.completed': '퀴즈 완료!',
+  'quiz.tab.try.again': '다시 도전',
+  'quiz.tab.re.try': '재도전',
+  'quiz.tab.score.saved': '성적이 저장되었습니다!',
+  'quiz.tab.achievement.achieved': '🎉 성취 달성!',
+  'quiz.tab.new.achievement': '새로운 성취를 획득했습니다!',
 }
 
 // 영어
@@ -563,6 +612,55 @@ const en: Record<string, string> = {
   'language.ja': '日本語',
   'language.zh': '中文',
   'language.select': 'Select Language',
+  
+  // 퀴즈 탭 UI 요소
+  'quiz.tab.topic.selector': 'Topic Selector',
+  'quiz.tab.random': 'Random',
+  'quiz.tab.selected.topic': 'Selected Topic',
+  'quiz.tab.today.topic': 'Today\'s Topic',
+  'quiz.tab.wrong.notes': 'Wrong Notes',
+  'quiz.tab.no.terms.message': 'No terms registered',
+  'quiz.tab.no.terms.selected.message': 'No terms for selected topic',
+  'quiz.tab.no.wrong.notes.message': 'No problems registered in wrong notes. Register wrong problems in wrong notes while taking quizzes!',
+  'quiz.tab.no.terms.date.message': '{date} date has no terms registered. Please take quizzes after the administrator registers terms!',
+  'quiz.tab.no.terms.topic.message': '"{topic}" topic has no terms registered. Please select another topic or take quizzes after the administrator registers terms!',
+  'quiz.tab.wrong.notes.mode': 'Wrong Notes Mode',
+  'quiz.tab.selected.date': 'Selected Date: {date}',
+  'quiz.tab.selected.topic.info': 'Selected Topic: {topic}',
+  
+  // 퀴즈 탭 추가 UI 요소
+  'quiz.tab.select.topic': 'Select Topic',
+  'quiz.tab.no.topics.available': 'No topics available',
+  'quiz.tab.wrong.note.added': 'Wrong answer note added!',
+  'quiz.tab.next.question': 'Next Question',
+  'quiz.tab.complete.quiz': 'Complete Quiz',
+  'quiz.tab.remove.from.wrong.notes': 'Remove from wrong notes',
+  'quiz.tab.remove': 'Remove',
+  'quiz.tab.add.to.wrong.notes': 'Add to wrong notes',
+  'quiz.tab.add.wrong.note': 'Add Wrong Answer',
+  'quiz.tab.quiz.completed': 'Quiz Completed!',
+  'quiz.tab.try.again': 'Try Again',
+  'quiz.tab.re.try': 'Re-try',
+  'quiz.tab.score.saved': 'Score saved!',
+  'quiz.tab.achievement.achieved': '🎉 Achievement Achieved!',
+  'quiz.tab.new.achievement': 'New achievement gained!',
+  
+  // 진행률 탭 모드명
+  'progress.tab.trend.card': 'Learning Trend Card',
+  'progress.tab.trend.graph': 'Learning Trend Graph',
+  
+  // 진행률 탭 카드 내용
+  'progress.card.ai.info.learning': 'AI Info Learning',
+  'progress.card.today.learning.count': 'Today\'s Learning Count',
+  'progress.card.daily.total.info': 'Daily Total Info Count',
+  'progress.card.accumulated.total.learning': 'Accumulated Total Learning',
+  'progress.card.terms.learning.count': 'Terms Learning',
+  'progress.card.learning.count': 'Learning Count',
+  'progress.card.quiz.score': 'Quiz Score',
+  'progress.card.daily.accuracy': 'Daily Accuracy',
+  'progress.card.daily.accumulated': 'Daily Accumulated',
+  'progress.card.accuracy': 'Accuracy',
+  'progress.card.accumulated.score': 'Accumulated Score',
 }
 
 // 일본어
@@ -842,6 +940,55 @@ const ja: Record<string, string> = {
   'language.ja': '日本語',
   'language.zh': '中文',
   'language.select': '言語選択',
+  
+  // 퀴즈 탭 UI 요소
+  'quiz.tab.topic.selector': 'トピック選択',
+  'quiz.tab.random': 'ランダム',
+  'quiz.tab.selected.topic': '選択されたトピック',
+  'quiz.tab.today.topic': '今日のトピック',
+  'quiz.tab.wrong.notes': '間違いノート',
+  'quiz.tab.no.terms.message': '登録された用語がありません',
+  'quiz.tab.no.terms.selected.message': '選択されたトピックに用語がありません',
+  'quiz.tab.no.wrong.notes.message': '間違いノートに登録された問題がありません。クイズを解きながら間違った問題を間違いノートに登録してみてください！',
+  'quiz.tab.no.terms.date.message': '{date} 日に登録された用語がありません。管理者が用語を登録した後にクイズを解いてみてください！',
+  'quiz.tab.no.terms.topic.message': '"{topic}" トピックに登録された用語がありません。別のトピックを選択するか、管理者が用語を登録した後にクイズを解いてみてください！',
+  'quiz.tab.wrong.notes.mode': '間違いノートモード',
+  'quiz.tab.selected.date': '選択した日付: {date}',
+  'quiz.tab.selected.topic.info': '選択したトピック: {topic}',
+  
+  // 進捗率タブモード名
+  'progress.tab.trend.card': '学習推移カード',
+  'progress.tab.trend.graph': '学習推移グラフ',
+  
+  // 進捗率タブカード内容
+  'progress.card.ai.info.learning': 'AI情報学習',
+  'progress.card.today.learning.count': '今日の学習数',
+  'progress.card.daily.total.info': '日別総情報数',
+  'progress.card.accumulated.total.learning': '累積総学習数',
+  'progress.card.terms.learning.count': '用語学習',
+  'progress.card.learning.count': '学習数',
+  'progress.card.quiz.score': 'クイズスコア',
+  'progress.card.daily.accuracy': '日別正答率',
+  'progress.card.daily.accumulated': '日別累積',
+  'progress.card.accuracy': '正答率',
+  'progress.card.accumulated.score': '累積スコア',
+  
+  // 퀴즈 탭 추가 UI 요소
+  'quiz.tab.select.topic': '주제 선택',
+  'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
+  'quiz.tab.wrong.note.added': '오답 노트에 등록되었습니다!',
+  'quiz.tab.next.question': '다음 문제',
+  'quiz.tab.complete.quiz': '퀴즈 완료하기',
+  'quiz.tab.remove.from.wrong.notes': '오답 노트에서 삭제',
+  'quiz.tab.remove': '삭제',
+  'quiz.tab.add.to.wrong.notes': '오답 노트 등록',
+  'quiz.tab.add.wrong.note': '오답 등록',
+  'quiz.tab.quiz.completed': '퀴즈 완료!',
+  'quiz.tab.try.again': '다시 도전',
+  'quiz.tab.re.try': '재도전',
+  'quiz.tab.score.saved': '성적이 저장되었습니다!',
+  'quiz.tab.achievement.achieved': '🎉 성취 달성!',
+  'quiz.tab.new.achievement': '🎉 성취 달성!',
 }
 
 // 중국어
@@ -1017,13 +1164,13 @@ const zh: Record<string, string> = {
   // 进度卡片内容
   'progress.ai.info.learning': 'AI信息学习',
   'progress.ai.info.today.count': '今日学习数',
-  'progress.ai.info.daily.total': '日总信息数',
+  'progress.ai.info.daily.total': '每日总信息数',
   'progress.ai.info.accumulated.total': '累计总学习数',
-  'progress.terms.learning.count': '学习数',
-  'progress.quiz.daily.accuracy': '日准确率',
-  'progress.quiz.daily.accumulated': '日累计',
-  'progress.quiz.accuracy': '日准确率',
-  'progress.quiz.accumulated.score': '日累计',
+  'progress.terms.learning.count': '术语学习',
+  'progress.quiz.daily.accuracy': '每日正确率',
+  'progress.quiz.daily.accumulated': '每日累计',
+  'progress.quiz.accuracy': '正确率',
+  'progress.quiz.accumulated.score': '累计分数',
   
   // 术语学习
   'terms.title': '术语学习',
@@ -1121,6 +1268,55 @@ const zh: Record<string, string> = {
   'language.ja': '日本語',
   'language.zh': '中文',
   'language.select': '选择语言',
+  
+  // 퀴즈 탭 UI 요소
+  'quiz.tab.topic.selector': '主题选择',
+  'quiz.tab.random': '随机',
+  'quiz.tab.selected.topic': '已选主题',
+  'quiz.tab.today.topic': '今日主题',
+  'quiz.tab.wrong.notes': '错题笔记',
+  'quiz.tab.no.terms.message': '没有注册的术语',
+  'quiz.tab.no.terms.selected.message': '所选主题没有术语',
+  'quiz.tab.no.wrong.notes.message': '错题笔记中没有注册的问题。在做测验时，请将错误的问题注册到错题笔记中！',
+  'quiz.tab.no.terms.date.message': '{date} 日期没有注册的术语。请管理员注册术语后再做测验！',
+  'quiz.tab.no.terms.topic.message': '"{topic}" 主题没有注册的术语。请选择其他主题或管理员注册术语后再做测验！',
+  'quiz.tab.wrong.notes.mode': '错题笔记模式',
+  'quiz.tab.selected.date': '选择日期: {date}',
+  'quiz.tab.selected.topic.info': '选择主题: {topic}',
+  
+  // 进度标签页模式名
+  'progress.tab.trend.card': '学习趋势卡片',
+  'progress.tab.trend.graph': '学习趋势图表',
+  
+  // 进度标签页卡片内容
+  'progress.card.ai.info.learning': 'AI信息学习',
+  'progress.card.today.learning.count': '今日学习数',
+  'progress.card.daily.total.info': '每日总信息数',
+  'progress.card.accumulated.total.learning': '累计总学习数',
+  'progress.card.terms.learning.count': '术语学习',
+  'progress.card.learning.count': '学习数',
+  'progress.card.quiz.score': '测验分数',
+  'progress.card.daily.accuracy': '每日正确率',
+  'progress.card.daily.accumulated': '每日累计',
+  'progress.card.accuracy': '正确率',
+  'progress.card.accumulated.score': '累计分数',
+  
+  // 퀴즈 탭 추가 UI 요소
+  'quiz.tab.select.topic': '주제 선택',
+  'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
+  'quiz.tab.wrong.note.added': '오답 노트에 등록되었습니다!',
+  'quiz.tab.next.question': '다음 문제',
+  'quiz.tab.complete.quiz': '퀴즈 완료하기',
+  'quiz.tab.remove.from.wrong.notes': '오답 노트에서 삭제',
+  'quiz.tab.remove': '삭제',
+  'quiz.tab.add.to.wrong.notes': '오답 노트 등록',
+  'quiz.tab.add.wrong.note': '오답 등록',
+  'quiz.tab.quiz.completed': '퀴즈 완료!',
+  'quiz.tab.try.again': '다시 도전',
+  'quiz.tab.re.try': '재도전',
+  'quiz.tab.score.saved': '성적이 저장되었습니다!',
+  'quiz.tab.achievement.achieved': '🎉 성취 달성!',
+  'quiz.tab.new.achievement': '🎉 성취 달성!',
 }
 
 export const translations: Translations = {
