@@ -1077,7 +1077,7 @@ const ja: Record<string, string> = {
   'progress.card.accumulated.score': '累積スコア',
   
   // 퀴즈 탭 추가 UI 요소
-  'quiz.tab.select.topic': '주제 선택',
+  'quiz.tab.select.topic': 'トピック選択',
   'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
   'quiz.tab.wrong.note.added': '오답 노트에 등록되었습니다!',
   'quiz.tab.next.question': '다음 문제',
@@ -1434,7 +1434,7 @@ const zh: Record<string, string> = {
   'progress.card.accumulated.score': '累计分数',
   
   // 퀴즈 탭 추가 UI 요소
-  'quiz.tab.select.topic': '주제 선택',
+  'quiz.tab.select.topic': '选择主题',
   'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
   'quiz.tab.wrong.note.added': '오답 노트에 등록되었습니다!',
   'quiz.tab.next.question': '다음 문제',
