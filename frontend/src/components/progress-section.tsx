@@ -524,11 +524,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">일별 총 용어 수</span>
+                <span className="text-white/70 text-xs">{t('progress.card.terms.daily.total')}</span>
                 <span className="text-purple-400 font-bold text-sm">{totalTerms}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">누적 총 용어 수</span>
+                <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
                        <span className="text-white font-semibold text-sm">
          {(() => {
            // AI 정보 날짜 목록의 총 개수 × 40 (각 날짜당 2개 카드 × 20개 용어)
@@ -669,7 +669,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">전체 누적</span>
+                <span className="text-white/70 text-xs">{t('progress.card.daily.accumulated')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
                     const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
