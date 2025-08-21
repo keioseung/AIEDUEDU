@@ -473,6 +473,15 @@ const ko: Record<string, string> = {
   // 용어학습 탭 로딩 페이지
   'terms.tab.loading': '잠시만 기다려 주세요.',
   
+  // 용어학습 탭 재생 속도 설정
+  'terms.playback.speed': '재생 속도',
+  'terms.playback.speed.1s': '1초',
+  'terms.playback.speed.2s': '2초',
+  'terms.playback.speed.3s': '3초',
+  'terms.playback.speed.5s': '5초',
+  'terms.playback.speed.7s': '7초',
+  'terms.playback.speed.10s': '10초',
+  
   // 용어학습 탭 날짜 필터
   'terms.date.filter.year': '년',
   'terms.date.filter.month': '월',
@@ -908,6 +917,15 @@ const en: Record<string, string> = {
   
   // Terms Learning Tab Loading Page
   'terms.tab.loading': 'Please wait a moment.',
+  
+  // Terms Learning Tab Playback Speed Settings
+  'terms.playback.speed': 'Playback Speed',
+  'terms.playback.speed.1s': '1 second',
+  'terms.playback.speed.2s': '2 seconds',
+  'terms.playback.speed.3s': '3 seconds',
+  'terms.playback.speed.5s': '5 seconds',
+  'terms.playback.speed.7s': '7 seconds',
+  'terms.playback.speed.10s': '10 seconds',
   
   // Terms Learning Tab Date Filter
   'terms.date.filter.year': 'Year',
@@ -1408,6 +1426,15 @@ const ja: Record<string, string> = {
   // 用語学習タブローディングページ
   'terms.tab.loading': 'しばらくお待ちください。',
   
+  // 用語学習タブ再生速度設定
+  'terms.playback.speed': '再生速度',
+  'terms.playback.speed.1s': '1秒',
+  'terms.playback.speed.2s': '2秒',
+  'terms.playback.speed.3s': '3秒',
+  'terms.playback.speed.5s': '5秒',
+  'terms.playback.speed.7s': '7秒',
+  'terms.playback.speed.10s': '10秒',
+  
   // 用語学習タブ日付フィルター
   'terms.date.filter.year': '年',
   'terms.date.filter.month': '月',
@@ -1873,6 +1900,15 @@ const zh: Record<string, string> = {
   
   // 术语学习标签页加载页面
   'terms.tab.loading': '请稍候。',
+  
+  // 术语学习标签页播放速度设置
+  'terms.playback.speed': '播放速度',
+  'terms.playback.speed.1s': '1秒',
+  'terms.playback.speed.2s': '2秒',
+  'terms.playback.speed.3s': '3秒',
+  'terms.playback.speed.5s': '5秒',
+  'terms.playback.speed.7s': '7秒',
+  'terms.playback.speed.10s': '10秒',
   
   // 术语学习标签页日期筛选
   'terms.date.filter.year': '年',

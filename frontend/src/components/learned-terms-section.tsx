@@ -1039,7 +1039,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
               {/* 속도 조절 드롭다운 */}
               {showSpeedControl && (
                 <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-xl rounded-lg p-3 border border-white/20 z-10 min-w-[140px]">
-                  <div className="text-white text-sm font-medium mb-2">재생 속도</div>
+                  <div className="text-white text-sm font-medium mb-2">{t('terms.playback.speed')}</div>
                   <div className="space-y-2">
                     <button
                       onClick={() => changeSpeed(1000)}
@@ -1047,7 +1047,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         autoPlayInterval === 1000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      1초
+                      {t('terms.playback.speed.1s')}
                     </button>
                     <button
                       onClick={() => changeSpeed(2000)}
@@ -1055,7 +1055,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         autoPlayInterval === 2000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      2초
+                      {t('terms.playback.speed.2s')}
                     </button>
                     <button
                       onClick={() => changeSpeed(3000)}
@@ -1063,7 +1063,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         autoPlayInterval === 3000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      3초
+                      {t('terms.playback.speed.3s')}
                     </button>
                     <button
                       onClick={() => changeSpeed(5000)}
@@ -1071,7 +1071,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         autoPlayInterval === 5000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      5초
+                      {t('terms.playback.speed.5s')}
                     </button>
                     <button
                       onClick={() => changeSpeed(7000)}
@@ -1079,7 +1079,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         autoPlayInterval === 7000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      7초
+                      {t('terms.playback.speed.7s')}
                     </button>
                     <button
                       onClick={() => changeSpeed(10000)}
@@ -1087,7 +1087,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         autoPlayInterval === 10000 ? 'bg-blue-500 text-white' : 'text-white/70 hover:bg-white/10'
                       }`}
                     >
-                      10초
+                      {t('terms.playback.speed.10s')}
                     </button>
                   </div>
                 </div>
