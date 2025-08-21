@@ -864,7 +864,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                                        {t('quiz.tab.today.topic')}
                                      </div>
                                      <div className="text-emerald-100/80 text-xs mt-0.5 leading-tight">
-                                       날짜별 퀴즈
+                                       {getDateBasedQuizTextByLanguage(currentLanguage)}
                                      </div>
                                    </div>
                                    <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
