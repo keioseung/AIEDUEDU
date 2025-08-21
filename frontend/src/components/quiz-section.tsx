@@ -72,47 +72,76 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
     queryKey: ['ai-info-topics', localLanguage],
     queryFn: async () => {
       try {
+        console.log(`🎯 Quiz 섹션 - AI Info에서 주제 가져오기 시작 (언어: ${localLanguage})`)
+        
         // AI Info의 모든 날짜 가져오기
         const datesResponse = await aiInfoAPI.getAllDates()
+        console.log(`🎯 Quiz 섹션 - getAllDates API 응답:`, datesResponse)
+        
         const allDates = datesResponse.data || []
+        console.log(`🎯 Quiz 섹션 - 파싱된 날짜 목록:`, allDates)
         
         if (allDates.length === 0) {
+          console.log('🎯 Quiz 섹션 - AI Info 날짜 데이터가 없음')
           return ['AI', 'Machine Learning', 'Deep Learning', 'Natural Language Processing']
         }
+        
+        console.log(`🎯 Quiz 섹션 - ${allDates.length}개 날짜에서 AI Info 주제 추출`)
         
         const allTopics = new Set<string>()
         
         for (const date of allDates) {
           try {
+            console.log(`🎯 Quiz 섹션 - 날짜 ${date} 처리 시작`)
             const dateResponse = await aiInfoAPI.getByDate(date)
+            console.log(`🎯 Quiz 섹션 - getByDate API 응답 (${date}):`, dateResponse)
+            
             const dateInfos = dateResponse.data
+            console.log(`🎯 Quiz 섹션 - 파싱된 AI 정보 (${date}):`, dateInfos)
             
             if (Array.isArray(dateInfos)) {
-              dateInfos.forEach((info: any) => {
+              console.log(`🎯 Quiz 섹션 - 날짜 ${date}의 AI 정보:`, dateInfos.length, '개')
+              
+              dateInfos.forEach((info: any, index: number) => {
+                console.log(`🎯 Quiz 섹션 - 날짜 ${date}, 인덱스 ${index}의 AI 정보:`, info)
+                console.log(`🎯 Quiz 섹션 - info 객체의 키들:`, Object.keys(info))
+                
                 // 백엔드 API 응답 구조에 맞게 제목 가져오기
                 const title = info[`title_${localLanguage}`] || info.title_ko || ''
                 
+                console.log(`🎯 Quiz 섹션 - ${localLanguage} 언어 제목:`, title)
+                console.log(`🎯 Quiz 섹션 - title_${localLanguage}:`, title)
+                console.log(`🎯 Quiz 섹션 - title_ko:`, info.title_ko)
+                console.log(`🎯 Quiz 섹션 - title_en:`, info.title_en)
+                
                 if (title && title.trim()) {
                   allTopics.add(title.trim())
+                  console.log(`🎯 Quiz 섹션 - 주제 추가: ${title.trim()}`)
+                } else {
+                  console.log(`🎯 Quiz 섹션 - 제목이 비어있음 또는 undefined`)
                 }
               })
+            } else {
+              console.log(`🎯 Quiz 섹션 - 날짜 ${date}의 AI 정보가 배열이 아님:`, typeof dateInfos)
             }
           } catch (error) {
-            console.log(`날짜 ${date}의 AI Info 가져오기 실패:`, error)
+            console.log(`🎯 Quiz 섹션 - 날짜 ${date}의 AI Info 가져오기 실패:`, error)
           }
         }
         
         const topicsList = Array.from(allTopics).sort()
+        console.log(`🎯 Quiz 섹션 - AI Info에서 ${topicsList.length}개 주제 추출 (언어: ${localLanguage}):`, topicsList)
         
         // 주제가 없으면 기본값 반환
         if (topicsList.length === 0) {
+          console.log('🎯 Quiz 섹션 - 주제가 없어서 기본값 반환')
           return ['AI', 'Machine Learning', 'Deep Learning', 'Natural Language Processing']
         }
         
         return topicsList
         
       } catch (error) {
-        console.error('주제 가져오기 실패:', error)
+        console.error('🎯 Quiz 섹션 - 주제 가져오기 실패:', error)
         return ['AI', 'Machine Learning', 'Deep Learning', 'Natural Language Processing']
       }
     },
@@ -213,6 +242,17 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
         {/* 주제 선택 */}
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-white mb-4">{t('quiz.topic.selection')}</h3>
+          
+          {/* 디버깅 정보 */}
+          <div className="mb-4 p-3 bg-yellow-900/20 rounded-lg border border-yellow-500/30">
+            <h4 className="text-sm font-semibold text-yellow-300 mb-2">🔍 주제 데이터 디버깅</h4>
+            <div className="text-xs text-yellow-200 space-y-1">
+              <div><span className="font-medium">topics 데이터:</span> {topics ? `${topics.length}개` : '로딩 중...'}</div>
+              <div><span className="font-medium">topics 내용:</span> {topics ? topics.join(', ') : '없음'}</div>
+              <div><span className="font-medium">현재 언어:</span> {localLanguage}</div>
+            </div>
+          </div>
+          
           <div className="flex flex-wrap gap-3">
             {topics?.map((topic) => (
               <button
