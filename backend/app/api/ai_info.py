@@ -132,6 +132,24 @@ def get_ai_info_by_date(date: str, db: Session = Depends(get_db)):
 @router.post("/", response_model=AIInfoResponse)
 def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
     try:
+        print(f"=== AI Info Registration Debug ===")
+        print(f"Date: {ai_info_data.date}")
+        print(f"Number of infos: {len(ai_info_data.infos)}")
+        for i, info in enumerate(ai_info_data.infos):
+            print(f"Info {i+1}:")
+            print(f"  Title KO: {info.title_ko}")
+            print(f"  Title EN: {info.title_en}")
+            print(f"  Title JA: {info.title_ja}")
+            print(f"  Title ZH: {info.title_zh}")
+            print(f"  Content KO: {info.content_ko[:50]}...")
+            print(f"  Content EN: {info.content_en[:50] if info.content_en else 'None'}...")
+            print(f"  Content JA: {info.content_ja[:50] if info.content_ja else 'None'}...")
+            print(f"  Content ZH: {info.content_zh[:50] if info.content_zh else 'None'}...")
+            print(f"  Terms KO count: {len(info.terms_ko) if info.terms_ko else 0}")
+            print(f"  Terms EN count: {len(info.terms_en) if info.terms_en else 0}")
+            print(f"  Terms JA count: {len(info.terms_ja) if info.terms_ja else 0}")
+            print(f"  Terms ZH count: {len(info.terms_zh) if info.terms_zh else 0}")
+        print(f"================================")
         existing_info = db.query(AIInfo).filter(AIInfo.date == ai_info_data.date).first()
 
         def build_infos(obj):
