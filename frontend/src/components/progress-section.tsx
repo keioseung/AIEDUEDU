@@ -509,7 +509,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <Target className="w-4 h-4 text-purple-400" />
-                <h3 className="text-white font-semibold text-sm">{t('progress.card.terms.learning.count')}</h3>
+                <h3 className="text-white font-semibold text-sm">
+                  {localLanguage === 'ko' ? '용어 학습' : 
+                   localLanguage === 'en' ? 'Terms Learning' : 
+                   localLanguage === 'ja' ? '用語学習' : '术语学习'}
+                </h3>
               </div>
               <TrendingUp className="w-3 h-3 text-purple-400" />
             </div>
