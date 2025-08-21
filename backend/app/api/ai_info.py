@@ -386,46 +386,46 @@ def get_all_ai_info(db: Session = Depends(get_db)):
         
         for ai_info in ai_infos:
             # info1
-            if ai_info.info1_title and ai_info.info1_content:
+            if ai_info.info1_title_ko and ai_info.info1_content_ko:
                 try:
-                    terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                    terms1 = json.loads(ai_info.info1_terms_ko) if ai_info.info1_terms_ko else []
                 except json.JSONDecodeError:
                     terms1 = []
                 all_ai_info.append({
                     "id": f"{ai_info.date}_0",
                     "date": ai_info.date,
-                    "title": ai_info.info1_title,
-                    "content": ai_info.info1_content,
+                    "title": ai_info.info1_title_ko,
+                    "content": ai_info.info1_content_ko,
                     "terms": terms1,
                     "info_index": 0
                 })
             
             # info2
-            if ai_info.info2_title and ai_info.info2_content:
+            if ai_info.info2_title_ko and ai_info.info2_content_ko:
                 try:
-                    terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                    terms2 = json.loads(ai_info.info2_terms_ko) if ai_info.info2_terms_ko else []
                 except json.JSONDecodeError:
                     terms2 = []
                 all_ai_info.append({
                     "id": f"{ai_info.date}_1",
                     "date": ai_info.date,
-                    "title": ai_info.info2_title,
-                    "content": ai_info.info2_content,
+                    "title": ai_info.info2_title_ko,
+                    "content": ai_info.info2_content_ko,
                     "terms": terms2,
                     "info_index": 1
                 })
             
             # info3
-            if ai_info.info3_title and ai_info.info3_content:
+            if ai_info.info3_title_ko and ai_info.info3_content_ko:
                 try:
-                    terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                    terms3 = json.loads(ai_info.info3_terms_ko) if ai_info.info3_terms_ko else []
                 except json.JSONDecodeError:
                     terms3 = []
                 all_ai_info.append({
                     "id": f"{ai_info.date}_2",
                     "date": ai_info.date,
-                    "title": ai_info.info3_title,
-                    "content": ai_info.info3_content,
+                    "title": ai_info.info3_title_ko,
+                    "content": ai_info.info3_content_ko,
                     "terms": terms3,
                     "info_index": 2
                 })
@@ -458,22 +458,22 @@ def get_total_ai_info_count(db: Session = Depends(get_db)):
             info3_count = 0
             
             # info1
-            if ai_info.info1_title and ai_info.info1_content:
+            if ai_info.info1_title_ko and ai_info.info1_content_ko:
                 total_cards += 1
                 info1_count = 1
-                print(f"DEBUG: Date {ai_info.date} - Info1: title='{ai_info.info1_title[:20]}...', content='{ai_info.info1_content[:20]}...'")
+                print(f"DEBUG: Date {ai_info.date} - Info1: title='{ai_info.info1_title_ko[:20]}...', content='{ai_info.info1_content_ko[:20]}...'")
             
             # info2
-            if ai_info.info2_title and ai_info.info2_content:
+            if ai_info.info2_title_ko and ai_info.info2_content_ko:
                 total_cards += 1
                 info2_count = 1
-                print(f"DEBUG: Date {ai_info.date} - Info2: title='{ai_info.info2_title[:20]}...', content='{ai_info.info2_content[:20]}...'")
+                print(f"DEBUG: Date {ai_info.date} - Info2: title='{ai_info.info2_title_ko[:20]}...', content='{ai_info.info2_content_ko[:20]}...'")
             
             # info3
-            if ai_info.info3_title and ai_info.info3_content:
+            if ai_info.info3_title_ko and ai_info.info3_content_ko:
                 total_cards += 1
                 info3_count = 1
-                print(f"DEBUG: Date {ai_info.date} - Info3: title='{ai_info.info3_title[:20]}...', content='{ai_info.info3_content[:20]}...'")
+                print(f"DEBUG: Date {ai_info.date} - Info3: title='{ai_info.info3_title_ko[:20]}...', content='{ai_info.info3_content_ko[:20]}...'")
             
             print(f"DEBUG: Date {ai_info.date} - Info1: {info1_count}, Info2: {info2_count}, Info3: {info3_count}")
         
@@ -704,23 +704,23 @@ def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
                     learned_indices = json.loads(progress.learned_info)
                     ai_info = db.query(AIInfo).filter(AIInfo.date == progress.date).first()
                     if ai_info:
-                        # 각 학습한 info의 용어들 가져오기
+                        # 각 학습한 info의 용어들 가져오기 (한국어 기준)
                         for info_idx in learned_indices:
-                            if info_idx == 0 and ai_info.info1_terms:
+                            if info_idx == 0 and ai_info.info1_terms_ko:
                                 try:
-                                    terms = json.loads(ai_info.info1_terms)
+                                    terms = json.loads(ai_info.info1_terms_ko)
                                     all_terms.extend(terms)
                                 except json.JSONDecodeError:
                                     pass
-                            elif info_idx == 1 and ai_info.info2_terms:
+                            elif info_idx == 1 and ai_info.info2_terms_ko:
                                 try:
-                                    terms = json.loads(ai_info.info2_terms)
+                                    terms = json.loads(ai_info.info2_terms_ko)
                                     all_terms.extend(terms)
                                 except json.JSONDecodeError:
                                     pass
-                            elif info_idx == 2 and ai_info.info3_terms:
+                            elif info_idx == 2 and ai_info.info3_terms_ko:
                                 try:
-                                    terms = json.loads(ai_info.info3_terms)
+                                    terms = json.loads(ai_info.info3_terms_ko)
                                     all_terms.extend(terms)
                                 except json.JSONDecodeError:
                                     pass
@@ -783,26 +783,26 @@ def get_terms_quiz_by_date(date: str, db: Session = Depends(get_db)):
         # 모든 용어 수집
         all_terms = []
         
-        # info1의 용어들
-        if ai_info.info1_terms:
+        # info1의 용어들 (한국어 기준)
+        if ai_info.info1_terms_ko:
             try:
-                terms1 = json.loads(ai_info.info1_terms)
+                terms1 = json.loads(ai_info.info1_terms_ko)
                 all_terms.extend(terms1)
             except json.JSONDecodeError:
                 pass
         
-        # info2의 용어들
-        if ai_info.info2_terms:
+        # info2의 용어들 (한국어 기준)
+        if ai_info.info2_terms_ko:
             try:
-                terms2 = json.loads(ai_info.info2_terms)
+                terms2 = json.loads(ai_info.info2_terms_ko)
                 all_terms.extend(terms2)
             except json.JSONDecodeError:
                 pass
         
-        # info3의 용어들
-        if ai_info.info3_terms:
+        # info3의 용어들 (한국어 기준)
+        if ai_info.info3_terms_ko:
             try:
-                terms3 = json.loads(ai_info.info3_terms)
+                terms3 = json.loads(ai_info.info3_terms_ko)
                 all_terms.extend(terms3)
             except json.JSONDecodeError:
                 pass
