@@ -142,12 +142,15 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
   const { data: learnedData, isLoading } = useQuery<LearnedTermsResponse>({
     queryKey: ['learned-terms', sessionId],
     queryFn: async () => {
-              const response = await aiInfoAPI.getLearnedTerms(sessionId, currentLanguage)
+      const response = await aiInfoAPI.getLearnedTerms(sessionId, currentLanguage)
       return response.data
     },
     enabled: !!sessionId,
-    refetchInterval: 2000,
-    refetchIntervalInBackground: true,
+    staleTime: 5 * 60 * 1000, // 5분간 데이터를 신선하게 유지
+    gcTime: 10 * 60 * 1000, // 10분간 캐시 유지
+    refetchOnWindowFocus: false, // 윈도우 포커스 시 새로고침 비활성화
+    refetchOnMount: false, // 컴포넌트 마운트 시 새로고침 비활성화
+    refetchOnReconnect: false, // 네트워크 재연결 시 새로고침 비활성화
   })
 
   // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
@@ -1215,7 +1218,16 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                     >
                       {scrollMode ? '📱 스크롤' : (
                         <div className="text-center leading-tight">
-                          <div>{t('terms.list.scroll.lock')}</div>
+                          <div className="text-xs font-medium">
+                            {localLanguage === 'ko' ? '스크롤 고정' : 
+                             localLanguage === 'en' ? 'Scroll Lock' : 
+                             localLanguage === 'ja' ? 'スクロール固定' : '滚动锁定'}
+                          </div>
+                          <div className="text-xs text-white/60">
+                            {localLanguage === 'ko' ? '(1초 이상 클릭)' : 
+                             localLanguage === 'en' ? '(Hold 1+ seconds)' : 
+                             localLanguage === 'ja' ? '(1秒以上長押し)' : '(长按1秒以上)'}
+                          </div>
                         </div>
                       )}
                     </button>
