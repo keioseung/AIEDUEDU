@@ -529,7 +529,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <Target className="w-4 h-4 text-purple-400" />
                 <h3 className="text-white font-semibold text-sm">
                   {localLanguage === 'ko' ? '용어 학습' : 
-                   localLanguage === 'en' ? 'Terms Learning' : 
+                   localLanguage === 'en' ? 'Terms' : 
                    localLanguage === 'ja' ? '用語学習' : '术语学习'}
                 </h3>
               </div>
