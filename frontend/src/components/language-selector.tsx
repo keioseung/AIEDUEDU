@@ -4,22 +4,31 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Globe, ChevronDown } from 'lucide-react'
 import { Language, languageFlags, languageNames, getCurrentLanguage, changeLanguage } from '@/lib/i18n'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState<Language>('ko')
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setCurrentLanguage(getCurrentLanguage())
     
     const handleLanguageChange = () => {
-      setCurrentLanguage(getCurrentLanguage())
+      const newLanguage = getCurrentLanguage()
+      setCurrentLanguage(newLanguage)
+      
+      // React Query 캐시 무효화하여 새로운 언어로 데이터 다시 요청
+      queryClient.invalidateQueries()
+      
+      // 전역 상태 업데이트를 위한 커스텀 이벤트 발생
+      window.dispatchEvent(new CustomEvent('forceUpdate', { detail: { language: newLanguage } }))
     }
 
     window.addEventListener('languageChange', handleLanguageChange)
     return () => window.removeEventListener('languageChange', handleLanguageChange)
-  }, [])
+  }, [queryClient])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

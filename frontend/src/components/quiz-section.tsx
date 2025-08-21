@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { HelpCircle, CheckCircle, XCircle, RotateCcw } from 'lucide-react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { quizAPI, userProgressAPI } from '@/lib/api'
 import type { Quiz } from '@/types'
-import { t } from '@/lib/i18n'
+import { t, getCurrentLanguage } from '@/lib/i18n'
 
 interface QuizSectionProps {
   sessionId: string
@@ -20,6 +20,33 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
   const [showResult, setShowResult] = useState(false)
   const [score, setScore] = useState(0)
   const [quizCompleted, setQuizCompleted] = useState(false)
+  const [localLanguage, setLocalLanguage] = useState(currentLanguage)
+
+  // 언어 변경 감지 및 즉시 반영
+  useEffect(() => {
+    setLocalLanguage(currentLanguage)
+  }, [currentLanguage])
+
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      const newLanguage = getCurrentLanguage()
+      setLocalLanguage(newLanguage)
+    }
+
+    const handleForceUpdate = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        setLocalLanguage(event.detail.language)
+      }
+    }
+
+    window.addEventListener('languageChange', handleLanguageChange)
+    window.addEventListener('forceUpdate', handleForceUpdate as EventListener)
+    
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange)
+      window.removeEventListener('forceUpdate', handleForceUpdate as EventListener)
+    }
+  }, [])
 
   // 퀴즈 점수 업데이트 뮤테이션
   const updateQuizScoreMutation = useMutation({
@@ -51,7 +78,7 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
 
   const currentQuiz = quizzes?.[currentQuizIndex]
 
-  // 다국어 퀴즈 내용 가져오기
+  // 다국어 퀴즈 내용 가져오기 (로컬 언어 상태 사용)
   const getQuizContent = (quiz: Quiz, language: 'ko' | 'en' | 'ja' | 'zh') => {
     const question = quiz[`question_${language}`] || quiz.question_ko || quiz.question || '문제를 불러올 수 없습니다'
     const option1 = quiz[`option1_${language}`] || quiz.option1_ko || quiz.option1 || '선택지 1'
@@ -61,6 +88,11 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
     const explanation = quiz[`explanation_${language}`] || quiz.explanation_ko || quiz.explanation || '설명을 불러올 수 없습니다'
     
     return { question, option1, option2, option3, option4, explanation }
+  }
+
+  // 현재 언어에 맞는 퀴즈 내용 가져오기
+  const getCurrentQuizContent = (quiz: Quiz) => {
+    return getQuizContent(quiz, localLanguage)
   }
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -174,19 +206,19 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
         {/* 퀴즈 내용 */}
         {currentQuiz ? (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-semibold text-white mb-4">
-                {getQuizContent(currentQuiz, currentLanguage).question}
-              </h3>
-            </div>
+                          <div>
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  {getCurrentQuizContent(currentQuiz).question}
+                </h3>
+              </div>
 
-            <div className="space-y-3">
-              {[
-                getQuizContent(currentQuiz, currentLanguage).option1,
-                getQuizContent(currentQuiz, currentLanguage).option2,
-                getQuizContent(currentQuiz, currentLanguage).option3,
-                getQuizContent(currentQuiz, currentLanguage).option4
-              ].map((option, index) => (
+              <div className="space-y-3">
+                {[
+                  getCurrentQuizContent(currentQuiz).option1,
+                  getCurrentQuizContent(currentQuiz).option2,
+                  getCurrentQuizContent(currentQuiz).option3,
+                  getCurrentQuizContent(currentQuiz).option4
+                ].map((option, index) => (
                 <button
                   key={index}
                   onClick={() => handleAnswerSelect(index)}
@@ -217,7 +249,7 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
                 <h4 className="text-lg font-semibold text-white mb-2">
                   {selectedAnswer === currentQuiz.correct ? t('quiz.correct') : t('quiz.incorrect')}
                 </h4>
-                <p className="text-white/80">{getQuizContent(currentQuiz, currentLanguage).explanation}</p>
+                <p className="text-white/80">{getCurrentQuizContent(currentQuiz).explanation}</p>
               </motion.div>
             )}
 

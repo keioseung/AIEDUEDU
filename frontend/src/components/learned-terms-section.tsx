@@ -58,9 +58,36 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
   const [isShuffling, setIsShuffling] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [showSortDropdown, setShowSortDropdown] = useState(false)
+  const [localLanguage, setLocalLanguage] = useState(currentLanguage)
 
   const queryClient = useQueryClient()
   const searchInputRef = useRef<HTMLInputElement>(null)
+  
+  // 언어 변경 감지 및 즉시 반영
+  useEffect(() => {
+    setLocalLanguage(currentLanguage)
+  }, [currentLanguage])
+
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      const newLanguage = getCurrentLanguage()
+      setLocalLanguage(newLanguage)
+    }
+
+    const handleForceUpdate = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        setLocalLanguage(event.detail.language)
+      }
+    }
+
+    window.addEventListener('languageChange', handleLanguageChange)
+    window.addEventListener('forceUpdate', handleForceUpdate as EventListener)
+    
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange)
+      window.removeEventListener('forceUpdate', handleForceUpdate as EventListener)
+    }
+  }, [])
   
   // propSelectedDate가 변경될 때 selectedDate 동기화
   useEffect(() => {
@@ -643,9 +670,12 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                      const dateObj = new Date(date)
                      const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`
                      const monthLabel = (() => {
-                       const currentLang = getCurrentLanguage()
-                       if (currentLang === 'en') {
+                       if (localLanguage === 'en') {
                          return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+                       } else if (localLanguage === 'ja') {
+                         return dateObj.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' })
+                       } else if (localLanguage === 'zh') {
+                         return dateObj.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })
                        } else {
                          return dateObj.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })
                            .replace('년', t('terms.date.filter.year'))
@@ -676,9 +706,18 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                          {group.dates.map((date) => {
                            const dateTerms = learnedData.terms_by_date[date] || []
                            const formattedDate = (() => {
-                             const currentLang = getCurrentLanguage()
-                             if (currentLang === 'en') {
+                             if (localLanguage === 'en') {
                                return new Date(date).toLocaleDateString('en-US', {
+                                 month: 'short',
+                                 day: 'numeric'
+                               })
+                             } else if (localLanguage === 'ja') {
+                               return new Date(date).toLocaleDateString('ja-JP', {
+                                 month: 'short',
+                                 day: 'numeric'
+                               })
+                             } else if (localLanguage === 'zh') {
+                               return new Date(date).toLocaleDateString('zh-CN', {
                                  month: 'short',
                                  day: 'numeric'
                                })
@@ -982,16 +1021,16 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
           {/* 용어 내용 */}
           <div className="text-center mb-4">
                                 <div className="text-2xl md:text-3xl font-bold text-white mb-3 break-words">
-                      {currentLanguage === 'ko' ? currentTerm.term :
-                       currentLanguage === 'en' ? currentTerm.term_en || currentTerm.term :
-                       currentLanguage === 'ja' ? currentTerm.term_ja || currentTerm.term :
-                       currentTerm.term_zh || currentTerm.term}
+                      {localLanguage === 'ko' ? currentTerm.term :
+                       localLanguage === 'en' ? currentTerm.term_en || currentTerm.term :
+                       localLanguage === 'ja' ? currentTerm.term_ja || currentTerm.term :
+                       localLanguage === 'zh' ? currentTerm.term_zh || currentTerm.term : currentTerm.term}
                     </div>
                           <div className="text-white/80 text-base md:text-lg leading-relaxed break-words">
-                {currentLanguage === 'ko' ? currentTerm.description :
-                 currentLanguage === 'en' ? currentTerm.description_en || currentTerm.description :
-                 currentLanguage === 'ja' ? currentTerm.description_ja || currentTerm.description :
-                 currentTerm.description_zh || currentTerm.description}
+                {localLanguage === 'ko' ? currentTerm.description :
+                 localLanguage === 'en' ? currentTerm.description_en || currentTerm.description :
+                 localLanguage === 'ja' ? currentTerm.description_ja || currentTerm.description :
+                 localLanguage === 'zh' ? currentTerm.description_zh || currentTerm.description : currentTerm.description}
               </div>
           </div>
 
