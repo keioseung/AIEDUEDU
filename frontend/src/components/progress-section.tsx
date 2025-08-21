@@ -850,15 +850,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       </div>
                     </div>
                     <span className="text-white/70 text-sm font-medium">
-                      {t('progress.graph.card.max')}: {maxAI}{t('progress.graph.card.items')}
+                      {t('progress.graph.card.max')}: 100%
                     </span>
                   </div>
                   <div className="w-full">
                     <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                       {/* y축 라벨 */}
                       <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
-                        {[maxAI, Math.round(maxAI/2), 0].map((v, i) => (
-                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}{t('progress.graph.card.items')}</div>
+                        {[100, 50, 0].map((v, i) => (
+                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}%</div>
                         ))}
                       </div>
 
@@ -866,7 +866,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
-                          const maxValue = Math.max(...uniqueChartData.map(d => d.ai_info), 1);
+                          const maxValue = 100; // 고정된 최대값 100%
                           const aiHeight = Math.min(Math.max((data.ai_info / maxValue) * 40, data.ai_info > 0 ? 3 : 0), 40);
                           const isFullAI = data.ai_info >= maxValue;
                           const percent = Math.min(Math.round((data.ai_info / maxValue) * 100), 100);
@@ -925,15 +925,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       </div>
                     </div>
                     <span className="text-white/70 text-sm font-medium">
-                      {t('progress.graph.card.max')}: {maxTerms}{t('progress.graph.card.items')}
+                      {t('progress.graph.card.max')}: 100%
                     </span>
                   </div>
                   <div className="w-full">
                     <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
                       {/* y축 라벨 */}
                       <div className="flex flex-col justify-between h-full mr-3 text-xs text-white/50 select-none" style={{height: 80}}>
-                        {[maxTerms, Math.round(maxTerms/2), 0].map((v, i) => (
-                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}{t('progress.graph.card.items')}</div>
+                        {[100, 50, 0].map((v, i) => (
+                          <div key={v} style={{height: 26, lineHeight: '26px'}} className="font-medium flex items-center">{v}%</div>
                         ))}
                       </div>
 
@@ -941,7 +941,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
-                          const maxValue = Math.max(...uniqueChartData.map(d => d.terms), 1);
+                          const maxValue = 100; // 고정된 최대값 100%
                           const termsHeight = Math.min(Math.max((data.terms / maxValue) * 40, data.terms > 0 ? 3 : 0), 40);
                           const isFullTerms = data.terms >= maxValue;
                           const percent = Math.min(Math.round((data.terms / maxValue) * 100), 100);
