@@ -222,6 +222,10 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
               console.log(`🎯 Terms Quiz - ${currentLanguage} 언어 제목:`, title)
               console.log(`🎯 Terms Quiz - ${currentLanguage} 언어 내용:`, content ? content.substring(0, 100) + '...' : '없음')
               console.log(`🎯 Terms Quiz - ${currentLanguage} 언어 용어:`, terms)
+              console.log(`🎯 Terms Quiz - title_${currentLanguage}:`, info[`title_${currentLanguage}`])
+              console.log(`🎯 Terms Quiz - title_ko:`, info.title_ko)
+              console.log(`🎯 Terms Quiz - content_${currentLanguage}:`, info[`content_${currentLanguage}`])
+              console.log(`🎯 Terms Quiz - content_ko:`, info.content_ko)
               
               if (title && title.trim() && content && content.trim()) {
                 allInfo.push({
@@ -248,7 +252,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
       console.log(`🎯 Terms Quiz - AI Info에서 ${allInfo.length}개 주제 추출 (언어: ${currentLanguage}):`, allInfo.map(info => info.title))
       return allInfo
     },
-    enabled: allDates.length > 0 && (getAllError !== null || allAIInfo.length === 0),
+    enabled: allDates.length > 0,
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
   })
@@ -504,6 +508,9 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                    <div><span className="font-medium">quizTitleOptions:</span> {quizTitleOptions ? `${quizTitleOptions.length}개` : '없음'}</div>
                    <div><span className="font-medium">현재 언어:</span> {currentLanguage}</div>
                    <div><span className="font-medium">로딩 상태:</span> {isLoadingAIInfo ? '로딩 중' : '완료'}</div>
+                   <div><span className="font-medium">dateBasedAIInfo:</span> {dateBasedAIInfo ? `${dateBasedAIInfo.length}개` : '로딩 중...'}</div>
+                   <div><span className="font-medium">allAIInfo:</span> {allAIInfo ? `${allAIInfo.length}개` : '로딩 중...'}</div>
+                   <div><span className="font-medium">allDates:</span> {allDates ? `${allDates.length}개` : '로딩 중...'}</div>
                  </div>
                </div>
                
