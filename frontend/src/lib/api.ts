@@ -270,7 +270,7 @@ export const aiInfoAPI = {
   delete: (date: string) => api.delete(`/api/ai-info/${date}`),
   deleteItem: (date: string, itemIndex: number) => api.delete(`/api/ai-info/${date}/item/${itemIndex}`),
   getAllDates: () => api.get('/api/ai-info/dates/all'),
-  getAll: () => api.get('/api/ai-info/all'),
+      getAll: (language: string = 'ko') => api.get(`/api/ai-info/all?language=${language}`),
   getTotalDays: () => api.get('/api/ai-info/total-days'),
   getTotalCount: () => api.get('/api/ai-info/total-count'),
   getLearnedCount: (sessionId: string) => api.get(`/api/ai-info/learned-count/${sessionId}`),
@@ -286,7 +286,7 @@ export const aiInfoAPI = {
   // 카테고리 관련 API
   getAllCategories: () => api.get('/api/ai-info/categories/all'),
   getSubcategories: (category: string) => api.get(`/api/ai-info/categories/${category}/subcategories`),
-  getByCategory: (category: string) => api.get(`/api/ai-info/by-category/${category}`),
+      getByCategory: (category: string, language: string = 'ko') => api.get(`/api/ai-info/by-category/${category}?language=${language}`),
   getCategoryStats: () => api.get('/api/ai-info/categories/stats'),
 }
 

@@ -735,6 +735,7 @@ export default function DashboardPage() {
               {aiInfoMode === 'category' && (
                 <AIInfoCategoryView
                   sessionId={sessionId}
+                  currentLanguage={currentLanguage}
                   onProgressUpdate={handleProgressUpdate}
                 />
               )}
@@ -743,6 +744,7 @@ export default function DashboardPage() {
               {aiInfoMode === 'list' && (
                 <AIInfoListMode
                   sessionId={sessionId}
+                  currentLanguage={currentLanguage}
                   onProgressUpdate={handleProgressUpdate}
                 />
               )}

@@ -31,6 +31,7 @@ interface CategoryStats {
 
 interface AIInfoCategoryViewProps {
   sessionId: string
+  currentLanguage: 'ko' | 'en' | 'ja' | 'zh'
   onProgressUpdate: () => void
 }
 
@@ -125,7 +126,7 @@ const getCategoryStyle = (category: string): { icon: React.ReactNode; bgColor: s
   }
 }
 
-export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIInfoCategoryViewProps) {
+export default function AIInfoCategoryView({ sessionId, currentLanguage, onProgressUpdate }: AIInfoCategoryViewProps) {
   const queryClient = useQueryClient()
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
@@ -173,12 +174,12 @@ export default function AIInfoCategoryView({ sessionId, onProgressUpdate }: AIIn
 
   // 선택된 카테고리의 AI 정보 가져오기
   const { data: categoryAIInfo = [], isLoading: isLoadingCategoryInfo } = useQuery<AIInfoItem[]>({
-    queryKey: ['ai-info-by-category', selectedCategory],
+    queryKey: ['ai-info-by-category', selectedCategory, currentLanguage],
     queryFn: async () => {
       if (!selectedCategory) return []
       try {
-        console.log(`카테고리 "${selectedCategory}" 정보 요청 중...`)
-        const response = await aiInfoAPI.getByCategory(selectedCategory)
+        console.log(`카테고리 "${selectedCategory}" 정보 요청 중... (언어: ${currentLanguage})`)
+        const response = await aiInfoAPI.getByCategory(selectedCategory, currentLanguage)
         console.log(`카테고리 "${selectedCategory}" 응답:`, response.data)
         return response.data
       } catch (error) {

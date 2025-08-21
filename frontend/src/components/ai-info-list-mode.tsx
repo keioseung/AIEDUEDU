@@ -20,10 +20,11 @@ interface AIInfoItem {
 
 interface AIInfoListModeProps {
   sessionId: string
+  currentLanguage: 'ko' | 'en' | 'ja' | 'zh'
   onProgressUpdate: () => void
 }
 
-export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoListModeProps) {
+export default function AIInfoListMode({ sessionId, currentLanguage, onProgressUpdate }: AIInfoListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedInfo, setSelectedInfo] = useState<AIInfoItem | null>(null)
   const [favoriteInfos, setFavoriteInfos] = useState<Set<string>>(new Set())
@@ -63,10 +64,10 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
 
   // 모든 AI 정보 가져오기 (getAll API 시도)
   const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
-    queryKey: ['all-ai-info'],
+    queryKey: ['all-ai-info', currentLanguage],
     queryFn: async () => {
       try {
-        const response = await aiInfoAPI.getAll()
+        const response = await aiInfoAPI.getAll(currentLanguage)
         return response.data
       } catch (error) {
         console.log('getAll API 실패, getAllDates API 사용:', error)
