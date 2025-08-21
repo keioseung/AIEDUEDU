@@ -20,6 +20,7 @@ import { logout } from '@/lib/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { userProgressAPI } from '@/lib/api'
 import { t, getCurrentLanguage, Language } from '@/lib/i18n'
+import { AIInfoItem } from '@/types'
 
 // 예시 용어 데이터
 const TERMS = [
