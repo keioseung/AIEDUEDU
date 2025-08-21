@@ -375,6 +375,7 @@ const ko: Record<string, string> = {
   'progress.card.daily.total.info': '일별 총 정보 수',
   'progress.card.accumulated.total.learning': '누적 총 학습 수',
   'progress.card.terms.learning.count': '용어 학습',
+  'progress.card.terms.learning': '용어학습',
   'progress.card.learning.count': '학습 수',
   'progress.card.quiz.score': '퀴즈 점수',
   'progress.card.daily.accuracy': '일일 정답률',
@@ -394,6 +395,9 @@ const ko: Record<string, string> = {
   
   // 진행률 그래프 메시지
   'progress.graph.no.data': '선택한 기간에 학습 데이터가 없습니다.',
+  
+  // 진행률 기간 변경 로딩
+  'progress.period.change.loading': '기간을 변경하는 중입니다. 잠시만 기다려 주세요.',
   
   // 진행률 사용자 정의 기간 설정
   'progress.custom.period.start.date': '시작일',
@@ -447,6 +451,21 @@ const ko: Record<string, string> = {
   'terms.tab.stats.favorites': '즐겨찾기',
   'terms.tab.stats.learning.progress': '학습진행률',
   'terms.tab.stats.learning.completed': '학습완료',
+  
+  // 용어학습 탭 단어 카드
+  'terms.card.learning.completed.count': '{count}개 학습완료',
+  'terms.card.learning.date': '학습일',
+  'terms.card.swipe.guide': '← 스와이프하여 다음/이전 용어 보기 →',
+  'terms.card.difficulty.beginner': '초급',
+  'terms.card.difficulty.intermediate': '중급',
+  'terms.card.difficulty.advanced': '고급',
+  'terms.card.playing': '재생중',
+  'terms.card.auto.play': '자동재생',
+  'terms.card.stop': '정지',
+  
+  // 용어학습 탭 목록 모드
+  'terms.list.difficulty': '난이도',
+  'terms.list.scroll.lock': '스크롤 고정(1초이상클릭)',
 }
 
 // 영어
@@ -857,6 +876,21 @@ const en: Record<string, string> = {
   'terms.tab.stats.learning.progress': 'Learning Progress',
   'terms.tab.stats.learning.completed': 'Learning Completed',
   
+  // Terms Learning Tab Word Cards
+  'terms.card.learning.completed.count': '{count} Learning Completed',
+  'terms.card.learning.date': 'Learning Date',
+  'terms.card.swipe.guide': '← Swipe to view next/previous terms →',
+  'terms.card.difficulty.beginner': 'Beginner',
+  'terms.card.difficulty.intermediate': 'Intermediate',
+  'terms.card.difficulty.advanced': 'Advanced',
+  'terms.card.playing': 'Playing',
+  'terms.card.auto.play': 'Auto Play',
+  'terms.card.stop': 'Stop',
+  
+  // Terms Learning Tab List Mode
+  'terms.list.difficulty': 'Difficulty',
+  'terms.list.scroll.lock': 'Scroll Lock (Hold 1+ seconds)',
+  
   // 진행률 탭 모드명
   'progress.tab.trend.card': 'Trend Card',
   'progress.tab.trend.graph': 'Trend Graph',
@@ -877,6 +911,9 @@ const en: Record<string, string> = {
   
   // Progress Graph Messages
   'progress.graph.no.data': 'No learning data available for the selected period.',
+  
+  // Progress Period Change Loading
+  'progress.period.change.loading': 'Changing period. Please wait a moment.',
   
   // Progress Custom Period Settings
   'progress.custom.period.start.date': 'Start Date',
@@ -1270,6 +1307,9 @@ const ja: Record<string, string> = {
   // 進捗グラフメッセージ
   'progress.graph.no.data': '選択した期間に学習データがありません。',
   
+  // 進捗期間変更ローディング
+  'progress.period.change.loading': '期間を変更中です。しばらくお待ちください。',
+  
   // 進捗カスタム期間設定
   'progress.custom.period.start.date': '開始日',
   'progress.custom.period.end.date': '終了日',
@@ -1322,6 +1362,21 @@ const ja: Record<string, string> = {
   'terms.tab.stats.favorites': 'お気に入り',
   'terms.tab.stats.learning.progress': '学習進捗率',
   'terms.tab.stats.learning.completed': '学習完了',
+  
+  // 用語学習タブ単語カード
+  'terms.card.learning.completed.count': '{count}件学習完了',
+  'terms.card.learning.date': '学習日',
+  'terms.card.swipe.guide': '← スワイプして次/前の用語を表示 →',
+  'terms.card.difficulty.beginner': '初級',
+  'terms.card.difficulty.intermediate': '中級',
+  'terms.card.difficulty.advanced': '上級',
+  'terms.card.playing': '再生中',
+  'terms.card.auto.play': '自動再生',
+  'terms.card.stop': '停止',
+  
+  // 用語学習タブリストモード
+  'terms.list.difficulty': '難易度',
+  'terms.list.scroll.lock': 'スクロール固定(1秒以上長押し)',
 }
 
 // 중국어
@@ -1706,6 +1761,9 @@ const zh: Record<string, string> = {
   // 进度图表消息
   'progress.graph.no.data': '所选期间没有学习数据。',
   
+  // 进度期间更改加载
+  'progress.period.change.loading': '正在更改期间，请稍候。',
+  
   // 进度自定义期间设置
   'progress.custom.period.start.date': '开始日期',
   'progress.custom.period.end.date': '结束日期',
@@ -1758,6 +1816,21 @@ const zh: Record<string, string> = {
   'terms.tab.stats.favorites': '收藏',
   'terms.tab.stats.learning.progress': '学习进度',
   'terms.tab.stats.learning.completed': '学习完成',
+  
+  // 术语学习标签页单词卡片
+  'terms.card.learning.completed.count': '{count}个学习完成',
+  'terms.card.learning.date': '学习日期',
+  'terms.card.swipe.guide': '← 滑动查看下一个/上一个术语 →',
+  'terms.card.difficulty.beginner': '初级',
+  'terms.card.difficulty.intermediate': '中级',
+  'terms.card.difficulty.advanced': '高级',
+  'terms.card.playing': '播放中',
+  'terms.card.auto.play': '自动播放',
+  'terms.card.stop': '停止',
+  
+  // 术语学习标签页列表模式
+  'terms.list.difficulty': '难度',
+  'terms.list.scroll.lock': '滚动锁定(长按1秒以上)',
 }
 
 export const translations: Translations = {

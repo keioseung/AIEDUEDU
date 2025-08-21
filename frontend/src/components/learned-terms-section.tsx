@@ -314,9 +314,9 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
   // 용어 난이도 계산 (용어 길이 기반)
   const getDifficulty = (term: string) => {
-    if (term.length <= 3) return { level: '초급', color: 'text-green-400', bg: 'bg-green-500/20' }
-    if (term.length <= 6) return { level: '중급', color: 'text-yellow-400', bg: 'bg-yellow-500/20' }
-    return { level: '고급', color: 'text-red-400', bg: 'bg-red-500/20' }
+    if (term.length <= 3) return { level: t('terms.card.difficulty.beginner'), color: 'text-green-400', bg: 'bg-green-500/20' }
+    if (term.length <= 6) return { level: t('terms.card.difficulty.intermediate'), color: 'text-yellow-400', bg: 'bg-yellow-500/20' }
+    return { level: t('terms.card.difficulty.advanced'), color: 'text-red-400', bg: 'bg-red-500/20' }
   }
 
   // 용어 목록 내보내기
@@ -327,8 +327,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
       const data = filteredTerms.map(term => ({
         용어: term.term,
         설명: term.description,
-        학습일: term.learned_date,
-        난이도: getDifficulty(term.term).level
+        [t('terms.card.learning.date')]: term.learned_date,
+        [t('terms.list.difficulty')]: getDifficulty(term.term).level
       }))
       
       const csv = [
@@ -913,9 +913,9 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                   // 즐겨찾기 필터가 활성화된 경우, 즐겨찾기 중에서만 학습한 개수 계산
                   if (showFavoritesOnly) {
                     const favoriteViewedTerms = Array.from(viewedTerms).filter(term => favoriteTerms.has(term))
-                    return `${favoriteViewedTerms.length}개 학습완료`
-                  }
-                  return `${viewedTerms.size}개 학습완료`
+                                      return t('terms.card.learning.completed.count', { count: favoriteViewedTerms.length })
+                }
+                return t('terms.card.learning.completed.count', { count: viewedTerms.size })
                 })()}
               </span>
             </div>
@@ -963,13 +963,13 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
           <div className="flex items-center justify-center text-white/60 text-sm">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span>학습일: {currentTerm.learned_date}</span>
+              <span>{t('terms.card.learning.date')}: {currentTerm.learned_date}</span>
             </div>
           </div>
 
           {/* 스와이프 안내 */}
           <div className="text-center mt-4 text-white/40 text-xs">
-            ← 스와이프하여 다음/이전 용어 보기 →
+            {t('terms.card.swipe.guide')}
           </div>
         </motion.div>
       )}
@@ -994,7 +994,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 {autoPlay ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                <span className="hidden sm:inline">{autoPlay ? '정지' : '자동재생'}</span>
+                <span className="hidden sm:inline">{autoPlay ? t('terms.card.stop') : t('terms.card.auto.play')}</span>
               </button>
               
               {/* 속도 조절 버튼 */}
@@ -1078,7 +1078,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             {/* 자동재생 상태 표시 */}
             {autoPlay && (
               <div className="flex items-center justify-center w-16 h-16 bg-green-500/30 text-green-300 rounded-xl border border-green-500/50">
-                <span className="text-sm font-medium">재생중</span>
+                                        <span className="text-sm font-medium">{t('terms.card.playing')}</span>
               </div>
             )}
             
@@ -1198,8 +1198,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                             {/* 용어명 - 난이도와 함께 표시 */}
                             <h3 className="font-bold text-white text-base leading-tight break-words line-clamp-1 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
                               <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium mr-2 ${
-                                termDifficulty.level === '초급' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
-                                termDifficulty.level === '중급' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30' :
+                                                              termDifficulty.level === t('terms.card.difficulty.beginner') ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                              termDifficulty.level === t('terms.card.difficulty.intermediate') ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30' :
                                 'bg-red-500/20 text-red-300 border border-red-400/30'
                               }`}>
                                 {termDifficulty.level}
