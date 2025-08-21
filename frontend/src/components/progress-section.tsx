@@ -888,6 +888,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         {localLanguage === 'ko' ? '용어학습' : 
                          localLanguage === 'en' ? 'Terms Learning' : 
                          localLanguage === 'ja' ? '用語学習' : '术语学习'}
+                        {/* 디버깅용 */}
+                        <span className="text-xs text-red-400 ml-2">[{localLanguage}]</span>
                       </span>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/30 to-purple-600/30 rounded-full border border-purple-400/40">
                         <span className="text-purple-200 text-xs font-medium">{t('progress.graph.card.average')}</span>
