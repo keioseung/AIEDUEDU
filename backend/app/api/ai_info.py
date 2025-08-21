@@ -1193,10 +1193,15 @@ def get_subcategories(category: str):
     return []
 
 @router.get("/by-category/{category:path}", response_model=List[dict])
-def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
+def get_ai_info_by_category(category: str, language: str = "ko", db: Session = Depends(get_db)):
     """특정 카테고리의 AI 정보를 반환합니다."""
     try:
-        print(f"카테고리 '{category}' 요청됨")
+        print(f"카테고리 '{category}' 요청됨 (언어: {language})")
+        
+        # 언어별 컬럼 선택
+        title_suffix = f"_title_{language}"
+        content_suffix = f"_content_{language}"
+        terms_suffix = f"_terms_{language}"
         
         # 모든 AI 정보를 가져와서 카테고리별로 필터링
         all_ai_info = db.query(AIInfo).all()
@@ -1209,22 +1214,26 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
             print(f"날짜 {ai_info.date} 처리 중...")
             
             # info1 처리
-            if ai_info.info1_title and ai_info.info1_content:
+            info1_title = getattr(ai_info, f'info1{title_suffix}', None)
+            info1_content = getattr(ai_info, f'info1{content_suffix}', None)
+            info1_terms = getattr(ai_info, f'info1{terms_suffix}', None)
+            
+            if info1_title and info1_content:
                 # 저장된 카테고리가 있으면 우선 사용, 없으면 실시간 분류
                 stored_category = getattr(ai_info, 'info1_category', None)
                 if stored_category and stored_category.strip():
                     print(f"  info1 저장된 카테고리: {stored_category}")
                     if stored_category == category:
                         try:
-                            terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                            terms1 = json.loads(info1_terms) if info1_terms else []
                         except json.JSONDecodeError:
                             terms1 = []
                         
                         filtered_infos.append({
                             "id": f"{ai_info.date}_0",
                             "date": ai_info.date,
-                            "title": ai_info.info1_title,
-                            "content": ai_info.info1_content,
+                            "title": info1_title,
+                            "content": info1_content,
                             "terms": terms1,
                             "category": stored_category,
                             "subcategory": None,
@@ -1236,22 +1245,22 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                     # 실시간 분류
                     total_classifications += 1
                     classification = ai_classifier.classify_content(
-                        ai_info.info1_title, 
-                        ai_info.info1_content
+                        info1_title, 
+                        info1_content
                     )
                     print(f"  info1 실시간 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
                     
                     if classification["category"] == category:
                         try:
-                            terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                            terms1 = json.loads(info1_terms) if info1_terms else []
                         except json.JSONDecodeError:
                             terms1 = []
                         
                         filtered_infos.append({
                             "id": f"{ai_info.date}_0",
                             "date": ai_info.date,
-                            "title": ai_info.info1_title,
-                            "content": ai_info.info1_content,
+                            "title": info1_title,
+                            "content": info1_content,
                             "terms": terms1,
                             "category": classification["category"],
                             "subcategory": classification["subcategory"],
@@ -1261,22 +1270,26 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         print(f"  -> info1 실시간 분류로 매칭됨!")
             
             # info2 처리
-            if ai_info.info2_title and ai_info.info2_content:
+            info2_title = getattr(ai_info, f'info2{title_suffix}', None)
+            info2_content = getattr(ai_info, f'info2{content_suffix}', None)
+            info2_terms = getattr(ai_info, f'info2{terms_suffix}', None)
+            
+            if info2_title and info2_content:
                 # 저장된 카테고리가 있으면 우선 사용, 없으면 실시간 분류
                 stored_category = getattr(ai_info, 'info2_category', None)
                 if stored_category and stored_category.strip():
                     print(f"  info2 저장된 카테고리: {stored_category}")
                     if stored_category == category:
                         try:
-                            terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                            terms2 = json.loads(info2_terms) if info2_terms else []
                         except json.JSONDecodeError:
                             terms2 = []
                         
                         filtered_infos.append({
                             "id": f"{ai_info.date}_1",
                             "date": ai_info.date,
-                            "title": ai_info.info2_title,
-                            "content": ai_info.info2_content,
+                            "title": info2_title,
+                            "content": info2_content,
                             "terms": terms2,
                             "category": stored_category,
                             "subcategory": None,
@@ -1288,22 +1301,22 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                     # 실시간 분류
                     total_classifications += 1
                     classification = ai_classifier.classify_content(
-                        ai_info.info2_title, 
-                        ai_info.info2_content
+                        info2_title, 
+                        info2_content
                     )
                     print(f"  info2 실시간 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
                     
                     if classification["category"] == category:
                         try:
-                            terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                            terms2 = json.loads(info2_terms) if info2_terms else []
                         except json.JSONDecodeError:
                             terms2 = []
                         
                         filtered_infos.append({
                             "id": f"{ai_info.date}_1",
                             "date": ai_info.date,
-                            "title": ai_info.info2_title,
-                            "content": ai_info.info2_content,
+                            "title": info2_title,
+                            "content": info2_content,
                             "terms": terms2,
                             "category": classification["category"],
                             "subcategory": classification["subcategory"],
@@ -1313,22 +1326,26 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                         print(f"  -> info2 실시간 분류로 매칭됨!")
             
             # info3 처리
-            if ai_info.info3_title and ai_info.info3_content:
+            info3_title = getattr(ai_info, f'info3{title_suffix}', None)
+            info3_content = getattr(ai_info, f'info3{content_suffix}', None)
+            info3_terms = getattr(ai_info, f'info3{terms_suffix}', None)
+            
+            if info3_title and info3_content:
                 # 저장된 카테고리가 있으면 우선 사용, 없으면 실시간 분류
                 stored_category = getattr(ai_info, 'info3_category', None)
                 if stored_category and stored_category.strip():
                     print(f"  info3 저장된 카테고리: {stored_category}")
                     if stored_category == category:
                         try:
-                            terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                            terms3 = json.loads(info3_terms) if info3_terms else []
                         except json.JSONDecodeError:
                             terms3 = []
                         
                         filtered_infos.append({
                             "id": f"{ai_info.date}_2",
                             "date": ai_info.date,
-                            "title": ai_info.info3_title,
-                            "content": ai_info.info3_content,
+                            "title": info3_title,
+                            "content": info3_content,
                             "terms": terms3,
                             "category": stored_category,
                             "subcategory": None,
@@ -1340,22 +1357,22 @@ def get_ai_info_by_category(category: str, db: Session = Depends(get_db)):
                     # 실시간 분류
                     total_classifications += 1
                     classification = ai_classifier.classify_content(
-                        ai_info.info3_title, 
-                        ai_info.info3_content
+                        info3_title, 
+                        info3_content
                     )
                     print(f"  info3 실시간 분류 결과: {classification['category']} (신뢰도: {classification['confidence']:.2f})")
                     
                     if classification["category"] == category:
                         try:
-                            terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                            terms3 = json.loads(info3_terms) if info3_terms else []
                         except json.JSONDecodeError:
                             terms3 = []
                         
                         filtered_infos.append({
                             "id": f"{ai_info.date}_2",
                             "date": ai_info.date,
-                            "title": ai_info.info3_title,
-                            "content": ai_info.info3_content,
+                            "title": info3_title,
+                            "content": info3_content,
                             "terms": terms3,
                             "category": classification["category"],
                             "subcategory": classification["subcategory"],
