@@ -885,9 +885,6 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                                      <div className="text-white font-semibold text-xs group-hover:text-purple-200 transition-colors leading-tight break-words">
                                        {info.title}
                                      </div>
-                                     <div className="text-white/90 text-xs mt-0.5 leading-tight">
-                                       {getTermsCountTextByLanguage(currentLanguage, info.terms?.length || 0)}
-                                     </div>
                                    </div>
                                    <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5">
                                      <ChevronRight className="w-3 h-3 text-purple-300" />
