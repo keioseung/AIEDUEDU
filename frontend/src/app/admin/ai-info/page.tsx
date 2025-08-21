@@ -60,7 +60,7 @@ export default function AdminAIInfoPage() {
     title_ko: '', title_en: '', title_ja: '', title_zh: '',
     content_ko: '', content_en: '', content_ja: '', content_zh: '',
     category: '', 
-    terms_ko: [], terms_en: [], terms_ja: [], terms_zh: []
+    terms_ko: [] as TermItem[], terms_en: [] as TermItem[], terms_ja: [] as TermItem[], terms_zh: [] as TermItem[]
   })
   
   // 검색 및 필터링 상태
@@ -1480,7 +1480,7 @@ export default function AdminAIInfoPage() {
                                         type="button"
                                         onClick={() => setEditingData({
                                           ...editingData,
-                                          terms_ko: [...editingData.terms_ko, { term: '', description: '' }]
+                                          terms_ko: [...(editingData.terms_ko || []), { term: '', description: '' }]
                                         })}
                                         className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
                                       >
@@ -1495,31 +1495,31 @@ export default function AdminAIInfoPage() {
                                             type="text"
                                             placeholder="용어"
                                             value={term.term}
-                                            onChange={(e) => {
-                                              const newTerms = [...editingData.terms_ko]
-                                              newTerms[termIdx] = { ...term, term: e.target.value }
-                                              setEditingData({ ...editingData, terms_ko: newTerms })
-                                            }}
+                                                                                         onChange={(e) => {
+                                               const newTerms = [...(editingData.terms_ko || [])]
+                                               newTerms[termIdx] = { ...term, term: e.target.value }
+                                               setEditingData({ ...editingData, terms_ko: newTerms })
+                                             }}
                                             className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
                                           <input
                                             type="text"
                                             placeholder="용어 설명"
                                             value={term.description}
-                                            onChange={(e) => {
-                                              const newTerms = [...editingData.terms_ko]
-                                              newTerms[termIdx] = { ...term, description: e.target.value }
-                                              setEditingData({ ...editingData, terms_ko: newTerms })
-                                            }}
+                                                                                         onChange={(e) => {
+                                               const newTerms = [...(editingData.terms_ko || [])]
+                                               newTerms[termIdx] = { ...term, description: e.target.value }
+                                               setEditingData({ ...editingData, terms_ko: newTerms })
+                                             }}
                                             className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
                                         </div>
                                         <button
                                           type="button"
-                                          onClick={() => {
-                                            const newTerms = editingData.terms_ko.filter((_, i) => i !== termIdx)
-                                            setEditingData({ ...editingData, terms_ko: newTerms })
-                                          }}
+                                                                                     onClick={() => {
+                                             const newTerms = (editingData.terms_ko || []).filter((_, i) => i !== termIdx)
+                                             setEditingData({ ...editingData, terms_ko: newTerms })
+                                           }}
                                           className="px-2 py-1 bg-red-500/20 text-red-300 rounded font-medium hover:bg-red-500/30 transition text-sm border border-red-500/30"
                                         >
                                           삭제
