@@ -145,6 +145,12 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 except json.JSONDecodeError:
                     terms1_ko = terms1_en = terms1_ja = terms1_zh = []
                 infos.append({
+                    # 기존 속성 (호환성 유지)
+                    "title": obj.info1_title_ko,
+                    "content": obj.info1_content_ko,
+                    "terms": terms1_ko,
+                    
+                    # 다국어 속성
                     "title_ko": obj.info1_title_ko,
                     "title_en": obj.info1_title_en or "",
                     "title_ja": obj.info1_title_ja or "",
@@ -168,6 +174,12 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 except json.JSONDecodeError:
                     terms2_ko = terms2_en = terms2_ja = terms2_zh = []
                 infos.append({
+                    # 기존 속성 (호환성 유지)
+                    "title": obj.info2_title_ko,
+                    "content": obj.info2_content_ko,
+                    "terms": terms2_ko,
+                    
+                    # 다국어 속성
                     "title_ko": obj.info2_title_ko,
                     "title_en": obj.info2_title_en or "",
                     "title_ja": obj.info2_title_ja or "",
@@ -191,6 +203,12 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 except json.JSONDecodeError:
                     terms3_ko = terms3_en = terms3_ja = terms3_zh = []
                 infos.append({
+                    # 기존 속성 (호환성 유지)
+                    "title": obj.info3_title_ko,
+                    "content": obj.info3_content_ko,
+                    "terms": terms3_ko,
+                    
+                    # 다국어 속성
                     "title_ko": obj.info3_title_ko,
                     "title_en": obj.info3_title_en or "",
                     "title_ja": obj.info3_title_ja or "",

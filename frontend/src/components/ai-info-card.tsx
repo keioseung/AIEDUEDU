@@ -292,39 +292,39 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   const getTitleByLanguage = () => {
     switch (currentLanguage) {
       case 'en':
-        return info.title_en || info.title_ko || 'No English title available'
+        return info.title_en || info.title || 'No English title available'
       case 'ja':
-        return info.title_ja || info.title_ko || '日本語タイトルが利用できません'
+        return info.title_ja || info.title || '日本語タイトルが利用できません'
       case 'zh':
-        return info.title_zh || info.title_ko || '中文标题不可用'
+        return info.title_zh || info.title || '中文标题不可用'
       default:
-        return info.title_ko || '제목을 입력해주세요'
+        return info.title_ko || info.title || '제목을 입력해주세요'
     }
   }
 
   const getContentByLanguage = () => {
     switch (currentLanguage) {
       case 'en':
-        return info.content_en || info.content_ko || 'No English content available'
+        return info.content_en || info.content || 'No English content available'
       case 'ja':
-        return info.content_ja || info.content_ko || '日本語コンテンツが利用できません'
+        return info.content_ja || info.content || '日本語コンテンツが利用できません'
       case 'zh':
-        return info.content_zh || info.content_ko || '中文内容不可用'
+        return info.content_zh || info.content || '中文内容不可用'
       default:
-        return info.content_ko || '내용을 입력해주세요'
+        return info.content_ko || info.content || '내용을 입력해주세요'
     }
   }
 
   const getTermsByLanguage = () => {
     switch (currentLanguage) {
       case 'en':
-        return info.terms_en || info.terms_ko || []
+        return info.terms_en || info.terms || []
       case 'ja':
-        return info.terms_ja || info.terms_ko || []
+        return info.terms_ja || info.terms || []
       case 'zh':
-        return info.terms_zh || info.terms_ko || []
+        return info.terms_zh || info.terms || []
       default:
-        return info.terms_ko || []
+        return info.terms_ko || info.terms || []
     }
   }
 

@@ -8,6 +8,11 @@ export interface AIInfoItem {
   id?: number | string
   date?: string
   
+  // 기존 속성 (호환성 유지)
+  title: string
+  content: string
+  terms?: TermItem[]
+  
   // 다국어 제목
   title_ko: string
   title_en: string
