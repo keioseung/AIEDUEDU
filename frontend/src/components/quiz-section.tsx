@@ -39,12 +39,20 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
       }
     }
 
+    const handleLanguageChanged = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        setLocalLanguage(event.detail.language)
+      }
+    }
+
     window.addEventListener('languageChange', handleLanguageChange)
     window.addEventListener('forceUpdate', handleForceUpdate as EventListener)
+    window.addEventListener('languageChanged', handleLanguageChanged as EventListener)
     
     return () => {
       window.removeEventListener('languageChange', handleLanguageChange)
       window.removeEventListener('forceUpdate', handleForceUpdate as EventListener)
+      window.removeEventListener('languageChanged', handleLanguageChanged as EventListener)
     }
   }, [])
 

@@ -1,22 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { Settings, ChevronRight } from 'lucide-react'
+import { FaSearch, FaFilter, FaSort, FaSortAmountDown, FaSortAmountUp, FaEye, FaEyeSlash, FaStar, FaStarO } from 'react-icons/fa'
+import { ChevronDown, ChevronUp, Search, Filter, SortAsc, SortDesc, Eye, EyeOff, Star, StarOff } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
+import { t, getCurrentLanguage } from '@/lib/i18n'
+import type { AIInfoItem } from '@/types'
 import AIInfoCard from './ai-info-card'
-import { t } from '@/lib/i18n'
-
-interface AIInfoItem {
-  id: string
-  date: string
-  title: string
-  content: string
-  terms: Array<{ term: string; description: string }>
-  info_index: number
-}
 
 interface AIInfoListModeProps {
   sessionId: string
@@ -35,6 +27,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   const [isProcessing, setIsProcessing] = useState(false)
   const [showSortDropdown, setShowSortDropdown] = useState(false)
   const [showItemsPerPageDropdown, setShowItemsPerPageDropdown] = useState(false)
+  const [localLanguage, setLocalLanguage] = useState(currentLanguage)
 
   // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
@@ -61,14 +54,48 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     callback(e)
   }
 
+  // 언어 변경 감지 및 즉시 반영
+  useEffect(() => {
+    setLocalLanguage(currentLanguage)
+  }, [currentLanguage])
+
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      const newLanguage = getCurrentLanguage()
+      setLocalLanguage(newLanguage)
+    }
+
+    const handleForceUpdate = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        setLocalLanguage(event.detail.language)
+      }
+    }
+
+    const handleLanguageChanged = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        setLocalLanguage(event.detail.language)
+      }
+    }
+
+    window.addEventListener('languageChange', handleLanguageChange)
+    window.addEventListener('forceUpdate', handleForceUpdate as EventListener)
+    window.addEventListener('languageChanged', handleLanguageChanged as EventListener)
+    
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange)
+      window.removeEventListener('forceUpdate', handleForceUpdate as EventListener)
+      window.removeEventListener('languageChanged', handleLanguageChanged as EventListener)
+    }
+  }, [])
+
 
   // 모든 AI 정보 가져오기 (getAll API 시도)
   const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
-    queryKey: ['all-ai-info', currentLanguage],
+    queryKey: ['all-ai-info', localLanguage],
     queryFn: async () => {
       try {
-        console.log(`getAll API 호출 중... (언어: ${currentLanguage})`)
-        const response = await aiInfoAPI.getAll(currentLanguage)
+        console.log(`getAll API 호출 중... (언어: ${localLanguage})`)
+        const response = await aiInfoAPI.getAll(localLanguage)
         console.log(`getAll API 응답:`, response.data)
         console.log(`getAll API 응답 데이터 개수:`, response.data?.length || 0)
         return response.data

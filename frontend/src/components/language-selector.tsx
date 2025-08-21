@@ -22,8 +22,21 @@ export default function LanguageSelector() {
       // React Query 캐시 무효화하여 새로운 언어로 데이터 다시 요청
       queryClient.invalidateQueries()
       
-      // 전역 상태 업데이트를 위한 커스텀 이벤트 발생
-      window.dispatchEvent(new CustomEvent('forceUpdate', { detail: { language: newLanguage } }))
+      // 전역 상태 업데이트를 위한 커스텀 이벤트 발생 (즉시 반영)
+      window.dispatchEvent(new CustomEvent('forceUpdate', { 
+        detail: { 
+          language: newLanguage,
+          timestamp: Date.now() // 고유한 이벤트를 위한 타임스탬프
+        } 
+      }))
+      
+      // 추가적인 강제 업데이트 이벤트
+      window.dispatchEvent(new CustomEvent('languageChanged', { 
+        detail: { 
+          language: newLanguage,
+          timestamp: Date.now()
+        } 
+      }))
     }
 
     window.addEventListener('languageChange', handleLanguageChange)

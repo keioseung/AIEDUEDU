@@ -419,74 +419,139 @@ def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
         all_ai_info = []
         ai_infos = db.query(AIInfo).order_by(AIInfo.date.desc()).all()
         
+        print(f"DEBUG: get_all_ai_info called with language: {language}")
+        print(f"DEBUG: Total AIInfo records in database: {len(ai_infos)}")
+        
         # 언어별 컬럼 선택
         title_suffix = f"_title_{language}"
         content_suffix = f"_content_{language}"
         terms_suffix = f"_terms_{language}"
         
-        print(f"DEBUG: get_all_ai_info called with language: {language}")
         print(f"DEBUG: Using columns: title{title_suffix}, content{content_suffix}, terms{terms_suffix}")
         
         for ai_info in ai_infos:
-            # info1
+            print(f"DEBUG: Processing AIInfo record for date: {ai_info.date}")
+            print(f"DEBUG: Record ID: {ai_info.id}")
+            
+            # info1 - 요청된 언어의 데이터만 사용
             info1_title = getattr(ai_info, f'info1{title_suffix}', None)
             info1_content = getattr(ai_info, f'info1{content_suffix}', None)
             info1_terms = getattr(ai_info, f'info1{terms_suffix}', None)
+            
+            print(f"DEBUG: info1{title_suffix}: {info1_title[:50] if info1_title else 'None'}...")
+            print(f"DEBUG: info1{content_suffix}: {info1_content[:50] if info1_content else 'None'}...")
             
             if info1_title and info1_content:
                 try:
                     terms1 = json.loads(info1_terms) if info1_terms else []
                 except json.JSONDecodeError:
                     terms1 = []
+                
+                # 카테고리 정보 가져오기
+                stored_category = getattr(ai_info, 'info1_category', None)
+                if not stored_category or not stored_category.strip():
+                    # 실시간 분류
+                    classification = ai_classifier.classify_content(
+                        info1_title, 
+                        info1_content
+                    )
+                    stored_category = classification["category"]
+                
                 all_ai_info.append({
                     "id": f"{ai_info.date}_0",
                     "date": ai_info.date,
                     "title": info1_title,
                     "content": info1_content,
                     "terms": terms1,
+                    "category": stored_category,
+                    "subcategory": None,
+                    "confidence": 1.0,
+                    "created_at": ai_info.created_at,
                     "info_index": 0
                 })
                 print(f"DEBUG: Added info1 for date {ai_info.date} with title: {info1_title[:30]}...")
+            else:
+                print(f"DEBUG: Skipped info1 for date {ai_info.date} - {language} language data not available")
             
-            # info2
+            # info2 - 요청된 언어의 데이터만 사용
             info2_title = getattr(ai_info, f'info2{title_suffix}', None)
             info2_content = getattr(ai_info, f'info2{content_suffix}', None)
             info2_terms = getattr(ai_info, f'info2{terms_suffix}', None)
+            
+            print(f"DEBUG: info2{title_suffix}: {info2_title[:50] if info2_title else 'None'}...")
+            print(f"DEBUG: info2{content_suffix}: {info2_content[:50] if info2_content else 'None'}...")
             
             if info2_title and info2_content:
                 try:
                     terms2 = json.loads(info2_terms) if info2_terms else []
                 except json.JSONDecodeError:
                     terms2 = []
+                
+                # 카테고리 정보 가져오기
+                stored_category = getattr(ai_info, 'info2_category', None)
+                if not stored_category or not stored_category.strip():
+                    # 실시간 분류
+                    classification = ai_classifier.classify_content(
+                        info2_title, 
+                        info2_content
+                    )
+                    stored_category = classification["category"]
+                
                 all_ai_info.append({
                     "id": f"{ai_info.date}_1",
                     "date": ai_info.date,
                     "title": info2_title,
                     "content": info2_content,
                     "terms": terms2,
+                    "category": stored_category,
+                    "subcategory": None,
+                    "confidence": 1.0,
+                    "created_at": ai_info.created_at,
                     "info_index": 1
                 })
                 print(f"DEBUG: Added info2 for date {ai_info.date} with title: {info2_title[:30]}...")
+            else:
+                print(f"DEBUG: Skipped info2 for date {ai_info.date} - {language} language data not available")
             
-            # info3
+            # info3 - 요청된 언어의 데이터만 사용
             info3_title = getattr(ai_info, f'info3{title_suffix}', None)
             info3_content = getattr(ai_info, f'info3{content_suffix}', None)
             info3_terms = getattr(ai_info, f'info3{terms_suffix}', None)
+            
+            print(f"DEBUG: info3{title_suffix}: {info3_title[:50] if info3_title else 'None'}...")
+            print(f"DEBUG: info3{content_suffix}: {info3_content[:50] if info3_content else 'None'}...")
             
             if info3_title and info3_content:
                 try:
                     terms3 = json.loads(info3_terms) if info3_terms else []
                 except json.JSONDecodeError:
                     terms3 = []
+                
+                # 카테고리 정보 가져오기
+                stored_category = getattr(ai_info, 'info3_category', None)
+                if not stored_category or not stored_category.strip():
+                    # 실시간 분류
+                    classification = ai_classifier.classify_content(
+                        info3_title, 
+                        info3_content
+                    )
+                    stored_category = classification["category"]
+                
                 all_ai_info.append({
                     "id": f"{ai_info.date}_2",
                     "date": ai_info.date,
                     "title": info3_title,
                     "content": info3_content,
                     "terms": terms3,
+                    "category": stored_category,
+                    "subcategory": None,
+                    "confidence": 1.0,
+                    "created_at": ai_info.created_at,
                     "info_index": 2
                 })
                 print(f"DEBUG: Added info3 for date {ai_info.date} with title: {info3_title[:30]}...")
+            else:
+                print(f"DEBUG: Skipped info3 for date {ai_info.date} - {language} language data not available")
         
         print(f"DEBUG: Total AI info items found: {len(all_ai_info)}")
         return all_ai_info
