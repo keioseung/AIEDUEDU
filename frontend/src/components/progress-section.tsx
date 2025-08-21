@@ -536,7 +536,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     // 해당 날짜의 AI 정보 카드 수 × 20 (각 카드당 20개 용어)
                     if (selectedDate) {
                       // 해당 날짜에 등록된 AI 정보 카드 수 확인
-                      const dateInfo = aiInfoDates?.find(date => date === selectedDate)
+                      const dateInfo = aiInfoDates?.find((date: string) => date === selectedDate)
                       if (dateInfo) {
                         return 2 * 20 // 각 날짜당 2개 카드, 각 카드당 20개 용어
                       }
