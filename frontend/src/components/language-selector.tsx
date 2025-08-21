@@ -103,7 +103,6 @@ export default function LanguageSelector() {
                   }`}
                 >
                   <span className="text-xl">{languageFlags[language]}</span>
-                  <span className="font-medium">{languageNames[language]}</span>
                   {currentLanguage === language && (
                     <div className="ml-auto w-2 h-2 bg-blue-400 rounded-full"></div>
                   )}
