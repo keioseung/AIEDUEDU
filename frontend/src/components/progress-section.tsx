@@ -445,17 +445,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">{t('progress.card.accumulated.total.learning')}</span>
-                       <span className="text-white font-semibold text-sm">
-         {(() => {
-           // 등록된 모든 AI 정보 중 유저가 학습한 정보 총 수
-           const totalLearned = learnedCountData?.learned_count || 0
-           // 전체 등록된 AI 정보 수 (각 날짜당 2개 카드로 가정)
-           const totalCards = (aiInfoDates?.length || 0) * 2
-           const percentage = totalCards > 0 ? Math.round((totalLearned / totalCards) * 100) : 0
+                <span className="text-white font-semibold text-sm">
+                  {(() => {
+                    // 실제 학습완료된 AI 정보 카드 수
+                    const totalLearned = learnedCountData?.learned_count || 0
+                    // 전체 등록된 AI 정보 수 (각 날짜당 2개 카드)
+                    const totalCards = (aiInfoDates?.length || 0) * 2
+                    const percentage = totalCards > 0 ? Math.round((totalLearned / totalCards) * 100) : 0
 
-           return `${totalLearned}/${totalCards} (${percentage}%)`
-         })()}
-       </span>
+                    return `${totalLearned}/${totalCards} (${percentage}%)`
+                  })()}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -531,95 +531,66 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">{t('progress.card.terms.daily.total')}</span>
-                <span className="text-purple-400 font-bold text-sm">{totalTerms}</span>
+                <span className="text-purple-400 font-bold text-sm">
+                  {(() => {
+                    // 해당 날짜의 AI 정보 카드 수 × 20 (각 카드당 20개 용어)
+                    if (selectedDate) {
+                      // 해당 날짜에 등록된 AI 정보 카드 수 확인
+                      const dateInfo = aiInfoDates?.find(date => date === selectedDate)
+                      if (dateInfo) {
+                        return 2 * 20 // 각 날짜당 2개 카드, 각 카드당 20개 용어
+                      }
+                    }
+                    return totalTerms
+                  })()}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
-                       <span className="text-white font-semibold text-sm">
-         {(() => {
-           // 등록된 모든 AI 정보의 관련 용어 총 수 (각 날짜당 2개 카드 × 20개 용어)
-           const totalTerms = (aiInfoDates?.length || 0) * 2 * 20
-           
-           // 용어 학습 완료 수를 계산 (localStorage + 백엔드 데이터 통합)
-           let totalTermsLearned = 0
-           
-           // 방법 1: localStorage에서 계산 시도
-           if (typeof window !== 'undefined') {
-             try {
-               const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-               const sessionProgress = userProgress[sessionId]
-               if (sessionProgress) {
-                 console.log('용어 학습 진행률 계산 - sessionProgress:', sessionProgress)
-                 
-                 // 모든 날짜의 용어 학습 데이터 수집
-                 Object.keys(sessionProgress).forEach(date => {
-                   if (date !== '__stats__' && date !== 'terms_by_date') {
-                     // 해당 날짜에 학습한 AI 정보의 인덱스들
-                     const learnedIndices = sessionProgress[date] || []
-                     console.log(`날짜 ${date}의 학습된 AI 정보 인덱스:`, learnedIndices)
-                     
-                     // 각 학습된 AI 정보의 용어 학습 상태 확인
-                     learnedIndices.forEach((infoIndex: number) => {
-                       const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
-                       const learnedTerms = localStorage.getItem(learnedTermsKey)
-                       if (learnedTerms) {
-                         try {
-                           const terms = JSON.parse(learnedTerms)
-                           console.log(`날짜 ${date}, 인덱스 ${infoIndex}의 학습된 용어:`, terms)
-                           totalTermsLearned += terms.length
-                         } catch (error) {
-                           console.error('용어 데이터 파싱 오류:', error)
-                         }
-                       } else {
-                         console.log(`날짜 ${date}, 인덱스 ${infoIndex}의 용어 데이터 없음`)
-                       }
-                     })
-                   }
-                 })
-               }
-               
-               // 방법 2: localStorage의 모든 키를 검색하여 learnedTerms 패턴 찾기
-               const allKeys = Object.keys(localStorage)
-               const learnedTermsKeys = allKeys.filter(key => 
-                 key.startsWith(`learnedTerms_${sessionId}_`) && 
-                 key.includes('_') && 
-                 key.split('_').length >= 4
-               )
-               
-               console.log('발견된 learnedTerms 키들:', learnedTermsKeys)
-               
-               // 각 키에서 용어 데이터 추출
-               learnedTermsKeys.forEach(key => {
-                 try {
-                   const terms = JSON.parse(localStorage.getItem(key) || '[]')
-                   if (Array.isArray(terms)) {
-                     console.log(`키 ${key}에서 발견된 용어:`, terms)
-                     totalTermsLearned += terms.length
-                   }
-                 } catch (error) {
-                   console.error(`키 ${key} 파싱 오류:`, error)
-                 }
-               })
-               
-               console.log('localStorage에서 계산된 총 용어 학습 수:', totalTermsLearned)
-             } catch (error) {
-               console.error('로컬 스토리지 데이터 파싱 오류:', error)
-             }
-           }
-           
-           // 방법 3: localStorage에서 계산이 0이면 백엔드 데이터 사용
-           if (totalTermsLearned === 0 && stats?.total_terms_learned) {
-             totalTermsLearned = stats.total_terms_learned
-             console.log('localStorage에서 데이터를 찾을 수 없어 백엔드 데이터 사용:', totalTermsLearned)
-           }
-           
-           console.log('최종 계산된 총 용어 학습 수:', totalTermsLearned)
-           
-           const percentage = totalTerms > 0 ? Math.round((totalTermsLearned / totalTerms) * 100) : 0
-
-           return `${totalTermsLearned}/${totalTerms} (${percentage}%)`
-         })()}
-       </span>
+                <span className="text-white font-semibold text-sm">
+                  {(() => {
+                    // 실제 학습완료된 용어 수를 계산
+                    let totalTermsLearned = 0
+                    
+                    // localStorage에서 실제 학습된 용어 수 계산
+                    if (typeof window !== 'undefined') {
+                      try {
+                        const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                        const sessionProgress = userProgress[sessionId]
+                        if (sessionProgress) {
+                          // 모든 날짜의 용어 학습 데이터 수집
+                          Object.keys(sessionProgress).forEach(date => {
+                            if (date !== '__stats__' && date !== 'terms_by_date') {
+                              const learnedIndices = sessionProgress[date] || []
+                              
+                              // 각 학습된 AI 정보의 용어 학습 상태 확인
+                              learnedIndices.forEach((infoIndex: number) => {
+                                const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
+                                const learnedTerms = localStorage.getItem(learnedTermsKey)
+                                if (learnedTerms) {
+                                  try {
+                                    const terms = JSON.parse(learnedTerms)
+                                    totalTermsLearned += terms.length
+                                  } catch (error) {
+                                    console.error('용어 데이터 파싱 오류:', error)
+                                  }
+                                }
+                              })
+                            }
+                          })
+                        }
+                      } catch (error) {
+                        console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                      }
+                    }
+                    
+                    // 전체 등록된 용어 수 (각 날짜당 2개 카드 × 20개 용어)
+                    const totalTerms = (aiInfoDates?.length || 0) * 2 * 20
+                    const percentage = totalTerms > 0 ? Math.round((totalTermsLearned / totalTerms) * 100) : 0
+                    
+                    return `${totalTermsLearned}/${totalTerms} (${percentage}%)`
+                  })()}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -639,40 +610,40 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               <TrendingUp className="w-3 h-3 text-green-400" />
             </div>
             <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">
-                {selectedDate ? `${selectedDate} ${t('progress.card.daily.accumulated')}` : t('progress.card.daily.accumulated')}
-              </span>
-              <span className="text-green-400 font-bold text-base">
-                {(() => {
-                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                  if (selectedDate && uniqueChartData.length > 0) {
-                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                    if (selectedDateData) {
-                      return `${selectedDateData.quiz_score}%`
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">
+                  {selectedDate ? `${selectedDate} ${t('progress.card.accuracy')}` : t('progress.card.accuracy')}
+                </span>
+                <span className="text-green-400 font-bold text-base">
+                  {(() => {
+                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                    if (selectedDate && uniqueChartData.length > 0) {
+                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                      if (selectedDateData) {
+                        return `${selectedDateData.quiz_score}%`
+                      }
                     }
-                  }
-                  return `${stats?.today_quiz_score || 0}%`
-                })()}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">
-                {selectedDate ? `${selectedDate} ${t('progress.card.accuracy')}` : t('progress.card.accuracy')}
-              </span>
-              <span className="text-white font-semibold text-sm">
-                {(() => {
-                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                  if (selectedDate && uniqueChartData.length > 0) {
-                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                    if (selectedDateData) {
-                      return `${selectedDateData.quiz_correct}/${selectedDateData.quiz_total}`
+                    return `${stats?.today_quiz_score || 0}%`
+                  })()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">
+                  {selectedDate ? `${selectedDate} ${t('progress.card.daily.accumulated')}` : t('progress.card.daily.accumulated')}
+                </span>
+                <span className="text-white font-semibold text-sm">
+                  {(() => {
+                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                    if (selectedDate && uniqueChartData.length > 0) {
+                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                      if (selectedDateData) {
+                        return `${selectedDateData.quiz_correct}/${selectedDateData.quiz_total}`
+                      }
                     }
-                  }
-                  return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
-                })()}
-              </span>
-            </div>
+                    return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
+                  })()}
+                </span>
+              </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-xs">{t('progress.card.accuracy')}</span>
               <span className="text-white font-semibold text-sm">
