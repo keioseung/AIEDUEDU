@@ -861,7 +861,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
-                          const maxValue = 100; // 고정된 최대값 100%
+                          const maxValue = 2; // 고정된 최대값 2 (각 날짜당 2개 카드)
                           const aiHeight = Math.min(Math.max((data.ai_info / maxValue) * 40, data.ai_info > 0 ? 3 : 0), 40);
                           const isFullAI = data.ai_info >= maxValue;
                           const percent = Math.min(Math.round((data.ai_info / maxValue) * 100), 100);
@@ -936,7 +936,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
-                          const maxValue = 100; // 고정된 최대값 100%
+                          const maxValue = 40; // 고정된 최대값 40 (각 날짜당 2개 카드 × 20개 용어)
                           const termsHeight = Math.min(Math.max((data.terms / maxValue) * 40, data.terms > 0 ? 3 : 0), 40);
                           const isFullTerms = data.terms >= maxValue;
                           const percent = Math.min(Math.round((data.terms / maxValue) * 100), 100);
