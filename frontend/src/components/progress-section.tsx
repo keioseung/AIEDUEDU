@@ -45,17 +45,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   useEffect(() => {
     const handleLanguageChange = () => {
       const newLanguage = getCurrentLanguage()
+      console.log('언어 변경 감지:', newLanguage)
       setLocalLanguage(newLanguage)
     }
 
     const handleForceUpdate = (event: CustomEvent) => {
       if (event.detail?.language) {
+        console.log('강제 업데이트 언어 변경:', event.detail.language)
         setLocalLanguage(event.detail.language)
       }
     }
 
     const handleLanguageChanged = (event: CustomEvent) => {
       if (event.detail?.language) {
+        console.log('언어 변경 이벤트:', event.detail.language)
         setLocalLanguage(event.detail.language)
       }
     }
@@ -70,6 +73,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       window.removeEventListener('languageChanged', handleLanguageChanged as EventListener)
     }
   }, [])
+
+  // localLanguage 값 디버깅
+  useEffect(() => {
+    console.log('현재 localLanguage:', localLanguage)
+  }, [localLanguage])
 
   // 선택된 날짜의 AI 정보 데이터 가져오기
   const { data: aiInfoData } = useQuery({
