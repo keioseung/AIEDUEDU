@@ -562,6 +562,132 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
     }
   }
 
+  // 다국어 다음 문제 버튼 텍스트 함수
+  const getNextQuestionTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Next Question"
+      case 'ja':
+        return "次の問題"
+      case 'zh':
+        return "下一题"
+      default:
+        return t('quiz.tab.next.question')
+    }
+  }
+
+  // 다국어 퀴즈 완료하기 버튼 텍스트 함수
+  const getCompleteQuizTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Complete Quiz"
+      case 'ja':
+        return "クイズ完了"
+      case 'zh':
+        return "完成测验"
+      default:
+        return t('quiz.tab.complete.quiz')
+    }
+  }
+
+  // 다국어 오답 노트에서 제거 버튼 텍스트 함수
+  const getRemoveFromWrongNotesTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Remove from Wrong Notes"
+      case 'ja':
+        return "間違いノートから削除"
+      case 'zh':
+        return "从错题本中移除"
+      default:
+        return t('quiz.tab.remove.from.wrong.notes')
+    }
+  }
+
+  // 다국어 제거 버튼 텍스트 함수 (모바일용)
+  const getRemoveTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Remove"
+      case 'ja':
+        return "削除"
+      case 'zh':
+        return "移除"
+      default:
+        return t('quiz.tab.remove')
+    }
+  }
+
+  // 다국어 오답 노트에 추가 버튼 텍스트 함수
+  const getAddToWrongNotesTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Add to Wrong Notes"
+      case 'ja':
+        return "間違いノートに追加"
+      case 'zh':
+        return "添加到错题本"
+      default:
+        return t('quiz.tab.add.to.wrong.notes')
+    }
+  }
+
+  // 다국어 오답 노트 추가 버튼 텍스트 함수 (모바일용)
+  const getAddWrongNoteTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Add Note"
+      case 'ja':
+        return "ノート追加"
+      case 'zh':
+        return "添加笔记"
+      default:
+        return t('quiz.tab.add.wrong.note')
+    }
+  }
+
+  // 다국어 퀴즈 완료 텍스트 함수
+  const getQuizCompletedTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Quiz Completed!"
+      case 'ja':
+        return "クイズ完了！"
+      case 'zh':
+        return "测验完成！"
+      default:
+        return t('quiz.tab.quiz.completed')
+    }
+  }
+
+  // 다국어 재도전 버튼 텍스트 함수
+  const getTryAgainTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Try Again"
+      case 'ja':
+        return "再挑戦"
+      case 'zh':
+        return "再试一次"
+      default:
+        return t('quiz.tab.try.again')
+    }
+  }
+
+  // 다국어 재도전 버튼 텍스트 함수 (모바일용)
+  const getReTryTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Re-try"
+      case 'ja':
+        return "再挑戦"
+      case 'zh':
+        return "重试"
+      default:
+        return t('quiz.tab.re.try')
+    }
+  }
+
   return (
     <section className="mb-8 relative">
       {/* 퀴즈 수 선택기 - 상단에 멋진 디자인으로 배치 */}
@@ -873,14 +999,14 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                             onClick={handleNextQuiz}
                             className="flex-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 text-white py-4 rounded-2xl font-bold hover:from-emerald-500 hover:via-green-600 hover:to-emerald-700 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-emerald-300/30"
                           >
-                            {t('quiz.tab.next.question')}
+                            {getNextQuestionTextByLanguage(currentLanguage)}
                           </button>
                         ) : (
                           <button
                             onClick={handleNextQuiz}
                             className="flex-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white py-4 rounded-2xl font-bold hover:from-amber-500 hover:via-yellow-600 hover:to-orange-600 touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-amber-300/30"
                           >
-                            {t('quiz.tab.complete.quiz')}
+                            {getCompleteQuizTextByLanguage(currentLanguage)}
                           </button>
                         )}
                         {isWrongAnswerMode ? (
@@ -889,8 +1015,8 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                             className="px-6 py-4 bg-gradient-to-br from-red-600/30 via-red-700/35 to-red-600/30 text-red-100 rounded-2xl hover:from-red-700/40 hover:via-red-800/45 hover:to-red-700/40 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-500/40 hover:border-red-500/60 transition-all duration-300 shadow-lg hover:shadow-xl"
                           >
                             <XCircle className="w-5 h-5" />
-                            <span className="hidden sm:inline">{t('quiz.tab.remove.from.wrong.notes')}</span>
-                            <span className="sm:hidden">{t('quiz.tab.remove')}</span>
+                            <span className="hidden sm:inline">{getRemoveFromWrongNotesTextByLanguage(currentLanguage)}</span>
+                            <span className="sm:hidden">{getRemoveTextByLanguage(currentLanguage)}</span>
                           </button>
                         ) : (
                           <button
@@ -899,8 +1025,8 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                             className="px-6 py-4 bg-gradient-to-br from-red-500/20 via-red-600/25 to-red-500/20 text-red-200 rounded-2xl hover:from-red-600/30 hover:via-red-700/35 hover:to-red-600/30 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base font-semibold border border-red-400/30 hover:border-red-400/50 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <BookOpen className="w-5 h-5" />
-                            <span className="hidden sm:inline">{t('quiz.tab.add.to.wrong.notes')}</span>
-                            <span className="sm:hidden">{t('quiz.tab.add.wrong.note')}</span>
+                            <span className="hidden sm:inline">{getAddToWrongNotesTextByLanguage(currentLanguage)}</span>
+                            <span className="sm:hidden">{getAddWrongNoteTextByLanguage(currentLanguage)}</span>
                           </button>
                         )}
                       </>
@@ -925,7 +1051,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                     </div>
                     
                     <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
-                      {t('quiz.tab.quiz.completed')}
+                      {getQuizCompletedTextByLanguage(currentLanguage)}
                     </h3>
                     
                     <div className="text-2xl md:text-3xl font-bold text-white mb-4 mobile-text bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">
@@ -947,8 +1073,8 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                       className="px-8 md:px-10 py-4 bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 text-white rounded-2xl font-bold hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 flex items-center justify-center gap-3 touch-optimized mobile-touch-target text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 border border-purple-400/30"
                     >
                       <RotateCcw className="w-5 h-5" />
-                      <span className="hidden sm:inline">{t('quiz.tab.try.again')}</span>
-                      <span className="sm:hidden">{t('quiz.tab.re.try')}</span>
+                      <span className="hidden sm:inline">{getTryAgainTextByLanguage(currentLanguage)}</span>
+                      <span className="sm:hidden">{getReTryTextByLanguage(currentLanguage)}</span>
                     </button>
                   </div>
                 </motion.div>
@@ -970,7 +1096,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
             <div className="flex items-center gap-3 md:gap-4">
               <Award className="w-6 h-6 md:w-7 md:h-7 animate-bounce" />
               <div>
-                <div className="font-bold text-lg md:text-xl">{t('quiz.tab.quiz.completed')}</div>
+                <div className="font-bold text-lg md:text-xl">{getQuizCompletedTextByLanguage(currentLanguage)}</div>
                 <div className="text-sm md:text-base opacity-95 font-medium">{t('quiz.tab.score.saved')}</div>
               </div>
             </div>
