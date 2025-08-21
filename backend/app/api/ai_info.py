@@ -465,7 +465,7 @@ def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
                     "terms": terms1,
                     "category": stored_category,
                     "subcategory": None,
-                    "confidence": 1.0,
+                    "confidence": "1.0",
                     "created_at": ai_info.created_at,
                     "info_index": 0
                 })
@@ -505,7 +505,7 @@ def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
                     "terms": terms2,
                     "category": stored_category,
                     "subcategory": None,
-                    "confidence": 1.0,
+                    "confidence": "1.0",
                     "created_at": ai_info.created_at,
                     "info_index": 1
                 })
@@ -545,7 +545,7 @@ def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
                     "terms": terms3,
                     "category": stored_category,
                     "subcategory": None,
-                    "confidence": 1.0,
+                    "confidence": "1.0",
                     "created_at": ai_info.created_at,
                     "info_index": 2
                 })
