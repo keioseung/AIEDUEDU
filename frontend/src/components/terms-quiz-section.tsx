@@ -463,6 +463,105 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
     return "📚 더 공부해보세요! 다음엔 더 잘할 수 있을 거예요!"
   }
 
+  // 다국어 점수 메시지 함수
+  const getScoreMessageByLanguage = (percentage: number, language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        if (percentage >= 90) return "🎉 Perfect! Excellent skills!"
+        if (percentage >= 80) return "🌟 Very well done! Almost all correct!"
+        if (percentage >= 70) return "👍 Good! You know quite a lot!"
+        if (percentage >= 60) return "💪 Not bad! Just need a little more effort!"
+        return "📚 Study more! You can do better next time!"
+      case 'ja':
+        if (percentage >= 90) return "🎉 完璧です！素晴らしい実力ですね！"
+        if (percentage >= 80) return "🌟 とてもよくできました！ほぼ全問正解です！"
+        if (percentage >= 70) return "👍 いいですね！かなりよく知っています！"
+        if (percentage >= 60) return "💪 悪くないです！もう少し努力すれば大丈夫です！"
+        return "📚 もっと勉強しましょう！次はもっと良くできます！"
+      case 'zh':
+        if (percentage >= 90) return "🎉 完美！出色的技能！"
+        if (percentage >= 80) return "🌟 做得很好！几乎全对了！"
+        if (percentage >= 70) return "👍 不错！你知道得很多！"
+        if (percentage >= 60) return "💪 还可以！再努力一点就好了！"
+        return "📚 多学习！下次会做得更好！"
+      default:
+        if (percentage >= 90) return "🎉 완벽합니다! 훌륭한 실력이네요!"
+        if (percentage >= 80) return "🌟 아주 잘했어요! 거의 다 맞췄네요!"
+        if (percentage >= 70) return "👍 좋아요! 꽤 잘 알고 있네요!"
+        if (percentage >= 60) return "💪 괜찮아요! 조금만 더 노력하면 됩니다!"
+        return "📚 더 공부해보세요! 다음엔 더 잘할 수 있을 거예요!"
+    }
+  }
+
+  // 다국어 점수 텍스트 함수
+  const getScoreTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Score"
+      case 'ja':
+        return "点数"
+      case 'zh':
+        return "分数"
+      default:
+        return "점수"
+    }
+  }
+
+  // 다국어 답안 제출 버튼 텍스트 함수
+  const getSubmitAnswerTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Submit Answer"
+      case 'ja':
+        return "回答を提出"
+      case 'zh':
+        return "提交答案"
+      default:
+        return "답안 제출"
+    }
+  }
+
+  // 다국어 정답/오답 메시지 함수
+  const getResultMessageByLanguage = (isCorrect: boolean, language: 'ko' | 'en' | 'ja' | 'zh') => {
+    if (isCorrect) {
+      switch (language) {
+        case 'en':
+          return "Correct! 🎉"
+        case 'ja':
+          return "正解です！🎉"
+        case 'zh':
+          return "答对了！🎉"
+        default:
+          return "정답입니다! 🎉"
+      }
+    } else {
+      switch (language) {
+        case 'en':
+          return "Incorrect 😅"
+        case 'ja':
+          return "不正解です😅"
+        case 'zh':
+          return "答错了😅"
+        default:
+          return "틀렸습니다 😅"
+      }
+    }
+  }
+
+  // 다국어 정답률 텍스트 함수
+  const getAccuracyTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Accuracy"
+      case 'ja':
+        return "正答率"
+      case 'zh':
+        return "正确率"
+      default:
+        return "정답률"
+    }
+  }
+
   return (
     <section className="mb-8 relative">
       {/* 퀴즈 수 선택기 - 상단에 멋진 디자인으로 배치 */}
@@ -676,7 +775,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                     {currentQuizIndex + 1} / {quizData.quizzes.length}
                   </span>
                   <span className="text-white font-bold text-base mobile-text bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent">
-                    점수: {score} / {quizData.quizzes.length}
+                    {getScoreTextByLanguage(currentLanguage)}: {score} / {quizData.quizzes.length}
                   </span>
                 </div>
                 <div className="w-full bg-white/15 rounded-full h-2">
@@ -733,7 +832,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                         className="p-5 rounded-2xl bg-gradient-to-br from-white/12 via-white/15 to-white/12 border border-white/25 shadow-lg shadow-white/10"
                       >
                         <h4 className="text-lg font-bold text-white mb-3 mobile-text">
-                          {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
+                          {getResultMessageByLanguage(selectedAnswer === currentQuiz.correct, currentLanguage)}
                         </h4>
                         <p className="text-white/90 text-base mobile-text leading-relaxed font-medium">{getQuizContent(currentQuiz, currentLanguage).explanation}</p>
                       </motion.div>
@@ -765,7 +864,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                         disabled={selectedAnswer === null}
                         className="flex-1 bg-gradient-to-r from-purple-500 via-violet-600 to-purple-700 text-white py-4 rounded-2xl font-bold hover:from-purple-600 hover:via-violet-700 hover:to-purple-800 disabled:opacity-50 disabled:cursor-not-allowed touch-optimized mobile-touch-target text-base shadow-xl hover:shadow-2xl transition-all duration-300 border border-purple-400/30"
                       >
-                        답안 제출
+                        {getSubmitAnswerTextByLanguage(currentLanguage)}
                       </button>
                     ) : (
                       <>
@@ -834,11 +933,11 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                     </div>
                     
                     <div className="text-xl md:text-2xl text-white/90 mb-4 md:mb-6 mobile-text font-semibold">
-                      정답률: {finalScore.percentage}%
+                      {getAccuracyTextByLanguage(currentLanguage)}: {finalScore.percentage}%
                     </div>
                     
                     <div className="text-lg md:text-xl text-white/80 mb-6 md:mb-8 mobile-text font-medium">
-                      {getScoreMessage(finalScore.percentage)}
+                      {getScoreMessageByLanguage(finalScore.percentage, currentLanguage)}
                     </div>
                   </div>
                   
