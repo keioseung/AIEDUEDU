@@ -751,12 +751,13 @@ export default function DashboardPage() {
 
           {activeTab === 'quiz' && (
             <section className="mb-8 md:mb-16">
-              <TermsQuizSection 
-                sessionId={sessionId} 
-                selectedDate={selectedDate} 
-                onProgressUpdate={handleProgressUpdate}
-                onDateChange={setSelectedDate}
-              />
+                          <TermsQuizSection
+              sessionId={sessionId}
+              selectedDate={selectedDate}
+              currentLanguage={currentLanguage}
+              onProgressUpdate={handleProgressUpdate}
+              onDateChange={setSelectedDate}
+            />
             </section>
           )}
           {activeTab === 'progress' && (

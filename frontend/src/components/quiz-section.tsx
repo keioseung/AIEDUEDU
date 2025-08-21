@@ -10,9 +10,10 @@ import { t } from '@/lib/i18n'
 
 interface QuizSectionProps {
   sessionId: string
+  currentLanguage: 'ko' | 'en' | 'ja' | 'zh'
 }
 
-function QuizSection({ sessionId }: QuizSectionProps) {
+function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
   const [selectedTopic, setSelectedTopic] = useState('AI')
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -49,6 +50,18 @@ function QuizSection({ sessionId }: QuizSectionProps) {
   })
 
   const currentQuiz = quizzes?.[currentQuizIndex]
+
+  // 다국어 퀴즈 내용 가져오기
+  const getQuizContent = (quiz: Quiz, language: 'ko' | 'en' | 'ja' | 'zh') => {
+    const question = quiz[`question_${language}`] || quiz.question_ko || quiz.question || '문제를 불러올 수 없습니다'
+    const option1 = quiz[`option1_${language}`] || quiz.option1_ko || quiz.option1 || '선택지 1'
+    const option2 = quiz[`option2_${language}`] || quiz.option2_ko || quiz.option2 || '선택지 2'
+    const option3 = quiz[`option3_${language}`] || quiz.option3_ko || quiz.option3 || '선택지 3'
+    const option4 = quiz[`option4_${language}`] || quiz.option4_ko || quiz.option4 || '선택지 4'
+    const explanation = quiz[`explanation_${language}`] || quiz.explanation_ko || quiz.explanation || '설명을 불러올 수 없습니다'
+    
+    return { question, option1, option2, option3, option4, explanation }
+  }
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (showResult) return
@@ -163,12 +176,17 @@ function QuizSection({ sessionId }: QuizSectionProps) {
           <div className="space-y-6">
             <div>
               <h3 className="text-xl font-semibold text-white mb-4">
-                {currentQuiz.question}
+                {getQuizContent(currentQuiz, currentLanguage).question}
               </h3>
             </div>
 
             <div className="space-y-3">
-              {[currentQuiz.option1, currentQuiz.option2, currentQuiz.option3, currentQuiz.option4].map((option, index) => (
+              {[
+                getQuizContent(currentQuiz, currentLanguage).option1,
+                getQuizContent(currentQuiz, currentLanguage).option2,
+                getQuizContent(currentQuiz, currentLanguage).option3,
+                getQuizContent(currentQuiz, currentLanguage).option4
+              ].map((option, index) => (
                 <button
                   key={index}
                   onClick={() => handleAnswerSelect(index)}
@@ -199,7 +217,7 @@ function QuizSection({ sessionId }: QuizSectionProps) {
                 <h4 className="text-lg font-semibold text-white mb-2">
                   {selectedAnswer === currentQuiz.correct ? t('quiz.correct') : t('quiz.incorrect')}
                 </h4>
-                <p className="text-white/80">{currentQuiz.explanation}</p>
+                <p className="text-white/80">{getQuizContent(currentQuiz, currentLanguage).explanation}</p>
               </motion.div>
             )}
 

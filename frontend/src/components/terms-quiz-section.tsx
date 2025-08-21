@@ -11,6 +11,7 @@ import { t } from '@/lib/i18n'
 interface TermsQuizSectionProps {
   sessionId: string
   selectedDate: string
+  currentLanguage: 'ko' | 'en' | 'ja' | 'zh'
   onProgressUpdate?: () => void
   onDateChange?: (date: string) => void
 }
@@ -41,7 +42,7 @@ interface AIInfoItem {
   info_index: number
 }
 
-function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateChange }: TermsQuizSectionProps) {
+function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgressUpdate, onDateChange }: TermsQuizSectionProps) {
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showResult, setShowResult] = useState(false)
@@ -57,6 +58,20 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
   const [showWrongAnswerAdded, setShowWrongAnswerAdded] = useState(false)
   const updateQuizScoreMutation = useUpdateQuizScore()
   const checkAchievementsMutation = useCheckAchievements()
+
+  // 다국어 퀴즈 내용 가져오기
+  const getQuizContent = (quiz: TermsQuiz, language: 'ko' | 'en' | 'ja' | 'zh') => {
+    // 현재는 단일 언어만 지원하므로 기존 필드 사용
+    // 나중에 다국어 필드가 추가되면 여기서 확장 가능
+    const question = quiz.question || '문제를 불러올 수 없습니다'
+    const option1 = quiz.option1 || '선택지 1'
+    const option2 = quiz.option2 || '선택지 2'
+    const option3 = quiz.option3 || '선택지 3'
+    const option4 = quiz.option4 || '선택지 4'
+    const explanation = quiz.explanation || '설명을 불러올 수 없습니다'
+    
+    return { question, option1, option2, option3, option4, explanation }
+  }
 
   // AI 정보 전체목록 가져오기 (getAll API 시도)
   const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
@@ -666,12 +681,17 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                 <div className="space-y-6 md:space-y-8">
                   <div>
                     <h3 className="text-base md:text-lg font-bold text-white mb-4 md:mb-6 mobile-text leading-tight bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent">
-                      {currentQuiz.question}
+                      {getQuizContent(currentQuiz, currentLanguage).question}
                     </h3>
                   </div>
 
                   <div className="space-y-3">
-                    {[currentQuiz.option1, currentQuiz.option2, currentQuiz.option3, currentQuiz.option4].map((option, index) => (
+                    {[
+                      getQuizContent(currentQuiz, currentLanguage).option1,
+                      getQuizContent(currentQuiz, currentLanguage).option2,
+                      getQuizContent(currentQuiz, currentLanguage).option3,
+                      getQuizContent(currentQuiz, currentLanguage).option4
+                    ].map((option, index) => (
                       <button
                         key={index}
                         onClick={() => handleAnswerSelect(index)}
@@ -704,7 +724,7 @@ function TermsQuizSection({ sessionId, selectedDate, onProgressUpdate, onDateCha
                         <h4 className="text-lg font-bold text-white mb-3 mobile-text">
                           {selectedAnswer === currentQuiz.correct ? '정답입니다! 🎉' : '틀렸습니다 😅'}
                         </h4>
-                        <p className="text-white/90 text-base mobile-text leading-relaxed font-medium">{currentQuiz.explanation}</p>
+                        <p className="text-white/90 text-base mobile-text leading-relaxed font-medium">{getQuizContent(currentQuiz, currentLanguage).explanation}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>

@@ -75,25 +75,103 @@ class AIInfoResponse(BaseModel):
 # Quiz Schemas
 class QuizCreate(BaseModel):
     topic: str
-    question: str
-    option1: str
-    option2: str
-    option3: str
-    option4: str
-    correct: int
-    explanation: str
+    
+    # 다국어 지원 - 문제
+    question_ko: str
+    question_en: Optional[str] = None
+    question_ja: Optional[str] = None
+    question_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 1
+    option1_ko: str
+    option1_en: Optional[str] = None
+    option1_ja: Optional[str] = None
+    option1_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 2
+    option2_ko: str
+    option2_en: Optional[str] = None
+    option2_ja: Optional[str] = None
+    option2_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 3
+    option3_ko: str
+    option3_en: Optional[str] = None
+    option3_ja: Optional[str] = None
+    option3_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 4
+    option4_ko: str
+    option4_en: Optional[str] = None
+    option4_ja: Optional[str] = None
+    option4_zh: Optional[str] = None
+    
+    # 다국어 지원 - 설명
+    explanation_ko: str
+    explanation_en: Optional[str] = None
+    explanation_ja: Optional[str] = None
+    explanation_zh: Optional[str] = None
+    
+    correct: int  # 정답 번호 (언어별로 동일)
+    
+    # 기존 단일 언어 필드들 (하위 호환성을 위해 유지)
+    question: Optional[str] = None
+    option1: Optional[str] = None
+    option2: Optional[str] = None
+    option3: Optional[str] = None
+    option4: Optional[str] = None
+    explanation: Optional[str] = None
 
 class QuizResponse(BaseModel):
     id: int
     topic: str
-    question: str
-    option1: str
-    option2: str
-    option3: str
-    option4: str
+    
+    # 다국어 지원 - 문제
+    question_ko: str
+    question_en: Optional[str] = None
+    question_ja: Optional[str] = None
+    question_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 1
+    option1_ko: str
+    option1_en: Optional[str] = None
+    option1_ja: Optional[str] = None
+    option1_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 2
+    option2_ko: str
+    option2_en: Optional[str] = None
+    option2_ja: Optional[str] = None
+    option2_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 3
+    option3_ko: str
+    option3_en: Optional[str] = None
+    option3_ja: Optional[str] = None
+    option3_zh: Optional[str] = None
+    
+    # 다국어 지원 - 선택지 4
+    option4_ko: str
+    option4_en: Optional[str] = None
+    option4_ja: Optional[str] = None
+    option4_zh: Optional[str] = None
+    
+    # 다국어 지원 - 설명
+    explanation_ko: str
+    explanation_en: Optional[str] = None
+    explanation_ja: Optional[str] = None
+    explanation_zh: Optional[str] = None
+    
     correct: int
-    explanation: str
     created_at: datetime
+    
+    # 기존 단일 언어 필드들 (하위 호환성을 위해 유지)
+    question: Optional[str] = None
+    option1: Optional[str] = None
+    option2: Optional[str] = None
+    option3: Optional[str] = None
+    option4: Optional[str] = None
+    explanation: Optional[str] = None
 
     class Config:
         from_attributes = True

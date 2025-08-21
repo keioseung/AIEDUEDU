@@ -101,14 +101,53 @@ class Quiz(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     topic = Column(String, index=True)
-    question = Column(Text)
-    option1 = Column(Text)
-    option2 = Column(Text)
-    option3 = Column(Text)
-    option4 = Column(Text)
-    correct = Column(Integer)
-    explanation = Column(Text)
+    
+    # 다국어 지원 - 문제
+    question_ko = Column(Text)  # 한국어 문제
+    question_en = Column(Text)  # 영어 문제
+    question_ja = Column(Text)  # 일본어 문제
+    question_zh = Column(Text)  # 중국어 문제
+    
+    # 다국어 지원 - 선택지 1
+    option1_ko = Column(Text)  # 한국어 선택지 1
+    option1_en = Column(Text)  # 영어 선택지 1
+    option1_ja = Column(Text)  # 일본어 선택지 1
+    option1_zh = Column(Text)  # 중국어 선택지 1
+    
+    # 다국어 지원 - 선택지 2
+    option2_ko = Column(Text)  # 한국어 선택지 2
+    option2_en = Column(Text)  # 영어 선택지 2
+    option2_ja = Column(Text)  # 일본어 선택지 2
+    option2_zh = Column(Text)  # 중국어 선택지 2
+    
+    # 다국어 지원 - 선택지 3
+    option3_ko = Column(Text)  # 한국어 선택지 3
+    option3_en = Column(Text)  # 영어 선택지 3
+    option3_ja = Column(Text)  # 일본어 선택지 3
+    option3_zh = Column(Text)  # 중국어 선택지 3
+    
+    # 다국어 지원 - 선택지 4
+    option4_ko = Column(Text)  # 한국어 선택지 4
+    option4_en = Column(Text)  # 영어 선택지 4
+    option4_ja = Column(Text)  # 일본어 선택지 4
+    option4_zh = Column(Text)  # 중국어 선택지 4
+    
+    # 다국어 지원 - 설명
+    explanation_ko = Column(Text)  # 한국어 설명
+    explanation_en = Column(Text)  # 영어 설명
+    explanation_ja = Column(Text)  # 일본어 설명
+    explanation_zh = Column(Text)  # 중국어 설명
+    
+    correct = Column(Integer)  # 정답 번호 (언어별로 동일)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # 기존 단일 언어 필드들 (하위 호환성을 위해 유지)
+    question = Column(Text)  # 기존 한국어 문제
+    option1 = Column(Text)  # 기존 한국어 선택지 1
+    option2 = Column(Text)  # 기존 한국어 선택지 2
+    option3 = Column(Text)  # 기존 한국어 선택지 3
+    option4 = Column(Text)  # 기존 한국어 선택지 4
+    explanation = Column(Text)  # 기존 한국어 설명
 
 class UserProgress(Base):
     __tablename__ = "user_progress"

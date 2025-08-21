@@ -22,13 +22,52 @@ def get_quiz_by_topic(topic: str, db: Session = Depends(get_db)):
 def add_quiz(quiz_data: QuizCreate, db: Session = Depends(get_db)):
     db_quiz = Quiz(
         topic=quiz_data.topic,
-        question=quiz_data.question,
-        option1=quiz_data.option1,
-        option2=quiz_data.option2,
-        option3=quiz_data.option3,
-        option4=quiz_data.option4,
+        
+        # 다국어 지원 - 문제
+        question_ko=quiz_data.question_ko,
+        question_en=quiz_data.question_en,
+        question_ja=quiz_data.question_ja,
+        question_zh=quiz_data.question_zh,
+        
+        # 다국어 지원 - 선택지 1
+        option1_ko=quiz_data.option1_ko,
+        option1_en=quiz_data.option1_en,
+        option1_ja=quiz_data.option1_ja,
+        option1_zh=quiz_data.option1_zh,
+        
+        # 다국어 지원 - 선택지 2
+        option2_ko=quiz_data.option2_ko,
+        option2_en=quiz_data.option2_en,
+        option2_ja=quiz_data.option2_ja,
+        option2_zh=quiz_data.option2_zh,
+        
+        # 다국어 지원 - 선택지 3
+        option3_ko=quiz_data.option3_ko,
+        option3_en=quiz_data.option3_en,
+        option3_ja=quiz_data.option3_ja,
+        option3_zh=quiz_data.option3_zh,
+        
+        # 다국어 지원 - 선택지 4
+        option4_ko=quiz_data.option4_ko,
+        option4_en=quiz_data.option4_en,
+        option4_ja=quiz_data.option4_ja,
+        option4_zh=quiz_data.option4_zh,
+        
+        # 다국어 지원 - 설명
+        explanation_ko=quiz_data.explanation_ko,
+        explanation_en=quiz_data.explanation_en,
+        explanation_ja=quiz_data.explanation_ja,
+        explanation_zh=quiz_data.explanation_zh,
+        
         correct=quiz_data.correct,
-        explanation=quiz_data.explanation
+        
+        # 기존 단일 언어 필드들 (하위 호환성을 위해 유지)
+        question=quiz_data.question or quiz_data.question_ko,
+        option1=quiz_data.option1 or quiz_data.option1_ko,
+        option2=quiz_data.option2 or quiz_data.option2_ko,
+        option3=quiz_data.option3 or quiz_data.option3_ko,
+        option4=quiz_data.option4 or quiz_data.option4_ko,
+        explanation=quiz_data.explanation or quiz_data.explanation_ko
     )
     db.add(db_quiz)
     db.commit()
@@ -42,13 +81,52 @@ def update_quiz(quiz_id: int, quiz_data: QuizCreate, db: Session = Depends(get_d
         raise HTTPException(status_code=404, detail="Quiz not found")
     
     quiz.topic = quiz_data.topic
-    quiz.question = quiz_data.question
-    quiz.option1 = quiz_data.option1
-    quiz.option2 = quiz_data.option2
-    quiz.option3 = quiz_data.option3
-    quiz.option4 = quiz_data.option4
+    
+    # 다국어 지원 - 문제
+    quiz.question_ko = quiz_data.question_ko
+    quiz.question_en = quiz_data.question_en
+    quiz.question_ja = quiz_data.question_ja
+    quiz.question_zh = quiz_data.question_zh
+    
+    # 다국어 지원 - 선택지 1
+    quiz.option1_ko = quiz_data.option1_ko
+    quiz.option1_en = quiz_data.option1_en
+    quiz.option1_ja = quiz_data.option1_ja
+    quiz.option1_zh = quiz_data.option1_zh
+    
+    # 다국어 지원 - 선택지 2
+    quiz.option2_ko = quiz_data.option2_ko
+    quiz.option2_en = quiz_data.option2_en
+    quiz.option2_ja = quiz_data.option2_ja
+    quiz.option2_zh = quiz_data.option2_zh
+    
+    # 다국어 지원 - 선택지 3
+    quiz.option3_ko = quiz_data.option3_ko
+    quiz.option3_en = quiz_data.option3_en
+    quiz.option3_ja = quiz_data.option3_ja
+    quiz.option3_zh = quiz_data.option3_zh
+    
+    # 다국어 지원 - 선택지 4
+    quiz.option4_ko = quiz_data.option4_ko
+    quiz.option4_en = quiz_data.option4_en
+    quiz.option4_ja = quiz_data.option4_ja
+    quiz.option4_zh = quiz_data.option4_zh
+    
+    # 다국어 지원 - 설명
+    quiz.explanation_ko = quiz_data.explanation_ko
+    quiz.explanation_en = quiz_data.explanation_en
+    quiz.explanation_ja = quiz_data.explanation_ja
+    quiz.explanation_zh = quiz_data.explanation_zh
+    
     quiz.correct = quiz_data.correct
-    quiz.explanation = quiz_data.explanation
+    
+    # 기존 단일 언어 필드들 (하위 호환성을 위해 유지)
+    quiz.question = quiz_data.question or quiz_data.question_ko
+    quiz.option1 = quiz_data.option1 or quiz_data.option1_ko
+    quiz.option2 = quiz_data.option2 or quiz_data.option2_ko
+    quiz.option3 = quiz_data.option3 or quiz_data.option3_ko
+    quiz.option4 = quiz_data.option4 or quiz_data.option4_ko
+    quiz.explanation = quiz_data.explanation or quiz_data.explanation_ko
     
     db.commit()
     db.refresh(quiz)
