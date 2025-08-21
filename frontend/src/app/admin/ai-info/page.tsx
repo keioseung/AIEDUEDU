@@ -75,6 +75,9 @@ export default function AdminAIInfoPage() {
 
   // 전문용어 일괄 입력 상태
   const [bulkTermsText, setBulkTermsText] = useState('')
+  const [bulkTermsTextEn, setBulkTermsTextEn] = useState('')
+  const [bulkTermsTextJa, setBulkTermsTextJa] = useState('')
+  const [bulkTermsTextZh, setBulkTermsTextZh] = useState('')
   const [showBulkInput, setShowBulkInput] = useState<number | null>(null)
 
   // 서버에서 날짜별 AI 정보 목록 불러오기
@@ -435,26 +438,79 @@ export default function AdminAIInfoPage() {
   }
 
   const handleBulkTermsSubmit = (infoIdx: number) => {
+    let totalAdded = 0
+    
+    // 한국어 용어 처리
     if (bulkTermsText.trim()) {
-      const parsedTerms = parseTermsFromText(bulkTermsText)
-      if (parsedTerms.length > 0) {
+      const parsedTermsKo = parseTermsFromText(bulkTermsText)
+      if (parsedTermsKo.length > 0) {
         setInputs(inputs => inputs.map((input, i) => 
           i === infoIdx 
-            ? { ...input, terms_ko: [...input.terms_ko, ...parsedTerms] }
+            ? { ...input, terms_ko: [...input.terms_ko, ...parsedTermsKo] }
             : input
         ))
-        alert(`${parsedTerms.length}개의 용어가 추가되었습니다!`)
-      } else {
-        alert('파싱할 수 있는 용어가 없습니다. 형식을 확인해주세요.')
+        totalAdded += parsedTermsKo.length
       }
     }
+    
+    // 영어 용어 처리
+    if (bulkTermsTextEn.trim()) {
+      const parsedTermsEn = parseTermsFromText(bulkTermsTextEn)
+      if (parsedTermsEn.length > 0) {
+        setInputs(inputs => inputs.map((input, i) => 
+          i === infoIdx 
+            ? { ...input, terms_en: [...input.terms_en, ...parsedTermsEn] }
+            : input
+        ))
+        totalAdded += parsedTermsEn.length
+      }
+    }
+    
+    // 일본어 용어 처리
+    if (bulkTermsTextJa.trim()) {
+      const parsedTermsJa = parseTermsFromText(bulkTermsTextJa)
+      if (parsedTermsJa.length > 0) {
+        setInputs(inputs => inputs.map((input, i) => 
+          i === infoIdx 
+            ? { ...input, terms_ja: [...input.terms_ja, ...parsedTermsJa] }
+            : input
+        ))
+        totalAdded += parsedTermsJa.length
+      }
+    }
+    
+    // 중국어 용어 처리
+    if (bulkTermsTextZh.trim()) {
+      const parsedTermsZh = parseTermsFromText(bulkTermsTextZh)
+      if (parsedTermsZh.length > 0) {
+        setInputs(inputs => inputs.map((input, i) => 
+          i === infoIdx 
+            ? { ...input, terms_zh: [...input.terms_zh, ...parsedTermsZh] }
+            : input
+        ))
+        totalAdded += parsedTermsZh.length
+      }
+    }
+    
+    if (totalAdded > 0) {
+      alert(`총 ${totalAdded}개의 용어가 추가되었습니다!`)
+    } else {
+      alert('파싱할 수 있는 용어가 없습니다. 형식을 확인해주세요.')
+    }
+    
     setShowBulkInput(null)
     setBulkTermsText('')
+    setBulkTermsTextEn('')
+    setBulkTermsTextJa('')
+    setBulkTermsTextZh('')
   }
 
   const handleBulkTermsCancel = () => {
     setShowBulkInput(null)
     setBulkTermsText('')
+    setBulkTermsTextEn('')
+    setBulkTermsTextJa('')
+    setBulkTermsTextZh('')
   }
 
   const handleRemoveTerm = (infoIdx: number, termIdx: number) => {
@@ -1079,7 +1135,7 @@ export default function AdminAIInfoPage() {
                       {showBulkInput === idx && (
                         <div className="bg-yellow-500/10 border-2 border-yellow-500/30 rounded-xl p-4 mb-4">
                           <div className="flex items-center justify-between mb-3">
-                            <h4 className="font-bold text-yellow-300">📋 전문용어 일괄 입력</h4>
+                            <h4 className="font-bold text-yellow-300">📋 전문용어 일괄 입력 (다국어 지원)</h4>
                             <button 
                               type="button" 
                               onClick={handleBulkTermsCancel}
@@ -1090,7 +1146,7 @@ export default function AdminAIInfoPage() {
                           </div>
                           <div className="mb-3">
                             <p className="text-sm text-yellow-200 mb-2">
-                              전문용어를 복사해서 붙여넣으세요. 탭(→) 또는 공백으로 구분됩니다.
+                              각 언어별로 전문용어를 복사해서 붙여넣으세요. 탭(→) 또는 공백으로 구분됩니다.
                             </p>
                             <div className="text-xs text-yellow-300 bg-yellow-500/20 p-2 rounded mb-2">
                               <strong>예시:</strong><br/>
@@ -1099,13 +1155,55 @@ export default function AdminAIInfoPage() {
                               DSL	특정 분야 전용 프로그래밍 언어
                             </div>
                           </div>
-                          <textarea
-                            value={bulkTermsText}
-                            onChange={(e) => setBulkTermsText(e.target.value)}
-                            placeholder="용어	뜻&#10;LLM	GPT 같은 대형 언어 모델&#10;자연어	우리가 일상에서 쓰는 언어"
-                            className="w-full p-3 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
-                            rows={6}
-                          />
+                          
+                          {/* 한국어 용어 입력 */}
+                          <div className="mb-3">
+                            <label className="block text-sm font-medium text-yellow-300 mb-2">🇰🇷 한국어 용어</label>
+                            <textarea
+                              value={bulkTermsText}
+                              onChange={(e) => setBulkTermsText(e.target.value)}
+                              placeholder="용어	뜻&#10;LLM	GPT 같은 대형 언어 모델&#10;자연어	우리가 일상에서 쓰는 언어"
+                              className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                              rows={3}
+                            />
+                          </div>
+                          
+                          {/* 영어 용어 입력 */}
+                          <div className="mb-3">
+                            <label className="block text-sm font-medium text-yellow-300 mb-2">🇺🇸 영어 용어</label>
+                            <textarea
+                              value={bulkTermsTextEn}
+                              onChange={(e) => setBulkTermsTextEn(e.target.value)}
+                              placeholder="term	meaning&#10;LLM	Large Language Model like GPT&#10;Natural Language	Language we use in daily life"
+                              className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                              rows={3}
+                            />
+                          </div>
+                          
+                          {/* 일본어 용어 입력 */}
+                          <div className="mb-3">
+                            <label className="block text-sm font-medium text-yellow-300 mb-2">🇯🇵 일본어 용어</label>
+                            <textarea
+                              value={bulkTermsTextJa}
+                              onChange={(e) => setBulkTermsTextJa(e.target.value)}
+                              placeholder="用語	意味&#10;LLM	GPTのような大規模言語モデル&#10;自然言語	私たちが日常で使う言語"
+                              className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                              rows={3}
+                            />
+                          </div>
+                          
+                          {/* 중국어 용어 입력 */}
+                          <div className="mb-3">
+                            <label className="block text-sm font-medium text-yellow-300 mb-2">🇨🇳 중국어 용어</label>
+                            <textarea
+                              value={bulkTermsTextZh}
+                              onChange={(e) => setBulkTermsTextZh(e.target.value)}
+                              placeholder="术语	含义&#10;LLM	像GPT这样的大型语言模型&#10;自然语言	我们日常使用的语言"
+                              className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                              rows={3}
+                            />
+                          </div>
+                          
                           <div className="flex gap-2 mt-3">
                             <button 
                               type="button" 
