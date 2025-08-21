@@ -470,6 +470,9 @@ const ko: Record<string, string> = {
   'terms.list.difficulty': '난이도',
   'terms.list.scroll.lock': '스크롤 고정(1초이상클릭)',
   
+  // 용어학습 탭 로딩 페이지
+  'terms.tab.loading': '잠시만 기다려 주세요.',
+  
   // 용어학습 탭 날짜 필터
   'terms.date.filter.year': '년',
   'terms.date.filter.month': '월',
@@ -902,6 +905,9 @@ const en: Record<string, string> = {
   // Terms Learning Tab List Mode
   'terms.list.difficulty': 'Difficulty',
   'terms.list.scroll.lock': 'Scroll Lock (Hold 1+ seconds)',
+  
+  // Terms Learning Tab Loading Page
+  'terms.tab.loading': 'Please wait a moment.',
   
   // Terms Learning Tab Date Filter
   'terms.date.filter.year': 'Year',
@@ -1399,6 +1405,9 @@ const ja: Record<string, string> = {
   'terms.list.difficulty': '難易度',
   'terms.list.scroll.lock': 'スクロール固定(1秒以上長押し)',
   
+  // 用語学習タブローディングページ
+  'terms.tab.loading': 'しばらくお待ちください。',
+  
   // 用語学習タブ日付フィルター
   'terms.date.filter.year': '年',
   'terms.date.filter.month': '月',
@@ -1861,6 +1870,9 @@ const zh: Record<string, string> = {
   // 术语学习标签页列表模式
   'terms.list.difficulty': '难度',
   'terms.list.scroll.lock': '滚动锁定(长按1秒以上)',
+  
+  // 术语学习标签页加载页面
+  'terms.tab.loading': '请稍候。',
   
   // 术语学习标签页日期筛选
   'terms.date.filter.year': '年',
