@@ -37,9 +37,31 @@ def get_all_quiz_topics(language: str = "ko", db: Session = Depends(get_db)):
         return ["AI"]
 
 @router.get("/{topic}", response_model=List[QuizResponse])
-def get_quiz_by_topic(topic: str, db: Session = Depends(get_db)):
-    quizzes = db.query(Quiz).filter(Quiz.topic == topic).all()
-    return quizzes
+def get_quiz_by_topic(topic: str, language: str = "ko", db: Session = Depends(get_db)):
+    """주제별로 퀴즈를 반환합니다. 해당 언어에 데이터가 있는 퀴즈만 반환합니다."""
+    try:
+        # 언어별 컬럼 선택
+        question_suffix = f"question_{language}"
+        
+        # 해당 주제의 퀴즈 중에서 선택된 언어에 데이터가 있는 것만 필터링
+        quizzes = db.query(Quiz).filter(Quiz.topic == topic).all()
+        filtered_quizzes = []
+        
+        for quiz in quizzes:
+            # 해당 언어의 문제가 있는지 확인
+            if hasattr(quiz, question_suffix) and getattr(quiz, question_suffix):
+                filtered_quizzes.append(quiz)
+        
+        print(f"DEBUG: get_quiz_by_topic called with topic: {topic}, language: {language}")
+        print(f"DEBUG: Found {len(filtered_quizzes)} quizzes with {language} data out of {len(quizzes)} total")
+        print(f"DEBUG: Using column: {question_suffix}")
+        
+        return filtered_quizzes
+        
+    except Exception as e:
+        print(f"ERROR: get_quiz_by_topic failed: {e}")
+        # 에러 발생 시 빈 배열 반환
+        return []
 
 @router.post("/", response_model=QuizResponse)
 def add_quiz(quiz_data: QuizCreate, db: Session = Depends(get_db)):
