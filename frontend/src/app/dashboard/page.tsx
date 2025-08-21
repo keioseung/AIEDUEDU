@@ -777,6 +777,7 @@ export default function DashboardPage() {
             <section className="mb-8 md:mb-16">
               <LearnedTermsSection 
                 sessionId={sessionId} 
+                currentLanguage={currentLanguage}
                 selectedDate={selectedDate}
                 onDateChange={setSelectedDate}
               />

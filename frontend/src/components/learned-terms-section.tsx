@@ -9,13 +9,20 @@ import { t, getCurrentLanguage } from '@/lib/i18n'
 
 interface LearnedTermsSectionProps {
   sessionId: string
+  currentLanguage: 'ko' | 'en' | 'ja' | 'zh'
   selectedDate?: string
   onDateChange?: (date: string) => void
 }
 
 interface Term {
   term: string
+  term_en?: string
+  term_ja?: string
+  term_zh?: string
   description: string
+  description_en?: string
+  description_ja?: string
+  description_zh?: string
   learned_date: string
   info_index: number
 }
@@ -27,7 +34,7 @@ interface LearnedTermsResponse {
   terms_by_date: Record<string, Term[]>
 }
 
-function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDateChange }: LearnedTermsSectionProps) {
+function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSelectedDate, onDateChange }: LearnedTermsSectionProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
@@ -974,8 +981,18 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
 
           {/* 용어 내용 */}
           <div className="text-center mb-4">
-            <div className="text-2xl md:text-3xl font-bold text-white mb-3 break-words">{currentTerm.term}</div>
-            <div className="text-white/80 text-base md:text-lg leading-relaxed break-words">{currentTerm.description}</div>
+                                <div className="text-2xl md:text-3xl font-bold text-white mb-3 break-words">
+                      {currentLanguage === 'ko' ? currentTerm.term :
+                       currentLanguage === 'en' ? currentTerm.term_en || currentTerm.term :
+                       currentLanguage === 'ja' ? currentTerm.term_ja || currentTerm.term :
+                       currentTerm.term_zh || currentTerm.term}
+                    </div>
+                          <div className="text-white/80 text-base md:text-lg leading-relaxed break-words">
+                {currentLanguage === 'ko' ? currentTerm.description :
+                 currentLanguage === 'en' ? currentTerm.description_en || currentTerm.description :
+                 currentLanguage === 'ja' ? currentTerm.description_ja || currentTerm.description :
+                 currentTerm.description_zh || currentTerm.description}
+              </div>
           </div>
 
           {/* 학습일 정보 */}
@@ -1222,7 +1239,10 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                               }`}>
                                 {termDifficulty.level}
                               </span>
-                              {term.term}
+                              {currentLanguage === 'ko' ? term.term :
+                         currentLanguage === 'en' ? term.term_en || term.term :
+                         currentLanguage === 'ja' ? term.term_ja || term.term :
+                         term.term_zh || term.term}
                             </h3>
                           </div>
                         </div>

@@ -447,10 +447,13 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.accumulated.total.learning')}</span>
                        <span className="text-white font-semibold text-sm">
          {(() => {
-           // AI 정보 날짜 목록의 총 개수 × 2 (각 날짜당 2개 카드)
-           const totalDates = aiInfoDates?.length || 0
-           const totalCards = totalDates * 2
+           // 등록된 모든 AI 정보 중 유저가 학습한 정보 총 수
            const totalLearned = learnedCountData?.learned_count || 0
+           // 전체 등록된 AI 정보 수 (날짜별로 계산)
+           const totalCards = aiInfoDates?.reduce((total, date) => {
+             const dateAIInfo = aiInfoByDate[date] || []
+             return total + dateAIInfo.length
+           }, 0) || 0
            const percentage = totalCards > 0 ? Math.round((totalLearned / totalCards) * 100) : 0
 
            return `${totalLearned}/${totalCards} (${percentage}%)`
@@ -537,9 +540,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
                        <span className="text-white font-semibold text-sm">
          {(() => {
-           // AI 정보 날짜 목록의 총 개수 × 40 (각 날짜당 2개 카드 × 20개 용어)
-           const totalDates = aiInfoDates?.length || 0
-           const totalTerms = totalDates * 40
+           // 등록된 모든 AI 정보의 관련 용어 총 수
+           const totalTerms = aiInfoDates?.reduce((total, date) => {
+             const dateAIInfo = aiInfoByDate[date] || []
+             return total + dateAIInfo.reduce((dateTotal, info) => {
+               // 각 AI 정보의 용어 수 (기본값 20개)
+               return dateTotal + (info.terms?.length || 20)
+             }, 0)
+           }, 0) || 0
            
            // 용어 학습 완료 수를 계산 (localStorage + 백엔드 데이터 통합)
            let totalTermsLearned = 0
@@ -640,52 +648,52 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               <TrendingUp className="w-3 h-3 text-green-400" />
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} ${t('progress.card.accuracy')}` : t('progress.card.daily.accuracy')}
-                </span>
-                <span className="text-white font-semibold text-sm">
-                  {(() => {
-                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                    if (selectedDate && uniqueChartData.length > 0) {
-                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                      if (selectedDateData) {
-                        return `${selectedDateData.quiz_correct}/${selectedDateData.quiz_total}`
-                      }
+                          <div className="flex justify-between items-center">
+              <span className="text-white/70 text-xs">
+                {selectedDate ? `${selectedDate} ${t('progress.card.daily.accumulated')}` : t('progress.card.daily.accumulated')}
+              </span>
+              <span className="text-green-400 font-bold text-base">
+                {(() => {
+                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                  if (selectedDate && uniqueChartData.length > 0) {
+                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                    if (selectedDateData) {
+                      return `${selectedDateData.quiz_score}%`
                     }
-                    return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
-                  })()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} ${t('progress.card.accumulated.score')}` : t('progress.card.daily.accumulated')}
-                </span>
-                <span className="text-green-400 font-bold text-base">
-                  {(() => {
-                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                    if (selectedDate && uniqueChartData.length > 0) {
-                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                      if (selectedDateData) {
-                        return `${selectedDateData.quiz_score}%`
-                      }
+                  }
+                  return `${stats?.today_quiz_score || 0}%`
+                })()}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70 text-xs">
+                {selectedDate ? `${selectedDate} ${t('progress.card.accuracy')}` : t('progress.card.accuracy')}
+              </span>
+              <span className="text-white font-semibold text-sm">
+                {(() => {
+                  // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                  if (selectedDate && uniqueChartData.length > 0) {
+                    const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                    if (selectedDateData) {
+                      return `${selectedDateData.quiz_correct}/${selectedDateData.quiz_total}`
                     }
-                    return `${stats?.today_quiz_score || 0}%`
-                  })()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">{t('progress.card.daily.accumulated')}</span>
-                <span className="text-white font-semibold text-sm">
-                  {(() => {
-                    const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
-                    const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
-                    const percentage = stats?.cumulative_quiz_score || 0
+                  }
+                  return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
+                })()}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-white/70 text-xs">{t('progress.card.accuracy')}</span>
+              <span className="text-white font-semibold text-sm">
+                {(() => {
+                  const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
+                  const total = stats?.cumulative_quiz_total || stats?.total_quiz_questions || 0
+                  const percentage = stats?.cumulative_quiz_score || 0
 
-                    return `${correct}/${total} (${percentage}%)`
-                  })()}
-                </span>
-              </div>
+                  return `${correct}/${total} (${percentage}%)`
+                })()}
+              </span>
+            </div>
             </div>
           </motion.div>
         </div>
