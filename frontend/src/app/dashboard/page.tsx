@@ -129,6 +129,24 @@ export default function DashboardPage() {
       console.log('========================')
     }
   }, [aiInfo, selectedDate])
+
+  // 언어 변경 이벤트 감지
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      const newLanguage = localStorage.getItem('language') as 'ko' | 'en' | 'ja' | 'zh' || 'ko'
+      setCurrentLanguage(newLanguage)
+    }
+
+    // 초기 언어 설정
+    handleLanguageChange()
+
+    // 언어 변경 이벤트 리스너 등록
+    window.addEventListener('languageChange', handleLanguageChange)
+    
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange)
+    }
+  }, [])
   const { data: userProgress, isLoading: progressLoading, refetch: refetchUserProgress } = useUserProgress(sessionId)
   const { data: userStats, refetch: refetchUserStats } = useUserStats(sessionId)
   const router = useRouter()
