@@ -106,11 +106,19 @@ const ko: Record<string, string> = {
   'ai.info.sort.by.category': '카테고리순',
   'ai.info.sort.by.favorite': '즐겨찾기순',
   
+  // AI 정보 정렬 옵션 상세 설명
+  'ai.info.sort.by.date.description': '날짜순 정렬',
+  'ai.info.sort.by.title.description': '제목순 정렬',
+  'ai.info.sort.by.length.description': '내용 길이순 정렬',
+  
   // AI 정보 항목 수 옵션
+  'ai.info.items.5': '5개',
   'ai.info.items.10': '10개',
-  'ai.info.items.20': '20개',
+  'ai.info.items.30': '30개',
   'ai.info.items.50': '50개',
-  'ai.info.items.100': '100개',
+  
+  // AI 정보 항목 수 옵션 상세 설명
+  'ai.info.items.per.page.display': '페이지당 {count}개 표시',
   
   // AI 정보 카드 UI
   'ai.info.card.learning.complete': '학습 완료',
@@ -525,11 +533,19 @@ const en: Record<string, string> = {
   'ai.info.sort.by.category': 'By Category',
   'ai.info.sort.by.favorite': 'By Favorite',
   
+  // AI Info Sort Options Detailed Descriptions
+  'ai.info.sort.by.date.description': 'Sort by date',
+  'ai.info.sort.by.title.description': 'Sort by title',
+  'ai.info.sort.by.length.description': 'Sort by content length',
+  
   // AI Info Items Count Options
+  'ai.info.items.5': '5 items',
   'ai.info.items.10': '10 items',
-  'ai.info.items.20': '20 items',
+  'ai.info.items.30': '30 items',
   'ai.info.items.50': '50 items',
-  'ai.info.items.100': '100 items',
+  
+  // AI Info Items Count Options Detailed Descriptions
+  'ai.info.items.per.page.display': 'Display {count} items per page',
   
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI Info List Mode',
@@ -950,11 +966,19 @@ const ja: Record<string, string> = {
   'ai.info.sort.by.category': 'カテゴリ順',
   'ai.info.sort.by.favorite': 'お気に入り順',
   
+  // AI情報並び替えオプション詳細説明
+  'ai.info.sort.by.date.description': '日付順並び替え',
+  'ai.info.sort.by.title.description': 'タイトル順並び替え',
+  'ai.info.sort.by.length.description': '内容長さ順並び替え',
+  
   // AI情報項目数オプション
+  'ai.info.items.5': '5件',
   'ai.info.items.10': '10件',
-  'ai.info.items.20': '20件',
+  'ai.info.items.30': '30件',
   'ai.info.items.50': '50件',
-  'ai.info.items.100': '100件',
+  
+  // AI情報項目数オプション詳細説明
+  'ai.info.items.per.page.display': 'ページあたり{count}件表示',
   
   'ai.info.date': '日付',
   'ai.info.field.title': 'タイトル',
@@ -1378,11 +1402,19 @@ const zh: Record<string, string> = {
   'ai.info.sort.by.category': '按类别',
   'ai.info.sort.by.favorite': '按收藏',
   
+  // AI信息排序选项详细说明
+  'ai.info.sort.by.date.description': '按日期排序',
+  'ai.info.sort.by.title.description': '按标题排序',
+  'ai.info.sort.by.length.description': '按内容长度排序',
+  
   // AI信息项目数选项
+  'ai.info.items.5': '5个',
   'ai.info.items.10': '10个',
-  'ai.info.items.20': '20个',
+  'ai.info.items.30': '30个',
   'ai.info.items.50': '50个',
-  'ai.info.items.100': '100个',
+  
+  // AI信息项目数选项详细说明
+  'ai.info.items.per.page.display': '每页显示{count}个',
   
   'ai.info.date': '日期',
   'ai.info.field.title': '标题',

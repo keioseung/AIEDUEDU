@@ -373,14 +373,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                               ? 'text-emerald-100 group-hover:text-emerald-50'
                               : 'text-white group-hover:text-purple-200'
                           } transition-colors`}>
-                            🕒 최신순
+                            🕒 {t('ai.info.sort.by.date')}
                           </div>
                           <div className={`text-xs mt-0.5 leading-tight ${
                             sortBy === 'date'
                               ? 'text-emerald-100/80'
                               : 'text-white/90'
                           }`}>
-                            날짜순 정렬
+                            {t('ai.info.sort.by.date.description')}
                           </div>
                         </div>
                         <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -407,14 +407,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                               ? 'text-emerald-100 group-hover:text-emerald-50'
                               : 'text-white group-hover:text-purple-200'
                           } transition-colors`}>
-                            📝 제목순
+                            📝 {t('ai.info.sort.by.title')}
                           </div>
                           <div className={`text-xs mt-0.5 leading-tight ${
                             sortBy === 'title'
                               ? 'text-emerald-100/80'
                               : 'text-white/90'
                           }`}>
-                            제목순 정렬
+                            {t('ai.info.sort.by.title.description')}
                           </div>
                         </div>
                         <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -441,14 +441,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                               ? 'text-emerald-100 group-hover:text-emerald-50'
                               : 'text-white group-hover:text-purple-200'
                           } transition-colors`}>
-                            📏 길이순
+                            📏 {t('ai.info.sort.by.length')}
                           </div>
                           <div className={`text-xs mt-0.5 leading-tight ${
                             sortBy === 'length'
                               ? 'text-emerald-100/80'
                               : 'text-white/90'
                           }`}>
-                            내용 길이순 정렬
+                            {t('ai.info.sort.by.length.description')}
                           </div>
                         </div>
                         <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -519,14 +519,14 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
                                 ? 'text-emerald-100 group-hover:text-emerald-50'
                                 : 'text-white group-hover:text-purple-200'
                             } transition-colors`}>
-                              📄 {size}개
+                              📄 {t(`ai.info.items.${size}`)}
                             </div>
                             <div className={`text-xs mt-0.5 leading-tight ${
                               itemsPerPage === size
                                 ? 'text-emerald-100/80'
                                 : 'text-white/90'
                             }`}>
-                              페이지당 {size}개 표시
+                              {t('ai.info.items.per.page.display', { count: size })}
                             </div>
                           </div>
                           <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
