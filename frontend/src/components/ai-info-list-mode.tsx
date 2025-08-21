@@ -95,11 +95,32 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     queryFn: async () => {
       try {
         console.log(`getAll API 호출 중... (언어: ${localLanguage})`)
+        console.log(`API URL: /api/ai-info/all?language=${localLanguage}`)
+        
         const response = await aiInfoAPI.getAll(localLanguage)
-        console.log(`getAll API 응답:`, response.data)
+        console.log(`getAll API 전체 응답:`, response)
+        console.log(`getAll API 응답 데이터:`, response.data)
         console.log(`getAll API 응답 데이터 개수:`, response.data?.length || 0)
-        return response.data
+        console.log(`getAll API 응답 데이터 타입:`, typeof response.data)
+        
+        if (response.data && Array.isArray(response.data)) {
+          console.log(`getAll API 성공: ${response.data.length}개 항목 반환`)
+          response.data.forEach((item, index) => {
+            console.log(`항목 ${index}:`, {
+              id: item.id,
+              date: item.date,
+              title: item.title,
+              contentLength: item.content?.length || 0,
+              termsCount: item.terms?.length || 0
+            })
+          })
+        } else {
+          console.log(`getAll API 응답이 배열이 아님:`, response.data)
+        }
+        
+        return response.data || []
       } catch (error) {
+        console.error('getAll API 실패:', error)
         console.log('getAll API 실패, getAllDates API 사용:', error)
         return []
       }
