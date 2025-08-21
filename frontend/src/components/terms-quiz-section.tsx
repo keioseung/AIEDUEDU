@@ -728,6 +728,52 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
     }
   }
 
+  // 다국어 오답 노트 개수 텍스트 함수
+  const getWrongNotesCountTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh', count: number) => {
+    switch (language) {
+      case 'ko':
+        return `${count}개 문제`
+      case 'en':
+        return `${count} problems`
+      case 'ja':
+        return `${count}問題`
+      case 'zh':
+        return `${count}题`
+      default:
+        return `${count}개 문제`
+    }
+  }
+
+  // 다국어 날짜별 퀴즈 텍스트 함수
+  const getDateBasedQuizTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'en':
+        return "Daily Quiz"
+      case 'ja':
+        return "日別クイズ"
+      case 'zh':
+        return "每日测验"
+      default:
+        return "날짜별 퀴즈"
+    }
+  }
+
+  // 다국어 용어 개수 텍스트 함수
+  const getTermsCountTextByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh', count: number) => {
+    switch (language) {
+      case 'ko':
+        return `${count}개 용어`
+      case 'en':
+        return `${count} terms`
+      case 'ja':
+        return `${count}語`
+      case 'zh':
+        return `${count}个术语`
+      default:
+        return `${count}개 용어`
+    }
+  }
+
   return (
     <section className="mb-8 relative">
       {/* 퀴즈 수 선택기 - 상단에 멋진 디자인으로 배치 */}
@@ -797,7 +843,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                                        {t('quiz.tab.wrong.notes')}
                                      </div>
                                      <div className="text-red-100/80 text-xs mt-0.5 leading-tight">
-                                       {wrongAnswerNotes.length}개 문제
+                                       {getWrongNotesCountTextByLanguage(currentLanguage, wrongAnswerNotes.length)}
                                      </div>
                                    </div>
                                    <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -840,7 +886,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                                        {info.title}
                                      </div>
                                      <div className="text-white/90 text-xs mt-0.5 leading-tight">
-                                       {info.terms?.length || 0}개 용어
+                                       {getTermsCountTextByLanguage(currentLanguage, info.terms?.length || 0)}
                                      </div>
                                    </div>
                                    <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5">
