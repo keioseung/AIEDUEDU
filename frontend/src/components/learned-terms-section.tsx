@@ -5,7 +5,7 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion'
 import { BookOpen, Calendar, Brain, Target, Trophy, TrendingUp, Search, Star, Download, Filter, Shuffle, Bookmark, ChevronLeft, ChevronRight, Play, Pause, X, Menu, Settings } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
-import { t } from '@/lib/i18n'
+import { t, getCurrentLanguage } from '@/lib/i18n'
 
 interface LearnedTermsSectionProps {
   sessionId: string
