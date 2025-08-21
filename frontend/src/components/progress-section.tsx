@@ -668,7 +668,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <BarChart3 className="w-4 h-4 text-green-400" />
-                <h3 className="text-white font-semibold text-sm">{t('progress.card.quiz.score')}</h3>
+                <h3 className="text-white font-semibold text-sm">
+                  {localLanguage === 'ko' ? '퀴즈' : 
+                   localLanguage === 'en' ? 'Quiz' : 
+                   localLanguage === 'ja' ? 'クイズ' : '测验'}
+                </h3>
               </div>
               <TrendingUp className="w-3 h-3 text-green-400" />
             </div>
@@ -983,7 +987,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"></div>
-                      <span className="text-white font-semibold text-base">{t('progress.card.quiz.score')}</span>
+                      <span className="text-white font-semibold text-base">
+                        {localLanguage === 'ko' ? '퀴즈' : 
+                         localLanguage === 'en' ? 'Quiz' : 
+                         localLanguage === 'ja' ? 'クイズ' : '测验'}
+                      </span>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500/30 to-emerald-500/30 rounded-full border border-green-400/40">
                         <span className="text-green-200 text-xs font-medium">{t('progress.graph.card.average')}</span>
                         <span className="text-green-100 font-bold text-sm">
