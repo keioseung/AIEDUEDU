@@ -1276,7 +1276,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             <BookOpen className="w-4 h-4 md:w-5 md:h-5 text-blue-300" />
             <div>
               <div className="text-white font-semibold text-xs md:text-sm">{filteredTerms.length}</div>
-              <div className="text-white/60 text-xs">표시된 용어</div>
+              <div className="text-white/60 text-xs">{t('terms.tab.stats.displayed.terms')}</div>
             </div>
           </div>
         </motion.div>
@@ -1290,7 +1290,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             <Star className="w-4 h-4 md:w-5 md:h-5 text-green-300" />
             <div>
               <div className="text-white font-semibold text-xs md:text-sm">{favoriteTerms.size}</div>
-              <div className="text-white/60 text-xs">즐겨찾기</div>
+              <div className="text-white/60 text-xs">{t('terms.tab.stats.favorites')}</div>
             </div>
           </div>
         </motion.div>
@@ -1306,7 +1306,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
               <div className="text-white font-semibold text-xs md:text-sm">
                 {Math.round((viewedTerms.size / filteredTerms.length) * 100)}%
               </div>
-              <div className="text-white/60 text-xs">학습진행률</div>
+              <div className="text-white/60 text-xs">{t('terms.tab.stats.learning.progress')}</div>
             </div>
           </div>
         </motion.div>
@@ -1320,7 +1320,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             <Brain className="w-4 h-4 md:w-5 md:h-5 text-emerald-300" />
             <div>
               <div className="text-white font-semibold text-xs md:text-sm">{viewedTerms.size}</div>
-              <div className="text-white/60 text-xs">학습완료</div>
+              <div className="text-white/60 text-xs">{t('terms.tab.stats.learning.completed')}</div>
             </div>
           </div>
         </motion.div>

@@ -433,6 +433,12 @@ const ko: Record<string, string> = {
   'terms.tab.filter.random': '랜덤',
   'terms.tab.filter.export': '내보내기',
   'terms.tab.filter.total.terms': '전체 용어 목록 ({count}개)',
+  
+  // 용어학습 탭 하단 통계 카드
+  'terms.tab.stats.displayed.terms': '표시된 용어',
+  'terms.tab.stats.favorites': '즐겨찾기',
+  'terms.tab.stats.learning.progress': '학습진행률',
+  'terms.tab.stats.learning.completed': '학습완료',
 }
 
 // 영어
@@ -828,6 +834,12 @@ const en: Record<string, string> = {
   'terms.tab.filter.random': 'Random',
   'terms.tab.filter.export': 'Export',
   'terms.tab.filter.total.terms': 'All Terms ({count})',
+  
+  // Terms Learning Tab Bottom Statistics Cards
+  'terms.tab.stats.displayed.terms': 'Displayed Terms',
+  'terms.tab.stats.favorites': 'Favorites',
+  'terms.tab.stats.learning.progress': 'Learning Progress',
+  'terms.tab.stats.learning.completed': 'Learning Completed',
   
   // 진행률 탭 모드명
   'progress.tab.trend.card': 'Trend Card',
@@ -1280,6 +1292,12 @@ const ja: Record<string, string> = {
   'terms.tab.filter.random': 'ランダム',
   'terms.tab.filter.export': 'エクスポート',
   'terms.tab.filter.total.terms': '全体用語リスト ({count}件)',
+  
+  // 用語学習タブ下部統計カード
+  'terms.tab.stats.displayed.terms': '表示された用語',
+  'terms.tab.stats.favorites': 'お気に入り',
+  'terms.tab.stats.learning.progress': '学習進捗率',
+  'terms.tab.stats.learning.completed': '学習完了',
 }
 
 // 중국어
@@ -1702,6 +1720,12 @@ const zh: Record<string, string> = {
   'terms.tab.filter.random': '随机',
   'terms.tab.filter.export': '导出',
   'terms.tab.filter.total.terms': '所有术语 ({count}个)',
+  
+  // 术语学习标签页底部统计卡片
+  'terms.tab.stats.displayed.terms': '显示的术语',
+  'terms.tab.stats.favorites': '收藏',
+  'terms.tab.stats.learning.progress': '学习进度',
+  'terms.tab.stats.learning.completed': '学习完成',
 }
 
 export const translations: Translations = {
