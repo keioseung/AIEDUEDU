@@ -886,10 +886,13 @@ def get_terms_quiz_by_date(date: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Failed to generate terms quiz: {str(e)}")
 
 @router.get("/learned-terms/{session_id}")
-def get_learned_terms(session_id: str, db: Session = Depends(get_db)):
+def get_learned_terms(session_id: str, language: str = "ko", db: Session = Depends(get_db)):
     """사용자가 학습한 모든 용어를 가져옵니다."""
     try:
         from ..models import UserProgress
+        
+        # 언어별 컬럼 선택
+        terms_suffix = f"_terms_{language}"
         
         # 사용자의 학습 진행상황 가져오기
         user_progress = db.query(UserProgress).filter(
@@ -915,27 +918,10 @@ def get_learned_terms(session_id: str, db: Session = Depends(get_db)):
                             learned_dates.append(progress.date)
                             # 각 학습한 info의 용어들 가져오기
                             for info_idx in learned_indices:
-                                if info_idx == 0 and ai_info.info1_terms:
+                                info_terms_field = getattr(ai_info, f'info{info_idx + 1}{terms_suffix}', None)
+                                if info_terms_field:
                                     try:
-                                        terms = json.loads(ai_info.info1_terms)
-                                        for term in terms:
-                                            term['learned_date'] = progress.date
-                                            term['info_index'] = info_idx
-                                        all_terms.extend(terms)
-                                    except json.JSONDecodeError:
-                                        pass
-                                elif info_idx == 1 and ai_info.info2_terms:
-                                    try:
-                                        terms = json.loads(ai_info.info2_terms)
-                                        for term in terms:
-                                            term['learned_date'] = progress.date
-                                            term['info_index'] = info_idx
-                                        all_terms.extend(terms)
-                                    except json.JSONDecodeError:
-                                        pass
-                                elif info_idx == 2 and ai_info.info3_terms:
-                                    try:
-                                        terms = json.loads(ai_info.info3_terms)
+                                        terms = json.loads(info_terms_field)
                                         for term in terms:
                                             term['learned_date'] = progress.date
                                             term['info_index'] = info_idx
@@ -962,19 +948,10 @@ def get_learned_terms(session_id: str, db: Session = Depends(get_db)):
                                     
                                     # 해당 info의 모든 용어에서 학습한 용어만 필터링
                                     info_terms = []
-                                    if info_index == 0 and ai_info.info1_terms:
+                                    info_terms_field = getattr(ai_info, f'info{info_index + 1}{terms_suffix}', None)
+                                    if info_terms_field:
                                         try:
-                                            info_terms = json.loads(ai_info.info1_terms)
-                                        except json.JSONDecodeError:
-                                            pass
-                                    elif info_index == 1 and ai_info.info2_terms:
-                                        try:
-                                            info_terms = json.loads(ai_info.info2_terms)
-                                        except json.JSONDecodeError:
-                                            pass
-                                    elif info_index == 2 and ai_info.info3_terms:
-                                        try:
-                                            info_terms = json.loads(ai_info.info3_terms)
+                                            info_terms = json.loads(info_terms_field)
                                         except json.JSONDecodeError:
                                             pass
                                     

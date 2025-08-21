@@ -263,7 +263,7 @@ export default function DashboardPage() {
   // 진행율 계산 완료
 
   // 실제 학습한 용어 개수 계산 - 백엔드 데이터와 로컬 데이터 통합
-  const totalTerms = 60 // 3개 AI 정보 × 20개 용어씩
+  const totalTerms = totalAIInfo * 20 // 선택된 일자의 등록된 학습정보 수 × 20개 용어씩
   const learnedTermsFromBackend = Array.isArray(userProgress?.total_terms_learned) ? userProgress.total_terms_learned.length : (userProgress?.total_terms_learned ?? 0)
   
   // 로컬 스토리지에서 학습한 용어 개수 계산

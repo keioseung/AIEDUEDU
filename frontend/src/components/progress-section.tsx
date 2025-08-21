@@ -642,23 +642,6 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-xs">
-                  {selectedDate ? `${selectedDate} ${t('progress.card.accumulated.score')}` : t('progress.card.daily.accumulated')}
-                </span>
-                <span className="text-green-400 font-bold text-base">
-                  {(() => {
-                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
-                    if (selectedDate && uniqueChartData.length > 0) {
-                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                      if (selectedDateData) {
-                        return `${selectedDateData.quiz_score}%`
-                      }
-                    }
-                    return `${stats?.today_quiz_score || 0}%`
-                  })()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-xs">
                   {selectedDate ? `${selectedDate} ${t('progress.card.accuracy')}` : t('progress.card.daily.accuracy')}
                 </span>
                 <span className="text-white font-semibold text-sm">
@@ -671,6 +654,23 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       }
                     }
                     return `${stats?.today_quiz_correct || 0}/${stats?.today_quiz_total || 0}`
+                  })()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-xs">
+                  {selectedDate ? `${selectedDate} ${t('progress.card.accumulated.score')}` : t('progress.card.daily.accumulated')}
+                </span>
+                <span className="text-green-400 font-bold text-base">
+                  {(() => {
+                    // selectedDate가 있으면 해당 날짜의 데이터를 우선적으로 표시
+                    if (selectedDate && uniqueChartData.length > 0) {
+                      const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
+                      if (selectedDateData) {
+                        return `${selectedDateData.quiz_score}%`
+                      }
+                    }
+                    return `${stats?.today_quiz_score || 0}%`
                   })()}
                 </span>
               </div>
