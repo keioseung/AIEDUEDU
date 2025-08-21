@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaSearch, FaFilter, FaSort, FaSortAmountDown, FaSortAmountUp, FaEye, FaEyeSlash, FaStar, FaStarO } from 'react-icons/fa'
-import { ChevronDown, ChevronUp, Search, Filter, SortAsc, SortDesc, Eye, EyeOff, Star, StarOff } from 'lucide-react'
+import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { Settings, ChevronRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import { t, getCurrentLanguage } from '@/lib/i18n'
