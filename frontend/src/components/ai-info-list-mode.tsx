@@ -125,9 +125,9 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     refetchIntervalInBackground: true,
   })
 
-  // 각 날짜별 AI 정보 가져오기
+  // 각 날짜별 AI 정보 가져오기 (언어별 데이터 사용)
   const { data: dateBasedAIInfo = [], isLoading: isLoadingDateBased } = useQuery<AIInfoItem[]>({
-    queryKey: ['date-based-ai-info', allDates],
+    queryKey: ['date-based-ai-info', allDates, localLanguage],
     queryFn: async () => {
       if (allDates.length === 0) return []
       
@@ -138,14 +138,20 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           const response = await aiInfoAPI.getByDate(date)
           const dateInfos = response.data
           
-          dateInfos.forEach((info: { title: string; content: string; terms?: Array<{ term: string; description: string }> }, index: number) => {
-            if (info.title && info.content) {
+          dateInfos.forEach((info: any, index: number) => {
+            // 현재 언어에 맞는 데이터만 사용
+            const title = info[`title_${localLanguage}`] || info.title_ko || info.title
+            const content = info[`content_${localLanguage}`] || info.content_ko || info.content
+            const terms = info[`terms_${localLanguage}`] || info.terms_ko || info.terms || []
+            
+            if (title && content) {
               allInfo.push({
                 id: `${date}_${index}`,
                 date: date,
-                title: info.title,
-                content: info.content,
-                terms: info.terms || [],
+                title: title,
+                content: content,
+                terms: terms,
+                category: info.category || '',
                 info_index: index
               })
             }

@@ -292,7 +292,7 @@ export const aiInfoAPI = {
 
 // Quiz API
 export const quizAPI = {
-  getTopics: () => api.get('/api/quiz/topics'),
+  getTopics: (language: string = 'ko') => api.get(`/api/quiz/topics?language=${language}`),
   getByTopic: (topic: string) => api.get(`/api/quiz/${topic}`),
   add: (data: any) => api.post('/api/quiz/', data),
   update: (id: number, data: any) => api.put(`/api/quiz/${id}`, data),

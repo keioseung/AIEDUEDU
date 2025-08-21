@@ -68,15 +68,15 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
   })
 
   const { data: topics } = useQuery({
-    queryKey: ['quiz-topics'],
+    queryKey: ['quiz-topics', localLanguage],
     queryFn: async () => {
-      const response = await quizAPI.getTopics()
+      const response = await quizAPI.getTopics(localLanguage)
       return response.data as string[]
     },
   })
 
   const { data: quizzes } = useQuery({
-    queryKey: ['quiz', selectedTopic],
+    queryKey: ['quiz', selectedTopic, localLanguage],
     queryFn: async () => {
       const response = await quizAPI.getByTopic(selectedTopic)
       return response.data as Quiz[]

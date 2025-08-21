@@ -9,9 +9,31 @@ from ..schemas import QuizCreate, QuizResponse
 router = APIRouter()
 
 @router.get("/topics", response_model=List[str])
-def get_all_quiz_topics(db: Session = Depends(get_db)):
-    topics = list(set([row.topic for row in db.query(Quiz).all()]))
-    return topics
+def get_all_quiz_topics(language: str = "ko", db: Session = Depends(get_db)):
+    """언어별로 주제를 반환합니다. 해당 언어에 데이터가 있는 주제만 반환합니다."""
+    try:
+        # 언어별 컬럼 선택
+        question_suffix = f"_question_{language}"
+        
+        # 해당 언어에 데이터가 있는 주제만 필터링
+        topics = []
+        quizzes = db.query(Quiz).all()
+        
+        for quiz in quizzes:
+            # 해당 언어의 문제가 있는지 확인
+            if hasattr(quiz, question_suffix) and getattr(quiz, question_suffix):
+                topics.append(quiz.topic)
+        
+        # 중복 제거하고 반환
+        unique_topics = list(set(topics))
+        print(f"DEBUG: get_all_quiz_topics called with language: {language}")
+        print(f"DEBUG: Found {len(unique_topics)} topics with {language} data")
+        return unique_topics
+        
+    except Exception as e:
+        print(f"ERROR: get_all_quiz_topics failed: {e}")
+        # 에러 발생 시 기본 주제 반환
+        return ["AI"]
 
 @router.get("/{topic}", response_model=List[QuizResponse])
 def get_quiz_by_topic(topic: str, db: Session = Depends(get_db)):
