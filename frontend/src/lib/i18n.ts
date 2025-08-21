@@ -400,7 +400,7 @@ const ko: Record<string, string> = {
   'progress.graph.no.data': '선택한 기간에 학습 데이터가 없습니다.',
   
   // 진행률 기간 변경 로딩
-  'progress.period.change.loading': '기간을 변경하는 중입니다. 잠시만 기다려 주세요.',
+  'progress.period.change.loading': '잠시만 기다려 주세요.',
   
   // 진행률 사용자 정의 기간 설정
   'progress.custom.period.start.date': '시작일',
@@ -931,7 +931,7 @@ const en: Record<string, string> = {
   'progress.graph.no.data': 'No learning data available for the selected period.',
   
   // Progress Period Change Loading
-  'progress.period.change.loading': 'Changing period. Please wait a moment.',
+  'progress.period.change.loading': 'Please wait a moment.',
   
   // Progress Custom Period Settings
   'progress.custom.period.start.date': 'Start Date',
@@ -939,8 +939,8 @@ const en: Record<string, string> = {
   'progress.custom.period.select.dates': 'Please select start and end dates',
   
   // Progress Date Format
-  'progress.date.format.month': 'Month',
-  'progress.date.format.day': 'Day',
+  'progress.date.format.month': 'M',
+  'progress.date.format.day': 'D',
 }
 
 // 일본어
@@ -1329,7 +1329,7 @@ const ja: Record<string, string> = {
   'progress.graph.no.data': '選択した期間に学習データがありません。',
   
   // 進捗期間変更ローディング
-  'progress.period.change.loading': '期間を変更中です。しばらくお待ちください。',
+  'progress.period.change.loading': 'しばらくお待ちください。',
   
   // 進捗カスタム期間設定
   'progress.custom.period.start.date': '開始日',
@@ -1792,7 +1792,7 @@ const zh: Record<string, string> = {
   'progress.graph.no.data': '所选期间没有学习数据。',
   
   // 进度期间更改加载
-  'progress.period.change.loading': '正在更改期间，请稍候。',
+  'progress.period.change.loading': '请稍候。',
   
   // 进度自定义期间设置
   'progress.custom.period.start.date': '开始日期',
