@@ -38,7 +38,12 @@ export default function AdminAIInfoPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const [date, setDate] = useState('')
-  const [inputs, setInputs] = useState([{ title: '', content: '', terms: [] as TermItem[], category: '' }])
+  const [inputs, setInputs] = useState([{ 
+    title_ko: '', title_en: '', title_ja: '', title_zh: '', 
+    content_ko: '', content_en: '', content_ja: '', content_zh: '', 
+    terms_ko: [] as TermItem[], terms_en: [] as TermItem[], terms_ja: [] as TermItem[], terms_zh: [] as TermItem[], 
+    category: '' 
+  }])
   const [editId, setEditId] = useState<boolean>(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -62,8 +67,16 @@ export default function AdminAIInfoPage() {
   // 전체 AI 정보 관리 상태
   const [showAllAIInfo, setShowAllAIInfo] = useState(false)
   const [editingAIInfo, setEditingAIInfo] = useState<{id: string, index: number} | null>(null)
-  const [editingData, setEditingData] = useState<{title: string, content: string, category: string, terms: TermItem[]}>({
-    title: '', content: '', category: '', terms: []
+  const [editingData, setEditingData] = useState<{
+    title_ko: string, title_en: string, title_ja: string, title_zh: string,
+    content_ko: string, content_en: string, content_ja: string, content_zh: string,
+    category: string, 
+    terms_ko: TermItem[], terms_en: TermItem[], terms_ja: TermItem[], terms_zh: TermItem[]
+  }>({
+    title_ko: '', title_en: '', title_ja: '', title_zh: '',
+    content_ko: '', content_en: '', content_ja: '', content_zh: '',
+    category: '', 
+    terms_ko: [], terms_en: [], terms_ja: [], terms_zh: []
   })
   
   // 검색 및 필터링 상태
@@ -181,7 +194,12 @@ export default function AdminAIInfoPage() {
       refetchAIInfo()
       refetchDates()
       refetchAllAIInfo()
-      setInputs([{ title: '', content: '', terms: [], category: '' }])
+      setInputs([{ 
+        title_ko: '', title_en: '', title_ja: '', title_zh: '', 
+        content_ko: '', content_en: '', content_ja: '', content_zh: '', 
+        terms_ko: [] as TermItem[], terms_en: [] as TermItem[], terms_ja: [] as TermItem[], terms_zh: [] as TermItem[], 
+        category: '' 
+      }])
       setDate('')
       setEditId(false)
       setSuccess('등록이 완료되었습니다!')
@@ -200,7 +218,12 @@ export default function AdminAIInfoPage() {
       refetchAIInfo()
       refetchDates()
       refetchAllAIInfo()
-      setInputs([{ title: '', content: '', terms: [], category: '' }])
+      setInputs([{ 
+        title_ko: '', title_en: '', title_ja: '', title_zh: '', 
+        content_ko: '', content_en: '', content_ja: '', content_zh: '', 
+        terms_ko: [] as TermItem[], terms_en: [] as TermItem[], terms_ja: [] as TermItem[], terms_zh: [] as TermItem[], 
+        category: '' 
+      }])
       setDate('')
       setEditId(false)
       setSuccess('삭제가 완료되었습니다!')
@@ -244,7 +267,12 @@ export default function AdminAIInfoPage() {
       refetchDates()
       refetchAllAIInfo()
       setEditingAIInfo(null)
-      setEditingData({ title: '', content: '', category: '', terms: [] })
+      setEditingData({
+        title_ko: '', title_en: '', title_ja: '', title_zh: '',
+        content_ko: '', content_en: '', content_ja: '', content_zh: '',
+        category: '', 
+        terms_ko: [], terms_en: [], terms_ja: [], terms_zh: []
+      })
       setSuccess('항목이 수정되었습니다!')
     },
     onError: () => {
@@ -356,13 +384,18 @@ export default function AdminAIInfoPage() {
     }
   })
 
-  const handleInputChange = (idx: number, field: 'title' | 'content' | 'category', value: string) => {
+  const handleInputChange = (idx: number, field: 'title_ko' | 'title_en' | 'title_ja' | 'title_zh' | 'content_ko' | 'content_en' | 'content_ja' | 'content_zh' | 'category', value: string) => {
     setInputs(inputs => inputs.map((input, i) => i === idx ? { ...input, [field]: value } : input))
   }
 
   const handleAddInput = () => {
     if (inputs.length < 3) {
-      setInputs([...inputs, { title: '', content: '', terms: [], category: '' }])
+      setInputs([...inputs, { 
+        title_ko: '', title_en: '', title_ja: '', title_zh: '', 
+        content_ko: '', content_en: '', content_ja: '', content_zh: '', 
+        terms_ko: [] as TermItem[], terms_en: [] as TermItem[], terms_ja: [] as TermItem[], terms_zh: [] as TermItem[], 
+        category: '' 
+      }])
     }
   }
 
@@ -370,11 +403,11 @@ export default function AdminAIInfoPage() {
     setInputs(inputs => inputs.length === 1 ? inputs : inputs.filter((_, i) => i !== idx))
   }
 
-  // 용어 관리 핸들러
+  // 용어 관리 핸들러 - 한국어 기준으로 수정
   const handleAddTerm = (infoIdx: number) => {
     setInputs(inputs => inputs.map((input, i) => 
       i === infoIdx 
-        ? { ...input, terms: [...input.terms, { term: '', description: '' }] }
+        ? { ...input, terms_ko: [...input.terms_ko, { term: '', description: '' }] }
         : input
     ))
   }
@@ -423,7 +456,7 @@ export default function AdminAIInfoPage() {
       if (parsedTerms.length > 0) {
         setInputs(inputs => inputs.map((input, i) => 
           i === infoIdx 
-            ? { ...input, terms: [...input.terms, ...parsedTerms] }
+            ? { ...input, terms_ko: [...input.terms_ko, ...parsedTerms] }
             : input
         ))
         alert(`${parsedTerms.length}개의 용어가 추가되었습니다!`)
@@ -443,7 +476,7 @@ export default function AdminAIInfoPage() {
   const handleRemoveTerm = (infoIdx: number, termIdx: number) => {
     setInputs(inputs => inputs.map((input, i) => 
       i === infoIdx 
-        ? { ...input, terms: input.terms.filter((_, j) => j !== termIdx) }
+        ? { ...input, terms_ko: input.terms_ko.filter((_, j) => j !== termIdx) }
         : input
     ))
   }
@@ -453,7 +486,7 @@ export default function AdminAIInfoPage() {
       i === infoIdx 
         ? { 
             ...input, 
-            terms: input.terms.map((term, j) => 
+            terms_ko: input.terms_ko.map((term, j) => 
               j === termIdx ? { ...term, [field]: value } : term
             )
           }
@@ -469,7 +502,7 @@ export default function AdminAIInfoPage() {
       setError('날짜를 선택하세요.')
       return
     }
-    if (inputs.some(input => !input.title.trim() || !input.content.trim())) {
+    if (inputs.some(input => !input.title_ko.trim() || !input.content_ko.trim())) {
       setError('모든 제목과 내용을 입력하세요.')
       return
     }
@@ -478,7 +511,12 @@ export default function AdminAIInfoPage() {
 
   const handleEdit = (info: AIInfoItem, idx: number) => {
     setEditId(true)
-    setInputs([{ title: info.title, content: info.content, terms: info.terms || [], category: info.category || '' }])
+    setInputs([{ 
+      title_ko: info.title, title_en: '', title_ja: '', title_zh: '', 
+      content_ko: info.content, content_en: '', content_ja: '', content_zh: '', 
+      terms_ko: info.terms || [], terms_en: [], terms_ja: [], terms_zh: [], 
+      category: info.category || '' 
+    }])
   }
 
   const handleDelete = (date: string) => {
@@ -495,17 +533,26 @@ export default function AdminAIInfoPage() {
   const handleEditAIInfo = (date: string, index: number, info: AIInfoItem) => {
     setEditingAIInfo({ id: date, index })
     setEditingData({
-      title: info.title,
-      content: info.content,
+      title_ko: info.title,
+      title_en: '',
+      title_ja: '',
+      title_zh: '',
+      content_ko: info.content,
+      content_en: '',
+      content_ja: '',
+      content_zh: '',
       category: info.category || '',
-      terms: info.terms || []
+      terms_ko: info.terms || [],
+      terms_en: [],
+      terms_ja: [],
+      terms_zh: []
     })
   }
 
   const handleUpdateAIInfo = () => {
     if (!editingAIInfo) return
     
-    if (!editingData.title.trim() || !editingData.content.trim()) {
+    if (!editingData.title_ko.trim() || !editingData.content_ko.trim()) {
       setError('제목과 내용을 모두 입력해주세요.')
       return
     }
@@ -519,7 +566,12 @@ export default function AdminAIInfoPage() {
 
   const handleCancelEdit = () => {
     setEditingAIInfo(null)
-    setEditingData({ title: '', content: '', category: '', terms: [] })
+    setEditingData({
+      title_ko: '', title_en: '', title_ja: '', title_zh: '',
+      content_ko: '', content_en: '', content_ja: '', content_zh: '',
+      category: '', 
+      terms_ko: [], terms_en: [], terms_ja: [], terms_zh: []
+    })
   }
 
   const handleDeleteAIInfo = (date: string, index: number) => {
@@ -853,8 +905,22 @@ export default function AdminAIInfoPage() {
           <section className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
             <h2 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
               <FaBrain className="text-blue-400" />
-              AI 정보 관리
+              AI 정보 관리 (다국어 지원)
             </h2>
+            
+            <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+              <h3 className="text-lg font-semibold text-blue-300 mb-2">🌍 다국어 지원 안내</h3>
+              <p className="text-blue-200 text-sm">
+                각 AI 정보에 대해 한국어, 영어, 일본어, 중국어 버전을 모두 입력할 수 있습니다. 
+                사용자가 선택한 언어에 따라 해당 언어 버전의 내용이 표시됩니다.
+              </p>
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇰🇷 한국어 (기본)</div>
+                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇺🇸 영어</div>
+                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇯🇵 일본어</div>
+                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇨🇳 중국어</div>
+              </div>
+            </div>
             
             <form onSubmit={handleSubmit} className="mb-8 bg-white/5 rounded-xl p-6 border border-white/10 flex flex-col gap-6">
               <div className="flex flex-col md:flex-row md:items-end gap-4">
@@ -872,16 +938,50 @@ export default function AdminAIInfoPage() {
               <div className="grid gap-6">
                 {inputs.map((input, idx) => (
                   <div key={idx} className="bg-white/5 rounded-xl border border-white/10 p-6 flex flex-col gap-3 relative">
-                    <div className="flex flex-col gap-2">
-                      <label className="font-semibold text-white/80">제목</label>
-                      <input 
-                        type="text" 
-                        placeholder={`제목 ${idx+1}`} 
-                        value={input.title} 
-                        onChange={e => handleInputChange(idx, 'title', e.target.value)} 
-                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
-                      />
+                    {/* 제목 입력 - 다국어 지원 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">제목 (한국어)</label>
+                        <input 
+                          type="text" 
+                          placeholder={`한국어 제목 ${idx+1}`} 
+                          value={input.title_ko} 
+                          onChange={e => handleInputChange(idx, 'title_ko', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">제목 (영어)</label>
+                        <input 
+                          type="text" 
+                          placeholder={`English Title ${idx+1}`} 
+                          value={input.title_en} 
+                          onChange={e => handleInputChange(idx, 'title_en', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">제목 (일본어)</label>
+                        <input 
+                          type="text" 
+                          placeholder={`日本語タイトル ${idx+1}`} 
+                          value={input.title_ja} 
+                          onChange={e => handleInputChange(idx, 'title_ja', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">제목 (중국어)</label>
+                        <input 
+                          type="text" 
+                          placeholder={`中文标题 ${idx+1}`} 
+                          value={input.title_zh} 
+                          onChange={e => handleInputChange(idx, 'title_zh', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+                        />
+                      </div>
                     </div>
+                    
                     <div className="flex flex-col gap-2">
                       <label className="font-semibold text-white/80">카테고리</label>
                       <select 
@@ -900,21 +1000,55 @@ export default function AdminAIInfoPage() {
                         <option value="AI 응용 서비스" className="text-black">AI 응용 서비스</option>
                       </select>
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="font-semibold text-white/80">내용</label>
-                      <textarea 
-                        placeholder={`내용 ${idx+1}`} 
-                        value={input.content} 
-                        onChange={e => handleInputChange(idx, 'content', e.target.value)} 
-                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none" 
-                        rows={3} 
-                      />
+                    
+                    {/* 내용 입력 - 다국어 지원 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">내용 (한국어)</label>
+                        <textarea 
+                          placeholder={`한국어 내용 ${idx+1}`} 
+                          value={input.content_ko} 
+                          onChange={e => handleInputChange(idx, 'content_ko', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none" 
+                          rows={3} 
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">내용 (영어)</label>
+                        <textarea 
+                          placeholder={`English Content ${idx+1}`} 
+                          value={input.content_en} 
+                          onChange={e => handleInputChange(idx, 'content_en', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none" 
+                          rows={3} 
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">내용 (일본어)</label>
+                        <textarea 
+                          placeholder={`日本語コンテンツ ${idx+1}`} 
+                          value={input.content_ja} 
+                          onChange={e => handleInputChange(idx, 'content_ja', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none" 
+                          rows={3} 
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-semibold text-white/80">내용 (중국어)</label>
+                        <textarea 
+                          placeholder={`中文内容 ${idx+1}`} 
+                          value={input.content_zh} 
+                          onChange={e => handleInputChange(idx, 'content_zh', e.target.value)} 
+                          className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none" 
+                          rows={3} 
+                        />
+                      </div>
                     </div>
                     
-                    {/* 용어 입력 섹션 */}
+                    {/* 용어 입력 섹션 - 한국어 기준으로 표시 */}
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center justify-between">
-                        <label className="font-semibold text-white/80">관련 용어</label>
+                        <label className="font-semibold text-white/80">관련 용어 (한국어 기준)</label>
                         <div className="flex gap-2">
                           <button 
                             type="button" 
@@ -984,7 +1118,7 @@ export default function AdminAIInfoPage() {
                         </div>
                       )}
                       
-                      {input.terms.map((term, termIdx) => (
+                      {input.terms_ko.map((term, termIdx) => (
                         <div key={termIdx} className="flex gap-2 items-start">
                           <div className="flex-1 flex gap-2">
                             <input 
@@ -1099,7 +1233,14 @@ export default function AdminAIInfoPage() {
                     aiInfos.length > 0 && date === dateItem ? (
                       aiInfos.map((info, idx) => (
                         <div key={idx} className="mb-4 last:mb-0 bg-white/5 rounded-lg p-4">
-                          <div className="font-bold text-lg text-white mb-2">{info.title}</div>
+                          <div className="font-bold text-lg text-white mb-2">
+                            <div className="mb-1">{info.title_ko}</div>
+                            <div className="text-sm text-white/70">
+                              <div>🇺🇸 {info.title_en}</div>
+                              <div>🇯🇵 {info.title_ja}</div>
+                              <div>🇨🇳 {info.title_zh}</div>
+                            </div>
+                          </div>
                           {info.category && (
                             <div className="text-blue-400 text-sm mb-2">🏷️ {info.category}</div>
                           )}
@@ -1225,14 +1366,44 @@ export default function AdminAIInfoPage() {
                               {editingAIInfo && editingAIInfo.id === dateGroup.date && editingAIInfo.index === index ? (
                                 // 수정 모드
                                 <div className="space-y-4">
-                                  <div>
-                                    <label className="block text-white/80 font-medium mb-2">제목</label>
-                                    <input
-                                      type="text"
-                                      value={editingData.title}
-                                      onChange={(e) => setEditingData({...editingData, title: e.target.value})}
-                                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                                    />
+                                  {/* 제목 입력 - 다국어 지원 */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">제목 (한국어)</label>
+                                      <input
+                                        type="text"
+                                        value={editingData.title_ko}
+                                        onChange={(e) => setEditingData({...editingData, title_ko: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">제목 (영어)</label>
+                                      <input
+                                        type="text"
+                                        value={editingData.title_en}
+                                        onChange={(e) => setEditingData({...editingData, title_en: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">제목 (일본어)</label>
+                                      <input
+                                        type="text"
+                                        value={editingData.title_ja}
+                                        onChange={(e) => setEditingData({...editingData, title_ja: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">제목 (중국어)</label>
+                                      <input
+                                        type="text"
+                                        value={editingData.title_zh}
+                                        onChange={(e) => setEditingData({...editingData, title_zh: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                      />
+                                    </div>
                                   </div>
                                   
                                   <div>
@@ -1254,25 +1425,55 @@ export default function AdminAIInfoPage() {
                                     </select>
                                   </div>
                                   
-                                  <div>
-                                    <label className="block text-white/80 font-medium mb-2">내용</label>
-                                    <textarea
-                                      value={editingData.content}
-                                      onChange={(e) => setEditingData({...editingData, content: e.target.value})}
-                                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
-                                      rows={4}
-                                    />
+                                  {/* 내용 입력 - 다국어 지원 */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">내용 (한국어)</label>
+                                      <textarea
+                                        value={editingData.content_ko}
+                                        onChange={(e) => setEditingData({...editingData, content_ko: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
+                                        rows={4}
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">내용 (영어)</label>
+                                      <textarea
+                                        value={editingData.content_en}
+                                        onChange={(e) => setEditingData({...editingData, content_en: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
+                                        rows={4}
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">내용 (일본어)</label>
+                                      <textarea
+                                        value={editingData.content_ja}
+                                        onChange={(e) => setEditingData({...editingData, content_ja: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
+                                        rows={4}
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-white/80 font-medium mb-2">내용 (중국어)</label>
+                                      <textarea
+                                        value={editingData.content_zh}
+                                        onChange={(e) => setEditingData({...editingData, content_zh: e.target.value})}
+                                        className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
+                                        rows={4}
+                                      />
+                                    </div>
                                   </div>
                                   
                                   {/* 용어 수정 섹션 */}
                                   <div>
                                     <div className="flex items-center justify-between mb-2">
-                                      <label className="block text-white/80 font-medium">관련 용어</label>
+                                      <label className="block text-white/80 font-medium">관련 용어 (한국어 기준)</label>
                                       <button
                                         type="button"
                                         onClick={() => setEditingData({
                                           ...editingData,
-                                          terms: [...editingData.terms, { term: '', description: '' }]
+                                          terms_ko: [...editingData.terms_ko, { term: '', description: '' }]
                                         })}
                                         className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
                                       >
@@ -1280,7 +1481,7 @@ export default function AdminAIInfoPage() {
                                       </button>
                                     </div>
                                     
-                                    {editingData.terms.map((term, termIdx) => (
+                                    {editingData.terms_ko.map((term, termIdx) => (
                                       <div key={termIdx} className="flex gap-2 items-start mb-2">
                                         <div className="flex-1 flex gap-2">
                                           <input
@@ -1288,9 +1489,9 @@ export default function AdminAIInfoPage() {
                                             placeholder="용어"
                                             value={term.term}
                                             onChange={(e) => {
-                                              const newTerms = [...editingData.terms]
+                                              const newTerms = [...editingData.terms_ko]
                                               newTerms[termIdx] = { ...term, term: e.target.value }
-                                              setEditingData({ ...editingData, terms: newTerms })
+                                              setEditingData({ ...editingData, terms_ko: newTerms })
                                             }}
                                             className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
@@ -1299,9 +1500,9 @@ export default function AdminAIInfoPage() {
                                             placeholder="용어 설명"
                                             value={term.description}
                                             onChange={(e) => {
-                                              const newTerms = [...editingData.terms]
+                                              const newTerms = [...editingData.terms_ko]
                                               newTerms[termIdx] = { ...term, description: e.target.value }
-                                              setEditingData({ ...editingData, terms: newTerms })
+                                              setEditingData({ ...editingData, terms_ko: newTerms })
                                             }}
                                             className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
@@ -1309,8 +1510,8 @@ export default function AdminAIInfoPage() {
                                         <button
                                           type="button"
                                           onClick={() => {
-                                            const newTerms = editingData.terms.filter((_, i) => i !== termIdx)
-                                            setEditingData({ ...editingData, terms: newTerms })
+                                            const newTerms = editingData.terms_ko.filter((_, i) => i !== termIdx)
+                                            setEditingData({ ...editingData, terms_ko: newTerms })
                                           }}
                                           className="px-2 py-1 bg-red-500/20 text-red-300 rounded font-medium hover:bg-red-500/30 transition text-sm border border-red-500/30"
                                         >
@@ -1340,7 +1541,14 @@ export default function AdminAIInfoPage() {
                               ) : (
                                 // 보기 모드 - 제목만 간단하게 표시
                                 <>
-                                  <div className="font-bold text-lg text-white mb-2">{info.title}</div>
+                                  <div className="font-bold text-lg text-white mb-2">
+                                    <div className="mb-1">{info.title_ko}</div>
+                                    <div className="text-sm text-white/70">
+                                      <div>🇺🇸 {info.title_en}</div>
+                                      <div>🇯🇵 {info.title_ja}</div>
+                                      <div>🇨🇳 {info.title_zh}</div>
+                                    </div>
+                                  </div>
                                   {info.category && (
                                     <div className="text-blue-400 text-sm mb-2">🏷️ {info.category}</div>
                                   )}

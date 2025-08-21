@@ -27,62 +27,98 @@ def get_ai_info_by_date(date: str, db: Session = Depends(get_db)):
             return []
         
         infos = []
-        if ai_info.info1_title and ai_info.info1_content:
+        if ai_info.info1_title_ko and ai_info.info1_content_ko:
             try:
-                terms1 = json.loads(ai_info.info1_terms) if ai_info.info1_terms else []
+                terms1_ko = json.loads(ai_info.info1_terms_ko) if ai_info.info1_terms_ko else []
+                terms1_en = json.loads(ai_info.info1_terms_en) if ai_info.info1_terms_en else []
+                terms1_ja = json.loads(ai_info.info1_terms_ja) if ai_info.info1_terms_ja else []
+                terms1_zh = json.loads(ai_info.info1_terms_zh) if ai_info.info1_terms_zh else []
             except json.JSONDecodeError:
-                terms1 = []
+                terms1_ko = terms1_en = terms1_ja = terms1_zh = []
             
             # 카테고리 자동 분류
             classification = ai_classifier.classify_content(
-                ai_info.info1_title, 
-                ai_info.info1_content
+                ai_info.info1_title_ko, 
+                ai_info.info1_content_ko
             )
             
             infos.append({
-                "title": ai_info.info1_title, 
-                "content": ai_info.info1_content,
-                "terms": terms1,
+                "title_ko": ai_info.info1_title_ko,
+                "title_en": ai_info.info1_title_en or "",
+                "title_ja": ai_info.info1_title_ja or "",
+                "title_zh": ai_info.info1_title_zh or "",
+                "content_ko": ai_info.info1_content_ko,
+                "content_en": ai_info.info1_content_en or "",
+                "content_ja": ai_info.info1_content_ja or "",
+                "content_zh": ai_info.info1_content_zh or "",
+                "terms_ko": terms1_ko,
+                "terms_en": terms1_en,
+                "terms_ja": terms1_ja,
+                "terms_zh": terms1_zh,
                 "category": ai_info.info1_category or classification["category"],
                 "subcategory": classification["subcategory"],
                 "confidence": classification["confidence"]
             })
-        if ai_info.info2_title and ai_info.info2_content:
+        if ai_info.info2_title_ko and ai_info.info2_content_ko:
             try:
-                terms2 = json.loads(ai_info.info2_terms) if ai_info.info2_terms else []
+                terms2_ko = json.loads(ai_info.info2_terms_ko) if ai_info.info2_terms_ko else []
+                terms2_en = json.loads(ai_info.info2_terms_en) if ai_info.info2_terms_en else []
+                terms2_ja = json.loads(ai_info.info2_terms_ja) if ai_info.info2_terms_ja else []
+                terms2_zh = json.loads(ai_info.info2_terms_zh) if ai_info.info2_terms_zh else []
             except json.JSONDecodeError:
-                terms2 = []
+                terms2_ko = terms2_en = terms2_ja = terms2_zh = []
             
             # 카테고리 자동 분류
             classification = ai_classifier.classify_content(
-                ai_info.info2_title, 
-                ai_info.info2_content
+                ai_info.info2_title_ko, 
+                ai_info.info2_content_ko
             )
             
             infos.append({
-                "title": ai_info.info2_title, 
-                "content": ai_info.info2_content,
-                "terms": terms2,
+                "title_ko": ai_info.info2_title_ko,
+                "title_en": ai_info.info2_title_en or "",
+                "title_ja": ai_info.info2_title_ja or "",
+                "title_zh": ai_info.info2_title_zh or "",
+                "content_ko": ai_info.info2_content_ko,
+                "content_en": ai_info.info2_content_en or "",
+                "content_ja": ai_info.info2_content_ja or "",
+                "content_zh": ai_info.info2_content_zh or "",
+                "terms_ko": terms2_ko,
+                "terms_en": terms2_en,
+                "terms_ja": terms2_ja,
+                "terms_zh": terms2_zh,
                 "category": ai_info.info2_category or classification["category"],
                 "subcategory": classification["subcategory"],
                 "confidence": classification["confidence"]
             })
-        if ai_info.info3_title and ai_info.info3_content:
+        if ai_info.info3_title_ko and ai_info.info3_content_ko:
             try:
-                terms3 = json.loads(ai_info.info3_terms) if ai_info.info3_terms else []
+                terms3_ko = json.loads(ai_info.info3_terms_ko) if ai_info.info3_terms_ko else []
+                terms3_en = json.loads(ai_info.info3_terms_en) if ai_info.info3_terms_en else []
+                terms3_ja = json.loads(ai_info.info3_terms_ja) if ai_info.info3_terms_ja else []
+                terms3_zh = json.loads(ai_info.info3_terms_zh) if ai_info.info3_terms_zh else []
             except json.JSONDecodeError:
-                terms3 = []
+                terms3_ko = terms3_en = terms3_ja = terms3_zh = []
             
             # 카테고리 자동 분류
             classification = ai_classifier.classify_content(
-                ai_info.info3_title, 
-                ai_info.info3_content
+                ai_info.info3_title_ko, 
+                ai_info.info3_content_ko
             )
             
             infos.append({
-                "title": ai_info.info3_title, 
-                "content": ai_info.info3_content,
-                "terms": terms3,
+                "title_ko": ai_info.info3_title_ko,
+                "title_en": ai_info.info3_title_en or "",
+                "title_ja": ai_info.info3_title_ja or "",
+                "title_zh": ai_info.info3_title_zh or "",
+                "content_ko": ai_info.info3_content_ko,
+                "content_en": ai_info.info3_content_en or "",
+                "content_ja": ai_info.info3_content_ja or "",
+                "content_zh": ai_info.info3_content_zh or "",
+                "terms_ko": terms3_ko,
+                "terms_en": terms3_en,
+                "terms_ja": terms3_ja,
+                "terms_zh": terms3_zh,
                 "category": ai_info.info3_category or classification["category"],
                 "subcategory": classification["subcategory"],
                 "confidence": classification["confidence"]
@@ -100,37 +136,73 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
 
         def build_infos(obj):
             infos = []
-            if obj.info1_title and obj.info1_content:
+            if obj.info1_title_ko and obj.info1_content_ko:
                 try:
-                    terms1 = json.loads(obj.info1_terms) if obj.info1_terms else []
+                    terms1_ko = json.loads(obj.info1_terms_ko) if obj.info1_terms_ko else []
+                    terms1_en = json.loads(obj.info1_terms_en) if obj.info1_terms_en else []
+                    terms1_ja = json.loads(obj.info1_terms_ja) if obj.info1_terms_ja else []
+                    terms1_zh = json.loads(obj.info1_terms_zh) if obj.info1_terms_zh else []
                 except json.JSONDecodeError:
-                    terms1 = []
+                    terms1_ko = terms1_en = terms1_ja = terms1_zh = []
                 infos.append({
-                    "title": obj.info1_title,
-                    "content": obj.info1_content,
-                    "terms": terms1,
+                    "title_ko": obj.info1_title_ko,
+                    "title_en": obj.info1_title_en or "",
+                    "title_ja": obj.info1_title_ja or "",
+                    "title_zh": obj.info1_title_zh or "",
+                    "content_ko": obj.info1_content_ko,
+                    "content_en": obj.info1_content_en or "",
+                    "content_ja": obj.info1_content_ja or "",
+                    "content_zh": obj.info1_content_zh or "",
+                    "terms_ko": terms1_ko,
+                    "terms_en": terms1_en,
+                    "terms_ja": terms1_ja,
+                    "terms_zh": terms1_zh,
                     "category": obj.info1_category
                 })
-            if obj.info2_title and obj.info2_content:
+            if obj.info2_title_ko and obj.info2_content_ko:
                 try:
-                    terms2 = json.loads(obj.info2_terms) if obj.info2_terms else []
+                    terms2_ko = json.loads(obj.info2_terms_ko) if obj.info2_terms_ko else []
+                    terms2_en = json.loads(obj.info2_terms_en) if obj.info2_terms_en else []
+                    terms2_ja = json.loads(obj.info2_terms_ja) if obj.info2_terms_ja else []
+                    terms2_zh = json.loads(obj.info2_terms_zh) if obj.info2_terms_zh else []
                 except json.JSONDecodeError:
-                    terms2 = []
+                    terms2_ko = terms2_en = terms2_ja = terms2_zh = []
                 infos.append({
-                    "title": obj.info2_title,
-                    "content": obj.info2_content,
-                    "terms": terms2,
+                    "title_ko": obj.info2_title_ko,
+                    "title_en": obj.info2_title_en or "",
+                    "title_ja": obj.info2_title_ja or "",
+                    "title_zh": obj.info2_title_zh or "",
+                    "content_ko": obj.info2_content_ko,
+                    "content_en": obj.info2_content_en or "",
+                    "content_ja": obj.info2_content_ja or "",
+                    "content_zh": obj.info2_content_zh or "",
+                    "terms_ko": terms2_ko,
+                    "terms_en": terms2_en,
+                    "terms_ja": terms2_ja,
+                    "terms_zh": terms2_zh,
                     "category": obj.info2_category
                 })
-            if obj.info3_title and obj.info3_content:
+            if obj.info3_title_ko and obj.info3_content_ko:
                 try:
-                    terms3 = json.loads(obj.info3_terms) if obj.info3_terms else []
+                    terms3_ko = json.loads(obj.info3_terms_ko) if obj.info3_terms_ko else []
+                    terms3_en = json.loads(obj.info3_terms_en) if obj.info3_terms_en else []
+                    terms3_ja = json.loads(obj.info3_terms_ja) if obj.info3_terms_ja else []
+                    terms3_zh = json.loads(obj.info3_terms_zh) if obj.info3_terms_zh else []
                 except json.JSONDecodeError:
-                    terms3 = []
+                    terms3_ko = terms3_en = terms3_ja = terms3_zh = []
                 infos.append({
-                    "title": obj.info3_title,
-                    "content": obj.info3_content,
-                    "terms": terms3,
+                    "title_ko": obj.info3_title_ko,
+                    "title_en": obj.info3_title_en or "",
+                    "title_ja": obj.info3_title_ja or "",
+                    "title_zh": obj.info3_title_zh or "",
+                    "content_ko": obj.info3_content_ko,
+                    "content_en": obj.info3_content_en or "",
+                    "content_ja": obj.info3_content_ja or "",
+                    "content_zh": obj.info3_content_zh or "",
+                    "terms_ko": terms3_ko,
+                    "terms_en": terms3_en,
+                    "terms_ja": terms3_ja,
+                    "terms_zh": terms3_zh,
                     "category": obj.info3_category
                 })
             return infos
@@ -143,20 +215,31 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
 
         if existing_info:
             # 기존 데이터 업데이트 (비어있는 info2, info3에 순차적으로 채움)
-            infos_to_add = [i for i in ai_info_data.infos if i.title and i.content]
+            infos_to_add = [i for i in ai_info_data.infos if i.title_ko and i.content_ko]
             fields = [
-                ("info1_title", "info1_content", "info1_terms", "info1_category"),
-                ("info2_title", "info2_content", "info2_terms", "info2_category"),
-                ("info3_title", "info3_content", "info3_terms", "info3_category"),
+                ("info1_title_ko", "info1_content_ko", "info1_terms_ko", "info1_category"),
+                ("info2_title_ko", "info2_content_ko", "info2_terms_ko", "info2_category"),
+                ("info3_title_ko", "info3_content_ko", "info3_terms_ko", "info3_category"),
             ]
             for i, (title_field, content_field, terms_field, category_field) in enumerate(fields):
                 if getattr(existing_info, title_field) == '' or getattr(existing_info, content_field) == '':
                     if infos_to_add:
                         info = infos_to_add.pop(0)
-                        setattr(existing_info, title_field, info.title)
-                        setattr(existing_info, content_field, info.content)
-                        setattr(existing_info, terms_field, json.dumps(terms_to_dict(info.terms or [])))
+                        setattr(existing_info, title_field, info.title_ko)
+                        setattr(existing_info, content_field, info.content_ko)
+                        setattr(existing_info, terms_field, json.dumps(terms_to_dict(info.terms_ko or [])))
                         setattr(existing_info, category_field, info.category or '')
+                        
+                        # 다른 언어 필드들도 설정
+                        setattr(existing_info, title_field.replace('_ko', '_en'), info.title_en or '')
+                        setattr(existing_info, title_field.replace('_ko', '_ja'), info.title_ja or '')
+                        setattr(existing_info, title_field.replace('_ko', '_zh'), info.title_zh or '')
+                        setattr(existing_info, content_field.replace('_ko', '_en'), info.content_en or '')
+                        setattr(existing_info, content_field.replace('_ko', '_ja'), info.content_ja or '')
+                        setattr(existing_info, content_field.replace('_ko', '_zh'), info.content_zh or '')
+                        setattr(existing_info, terms_field.replace('_ko', '_en'), json.dumps(terms_to_dict(info.terms_en or [])))
+                        setattr(existing_info, terms_field.replace('_ko', '_ja'), json.dumps(terms_to_dict(info.terms_ja or [])))
+                        setattr(existing_info, terms_field.replace('_ko', '_zh'), json.dumps(terms_to_dict(info.terms_zh or [])))
             db.commit()
             db.refresh(existing_info)
             return {
@@ -169,17 +252,44 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
             # 새 데이터 생성
             db_ai_info = AIInfo(
                 date=ai_info_data.date,
-                info1_title=ai_info_data.infos[0].title if len(ai_info_data.infos) >= 1 else "",
-                info1_content=ai_info_data.infos[0].content if len(ai_info_data.infos) >= 1 else "",
-                info1_terms=json.dumps(terms_to_dict(ai_info_data.infos[0].terms or [])) if len(ai_info_data.infos) >= 1 else "[]",
+                info1_title_ko=ai_info_data.infos[0].title_ko if len(ai_info_data.infos) >= 1 else "",
+                info1_title_en=ai_info_data.infos[0].title_en if len(ai_info_data.infos) >= 1 else "",
+                info1_title_ja=ai_info_data.infos[0].title_ja if len(ai_info_data.infos) >= 1 else "",
+                info1_title_zh=ai_info_data.infos[0].title_zh if len(ai_info_data.infos) >= 1 else "",
+                info1_content_ko=ai_info_data.infos[0].content_ko if len(ai_info_data.infos) >= 1 else "",
+                info1_content_en=ai_info_data.infos[0].content_en if len(ai_info_data.infos) >= 1 else "",
+                info1_content_ja=ai_info_data.infos[0].content_ja if len(ai_info_data.infos) >= 1 else "",
+                info1_content_zh=ai_info_data.infos[0].content_zh if len(ai_info_data.infos) >= 1 else "",
+                info1_terms_ko=json.dumps(terms_to_dict(ai_info_data.infos[0].terms_ko or [])) if len(ai_info_data.infos) >= 1 else "[]",
+                info1_terms_en=json.dumps(terms_to_dict(ai_info_data.infos[0].terms_en or [])) if len(ai_info_data.infos) >= 1 else "[]",
+                info1_terms_ja=json.dumps(terms_to_dict(ai_info_data.infos[0].terms_ja or [])) if len(ai_info_data.infos) >= 1 else "[]",
+                info1_terms_zh=json.dumps(terms_to_dict(ai_info_data.infos[0].terms_zh or [])) if len(ai_info_data.infos) >= 1 else "[]",
                 info1_category=ai_info_data.infos[0].category if len(ai_info_data.infos) >= 1 else "",
-                info2_title=ai_info_data.infos[1].title if len(ai_info_data.infos) >= 2 else "",
-                info2_content=ai_info_data.infos[1].content if len(ai_info_data.infos) >= 2 else "",
-                info2_terms=json.dumps(terms_to_dict(ai_info_data.infos[1].terms or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info2_title_ko=ai_info_data.infos[1].title_ko if len(ai_info_data.infos) >= 2 else "",
+                info2_title_en=ai_info_data.infos[1].title_en if len(ai_info_data.infos) >= 2 else "",
+                info2_title_ja=ai_info_data.infos[1].title_ja if len(ai_info_data.infos) >= 2 else "",
+                info2_title_zh=ai_info_data.infos[1].title_zh if len(ai_info_data.infos) >= 2 else "",
+                info2_content_ko=ai_info_data.infos[1].content_ko if len(ai_info_data.infos) >= 2 else "",
+                info2_content_en=ai_info_data.infos[1].content_en if len(ai_info_data.infos) >= 2 else "",
+                info2_content_ja=ai_info_data.infos[1].content_ja if len(ai_info_data.infos) >= 2 else "",
+                info2_content_zh=ai_info_data.infos[1].content_zh if len(ai_info_data.infos) >= 2 else "",
+                info2_terms_ko=json.dumps(terms_to_dict(ai_info_data.infos[1].terms_ko or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info2_terms_en=json.dumps(terms_to_dict(ai_info_data.infos[1].terms_en or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info2_terms_ja=json.dumps(terms_to_dict(ai_info_data.infos[1].terms_ja or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info2_terms_zh=json.dumps(terms_to_dict(ai_info_data.infos[1].terms_zh or [])) if len(ai_info_data.infos) >= 2 else "[]",
                 info2_category=ai_info_data.infos[1].category if len(ai_info_data.infos) >= 2 else "",
-                info3_title=ai_info_data.infos[2].title if len(ai_info_data.infos) >= 3 else "",
-                info3_content=ai_info_data.infos[2].content if len(ai_info_data.infos) >= 3 else "",
-                info3_terms=json.dumps(terms_to_dict(ai_info_data.infos[2].terms or [])) if len(ai_info_data.infos) >= 3 else "[]",
+                info3_title_ko=ai_info_data.infos[2].title_ko if len(ai_info_data.infos) >= 3 else "",
+                info3_title_en=ai_info_data.infos[2].title_en if len(ai_info_data.infos) >= 3 else "",
+                info3_title_ja=ai_info_data.infos[2].title_ja if len(ai_info_data.infos) >= 3 else "",
+                info3_title_zh=ai_info_data.infos[2].title_zh if len(ai_info_data.infos) >= 3 else "",
+                info3_content_ko=ai_info_data.infos[2].content_ko if len(ai_info_data.infos) >= 3 else "",
+                info3_content_en=ai_info_data.infos[2].content_en if len(ai_info_data.infos) >= 3 else "",
+                info3_content_ja=ai_info_data.infos[2].content_ja if len(ai_info_data.infos) >= 3 else "",
+                info3_content_zh=ai_info_data.infos[2].content_zh if len(ai_info_data.infos) >= 3 else "",
+                info3_terms_ko=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_ko or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info3_terms_en=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_en or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info3_terms_ja=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_ja or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info3_terms_zh=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_zh or [])) if len(ai_info_data.infos) >= 2 else "[]",
                 info3_category=ai_info_data.infos[2].category if len(ai_info_data.infos) >= 3 else ""
             )
             db.add(db_ai_info)

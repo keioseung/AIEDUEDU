@@ -36,9 +36,25 @@ class TermItem(BaseModel):
 class AIInfoItem(BaseModel):
     id: Optional[Union[int, str]] = None
     date: Optional[str] = None
-    title: str
-    content: str
-    terms: Optional[List[TermItem]] = []
+    
+    # 다국어 제목
+    title_ko: str
+    title_en: str
+    title_ja: str
+    title_zh: str
+    
+    # 다국어 내용
+    content_ko: str
+    content_en: str
+    content_ja: str
+    content_zh: str
+    
+    # 다국어 용어
+    terms_ko: Optional[List[TermItem]] = []
+    terms_en: Optional[List[TermItem]] = []
+    terms_ja: Optional[List[TermItem]] = []
+    terms_zh: Optional[List[TermItem]] = []
+    
     category: Optional[str] = None
     subcategory: Optional[str] = None
     confidence: Optional[float] = None

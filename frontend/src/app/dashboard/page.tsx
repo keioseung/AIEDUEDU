@@ -91,6 +91,13 @@ export default function DashboardPage() {
     }
     return 'default'
   })
+  const [currentLanguage, setCurrentLanguage] = useState<'ko' | 'en' | 'ja' | 'zh'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('selectedLanguage') as 'ko' | 'en' | 'ja' | 'zh') || 'ko'
+    }
+    return 'ko'
+  })
+  
   const { data: aiInfo, isLoading: aiInfoLoading } = useAIInfo(selectedDate)
   const { data: userProgress, isLoading: progressLoading, refetch: refetchUserProgress } = useUserProgress(sessionId)
   const { data: userStats, refetch: refetchUserStats } = useUserStats(sessionId)
@@ -373,6 +380,14 @@ export default function DashboardPage() {
     setTimeout(() => setToast(null), 2500)
   }
 
+  // 언어 변경 핸들러
+  const handleLanguageChange = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    setCurrentLanguage(language)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedLanguage', language)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden px-4 safe-area-padding navigation-safe">
       {/* 고급스러운 배경 효과 */}
@@ -426,7 +441,15 @@ export default function DashboardPage() {
 
         {/* 언어 선택기 - 우측 상단 */}
         <div className="absolute top-3 right-3 md:top-4 md:right-4">
-          <LanguageSelector />
+          <div className="flex flex-col items-end gap-2">
+            <LanguageSelector />
+            <div className="text-xs text-white/60 bg-white/10 px-2 py-1 rounded-lg backdrop-blur-sm">
+              {currentLanguage === 'ko' && '🇰🇷 한국어'}
+              {currentLanguage === 'en' && '🇺🇸 English'}
+              {currentLanguage === 'ja' && '🇯🇵 日本語'}
+              {currentLanguage === 'zh' && '🇨🇳 中文'}
+            </div>
+          </div>
         </div>
 
         {/* 상단 아이콘과 제목 */}
@@ -622,6 +645,7 @@ export default function DashboardPage() {
                           onProgressUpdate={handleProgressUpdate}
                           forceUpdate={forceUpdate}
                           setForceUpdate={setForceUpdate}
+                          currentLanguage={currentLanguage}
                         />
                       )
                     })}

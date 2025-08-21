@@ -48,18 +48,52 @@ class AIInfo(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     date = Column(String, index=True)
-    info1_title = Column(Text)
-    info1_content = Column(Text)
-    info1_terms = Column(Text)  # JSON 직렬화된 용어 리스트
-    info1_category = Column(String)  # 카테고리
-    info2_title = Column(Text)
-    info2_content = Column(Text)
-    info2_terms = Column(Text)  # JSON 직렬화된 용어 리스트
-    info2_category = Column(String)  # 카테고리
-    info3_title = Column(Text)
-    info3_content = Column(Text)
-    info3_terms = Column(Text)  # JSON 직렬화된 용어 리스트
-    info3_category = Column(String)  # 카테고리
+    
+    # Info 1 - 다국어 지원
+    info1_title_ko = Column(Text)  # 한국어 제목
+    info1_title_en = Column(Text)  # 영어 제목
+    info1_title_ja = Column(Text)  # 일본어 제목
+    info1_title_zh = Column(Text)  # 중국어 제목
+    info1_content_ko = Column(Text)  # 한국어 내용
+    info1_content_en = Column(Text)  # 영어 내용
+    info1_content_ja = Column(Text)  # 일본어 내용
+    info1_content_zh = Column(Text)  # 중국어 내용
+    info1_terms_ko = Column(Text)  # 한국어 용어 (JSON 직렬화)
+    info1_terms_en = Column(Text)  # 영어 용어 (JSON 직렬화)
+    info1_terms_ja = Column(Text)  # 일본어 용어 (JSON 직렬화)
+    info1_terms_zh = Column(Text)  # 중국어 용어 (JSON 직렬화)
+    info1_category = Column(String)  # 카테고리 (언어별로 동일)
+    
+    # Info 2 - 다국어 지원
+    info2_title_ko = Column(Text)
+    info2_title_en = Column(Text)
+    info2_title_ja = Column(Text)
+    info2_title_zh = Column(Text)
+    info2_content_ko = Column(Text)
+    info2_content_en = Column(Text)
+    info2_content_ja = Column(Text)
+    info2_content_zh = Column(Text)
+    info2_terms_ko = Column(Text)
+    info2_terms_en = Column(Text)
+    info2_terms_ja = Column(Text)
+    info2_terms_zh = Column(Text)
+    info2_category = Column(String)
+    
+    # Info 3 - 다국어 지원
+    info3_title_ko = Column(Text)
+    info3_title_en = Column(Text)
+    info3_title_ja = Column(Text)
+    info3_title_zh = Column(Text)
+    info3_content_ko = Column(Text)
+    info3_content_en = Column(Text)
+    info3_content_ja = Column(Text)
+    info3_content_zh = Column(Text)
+    info3_terms_ko = Column(Text)
+    info3_terms_en = Column(Text)
+    info3_terms_ja = Column(Text)
+    info3_terms_zh = Column(Text)
+    info3_category = Column(String)
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class Quiz(Base):

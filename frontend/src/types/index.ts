@@ -7,9 +7,25 @@ export interface TermItem {
 export interface AIInfoItem {
   id?: number | string
   date?: string
-  title: string
-  content: string
-  terms?: TermItem[]
+  
+  // 다국어 제목
+  title_ko: string
+  title_en: string
+  title_ja: string
+  title_zh: string
+  
+  // 다국어 내용
+  content_ko: string
+  content_en: string
+  content_ja: string
+  content_zh: string
+  
+  // 다국어 용어
+  terms_ko?: TermItem[]
+  terms_en?: TermItem[]
+  terms_ja?: TermItem[]
+  terms_zh?: TermItem[]
+  
   category?: string
   subcategory?: string
   confidence?: number

@@ -21,6 +21,7 @@ interface AIInfoCardProps {
   isFavorite?: boolean
   onFavoriteToggle?: (infoId: string) => void
   searchQuery?: string
+  currentLanguage?: 'ko' | 'en' | 'ja' | 'zh'  // 현재 선택된 언어
 }
 
 // 검색어 강조 함수
@@ -135,7 +136,7 @@ const getCategoryStyle = (category: string) => {
   }
 }
 
-function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery }: AIInfoCardProps) {
+function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery, currentLanguage }: AIInfoCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
@@ -284,8 +285,53 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   }, [isLearnedProp, forceUpdate, date, sessionId, index]);
 
   // 용어가 있는지 확인
-  const hasTerms = info.terms && info.terms.length > 0
-  const currentTerm = hasTerms && info.terms ? info.terms[currentTermIndex] : null
+  const hasTerms = info.terms_ko && info.terms_ko.length > 0
+  const currentTerm = hasTerms && info.terms_ko ? info.terms_ko[currentTermIndex] : null
+
+  // 현재 언어에 따른 제목과 내용 가져오기
+  const getTitleByLanguage = () => {
+    switch (currentLanguage) {
+      case 'en':
+        return info.title_en || info.title_ko || 'No English title available'
+      case 'ja':
+        return info.title_ja || info.title_ko || '日本語タイトルが利用できません'
+      case 'zh':
+        return info.title_zh || info.title_ko || '中文标题不可用'
+      default:
+        return info.title_ko || '제목을 입력해주세요'
+    }
+  }
+
+  const getContentByLanguage = () => {
+    switch (currentLanguage) {
+      case 'en':
+        return info.content_en || info.content_ko || 'No English content available'
+      case 'ja':
+        return info.content_ja || info.content_ko || '日本語コンテンツが利用できません'
+      case 'zh':
+        return info.content_zh || info.content_ko || '中文内容不可用'
+      default:
+        return info.content_ko || '내용을 입력해주세요'
+    }
+  }
+
+  const getTermsByLanguage = () => {
+    switch (currentLanguage) {
+      case 'en':
+        return info.terms_en || info.terms_ko || []
+      case 'ja':
+        return info.terms_ja || info.terms_ko || []
+      case 'zh':
+        return info.terms_zh || info.terms_ko || []
+      default:
+        return info.terms_ko || []
+    }
+  }
+
+  // 현재 언어의 용어들
+  const currentLanguageTerms = getTermsByLanguage()
+  const hasTermsInCurrentLanguage = currentLanguageTerms && currentLanguageTerms.length > 0
+  const currentTermInLanguage = hasTermsInCurrentLanguage && currentLanguageTerms ? currentLanguageTerms[currentTermIndex] : null
 
   const handleNextTerm = async () => {
     if (hasTerms && info.terms) {
@@ -445,7 +491,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-base md:text-lg font-semibold gradient-text line-clamp-2 leading-tight">
-              {highlightText(info.title, searchQuery || '')}
+              {highlightText(getTitleByLanguage(), searchQuery || '')}
             </h3>
             <p className="text-white/60 text-xs md:text-sm">
               {isLearned ? t('ai.info.card.learning.complete') : t('ai.info.card.learning.required')}
@@ -469,9 +515,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       {/* 내용 */}
       <div className="mb-3 md:mb-4 text-white/90 text-sm md:text-base leading-relaxed whitespace-pre-line">
         <p className={isExpanded ? '' : 'line-clamp-3'}>
-          {highlightText(info.content, searchQuery || '')}
+          {highlightText(getContentByLanguage(), searchQuery || '')}
         </p>
-        {info.content.length > 150 && (
+        {getContentByLanguage().length > 150 && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="btn mt-2 text-xs px-3 py-1.5 md:py-2 touch-optimized"
@@ -482,7 +528,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       </div>
       
       {/* 용어 학습 섹션 */}
-      {hasTerms && (
+      {hasTermsInCurrentLanguage && (
         <div className="mb-3 md:mb-4">
           <button
             onClick={() => setShowTerms(!showTerms)}
@@ -492,7 +538,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             <span className="hidden sm:inline">{showTerms ? t('ai.info.card.terms.learning.hide') : t('ai.info.card.terms.learning.show')}</span>
             <span className="sm:hidden">{showTerms ? t('ai.info.card.terms.hide') : t('ai.info.card.terms.learning.short')}</span>
             {/* 항상 완료 개수 표시 */}
-            {hasTerms && (
+            {hasTermsInCurrentLanguage && (
               <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">
                 {actualLearnedTerms.size}{t('ai.info.card.terms.complete.count')}
               </span>
@@ -500,7 +546,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           </button>
           
           <AnimatePresence>
-            {showTerms && currentTerm && (
+            {showTerms && currentTermInLanguage && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -513,13 +559,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 {/* 진행률 바 */}
                 <div className="mb-3">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-white/60">{currentTermIndex + 1} / {info.terms?.length || 0}</span>
+                    <span className="text-xs text-white/60">{currentTermIndex + 1} / {currentLanguageTerms?.length || 0}</span>
                     <span className="text-xs text-green-400 font-bold">{actualLearnedTerms.size}{t('ai.info.card.terms.learning.complete.count')}</span>
                   </div>
                   <div className="w-full bg-white/20 rounded-full h-2">
                     <div
                       className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300"
-                      style={{ width: `${((currentTermIndex + 1) / (info.terms?.length || 1)) * 100}%` }}
+                      style={{ width: `${((currentTermIndex + 1) / (currentLanguageTerms?.length || 1)) * 100}%` }}
                     />
                   </div>
                 </div>
@@ -527,9 +573,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 {/* 현재 용어 강조 */}
                 <div className="text-center mb-3">
                   <div className="text-xl md:text-2xl font-extrabold text-blue-200 mb-2 animate-pulse mobile-text">
-                    {currentTerm.term}
+                    {currentTermInLanguage.term}
                   </div>
-                  <div className="text-white/80 text-sm md:text-base mobile-text">{currentTerm.description}</div>
+                  <div className="text-white/80 text-sm md:text-base mobile-text">{currentTermInLanguage.description}</div>
                 </div>
                 
                 {/* 스와이프 안내 */}
@@ -557,7 +603,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 
                 {/* 전체 용어 목록 점프 - 모바일 최적화 */}
                 <div className="flex flex-wrap gap-1 md:gap-2 justify-center mt-2">
-                  {info.terms?.map((term, idx) => (
+                  {currentLanguageTerms?.map((term, idx) => (
                     <button
                       key={term.term}
                       onClick={async () => {
@@ -606,7 +652,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 </div>
                 
                 {/* 학습 완료 축하 메시지 */}
-                {actualLearnedTerms.size === info.terms?.length && info.terms.length > 0 && (
+                {actualLearnedTerms.size === currentLanguageTerms?.length && currentLanguageTerms.length > 0 && (
                   <div className="mt-3 md:mt-4 text-center animate-bounce">
                     <span className="inline-block bg-green-500 text-white px-3 md:px-4 py-2 rounded-full font-bold shadow text-sm mobile-text">
                       {t('ai.info.card.terms.all.complete')}
