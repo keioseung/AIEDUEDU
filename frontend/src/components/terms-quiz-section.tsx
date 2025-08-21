@@ -195,37 +195,19 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
     queryFn: async () => {
       if (allDates.length === 0) return []
       
-      console.log(`🎯 Terms Quiz - AI Info에서 주제 가져오기 시작 (언어: ${currentLanguage})`)
       const allInfo: AIInfoItem[] = []
       
       for (const date of allDates) {
         try {
-          console.log(`🎯 Terms Quiz - 날짜 ${date} 처리 시작`)
           const response = await aiInfoAPI.getByDate(date)
-          console.log(`🎯 Terms Quiz - getByDate API 응답 (${date}):`, response)
-          
           const dateInfos = response.data
-          console.log(`🎯 Terms Quiz - 파싱된 AI 정보 (${date}):`, dateInfos)
           
           if (Array.isArray(dateInfos)) {
-            console.log(`🎯 Terms Quiz - 날짜 ${date}의 AI 정보:`, dateInfos.length, '개')
-            
             dateInfos.forEach((info: any, index: number) => {
-              console.log(`🎯 Terms Quiz - 날짜 ${date}, 인덱스 ${index}의 AI 정보:`, info)
-              console.log(`🎯 Terms Quiz - info 객체의 키들:`, Object.keys(info))
-              
               // 백엔드 API 응답 구조에 맞게 제목과 내용 가져오기
               const title = info[`title_${currentLanguage}`] || info.title_ko || ''
               const content = info[`content_${currentLanguage}`] || info.content_ko || ''
               const terms = info[`terms_${currentLanguage}`] || info.terms_ko || []
-              
-              console.log(`🎯 Terms Quiz - ${currentLanguage} 언어 제목:`, title)
-              console.log(`🎯 Terms Quiz - ${currentLanguage} 언어 내용:`, content ? content.substring(0, 100) + '...' : '없음')
-              console.log(`🎯 Terms Quiz - ${currentLanguage} 언어 용어:`, terms)
-              console.log(`🎯 Terms Quiz - title_${currentLanguage}:`, info[`title_${currentLanguage}`])
-              console.log(`🎯 Terms Quiz - title_ko:`, info.title_ko)
-              console.log(`🎯 Terms Quiz - content_${currentLanguage}:`, info[`content_${currentLanguage}`])
-              console.log(`🎯 Terms Quiz - content_ko:`, info.content_ko)
               
               if (title && title.trim() && content && content.trim()) {
                 allInfo.push({
@@ -236,20 +218,14 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                   terms: Array.isArray(terms) ? terms : [],
                   info_index: index
                 })
-                console.log(`🎯 Terms Quiz - AI 정보 추가: ${title.trim()}`)
-              } else {
-                console.log(`🎯 Terms Quiz - 제목 또는 내용이 비어있음`)
               }
             })
-          } else {
-            console.log(`🎯 Terms Quiz - 날짜 ${date}의 AI 정보가 배열이 아님:`, typeof dateInfos)
           }
         } catch (error) {
-          console.log(`🎯 Terms Quiz - 날짜 ${date}의 AI Info 가져오기 실패:`, error)
+          console.log(`날짜 ${date}의 AI Info 가져오기 실패:`, error)
         }
       }
       
-      console.log(`🎯 Terms Quiz - AI Info에서 ${allInfo.length}개 주제 추출 (언어: ${currentLanguage}):`, allInfo.map(info => info.title))
       return allInfo
     },
     enabled: allDates.length > 0,
@@ -265,7 +241,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
   const quizTitleOptions = [t('quiz.tab.today.topic'), ...actualAIInfo.map(info => info.title)]
 
   // 디버깅을 위한 로그
-  console.log('🎯 Terms Quiz - AI 정보 상태:', { 
+  console.log('AI 정보 상태:', { 
     allAIInfo: allAIInfo.length, 
     dateBasedAIInfo: dateBasedAIInfo.length, 
     actualAIInfo: actualAIInfo.length,
@@ -273,8 +249,8 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
     error: getAllError,
     allDates: allDates.length
   })
-  console.log('🎯 Terms Quiz - quizTitleOptions:', quizTitleOptions)
-  console.log('🎯 Terms Quiz - selectedQuizTitle:', selectedQuizTitle)
+  console.log('quizTitleOptions:', quizTitleOptions)
+  console.log('selectedQuizTitle:', selectedQuizTitle)
 
   // 선택된 제목에 해당하는 AI 정보 찾기
   const selectedAIInfo = selectedQuizTitle !== t('quiz.tab.today.topic') 
@@ -500,20 +476,6 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
 
             {/* 오른쪽: 퀴즈 주제 선택 버튼 */}
             <div className="flex items-center gap-3 w-full">
-               {/* 디버깅 정보 */}
-               <div className="mb-4 p-3 bg-blue-900/20 rounded-lg border border-blue-500/30">
-                 <h4 className="text-sm font-semibold text-blue-300 mb-2">🔍 Terms Quiz 디버깅</h4>
-                 <div className="text-xs text-blue-200 space-y-1">
-                   <div><span className="font-medium">actualAIInfo:</span> {actualAIInfo ? `${actualAIInfo.length}개` : '로딩 중...'}</div>
-                   <div><span className="font-medium">quizTitleOptions:</span> {quizTitleOptions ? `${quizTitleOptions.length}개` : '없음'}</div>
-                   <div><span className="font-medium">현재 언어:</span> {currentLanguage}</div>
-                   <div><span className="font-medium">로딩 상태:</span> {isLoadingAIInfo ? '로딩 중' : '완료'}</div>
-                   <div><span className="font-medium">dateBasedAIInfo:</span> {dateBasedAIInfo ? `${dateBasedAIInfo.length}개` : '로딩 중...'}</div>
-                   <div><span className="font-medium">allAIInfo:</span> {allAIInfo ? `${allAIInfo.length}개` : '로딩 중...'}</div>
-                   <div><span className="font-medium">allDates:</span> {allDates ? `${allDates.length}개` : '로딩 중...'}</div>
-                 </div>
-               </div>
-               
                {/* 주제 선택 버튼 */}
                <div className="relative flex-1">
                  <button
