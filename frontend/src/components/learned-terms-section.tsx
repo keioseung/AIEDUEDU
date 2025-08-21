@@ -1151,7 +1151,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                     >
                       {scrollMode ? '📱 스크롤' : (
                         <div className="text-center leading-tight">
-                          <div>스크롤 고정</div>
+                          <div>{t('terms.list.scroll.lock')}</div>
                           <div className="text-[10px] opacity-80">(1초 이상 클릭)</div>
                         </div>
                       )}
