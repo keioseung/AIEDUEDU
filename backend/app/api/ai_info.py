@@ -22,9 +22,26 @@ def normalize_text(text):
 @router.get("/{date}", response_model=List[AIInfoItem])
 def get_ai_info_by_date(date: str, db: Session = Depends(get_db)):
     try:
+        print(f"=== Getting AI Info for Date: {date} ===")
         ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
         if not ai_info:
+            print(f"No AI info found for date: {date}")
             return []
+        
+        print(f"Found AI info record: ID={ai_info.id}")
+        print(f"Info1 - Title KO: {ai_info.info1_title_ko}")
+        print(f"Info1 - Title EN: {ai_info.info1_title_en}")
+        print(f"Info1 - Title JA: {ai_info.info1_title_ja}")
+        print(f"Info1 - Title ZH: {ai_info.info1_title_zh}")
+        print(f"Info1 - Content KO: {ai_info.info1_content_ko[:50] if ai_info.info1_content_ko else 'None'}...")
+        print(f"Info1 - Content EN: {ai_info.info1_content_en[:50] if ai_info.info1_content_en else 'None'}...")
+        print(f"Info1 - Content JA: {ai_info.info1_content_ja[:50] if ai_info.info1_content_ja else 'None'}...")
+        print(f"Info1 - Content ZH: {ai_info.info1_content_zh[:50] if ai_info.info1_content_zh else 'None'}...")
+        print(f"Info1 - Terms KO: {ai_info.info1_terms_ko}")
+        print(f"Info1 - Terms EN: {ai_info.info1_terms_en}")
+        print(f"Info1 - Terms JA: {ai_info.info1_terms_ja}")
+        print(f"Info1 - Terms ZH: {ai_info.info1_terms_zh}")
+        print(f"================================")
         
         infos = []
         if ai_info.info1_title_ko and ai_info.info1_content_ko:
