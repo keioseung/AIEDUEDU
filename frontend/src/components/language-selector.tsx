@@ -60,6 +60,11 @@ export default function LanguageSelector() {
     setCurrentLanguage(language)
     setIsOpen(false)
     changeLanguage(language)
+    
+    // 언어 변경 시 무조건 새로고침
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
   }
 
   const languages: Language[] = ['ko', 'en', 'ja', 'zh']
