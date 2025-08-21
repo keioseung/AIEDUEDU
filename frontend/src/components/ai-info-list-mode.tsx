@@ -277,7 +277,11 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
         return filtered.sort((a, b) => a.content.length - b.content.length)
       case 'date':
       default:
-        return filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        return filtered.sort((a, b) => {
+          const dateA = a.date ? new Date(a.date).getTime() : 0
+          const dateB = b.date ? new Date(b.date).getTime() : 0
+          return dateB - dateA
+        })
     }
   })()
 
