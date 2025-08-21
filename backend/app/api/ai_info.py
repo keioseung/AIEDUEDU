@@ -1390,16 +1390,16 @@ def get_category_statistics(db: Session = Depends(get_db)):
             print(f"날짜 {ai_info.date} 통계 처리 중...")
             
             # info1 처리
-            if ai_info.info1_title and ai_info.info1_content:
+            if ai_info.info1_title_ko and ai_info.info1_content_ko:
                 total_items += 1
                 stored_category = getattr(ai_info, 'info1_category', None)
                 if stored_category and stored_category.strip():
                     category = stored_category
-                    print(f"  info1: '{ai_info.info1_title[:30]}...' -> 저장된 카테고리: {category}")
+                    print(f"  info1: '{ai_info.info1_title_ko[:30]}...' -> 저장된 카테고리: {category}")
                 else:
-                    classification = ai_classifier.classify_content(ai_info.info1_title, ai_info.info1_content)
+                    classification = ai_classifier.classify_content(ai_info.info1_title_ko, ai_info.info1_content_ko)
                     category = classification["category"]
-                    print(f"  info1: '{ai_info.info1_title[:30]}...' -> 실시간 분류: {category}")
+                    print(f"  info1: '{ai_info.info1_title_ko[:30]}...' -> 실시간 분류: {category}")
                 
                 if category not in category_stats:
                     category_stats[category] = {
@@ -1414,16 +1414,16 @@ def get_category_statistics(db: Session = Depends(get_db)):
                     category_stats[category]["dates"].append(ai_info.date)
             
             # info2 처리
-            if ai_info.info2_title and ai_info.info2_content:
+            if ai_info.info2_title_ko and ai_info.info2_content_ko:
                 total_items += 1
                 stored_category = getattr(ai_info, 'info2_category', None)
                 if stored_category and stored_category.strip():
                     category = stored_category
-                    print(f"  info2: '{ai_info.info2_title[:30]}...' -> 저장된 카테고리: {category}")
+                    print(f"  info2: '{ai_info.info2_title_ko[:30]}...' -> 저장된 카테고리: {category}")
                 else:
-                    classification = ai_classifier.classify_content(ai_info.info2_title, ai_info.info2_content)
+                    classification = ai_classifier.classify_content(ai_info.info2_title_ko, ai_info.info2_content_ko)
                     category = classification["category"]
-                    print(f"  info2: '{ai_info.info2_title[:30]}...' -> 실시간 분류: {category}")
+                    print(f"  info2: '{ai_info.info2_title_ko[:30]}...' -> 실시간 분류: {category}")
                 
                 if category not in category_stats:
                     category_stats[category] = {
@@ -1438,16 +1438,16 @@ def get_category_statistics(db: Session = Depends(get_db)):
                     category_stats[category]["dates"].append(ai_info.date)
             
             # info3 처리
-            if ai_info.info3_title and ai_info.info3_content:
+            if ai_info.info3_title_ko and ai_info.info3_content_ko:
                 total_items += 1
                 stored_category = getattr(ai_info, 'info3_category', None)
                 if stored_category and stored_category.strip():
                     category = stored_category
-                    print(f"  info3: '{ai_info.info3_title[:30]}...' -> 저장된 카테고리: {category}")
+                    print(f"  info2: '{ai_info.info3_title_ko[:30]}...' -> 저장된 카테고리: {category}")
                 else:
-                    classification = ai_classifier.classify_content(ai_info.info3_title, ai_info.info3_content)
+                    classification = ai_classifier.classify_content(ai_info.info3_title_ko, ai_info.info3_content_ko)
                     category = classification["category"]
-                    print(f"  info3: '{ai_info.info3_title[:30]}...' -> 실시간 분류: {category}")
+                    print(f"  info3: '{ai_info.info3_title_ko[:30]}...' -> 실시간 분류: {category}")
                 
                 if category not in category_stats:
                     category_stats[category] = {

@@ -260,15 +260,7 @@ export default function DashboardPage() {
   const learnedAIInfo = Math.max(localProgress.length, backendProgress.length)
   const aiInfoProgress = totalAIInfo > 0 ? (learnedAIInfo / totalAIInfo) * 100 : 0
   
-  // 디버깅: 진행율 계산 확인
-  console.log('대시보드 진행율 계산:', {
-    selectedDate,
-    totalAIInfo,
-    localProgress: localProgress.length,
-    backendProgress: backendProgress.length,
-    learnedAIInfo,
-    aiInfoProgress
-  })
+  // 진행율 계산 완료
 
   // 실제 학습한 용어 개수 계산 - 백엔드 데이터와 로컬 데이터 통합
   const totalTerms = 60 // 3개 AI 정보 × 20개 용어씩
@@ -304,15 +296,7 @@ export default function DashboardPage() {
   const learnedTermsCount = Math.max(learnedTermsFromBackend, localTermsCount)
   const termsProgress = totalTerms > 0 ? (learnedTermsCount / totalTerms) * 100 : 0
   
-  // 디버깅: 용어 진행율 계산 확인
-  console.log('대시보드 용어 진행율 계산:', {
-    selectedDate,
-    totalTerms,
-    learnedTermsFromBackend,
-    localTermsCount,
-    learnedTermsCount,
-    termsProgress
-  })
+  // 용어 진행율 계산 완료
 
   // 퀴즈 점수 계산 - 당일 푼 전체 문제수가 분모, 정답 맞춘 총 개수가 분자
   const quizScore = (() => {
