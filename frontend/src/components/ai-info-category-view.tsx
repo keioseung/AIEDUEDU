@@ -474,7 +474,10 @@ export default function AIInfoCategoryView({ sessionId, currentLanguage, onProgr
                   {filteredAIInfo.map((info, index) => (
                     <div key={info.id} className="relative">
                                              <AIInfoCard
-                         info={info}
+                         info={{
+                           ...info,
+                           confidence: info.confidence ? String(info.confidence) : undefined
+                         }}
                          index={index}
                          date={info.date || new Date().toISOString().split('T')[0]}
                          sessionId={sessionId}
