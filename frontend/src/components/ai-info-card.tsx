@@ -505,11 +505,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         <div className="flex-shrink-0">
           <button
             onClick={toggleFavorite}
-            className={`p-2 rounded-lg transition-all w-full h-full min-h-[44px] flex items-center justify-center ${
+            className={`p-2 rounded-lg transition-all w-full h-full min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer ${
               isFavorite
                 ? 'text-yellow-400 bg-yellow-500/20 hover:bg-yellow-500/30'
                 : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
             }`}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Star className="w-4 h-4" fill={isFavorite ? 'currentColor' : 'none'} />
           </button>
