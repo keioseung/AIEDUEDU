@@ -486,8 +486,26 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.accumulated.total.learning')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // 실제 학습완료된 AI 정보 카드 수
-                    const totalLearned = learnedCountData?.learned_count || 0
+                    // localStorage에서 실제 학습완료된 AI 정보 카드 수 계산
+                    let totalLearned = 0
+                    if (typeof window !== 'undefined') {
+                      try {
+                        const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                        const sessionProgress = userProgress[sessionId]
+                        if (sessionProgress) {
+                          // 모든 날짜의 학습 데이터 수집
+                          Object.keys(sessionProgress).forEach(date => {
+                            if (date !== '__stats__' && date !== 'terms_by_date') {
+                              const learnedIndices = sessionProgress[date] || []
+                              totalLearned += learnedIndices.length
+                            }
+                          })
+                        }
+                      } catch (error) {
+                        console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                      }
+                    }
+                    
                     // 전체 등록된 AI 정보 수 (각 날짜당 2개 카드)
                     const totalCards = (aiInfoDates?.length || 0) * 2
                     const percentage = totalCards > 0 ? Math.round((totalLearned / totalCards) * 100) : 0
