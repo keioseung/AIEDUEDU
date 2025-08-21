@@ -250,10 +250,10 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
       filtered = filtered.filter(info => 
         info.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         info.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        info.terms.some(term => 
+        info.terms?.some(term => 
           term.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
           term.description.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        ) || false
       )
     }
 
