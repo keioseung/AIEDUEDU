@@ -36,10 +36,41 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const [customStartDate, setCustomStartDate] = useState('')
   const [customEndDate, setCustomEndDate] = useState('')
   const [viewMode, setViewMode] = useState<'cards' | 'graph'>('cards')
+  const [localLanguage, setLocalLanguage] = useState(getCurrentLanguage())
 
   const { data: stats } = useUserStats(sessionId)
   const queryClient = useQueryClient()
   
+  // 언어 변경 감지 및 즉시 반영
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      const newLanguage = getCurrentLanguage()
+      setLocalLanguage(newLanguage)
+    }
+
+    const handleForceUpdate = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        setLocalLanguage(event.detail.language)
+      }
+    }
+
+    const handleLanguageChanged = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        setLocalLanguage(event.detail.language)
+      }
+    }
+
+    window.addEventListener('languageChange', handleLanguageChange)
+    window.addEventListener('forceUpdate', handleLanguageChanged as EventListener)
+    window.addEventListener('languageChanged', handleLanguageChanged as EventListener)
+    
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange)
+      window.removeEventListener('forceUpdate', handleLanguageChanged as EventListener)
+      window.removeEventListener('languageChanged', handleLanguageChanged as EventListener)
+    }
+  }, [])
+
   // 선택된 날짜의 AI 정보 데이터 가져오기
   const { data: aiInfoData } = useQuery({
     queryKey: ['ai-info', selectedDate || new Date().toISOString().split('T')[0]],
