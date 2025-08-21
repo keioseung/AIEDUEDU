@@ -1488,7 +1488,7 @@ export default function AdminAIInfoPage() {
                                       </button>
                                     </div>
                                     
-                                    {editingData.terms_ko.map((term, termIdx) => (
+                                    {editingData.terms_ko?.map((term, termIdx) => (
                                       <div key={termIdx} className="flex gap-2 items-start mb-2">
                                         <div className="flex-1 flex gap-2">
                                           <input
