@@ -299,13 +299,12 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
             <FaRobot className="w-full h-full text-blue-400" />
           </div>
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-white">AI 정보가 없습니다</h3>
+            <h3 className="text-xl font-semibold text-white">{t('ai.info.no.data.title')}</h3>
             <p className="text-white/70 text-base">
-              아직 등록된 AI 정보가 없습니다.<br/>
-              관리자가 AI 정보를 등록한 후 이용해주세요!
+              {t('ai.info.no.data.description')}
             </p>
             <div className="text-sm text-white/50">
-              새로운 AI 정보를 기다리고 있습니다
+              {t('ai.info.no.data.waiting')}
             </div>
           </div>
         </div>

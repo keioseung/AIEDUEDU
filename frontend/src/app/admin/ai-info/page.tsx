@@ -1290,7 +1290,7 @@ export default function AdminAIInfoPage() {
             </form>
             
             <div className="grid gap-4">
-              {dates.length === 0 && <div className="text-white/50 text-center">등록된 AI 정보가 없습니다.</div>}
+              {dates.length === 0 && <div className="text-white/50 text-center">{t('ai.info.no.data.admin')}</div>}
               
               {/* 전체 AI 정보 보기 버튼 */}
               {dates.length > 0 && (
@@ -1449,11 +1449,11 @@ export default function AdminAIInfoPage() {
                   {isLoadingAllAIInfo ? (
                     <div className="text-white/50 text-center py-8">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-                      AI 정보를 불러오는 중...
+                      {t('ai.info.loading')}
                     </div>
                   ) : filteredAIInfos.length === 0 ? (
                     <div className="text-white/50 text-center py-8">
-                      {allAIInfos.length === 0 ? '등록된 AI 정보가 없습니다.' : '검색 조건에 맞는 AI 정보가 없습니다.'}
+                      {allAIInfos.length === 0 ? t('ai.info.no.data.admin') : t('ai.info.no.data.search')}
                       <div className="mt-4 text-xs text-white/40">
                         디버그: allAIInfos 길이 = {allAIInfos.length}, filteredAIInfos 길이 = {filteredAIInfos.length}
                       </div>

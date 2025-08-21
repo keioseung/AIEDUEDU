@@ -911,7 +911,7 @@ def get_terms_quiz_by_date(date: str, language: str = "ko", db: Session = Depend
         ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
         
         if not ai_info:
-            return {"quizzes": [], "message": f"{date} 날짜의 AI 정보가 없습니다."}
+            return {"quizzes": [], "message": f"No AI information available for date {date}."}
         
         # 모든 용어 수집 (선택된 언어 기준)
         all_terms = []

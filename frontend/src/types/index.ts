@@ -33,7 +33,10 @@ export interface AIInfoItem {
   
   category?: string
   subcategory?: string
-  confidence?: number
+  confidence?: string
+  
+  // 즐겨찾기 기능을 위한 인덱스
+  info_index?: number
 }
 
 export interface AIInfoCreate {

@@ -703,7 +703,7 @@ export default function DashboardPage() {
                     {aiInfoFixed.length === 0 && (
                       <div className="glass backdrop-blur-xl rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center text-white/70 shadow-xl min-h-[180px] border border-white/10">
                         <FaBookOpen className="w-10 h-10 md:w-12 md:h-12 mb-3 opacity-60" />
-                        <span className="text-base md:text-lg font-semibold">AI 정보가 없습니다</span>
+                        <span className="text-base md:text-lg font-semibold">{t('ai.info.no.data.title')}</span>
                       </div>
                     )}
                     {aiInfoFixed.map((info, index) => {

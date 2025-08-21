@@ -98,6 +98,14 @@ const ko: Record<string, string> = {
   'ai.info.mode.category': '카테고리별',
   'ai.info.mode.full': '전체목록',
   'ai.info.sort.options': '정렬 옵션',
+  
+  // AI 정보 없음 메시지
+  'ai.info.no.data.title': 'AI 정보가 없습니다',
+  'ai.info.no.data.description': '아직 등록된 AI 정보가 없습니다.\n관리자가 AI 정보를 등록한 후 이용해주세요!',
+  'ai.info.no.data.waiting': '새로운 AI 정보를 기다리고 있습니다',
+  'ai.info.no.data.admin': '등록된 AI 정보가 없습니다.',
+  'ai.info.no.data.search': '검색 조건에 맞는 AI 정보가 없습니다.',
+  'ai.info.loading': 'AI 정보를 불러오는 중...',
   'ai.info.items.per.page.select': '항목 수 선택',
   
   // AI 정보 정렬 옵션
@@ -567,6 +575,14 @@ const en: Record<string, string> = {
   'ai.info.terms': 'Terms',
   'ai.info.category': 'Category',
   'ai.info.subcategory': 'Subcategory',
+  
+  // AI 정보 없음 메시지
+  'ai.info.no.data.title': 'No AI Information Available',
+  'ai.info.no.data.description': 'No AI information has been registered yet.\nPlease wait for the administrator to register AI information!',
+  'ai.info.no.data.waiting': 'Waiting for new AI information',
+  'ai.info.no.data.admin': 'No registered AI information.',
+  'ai.info.no.data.search': 'No AI information matches your search criteria.',
+  'ai.info.loading': 'Loading AI information...',
   'ai.info.sort.options': 'Sort Options',
   'ai.info.items.per.page.select': 'Select Items Per Page',
   
@@ -1075,6 +1091,14 @@ const ja: Record<string, string> = {
   'ai.info.category': 'カテゴリ',
   'ai.info.subcategory': 'サブカテゴリ',
   
+  // AI情報なしメッセージ
+  'ai.info.no.data.title': 'AI情報がありません',
+  'ai.info.no.data.description': 'まだ登録されたAI情報がありません。\n管理者がAI情報を登録するまでお待ちください！',
+  'ai.info.no.data.waiting': '新しいAI情報をお待ちしています',
+  'ai.info.no.data.admin': '登録されたAI情報がありません。',
+  'ai.info.no.data.search': '検索条件に一致するAI情報がありません。',
+  'ai.info.loading': 'AI情報を読み込み中...',
+  
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI情報リストモード',
   'ai.info.list.total.count': '合計 {count} 件',
@@ -1552,6 +1576,14 @@ const zh: Record<string, string> = {
   'ai.info.terms': '术语',
   'ai.info.category': '类别',
   'ai.info.subcategory': '子类别',
+  
+  // AI信息无数据消息
+  'ai.info.no.data.title': '暂无AI信息',
+  'ai.info.no.data.description': '尚未注册任何AI信息。\n请等待管理员注册AI信息后再使用！',
+  'ai.info.no.data.waiting': '正在等待新的AI信息',
+  'ai.info.no.data.admin': '没有注册的AI信息。',
+  'ai.info.no.data.search': '没有符合搜索条件的AI信息。',
+  'ai.info.loading': '正在加载AI信息...',
   
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI 信息列表模式',
