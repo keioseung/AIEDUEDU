@@ -422,21 +422,21 @@ def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
         print(f"DEBUG: get_all_ai_info called with language: {language}")
         print(f"DEBUG: Total AIInfo records in database: {len(ai_infos)}")
         
-        # 언어별 컬럼 선택
-        title_suffix = f"_title_{language}"
-        content_suffix = f"_content_{language}"
-        terms_suffix = f"_terms_{language}"
+        # 언어별 컬럼 선택 (올바른 컬럼명 사용)
+        title_suffix = f"info1_title_{language}"
+        content_suffix = f"info1_content_{language}"
+        terms_suffix = f"info1_terms_{language}"
         
-        print(f"DEBUG: Using columns: title{title_suffix}, content{content_suffix}, terms{terms_suffix}")
+        print(f"DEBUG: Using columns: {title_suffix}, {content_suffix}, {terms_suffix}")
         
         for ai_info in ai_infos:
             print(f"DEBUG: Processing AIInfo record for date: {ai_info.date}")
             print(f"DEBUG: Record ID: {ai_info.id}")
             
             # info1 - 요청된 언어의 데이터만 사용
-            info1_title = getattr(ai_info, f'info1{title_suffix}', None)
-            info1_content = getattr(ai_info, f'info1{content_suffix}', None)
-            info1_terms = getattr(ai_info, f'info1{terms_suffix}', None)
+            info1_title = getattr(ai_info, title_suffix, None)
+            info1_content = getattr(ai_info, content_suffix, None)
+            info1_terms = getattr(ai_info, terms_suffix, None)
             
             print(f"DEBUG: info1{title_suffix}: {info1_title[:50] if info1_title else 'None'}...")
             print(f"DEBUG: info1{content_suffix}: {info1_content[:50] if info1_content else 'None'}...")
@@ -474,9 +474,9 @@ def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
                 print(f"DEBUG: Skipped info1 for date {ai_info.date} - {language} language data not available")
             
             # info2 - 요청된 언어의 데이터만 사용
-            info2_title = getattr(ai_info, f'info2{title_suffix}', None)
-            info2_content = getattr(ai_info, f'info2{content_suffix}', None)
-            info2_terms = getattr(ai_info, f'info2{terms_suffix}', None)
+            info2_title = getattr(ai_info, f'info2_title_{language}', None)
+            info2_content = getattr(ai_info, f'info2_content_{language}', None)
+            info2_terms = getattr(ai_info, f'info2_terms_{language}', None)
             
             print(f"DEBUG: info2{title_suffix}: {info2_title[:50] if info2_title else 'None'}...")
             print(f"DEBUG: info2{content_suffix}: {info2_content[:50] if info2_content else 'None'}...")
@@ -514,9 +514,9 @@ def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
                 print(f"DEBUG: Skipped info2 for date {ai_info.date} - {language} language data not available")
             
             # info3 - 요청된 언어의 데이터만 사용
-            info3_title = getattr(ai_info, f'info3{title_suffix}', None)
-            info3_content = getattr(ai_info, f'info3{content_suffix}', None)
-            info3_terms = getattr(ai_info, f'info3{terms_suffix}', None)
+            info3_title = getattr(ai_info, f'info3_title_{language}', None)
+            info3_content = getattr(ai_info, f'info3_content_{language}', None)
+            info3_terms = getattr(ai_info, f'info3_terms_{language}', None)
             
             print(f"DEBUG: info3{title_suffix}: {info3_title[:50] if info3_title else 'None'}...")
             print(f"DEBUG: info3{content_suffix}: {info3_content[:50] if info3_content else 'None'}...")

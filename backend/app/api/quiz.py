@@ -12,8 +12,8 @@ router = APIRouter()
 def get_all_quiz_topics(language: str = "ko", db: Session = Depends(get_db)):
     """언어별로 주제를 반환합니다. 해당 언어에 데이터가 있는 주제만 반환합니다."""
     try:
-        # 언어별 컬럼 선택
-        question_suffix = f"_question_{language}"
+        # 언어별 컬럼 선택 (올바른 컬럼명 사용)
+        question_suffix = f"question_{language}"
         
         # 해당 언어에 데이터가 있는 주제만 필터링
         topics = []
@@ -28,6 +28,7 @@ def get_all_quiz_topics(language: str = "ko", db: Session = Depends(get_db)):
         unique_topics = list(set(topics))
         print(f"DEBUG: get_all_quiz_topics called with language: {language}")
         print(f"DEBUG: Found {len(unique_topics)} topics with {language} data")
+        print(f"DEBUG: Using column: {question_suffix}")
         return unique_topics
         
     except Exception as e:
