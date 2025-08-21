@@ -84,7 +84,7 @@ const ko: Record<string, string> = {
   'ai.info.subcategory': '하위 카테고리',
   
   // AI 정보 목록 모드 UI
-  'ai.info.list.mode.title': 'AI 정보 목록 모드',
+  'ai.info.list.mode.title': 'AI 정보 목록',
   'ai.info.list.total.count': '총 {count}개 정보',
   'ai.info.list.search.placeholder': '제목, 내용, 용어로 검색...',
   'ai.info.search.placeholder': 'AI 정보 검색...',
@@ -610,7 +610,7 @@ const en: Record<string, string> = {
   'ai.info.list.title': 'AI Info List',
   
   // AI Info List Mode UI
-  'ai.info.list.mode.title': 'AI Info List Mode',
+  'ai.info.list.mode.title': 'AI Info List',
   'ai.info.list.total.count': 'Total {count} items',
   'ai.info.list.search.placeholder': 'Search by title, content, or term...',
   'ai.info.search.placeholder': 'Search AI info...',
@@ -1100,7 +1100,7 @@ const ja: Record<string, string> = {
   'ai.info.loading': 'AI情報を読み込み中...',
   
   // AI Info List Mode UI
-  'ai.info.list.mode.title': 'AI情報リストモード',
+  'ai.info.list.mode.title': 'AI情報リスト',
   'ai.info.list.total.count': '合計 {count} 件',
   'ai.info.list.search.placeholder': 'タイトル、内容、用語で検索...',
   'ai.info.search.placeholder': 'AI情報を検索...',
@@ -1586,7 +1586,7 @@ const zh: Record<string, string> = {
   'ai.info.loading': '正在加载AI信息...',
   
   // AI Info List Mode UI
-  'ai.info.list.mode.title': 'AI 信息列表模式',
+  'ai.info.list.mode.title': 'AI 信息列表',
   'ai.info.list.total.count': '共 {count} 个信息',
   'ai.info.list.search.placeholder': '按标题、内容或术语搜索...',
   'ai.info.search.placeholder': '搜索 AI 信息...',
