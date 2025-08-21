@@ -242,7 +242,8 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 즐겨찾기 키 생성 함수
   const generateFavoriteKey = (info: AIInfoItem) => {
     // info.id가 있으면 그것을 사용, 없으면 date와 info_index 조합 사용
-    return info.id || `${info.date}_${info.info_index}`
+    // 모든 키를 문자열로 변환하여 반환
+    return String(info.id || `${info.date}_${info.info_index}`)
   }
 
 
