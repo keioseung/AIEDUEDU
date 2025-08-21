@@ -552,7 +552,7 @@ export default function AdminAIInfoPage() {
   const handleUpdateAIInfo = () => {
     if (!editingAIInfo) return
     
-    if (!editingData.title_ko.trim() || !editingData.content_ko.trim()) {
+    if (!editingData.title_ko?.trim() || !editingData.content_ko?.trim()) {
       setError('제목과 내용을 모두 입력해주세요.')
       return
     }
@@ -560,24 +560,24 @@ export default function AdminAIInfoPage() {
     // AIInfoItem 타입에 맞게 변환 (기존 호환성 유지)
     const aiInfoData: AIInfoItem = {
       // 기존 속성 (기본값으로 설정)
-      title: editingData.title_ko,
-      content: editingData.content_ko,
-      terms: editingData.terms_ko,
+      title: editingData.title_ko || '',
+      content: editingData.content_ko || '',
+      terms: editingData.terms_ko || [],
       
       // 다국어 속성
-      title_ko: editingData.title_ko,
-      title_en: editingData.title_en,
-      title_ja: editingData.title_ja,
-      title_zh: editingData.title_zh,
-      content_ko: editingData.content_ko,
-      content_en: editingData.content_en,
-      content_ja: editingData.content_ja,
-      content_zh: editingData.content_zh,
-      category: editingData.category,
-      terms_ko: editingData.terms_ko,
-      terms_en: editingData.terms_en,
-      terms_ja: editingData.terms_ja,
-      terms_zh: editingData.terms_zh
+      title_ko: editingData.title_ko || '',
+      title_en: editingData.title_en || '',
+      title_ja: editingData.title_ja || '',
+      title_zh: editingData.title_zh || '',
+      content_ko: editingData.content_ko || '',
+      content_en: editingData.content_en || '',
+      content_ja: editingData.content_ja || '',
+      content_zh: editingData.content_zh || '',
+      category: editingData.category || '',
+      terms_ko: editingData.terms_ko || [],
+      terms_en: editingData.terms_en || [],
+      terms_ja: editingData.terms_ja || [],
+      terms_zh: editingData.terms_zh || []
     }
 
     updateItemMutation.mutate({
