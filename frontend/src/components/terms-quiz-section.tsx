@@ -306,18 +306,18 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
           
           return {
             id: index + 1,
-            question: getCurrentLanguage() === 'ko' ? `"${term.term}"의 의미로 가장 적절한 것은?` :
-                     getCurrentLanguage() === 'en' ? `What is the most appropriate meaning of "${term.term}"?` :
-                     getCurrentLanguage() === 'ja' ? `"${term.term}"の意味として最も適切なものは？` :
+            question: currentLanguage === 'ko' ? `"${term.term}"의 의미로 가장 적절한 것은?` :
+                     currentLanguage === 'en' ? `What is the most appropriate meaning of "${term.term}"?` :
+                     currentLanguage === 'ja' ? `"${term.term}"の意味として最も適切なものは？` :
                      `"${term.term}"最恰当的含义是什么？`,
             option1: shuffledOptions[0],
             option2: shuffledOptions[1],
             option3: shuffledOptions[2],
             option4: shuffledOptions[3],
             correct: correctIndex,
-            explanation: getCurrentLanguage() === 'ko' ? `${term.term}의 정확한 의미는: ${term.description}` :
-                         getCurrentLanguage() === 'en' ? `The correct meaning of "${term.term}" is: ${term.description}` :
-                         getCurrentLanguage() === 'ja' ? `"${term.term}"の正確な意味は: ${term.description}` :
+            explanation: currentLanguage === 'ko' ? `${term.term}의 정확한 의미는: ${term.description}` :
+                         currentLanguage === 'en' ? `The correct meaning of "${term.term}" is: ${term.description}` :
+                         currentLanguage === 'ja' ? `"${term.term}"の正確な意味は: ${term.description}` :
                          `"${term.term}"的正确含义是: ${term.description}`
           }
         })
