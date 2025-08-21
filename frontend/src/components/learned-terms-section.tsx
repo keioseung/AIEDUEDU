@@ -5,6 +5,7 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion'
 import { BookOpen, Calendar, Brain, Target, Trophy, TrendingUp, Search, Star, Download, Filter, Shuffle, Bookmark, ChevronLeft, ChevronRight, Play, Pause, X, Menu, Settings } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
+import { t } from '@/lib/i18n'
 
 interface LearnedTermsSectionProps {
   sessionId: string
@@ -507,7 +508,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
       <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
         <div className="flex flex-col items-center justify-center text-white -mt-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-          <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려 주세요.</p>
+          <p className="text-white/80 text-lg font-medium whitespace-nowrap">{t('common.loading')}</p>
         </div>
       </div>
     )
@@ -518,12 +519,12 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
       <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
         <div className="text-center text-white">
           <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-60" />
-          <h3 className="text-lg font-semibold mb-2">학습한 용어가 없습니다</h3>
+          <h3 className="text-lg font-semibold mb-2">{t('terms.tab.no.terms.message')}</h3>
           <p className="text-white/70 mb-3 text-sm">
-            AI 정보를 학습하고 용어를 등록한 후 여기서 확인해보세요!
+            {t('terms.tab.no.terms.description')}
           </p>
           <div className="text-xs text-white/50">
-            총 학습 가능한 용어: 0개
+            {t('terms.tab.total.available.terms', { count: 0 })}
           </div>
         </div>
       </div>
@@ -549,7 +550,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Filter className={`w-4 h-4 ${showFilters ? 'text-white' : 'text-white/80'}`} />
-            <span className="inline">필터</span>
+            <span className="inline">{t('terms.filter.button')}</span>
           </button>
           <button
             onTouchStart={handleWebViewTouch(toggleTermList)}
@@ -562,7 +563,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Menu className={`w-4 h-4 ${showTermList ? 'text-white' : 'text-white/80'}`} />
-            <span className="inline">목록</span>
+            <span className="inline">{t('terms.list.button')}</span>
           </button>
         </div>
       </div>
@@ -573,7 +574,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
         <input
           ref={searchInputRef}
           type="text"
-          placeholder="용어나 설명으로 검색..."
+          placeholder={t('terms.search.placeholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full pl-9 pr-4 py-2.5 bg-white/10 border-2 border-purple-600/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-sm shadow-lg shadow-purple-900/30"

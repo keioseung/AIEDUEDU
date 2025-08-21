@@ -403,6 +403,11 @@ const ko: Record<string, string> = {
   'quiz.tab.score.saved': '성적이 저장되었습니다!',
   'quiz.tab.achievement.achieved': '🎉 성취 달성!',
   'quiz.tab.new.achievement': '새로운 성취를 획득했습니다!',
+  
+  // 용어학습 탭 추가 UI 요소
+  'terms.tab.no.terms.message': '학습한 용어가 없습니다',
+  'terms.tab.no.terms.description': 'AI 정보를 학습하고 용어를 등록한 후 여기서 확인해보세요!',
+  'terms.tab.total.available.terms': '총 학습 가능한 용어: {count}개',
 }
 
 // 영어
@@ -777,6 +782,11 @@ const en: Record<string, string> = {
   'quiz.tab.score.saved': 'Score saved!',
   'quiz.tab.achievement.achieved': '🎉 Achievement Achieved!',
   'quiz.tab.new.achievement': 'New achievement gained!',
+  
+  // Terms Learning Tab Additional UI Elements
+  'terms.tab.no.terms.message': 'No terms learned yet',
+  'terms.tab.no.terms.description': 'Learn AI information and register terms to check them here!',
+  'terms.tab.total.available.terms': 'Total available terms: {count}',
   
   // 진행률 탭 모드명
   'progress.tab.trend.card': 'Trend Card',
@@ -1190,6 +1200,11 @@ const ja: Record<string, string> = {
   'quiz.tab.score.saved': '성적이 저장되었습니다!',
   'quiz.tab.achievement.achieved': '🎉 성취 달성!',
   'quiz.tab.new.achievement': '🎉 성취 달성!',
+  
+  // 用語学習タブ追加UI要素
+  'terms.tab.no.terms.message': '学習した用語がありません',
+  'terms.tab.no.terms.description': 'AI情報を学習して用語を登録した後、ここで確認してください！',
+  'terms.tab.total.available.terms': '総学習可能用語: {count}件',
 }
 
 // 중국어
@@ -1582,6 +1597,11 @@ const zh: Record<string, string> = {
   'quiz.tab.score.saved': '성적이 저장되었습니다!',
   'quiz.tab.achievement.achieved': '🎉 성취 달성!',
   'quiz.tab.new.achievement': '🎉 성취 달성!',
+  
+  // 术语学习标签页附加UI元素
+  'terms.tab.no.terms.message': '没有学习过的术语',
+  'terms.tab.no.terms.description': '学习AI信息并注册术语后，在这里查看！',
+  'terms.tab.total.available.terms': '总可学习术语: {count}个',
 }
 
 export const translations: Translations = {
