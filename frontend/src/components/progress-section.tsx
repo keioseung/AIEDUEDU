@@ -385,7 +385,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   };
 
   return (
-    <div className="space-y-8 relative">
+    <div className="space-y-8 relative" key={localLanguage}>
       
 
       {/* 모드 선택 */}
