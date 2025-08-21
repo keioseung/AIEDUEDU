@@ -387,6 +387,15 @@ const ko: Record<string, string> = {
   // 진행률 그래프 메시지
   'progress.graph.no.data': '선택한 기간에 학습 데이터가 없습니다.',
   
+  // 진행률 사용자 정의 기간 설정
+  'progress.custom.period.start.date': '시작일',
+  'progress.custom.period.end.date': '종료일',
+  'progress.custom.period.select.dates': '시작일과 종료일을 선택해주세요',
+  
+  // 진행률 날짜 포맷
+  'progress.date.format.month': '월',
+  'progress.date.format.day': '일',
+  
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': '주제 선택',
   'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
@@ -840,6 +849,15 @@ const en: Record<string, string> = {
   
   // Progress Graph Messages
   'progress.graph.no.data': 'No learning data available for the selected period.',
+  
+  // Progress Custom Period Settings
+  'progress.custom.period.start.date': 'Start Date',
+  'progress.custom.period.end.date': 'End Date',
+  'progress.custom.period.select.dates': 'Please select start and end dates',
+  
+  // Progress Date Format
+  'progress.date.format.month': 'Month',
+  'progress.date.format.day': 'Day',
 }
 
 // 일본어
@@ -1215,6 +1233,15 @@ const ja: Record<string, string> = {
   
   // 進捗グラフメッセージ
   'progress.graph.no.data': '選択した期間に学習データがありません。',
+  
+  // 進捗カスタム期間設定
+  'progress.custom.period.start.date': '開始日',
+  'progress.custom.period.end.date': '終了日',
+  'progress.custom.period.select.dates': '開始日と終了日を選択してください',
+  
+  // 進捗日付フォーマット
+  'progress.date.format.month': '月',
+  'progress.date.format.day': '日',
   
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': 'トピック選択',
@@ -1629,6 +1656,15 @@ const zh: Record<string, string> = {
   // 进度图表消息
   'progress.graph.no.data': '所选期间没有学习数据。',
   
+  // 进度自定义期间设置
+  'progress.custom.period.start.date': '开始日期',
+  'progress.custom.period.end.date': '结束日期',
+  'progress.custom.period.select.dates': '请选择开始和结束日期',
+  
+  // 进度日期格式
+  'progress.date.format.month': '月',
+  'progress.date.format.day': '日',
+  
   // 퀴즈 탭 추가 UI 요소
   'quiz.tab.select.topic': '选择主题',
   'quiz.tab.no.topics.available': '사용 가능한 주제가 없습니다',
@@ -1712,6 +1748,29 @@ export const getCurrentLanguage = (): Language => {
 }
 
 // 번역 함수
-export const t = (key: string, language: Language = getCurrentLanguage()): string => {
-  return translations[language][key] || translations.ko[key] || key
+export const t = (key: string, languageOrOptions?: Language | { language?: Language; [key: string]: any }): string => {
+  let language: Language = getCurrentLanguage()
+  let options: Record<string, any> = {}
+  
+  if (languageOrOptions) {
+    if (typeof languageOrOptions === 'string') {
+      language = languageOrOptions
+    } else {
+      language = languageOrOptions.language || getCurrentLanguage()
+      options = languageOrOptions
+    }
+  }
+  
+  let result = translations[language][key] || translations.ko[key] || key
+  
+  // 옵션이 있으면 문자열 보간 수행
+  if (Object.keys(options).length > 0) {
+    Object.entries(options).forEach(([key, value]) => {
+      if (key !== 'language') {
+        result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value))
+      }
+    })
+  }
+  
+  return result
 }

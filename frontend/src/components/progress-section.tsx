@@ -344,7 +344,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     const date = new Date(dateString);
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    return `${month < 10 ? '0' : ''}${month}월${day < 10 ? '0' : ''}${day}일`;
+    return `${month < 10 ? '0' : ''}${month}${t('progress.date.format.month')}${day < 10 ? '0' : ''}${day}${t('progress.date.format.day')}`;
   };
 
   return (
@@ -742,7 +742,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               </div>
               <div className="flex flex-col gap-3">
                 <div className="w-full">
-                  <label className="block text-white/70 text-xs font-medium mb-2">📅 시작일</label>
+                  <label className="block text-white/70 text-xs font-medium mb-2">📅 {t('progress.custom.period.start.date')}</label>
                   <input
                     type="date"
                     value={customStartDate}
@@ -757,7 +757,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="w-16 h-0.5 bg-white/30 rounded-full"></div>
                 </div>
                 <div className="w-full">
-                  <label className="block text-white/70 text-xs font-medium mb-2">📅 종료일</label>
+                  <label className="block text-white/70 text-xs font-medium mb-2">📅 {t('progress.custom.period.end.date')}</label>
                   <input
                     type="date"
                     value={customEndDate}
@@ -771,7 +771,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/50 text-xs">
                   {customStartDate && customEndDate ? 
                     `${customStartDate} ~ ${customEndDate}` : 
-                    '시작일과 종료일을 선택해주세요'
+                    t('progress.custom.period.select.dates')
                   }
                 </span>
               </div>
