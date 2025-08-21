@@ -610,10 +610,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // 실제 학습완료된 용어 수를 계산
+                    // localStorage에서 실제 학습된 용어 수 계산
                     let totalTermsLearned = 0
                     
-                    // localStorage에서 실제 학습된 용어 수 계산
                     if (typeof window !== 'undefined') {
                       try {
                         const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
@@ -626,12 +625,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                               
                               // 각 학습된 AI 정보의 용어 학습 상태 확인
                               learnedIndices.forEach((infoIndex: number) => {
+                                // learnedTerms_{sessionId}_{date}_{infoIndex} 형식의 키 사용
                                 const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
                                 const learnedTerms = localStorage.getItem(learnedTermsKey)
                                 if (learnedTerms) {
                                   try {
                                     const terms = JSON.parse(learnedTerms)
-                                    totalTermsLearned += terms.length
+                                    if (Array.isArray(terms)) {
+                                      totalTermsLearned += terms.length
+                                    }
                                   } catch (error) {
                                     console.error('용어 데이터 파싱 오류:', error)
                                   }
