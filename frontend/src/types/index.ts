@@ -45,25 +45,103 @@ export interface AIInfoCreate {
 export interface Quiz {
   id: number
   topic: string
-  question: string
-  option1: string
-  option2: string
-  option3: string
-  option4: string
+  
+  // 다국어 지원 - 문제
+  question_ko: string
+  question_en?: string
+  question_ja?: string
+  question_zh?: string
+  
+  // 다국어 지원 - 선택지 1
+  option1_ko: string
+  option1_en?: string
+  option1_ja?: string
+  option1_zh?: string
+  
+  // 다국어 지원 - 선택지 2
+  option2_ko: string
+  option2_en?: string
+  option2_ja?: string
+  option2_zh?: string
+  
+  // 다국어 지원 - 선택지 3
+  option3_ko: string
+  option3_en?: string
+  option3_ja?: string
+  option3_zh?: string
+  
+  // 다국어 지원 - 선택지 4
+  option4_ko: string
+  option4_en?: string
+  option4_ja?: string
+  option4_zh?: string
+  
+  // 다국어 지원 - 설명
+  explanation_ko: string
+  explanation_en?: string
+  explanation_ja?: string
+  explanation_zh?: string
+  
   correct: number
-  explanation: string
   created_at: string
+  
+  // 기존 단일 언어 필드들 (하위 호환성을 위해 유지)
+  question?: string
+  option1?: string
+  option2?: string
+  option3?: string
+  option4?: string
+  explanation?: string
 }
 
 export interface QuizCreate {
   topic: string
-  question: string
-  option1: string
-  option2: string
-  option3: string
-  option4: string
+  
+  // 다국어 지원 - 문제
+  question_ko: string
+  question_en?: string
+  question_ja?: string
+  question_zh?: string
+  
+  // 다국어 지원 - 선택지 1
+  option1_ko: string
+  option1_en?: string
+  option1_ja?: string
+  option1_zh?: string
+  
+  // 다국어 지원 - 선택지 2
+  option2_ko: string
+  option2_en?: string
+  option2_ja?: string
+  option2_zh?: string
+  
+  // 다국어 지원 - 선택지 3
+  option3_ko: string
+  option3_en?: string
+  option3_ja?: string
+  option3_zh?: string
+  
+  // 다국어 지원 - 선택지 4
+  option4_ko: string
+  option4_en?: string
+  option4_ja?: string
+  option4_zh?: string
+  
+  // 다국어 지원 - 설명
+  explanation_ko: string
+  explanation_en?: string
+  explanation_ja?: string
+  explanation_zh?: string
+  
   correct: number
-  explanation: string
+  
+  // 기존 단일 언어 필드들 (하위 호환성을 위해 유지)
+  question?: string
+  option1?: string
+  option2?: string
+  option3?: string
+  option4?: string
+  explanation?: string
 }
 
 // User Progress Types
