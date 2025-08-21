@@ -209,7 +209,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     }
   }, [])
 
-  // 즐겨찾기 저장
+  // 즐겨찾기 토글
   const toggleFavorite = (favoriteKey: string) => {
     console.log('즐겨찾기 토글 호출:', favoriteKey, '현재 상태:', favoriteInfos.has(favoriteKey))
     
@@ -239,6 +239,11 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     }
   }
 
+  // 즐겨찾기 키 생성 함수
+  const generateFavoriteKey = (info: AIInfoItem) => {
+    // info.id가 있으면 그것을 사용, 없으면 date와 info_index 조합 사용
+    return info.id || `${info.date}_${info.info_index}`
+  }
 
 
   // 필터링 및 정렬된 AI 정보
@@ -261,7 +266,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     if (showFavoritesOnly) {
       console.log('즐겨찾기만 필터 적용, 현재 즐겨찾기 목록:', [...favoriteInfos])
       filtered = filtered.filter(info => {
-        const favoriteKey = `${info.date}_${info.info_index}`
+        const favoriteKey = generateFavoriteKey(info)
         const isFavorite = favoriteInfos.has(favoriteKey)
         console.log(`정보 ${info.title} (${favoriteKey}) 즐겨찾기 상태:`, isFavorite)
         return isFavorite
@@ -634,13 +639,13 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                  content: info.content,
                  terms: info.terms
                }}
-                               index={info.info_index || 0}
-                               date={info.date || ''}
+               index={info.info_index || 0}
+               date={info.date || ''}
                sessionId={sessionId}
                isLearned={false}
                onProgressUpdate={onProgressUpdate}
-               isFavorite={favoriteInfos.has(`${info.date}_${info.info_index}`)}
-               onFavoriteToggle={(favoriteKey) => toggleFavorite(favoriteKey)}
+               isFavorite={favoriteInfos.has(generateFavoriteKey(info))}
+               onFavoriteToggle={() => toggleFavorite(generateFavoriteKey(info))}
                searchQuery={searchQuery}
              />
            </div>

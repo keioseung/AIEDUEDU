@@ -185,7 +185,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     if (typeof window !== 'undefined') {
       try {
         const favorites = JSON.parse(localStorage.getItem('favoriteAIInfos') || '[]')
-        const favoriteKey = info.id
+        const favoriteKey = `${date}_${index}`
         const isFav = favorites.includes(favoriteKey)
         console.log(`즐겨찾기 상태 로드: ${favoriteKey} = ${isFav}`)
         setIsFavorite(isFav)
@@ -193,7 +193,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         console.error('즐겨찾기 상태 로드 오류:', error)
       }
     }
-  }, [info.id])
+  }, [date, index])
   
   // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
   const actualLearnedTerms = new Set<string>()
@@ -243,7 +243,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     if (typeof window !== 'undefined') {
       try {
         const favorites = JSON.parse(localStorage.getItem('favoriteAIInfos') || '[]')
-        const favoriteKey = info.id
+        // AIInfoListMode에서 전달받은 favoriteKey 사용
+        const favoriteKey = `${date}_${index}`
         
         if (isFavorite) {
           const newFavorites = favorites.filter((key: string) => key !== favoriteKey)
@@ -256,8 +257,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         }
         
         // 부모 컴포넌트에 즐겨찾기 상태 변경 알림
-        if (onFavoriteToggle && info.id) {
-          onFavoriteToggle(String(info.id))
+        if (onFavoriteToggle) {
+          onFavoriteToggle(favoriteKey)
         }
         
         // 로컬 상태도 즉시 업데이트
@@ -504,9 +505,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         <div className="flex-shrink-0">
           <button
             onClick={toggleFavorite}
-            className={`p-2 rounded-lg transition-all ${
+            className={`p-2 rounded-lg transition-all w-full h-full min-h-[44px] flex items-center justify-center ${
               isFavorite
-                ? 'text-yellow-400 bg-yellow-500/20'
+                ? 'text-yellow-400 bg-yellow-500/20 hover:bg-yellow-500/30'
                 : 'text-white/30 hover:text-yellow-400 hover:bg-yellow-500/10'
             }`}
           >
