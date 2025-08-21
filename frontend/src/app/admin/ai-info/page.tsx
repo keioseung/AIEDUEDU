@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { FaBrain, FaArrowLeft, FaPlus, FaEdit, FaTrash, FaRobot, FaFileAlt, FaCopy, FaSave, FaTimes, FaDownload, FaUpload } from 'react-icons/fa'
 import { aiInfoAPI, promptAPI, baseContentAPI } from '@/lib/api'
 import { AIInfoItem, TermItem } from '@/types'
+import { useTranslations } from '@/hooks/use-translations'
 
 interface ServerPrompt {
   id: number
@@ -26,6 +27,7 @@ interface ServerBaseContent {
 export default function AdminAIInfoPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { t } = useTranslations()
   const [date, setDate] = useState('')
   const [inputs, setInputs] = useState([{ 
     title_ko: '', title_en: '', title_ja: '', title_zh: '', 
