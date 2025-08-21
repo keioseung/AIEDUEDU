@@ -449,11 +449,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
          {(() => {
            // 등록된 모든 AI 정보 중 유저가 학습한 정보 총 수
            const totalLearned = learnedCountData?.learned_count || 0
-           // 전체 등록된 AI 정보 수 (날짜별로 계산)
-           const totalCards = aiInfoDates?.reduce((total: number, date: string) => {
-             const dateAIInfo = aiInfoByDate[date] || []
-             return total + dateAIInfo.length
-           }, 0) || 0
+           // 전체 등록된 AI 정보 수 (각 날짜당 2개 카드로 가정)
+           const totalCards = (aiInfoDates?.length || 0) * 2
            const percentage = totalCards > 0 ? Math.round((totalLearned / totalCards) * 100) : 0
 
            return `${totalLearned}/${totalCards} (${percentage}%)`
@@ -540,14 +537,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
                        <span className="text-white font-semibold text-sm">
          {(() => {
-           // 등록된 모든 AI 정보의 관련 용어 총 수
-           const totalTerms = aiInfoDates?.reduce((total: number, date: string) => {
-             const dateAIInfo = aiInfoByDate[date] || []
-             return total + dateAIInfo.reduce((dateTotal: number, info: any) => {
-               // 각 AI 정보의 용어 수 (기본값 20개)
-               return dateTotal + (info.terms?.length || 20)
-             }, 0)
-           }, 0) || 0
+           // 등록된 모든 AI 정보의 관련 용어 총 수 (각 날짜당 2개 카드 × 20개 용어)
+           const totalTerms = (aiInfoDates?.length || 0) * 2 * 20
            
            // 용어 학습 완료 수를 계산 (localStorage + 백엔드 데이터 통합)
            let totalTermsLearned = 0
