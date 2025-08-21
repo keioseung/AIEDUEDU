@@ -605,7 +605,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
               <div>
                 <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  날짜별 필터
+                  {t('terms.tab.filter.date.filter')}
                 </h3>
                  
                  {/* 전체 버튼 - 제일 위에 배치 */}
@@ -621,7 +621,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                      style={{ WebkitTapHighlightColor: 'transparent' }}
                    >
                      <div className="flex flex-col items-center">
-                       <span className="text-sm font-bold">전체</span>
+                       <span className="text-sm font-bold">{t('terms.tab.filter.all')}</span>
                        <span className="text-xs opacity-90">({learnedData.total_terms})</span>
                      </div>
                    </button>
@@ -702,7 +702,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                    <span className="relative z-10 flex items-center gap-2">
                      <Settings className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
-                     <span className="text-xs font-medium">정렬</span>
+                     <span className="text-xs font-medium">{t('terms.tab.filter.sort')}</span>
                    </span>
                  </button>
 
@@ -720,7 +720,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                        }}
                      >
                        <div className="text-center mb-2">
-                         <div className="text-white/95 text-xs font-semibold mb-1">정렬 옵션</div>
+                         <div className="text-white/95 text-xs font-semibold mb-1">{t('terms.tab.filter.sort.options')}</div>
                          <div className="w-full bg-white/20 rounded-full h-0.5">
                            <div className="bg-gradient-to-r from-purple-400 via-violet-500 to-purple-600 h-0.5 rounded-full transition-all duration-300" />
                          </div>
@@ -745,14 +745,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                                    ? 'text-emerald-100 group-hover:text-emerald-50'
                                    : 'text-white group-hover:text-purple-200'
                                } transition-colors`}>
-                                 🕒 최신순
+                                 {t('terms.tab.filter.sort.by.date')}
                                </div>
                                <div className={`text-xs mt-0.5 leading-tight ${
                                  sortBy === 'date'
                                    ? 'text-emerald-100/80'
                                    : 'text-white/90'
                                }`}>
-                                 날짜순 정렬
+                                 {t('terms.tab.filter.sort.by.date.description')}
                                </div>
                              </div>
                              <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -779,14 +779,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                                    ? 'text-emerald-100 group-hover:text-emerald-50'
                                    : 'text-white group-hover:text-purple-200'
                                } transition-colors`}>
-                                 🔤 가나다순
+                                 {t('terms.tab.filter.sort.by.alphabet')}
                                </div>
                                <div className={`text-xs mt-0.5 leading-tight ${
                                  sortBy === 'alphabet'
                                    ? 'text-emerald-100/80'
                                    : 'text-white/90'
                                }`}>
-                                 알파벳순 정렬
+                                 {t('terms.tab.filter.sort.by.alphabet.description')}
                                </div>
                              </div>
                              <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -813,14 +813,14 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                                    ? 'text-emerald-100 group-hover:text-emerald-50'
                                    : 'text-white group-hover:text-purple-200'
                                } transition-colors`}>
-                                 📏 길이순
+                                 {t('terms.tab.filter.sort.by.length')}
                                </div>
                                <div className={`text-xs mt-0.5 leading-tight ${
                                  sortBy === 'length'
                                    ? 'text-emerald-100/80'
                                    : 'text-white/90'
                                }`}>
-                                 용어 길이순 정렬
+                                 {t('terms.tab.filter.sort.by.length.description')}
                                </div>
                              </div>
                              <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -856,7 +856,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white/70'}`} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
-                 <span className="text-xs font-medium">즐겨찾기</span>
+                 <span className="text-xs font-medium">{t('terms.tab.filter.favorites')}</span>
                </button>
                
                {/* 랜덤 버튼 */}
@@ -871,7 +871,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Shuffle className="w-3.5 h-3.5" />
-                 <span className="text-xs font-medium">랜덤</span>
+                 <span className="text-xs font-medium">{t('terms.tab.filter.random')}</span>
                </button>
                
                {/* 내보내기 버튼 */}
@@ -886,7 +886,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                  style={{ WebkitTapHighlightColor: 'transparent' }}
                >
                  <Download className="w-3.5 h-3.5" />
-                 <span className="text-xs font-medium">내보내기</span>
+                 <span className="text-xs font-medium">{t('terms.tab.filter.export')}</span>
                </button>
              </div>
           </motion.div>
@@ -1116,7 +1116,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                          <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                   <Target className="w-5 h-5" />
-                  전체 용어 목록 ({filteredTerms.length}개)
+                  {t('terms.tab.filter.total.terms', { count: filteredTerms.length })}
                 </h3>
                 <div className="flex items-center gap-2">
                   <div className="relative">

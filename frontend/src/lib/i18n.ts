@@ -408,6 +408,22 @@ const ko: Record<string, string> = {
   'terms.tab.no.terms.message': '학습한 용어가 없습니다',
   'terms.tab.no.terms.description': 'AI 정보를 학습하고 용어를 등록한 후 여기서 확인해보세요!',
   'terms.tab.total.available.terms': '총 학습 가능한 용어: {count}개',
+  
+  // 용어학습 탭 필터 UI 요소
+  'terms.tab.filter.date.filter': '날짜별 필터',
+  'terms.tab.filter.all': '전체',
+  'terms.tab.filter.sort': '정렬',
+  'terms.tab.filter.sort.options': '정렬 옵션',
+  'terms.tab.filter.sort.by.date': '🕒 최신순',
+  'terms.tab.filter.sort.by.date.description': '날짜순 정렬',
+  'terms.tab.filter.sort.by.alphabet': '🔤 가나다순',
+  'terms.tab.filter.sort.by.alphabet.description': '알파벳순 정렬',
+  'terms.tab.filter.sort.by.length': '📏 길이순',
+  'terms.tab.filter.sort.by.length.description': '용어 길이순 정렬',
+  'terms.tab.filter.favorites': '즐겨찾기',
+  'terms.tab.filter.random': '랜덤',
+  'terms.tab.filter.export': '내보내기',
+  'terms.tab.filter.total.terms': '전체 용어 목록 ({count}개)',
 }
 
 // 영어
@@ -787,6 +803,22 @@ const en: Record<string, string> = {
   'terms.tab.no.terms.message': 'No terms learned yet',
   'terms.tab.no.terms.description': 'Learn AI information and register terms to check them here!',
   'terms.tab.total.available.terms': 'Total available terms: {count}',
+  
+  // Terms Learning Tab Filter UI Elements
+  'terms.tab.filter.date.filter': 'Filter by Date',
+  'terms.tab.filter.all': 'All',
+  'terms.tab.filter.sort': 'Sort',
+  'terms.tab.filter.sort.options': 'Sort Options',
+  'terms.tab.filter.sort.by.date': '🕒 Latest',
+  'terms.tab.filter.sort.by.date.description': 'Sort by date',
+  'terms.tab.filter.sort.by.alphabet': '🔤 Alphabetical',
+  'terms.tab.filter.sort.by.alphabet.description': 'Sort alphabetically',
+  'terms.tab.filter.sort.by.length': '📏 By Length',
+  'terms.tab.filter.sort.by.length.description': 'Sort by term length',
+  'terms.tab.filter.favorites': 'Favorites',
+  'terms.tab.filter.random': 'Random',
+  'terms.tab.filter.export': 'Export',
+  'terms.tab.filter.total.terms': 'All Terms ({count})',
   
   // 진행률 탭 모드명
   'progress.tab.trend.card': 'Trend Card',
@@ -1205,6 +1237,22 @@ const ja: Record<string, string> = {
   'terms.tab.no.terms.message': '学習した用語がありません',
   'terms.tab.no.terms.description': 'AI情報を学習して用語を登録した後、ここで確認してください！',
   'terms.tab.total.available.terms': '総学習可能用語: {count}件',
+  
+  // 用語学習タブフィルターUI要素
+  'terms.tab.filter.date.filter': '日付別フィルター',
+  'terms.tab.filter.all': '全体',
+  'terms.tab.filter.sort': '並び替え',
+  'terms.tab.filter.sort.options': '並び替えオプション',
+  'terms.tab.filter.sort.by.date': '🕒 最新順',
+  'terms.tab.filter.sort.by.date.description': '日付順並び替え',
+  'terms.tab.filter.sort.by.alphabet': '🔤 あいうえお順',
+  'terms.tab.filter.sort.by.alphabet.description': 'アルファベット順並び替え',
+  'terms.tab.filter.sort.by.length': '📏 長さ順',
+  'terms.tab.filter.sort.by.length.description': '用語長さ順並び替え',
+  'terms.tab.filter.favorites': 'お気に入り',
+  'terms.tab.filter.random': 'ランダム',
+  'terms.tab.filter.export': 'エクスポート',
+  'terms.tab.filter.total.terms': '全体用語リスト ({count}件)',
 }
 
 // 중국어
@@ -1602,6 +1650,22 @@ const zh: Record<string, string> = {
   'terms.tab.no.terms.message': '没有学习过的术语',
   'terms.tab.no.terms.description': '学习AI信息并注册术语后，在这里查看！',
   'terms.tab.total.available.terms': '总可学习术语: {count}个',
+  
+  // 术语学习标签页过滤器UI元素
+  'terms.tab.filter.date.filter': '按日期筛选',
+  'terms.tab.filter.all': '全部',
+  'terms.tab.filter.sort': '排序',
+  'terms.tab.filter.sort.options': '排序选项',
+  'terms.tab.filter.sort.by.date': '🕒 最新',
+  'terms.tab.filter.sort.by.date.description': '按日期排序',
+  'terms.tab.filter.sort.by.alphabet': '🔤 字母顺序',
+  'terms.tab.filter.sort.by.alphabet.description': '按字母排序',
+  'terms.tab.filter.sort.by.length': '📏 按长度',
+  'terms.tab.filter.sort.by.length.description': '按术语长度排序',
+  'terms.tab.filter.favorites': '收藏',
+  'terms.tab.filter.random': '随机',
+  'terms.tab.filter.export': '导出',
+  'terms.tab.filter.total.terms': '所有术语 ({count}个)',
 }
 
 export const translations: Translations = {
