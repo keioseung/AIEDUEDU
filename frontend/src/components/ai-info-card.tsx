@@ -514,10 +514,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
               width: '48px',
               height: '48px',
               minWidth: '48px',
-              minHeight: '48px'
+              minHeight: '48px',
+              position: 'relative',
+              zIndex: 10
             }}
           >
-            <Star className="w-5 h-5" fill={isFavorite ? 'currentColor' : 'none'} />
+            <div className="absolute inset-0 w-full h-full" />
+            <Star className="w-5 h-5 relative z-10" fill={isFavorite ? 'currentColor' : 'none'} />
           </button>
         </div>
       </div>

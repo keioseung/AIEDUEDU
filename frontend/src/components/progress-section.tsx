@@ -676,7 +676,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 </span>
               </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-xs">{t('progress.card.accuracy')}</span>
+              <span className="text-white/70 text-xs">
+                {localLanguage === 'ko' ? '누적 정답률' : 
+                 localLanguage === 'en' ? 'Cumulative Accuracy' : 
+                 localLanguage === 'ja' ? '累積正答率' : '累计正确率'}
+              </span>
               <span className="text-white font-semibold text-sm">
                 {(() => {
                   const correct = stats?.cumulative_quiz_correct || stats?.total_quiz_correct || 0
@@ -872,7 +876,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/50"></div>
-                      <span className="text-white font-semibold text-base">{t('progress.card.terms.learning')}</span>
+                      <span className="text-white font-semibold text-base">
+                        {localLanguage === 'ko' ? '용어학습' : 
+                         localLanguage === 'en' ? 'Terms Learning' : 
+                         localLanguage === 'ja' ? '用語学習' : '术语学习'}
+                      </span>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/30 to-purple-600/30 rounded-full border border-purple-400/40">
                         <span className="text-purple-200 text-xs font-medium">{t('progress.graph.card.average')}</span>
                         <span className="text-purple-100 font-bold text-sm">
