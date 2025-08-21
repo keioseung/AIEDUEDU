@@ -330,8 +330,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
 
   // 현재 언어의 용어들
   const currentLanguageTerms = getTermsByLanguage()
-  const hasTermsInCurrentLanguage = currentLanguageTerms && currentLanguageTerms.length > 0
+  const hasTermsInCurrentLanguage = currentLanguageTerms && Array.isArray(currentLanguageTerms) && currentLanguageTerms.length > 0
   const currentTermInLanguage = hasTermsInCurrentLanguage && currentLanguageTerms ? currentLanguageTerms[currentTermIndex] : null
+
+  // 용어 개수 계산 (안전한 접근)
+  const totalTerms = currentLanguageTerms && Array.isArray(currentLanguageTerms) ? currentLanguageTerms.length : 0
 
   const handleNextTerm = async () => {
     if (hasTerms && info.terms) {
@@ -559,13 +562,13 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 {/* 진행률 바 */}
                 <div className="mb-3">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-white/60">{currentTermIndex + 1} / {currentLanguageTerms?.length || 0}</span>
+                    <span className="text-xs text-white/60">{currentTermIndex + 1} / {totalTerms}</span>
                     <span className="text-xs text-green-400 font-bold">{actualLearnedTerms.size}{t('ai.info.card.terms.learning.complete.count')}</span>
                   </div>
                   <div className="w-full bg-white/20 rounded-full h-2">
                     <div
                       className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300"
-                      style={{ width: `${((currentTermIndex + 1) / (currentLanguageTerms?.length || 1)) * 100}%` }}
+                      style={{ width: `${((currentTermIndex + 1) / totalTerms) * 100}%` }}
                     />
                   </div>
                 </div>
@@ -652,7 +655,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 </div>
                 
                 {/* 학습 완료 축하 메시지 */}
-                {actualLearnedTerms.size === currentLanguageTerms?.length && currentLanguageTerms.length > 0 && (
+                {actualLearnedTerms.size === totalTerms && totalTerms > 0 && (
                   <div className="mt-3 md:mt-4 text-center animate-bounce">
                     <span className="inline-block bg-green-500 text-white px-3 md:px-4 py-2 rounded-full font-bold shadow text-sm mobile-text">
                       {t('ai.info.card.terms.all.complete')}

@@ -175,8 +175,11 @@ export default function DashboardPage() {
     }
   }, [router])
 
+  // AI 정보 데이터 안전 접근
+  const safeAIInfo = aiInfo || []
+  
   // 학습 진행률 계산 (로컬 스토리지와 백엔드 데이터 통합)
-  const totalAIInfo = aiInfo?.length || 0
+  const totalAIInfo = safeAIInfo.length
   
   // 로컬 스토리지에서 학습 상태 확인 (강제 업데이트 포함)
   const localProgress = (() => {
@@ -358,7 +361,7 @@ export default function DashboardPage() {
   weeklyData[todayIndex].quiz = Math.min(quizScore, 100) // 퀴즈 점수는 최대 100점
 
   // AI 정보 3개만 정확히 보여줌
-  const aiInfoFixed = aiInfo && aiInfo.length > 0 ? aiInfo.slice(0, 3) : []
+  const aiInfoFixed = safeAIInfo && safeAIInfo.length > 0 ? safeAIInfo.slice(0, 3) : []
 
   const [forceUpdate, setForceUpdate] = useState(0)
   
@@ -386,6 +389,51 @@ export default function DashboardPage() {
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedLanguage', language)
     }
+  }
+
+  // 진행율 계산 함수들
+  const calculateProgress = (aiInfos: AIInfoItem[]) => {
+    if (!aiInfos || aiInfos.length === 0) return 0
+    
+    let totalItems = 0
+    let completedItems = 0
+    
+    aiInfos.forEach(info => {
+      // 안전한 용어 접근
+      const terms = info.terms || info.terms_ko || []
+      if (Array.isArray(terms)) {
+        totalItems += terms.length
+        terms.forEach(term => {
+          if (learnedTerms.has(term.term)) {
+            completedItems++
+          }
+        })
+      }
+    })
+    
+    return totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0
+  }
+
+  const calculateTermsProgress = (aiInfos: AIInfoItem[]) => {
+    if (!aiInfos || aiInfos.length === 0) return 0
+    
+    let totalTerms = 0
+    let learnedTermsCount = 0
+    
+    aiInfos.forEach(info => {
+      // 안전한 용어 접근
+      const terms = info.terms || info.terms_ko || []
+      if (Array.isArray(terms)) {
+        totalTerms += terms.length
+        terms.forEach(term => {
+          if (learnedTerms.has(term.term)) {
+            learnedTermsCount++
+          }
+        })
+      }
+    })
+    
+    return totalTerms > 0 ? Math.round((learnedTermsCount / totalTerms) * 100) : 0
   }
 
   return (
