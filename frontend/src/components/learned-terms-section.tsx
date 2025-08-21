@@ -1152,7 +1152,6 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                       {scrollMode ? '📱 스크롤' : (
                         <div className="text-center leading-tight">
                           <div>{t('terms.list.scroll.lock')}</div>
-                          <div className="text-[10px] opacity-80">(1초 이상 클릭)</div>
                         </div>
                       )}
                     </button>
@@ -1263,7 +1262,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                         {index === currentTermIndex && (
                           <div className="flex items-center gap-1">
                             <div className="w-1.5 h-1.5 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse shadow-sm" />
-                            <span className="text-blue-200 text-xs font-semibold">현재</span>
+                            <span className="text-blue-200 text-xs font-semibold">{t('terms.list.card.current')}</span>
                     </div>
                         )}
                       </div>

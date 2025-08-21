@@ -482,6 +482,9 @@ const ko: Record<string, string> = {
   'terms.playback.speed.7s': '7초',
   'terms.playback.speed.10s': '10초',
   
+  // 용어학습 탭 목록 카드
+  'terms.list.card.current': '현재',
+  
   // 용어학습 탭 날짜 필터
   'terms.date.filter.year': '년',
   'terms.date.filter.month': '월',
@@ -926,6 +929,9 @@ const en: Record<string, string> = {
   'terms.playback.speed.5s': '5 seconds',
   'terms.playback.speed.7s': '7 seconds',
   'terms.playback.speed.10s': '10 seconds',
+  
+  // Terms Learning Tab List Card
+  'terms.list.card.current': 'Current',
   
   // Terms Learning Tab Date Filter
   'terms.date.filter.year': 'Year',
@@ -1435,6 +1441,9 @@ const ja: Record<string, string> = {
   'terms.playback.speed.7s': '7秒',
   'terms.playback.speed.10s': '10秒',
   
+  // 用語学習タブリストカード
+  'terms.list.card.current': '現在',
+  
   // 用語学習タブ日付フィルター
   'terms.date.filter.year': '年',
   'terms.date.filter.month': '月',
@@ -1909,6 +1918,9 @@ const zh: Record<string, string> = {
   'terms.playback.speed.5s': '5秒',
   'terms.playback.speed.7s': '7秒',
   'terms.playback.speed.10s': '10秒',
+  
+  // 术语学习标签页列表卡片
+  'terms.list.card.current': '当前',
   
   // 术语学习标签页日期筛选
   'terms.date.filter.year': '年',

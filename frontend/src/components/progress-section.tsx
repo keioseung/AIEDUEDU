@@ -6,7 +6,7 @@ import { BarChart3, TrendingUp, BookOpen, Target, Calendar, ChevronLeft, Chevron
 import { useUserStats } from '@/hooks/use-user-progress'
 import { userProgressAPI, aiInfoAPI } from '@/lib/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { t } from '@/lib/i18n'
+import { t, getCurrentLanguage } from '@/lib/i18n'
 
 interface ProgressSectionProps {
   sessionId: string
@@ -342,9 +342,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   // 날짜 포맷 함수 (컴팩트 형식)
   const formatCompactDate = (dateString: string) => {
     const date = new Date(dateString);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${month < 10 ? '0' : ''}${month}${t('progress.date.format.month')}${day < 10 ? '0' : ''}${day}${t('progress.date.format.day')}`;
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } else {
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return `${month < 10 ? '0' : ''}${month}${t('progress.date.format.month')}${day < 10 ? '0' : ''}${day}${t('progress.date.format.day')}`;
+    }
   };
 
   return (
