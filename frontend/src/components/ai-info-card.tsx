@@ -246,23 +246,22 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         // AIInfoListMode에서 전달받은 favoriteKey 사용
         const favoriteKey = `${date}_${index}`
         
-        if (isFavorite) {
-          const newFavorites = favorites.filter((key: string) => key !== favoriteKey)
-          localStorage.setItem('favoriteAIInfos', JSON.stringify(newFavorites))
-          setIsFavorite(false)
-        } else {
+        const newIsFavorite = !isFavorite
+        
+        if (newIsFavorite) {
           favorites.push(favoriteKey)
-          localStorage.setItem('favoriteAIInfos', JSON.stringify(favorites))
-          setIsFavorite(true)
+        } else {
+          const newFavorites = favorites.filter((key: string) => key !== favoriteKey)
+          favorites.splice(0, favorites.length, ...newFavorites)
         }
+        
+        localStorage.setItem('favoriteAIInfos', JSON.stringify(favorites))
+        setIsFavorite(newIsFavorite)
         
         // 부모 컴포넌트에 즐겨찾기 상태 변경 알림
         if (onFavoriteToggle) {
           onFavoriteToggle(favoriteKey)
         }
-        
-        // 로컬 상태도 즉시 업데이트
-        setIsFavorite(!isFavorite)
       } catch {}
     }
   }
