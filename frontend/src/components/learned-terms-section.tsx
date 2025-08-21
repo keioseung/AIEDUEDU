@@ -636,6 +636,8 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                      const dateObj = new Date(date)
                      const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`
                      const monthLabel = dateObj.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })
+                       .replace('년', t('terms.date.filter.year'))
+                       .replace('월', t('terms.date.filter.month'))
                      
                      if (!monthlyGroups.has(monthKey)) {
                        monthlyGroups.set(monthKey, { month: monthLabel, dates: [], totalTerms: 0 })
@@ -654,7 +656,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                        <div className="flex items-center gap-2 mb-2">
                          <div className="w-2 h-2 bg-white/30 rounded-full"></div>
                          <span className="text-sm font-medium text-white/80">{group.month}</span>
-                         <span className="text-xs text-white/50">({group.totalTerms}개)</span>
+                         <span className="text-xs text-white/50">({t('terms.date.filter.items.count', { count: group.totalTerms })})</span>
                        </div>
                        <div className="flex flex-wrap gap-1.5 ml-4">
                          {group.dates.map((date) => {
@@ -662,7 +664,7 @@ function LearnedTermsSection({ sessionId, selectedDate: propSelectedDate, onDate
                            const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
                              month: 'short',
                              day: 'numeric'
-                           })
+                           }).replace('월', t('terms.date.filter.month')).replace('일', t('terms.date.filter.day'))
                            return (
                              <button
                                key={date}

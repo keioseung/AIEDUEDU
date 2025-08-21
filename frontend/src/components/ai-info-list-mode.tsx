@@ -563,7 +563,7 @@ export default function AIInfoListMode({ sessionId, onProgressUpdate }: AIInfoLi
         </div>
       </div>
 
-             {/* AI 정보 목록 */}
+             {/* {t('ai.info.list.title')} */}
        <div className="grid gap-4 w-full">
          {currentItems.map((info, index) => (
            <div key={info.id} className="relative">

@@ -120,6 +120,9 @@ const ko: Record<string, string> = {
   // AI 정보 항목 수 옵션 상세 설명
   'ai.info.items.per.page.display': '페이지당 {count}개 표시',
   
+  // AI 정보 목록 제목
+  'ai.info.list.title': 'AI 정보 목록',
+  
   // AI 정보 카드 UI
   'ai.info.card.learning.complete': '학습 완료',
   'ai.info.card.learning.required': '학습 필요',
@@ -466,6 +469,12 @@ const ko: Record<string, string> = {
   // 용어학습 탭 목록 모드
   'terms.list.difficulty': '난이도',
   'terms.list.scroll.lock': '스크롤 고정(1초이상클릭)',
+  
+  // 용어학습 탭 날짜 필터
+  'terms.date.filter.year': '년',
+  'terms.date.filter.month': '월',
+  'terms.date.filter.day': '일',
+  'terms.date.filter.items.count': '{count}개',
 }
 
 // 영어
@@ -565,6 +574,9 @@ const en: Record<string, string> = {
   
   // AI Info Items Count Options Detailed Descriptions
   'ai.info.items.per.page.display': 'Display {count} items per page',
+  
+  // AI Info List Title
+  'ai.info.list.title': 'AI Info List',
   
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI Info List Mode',
@@ -891,6 +903,12 @@ const en: Record<string, string> = {
   'terms.list.difficulty': 'Difficulty',
   'terms.list.scroll.lock': 'Scroll Lock (Hold 1+ seconds)',
   
+  // Terms Learning Tab Date Filter
+  'terms.date.filter.year': 'Year',
+  'terms.date.filter.month': 'Month',
+  'terms.date.filter.day': 'Day',
+  'terms.date.filter.items.count': '{count} items',
+  
   // 진행률 탭 모드명
   'progress.tab.trend.card': 'Trend Card',
   'progress.tab.trend.graph': 'Trend Graph',
@@ -1016,6 +1034,9 @@ const ja: Record<string, string> = {
   
   // AI情報項目数オプション詳細説明
   'ai.info.items.per.page.display': 'ページあたり{count}件表示',
+  
+  // AI情報リストタイトル
+  'ai.info.list.title': 'AI情報リスト',
   
   'ai.info.date': '日付',
   'ai.info.field.title': 'タイトル',
@@ -1377,6 +1398,12 @@ const ja: Record<string, string> = {
   // 用語学習タブリストモード
   'terms.list.difficulty': '難易度',
   'terms.list.scroll.lock': 'スクロール固定(1秒以上長押し)',
+  
+  // 用語学習タブ日付フィルター
+  'terms.date.filter.year': '年',
+  'terms.date.filter.month': '月',
+  'terms.date.filter.day': '日',
+  'terms.date.filter.items.count': '{count}件',
 }
 
 // 중국어
@@ -1470,6 +1497,9 @@ const zh: Record<string, string> = {
   
   // AI信息项目数选项详细说明
   'ai.info.items.per.page.display': '每页显示{count}个',
+  
+  // AI信息列表标题
+  'ai.info.list.title': 'AI信息列表',
   
   'ai.info.date': '日期',
   'ai.info.field.title': '标题',
@@ -1831,6 +1861,12 @@ const zh: Record<string, string> = {
   // 术语学习标签页列表模式
   'terms.list.difficulty': '难度',
   'terms.list.scroll.lock': '滚动锁定(长按1秒以上)',
+  
+  // 术语学习标签页日期筛选
+  'terms.date.filter.year': '年',
+  'terms.date.filter.month': '月',
+  'terms.date.filter.day': '日',
+  'terms.date.filter.items.count': '{count}个',
 }
 
 export const translations: Translations = {
