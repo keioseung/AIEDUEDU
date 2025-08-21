@@ -304,7 +304,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
       if (selectedQuizTitle === t('quiz.tab.wrong.notes')) {
         // 오답 노트 모드: 저장된 오답 문제들로 퀴즈 생성
         if (wrongAnswerNotes.length === 0) {
-          return { quizzes: [], total_terms: 0, message: "오답 노트에 등록된 문제가 없습니다." }
+          return { quizzes: [], total_terms: 0, message: getWrongNotesEmptyMessageByLanguage(currentLanguage) }
         }
 
         // 오답 노트에서 퀴즈 생성 (최대 10개)
@@ -315,13 +315,13 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
         return {
           quizzes: shuffledQuizzes,
           total_terms: wrongAnswerNotes.length,
-          message: `오답 노트에서 ${shuffledQuizzes.length}개 문제를 가져왔습니다.`
+          message: getWrongNotesQuizMessageByLanguage(currentLanguage, shuffledQuizzes.length)
         }
       } else if (selectedQuizTitle !== t('quiz.tab.today.topic') && selectedAIInfo) {
         // 선택된 제목의 용어로 퀴즈 생성
         const terms = selectedAIInfo.terms || []
         if (terms.length === 0) {
-          return { quizzes: [], total_terms: 0, message: "선택된 주제에 등록된 용어가 없습니다." }
+          return { quizzes: [], total_terms: 0, message: getNoTermsMessageByLanguage(currentLanguage) }
         }
 
         // 용어로부터 퀴즈 생성 (최대 5개)
@@ -370,7 +370,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
         return {
           quizzes,
           total_terms: terms.length,
-          message: `${selectedAIInfo.title} 주제의 용어로 퀴즈를 생성했습니다.`
+          message: getQuizGeneratedMessageByLanguage(currentLanguage, selectedAIInfo.title)
         }
       } else {
         // 기존 방식: 날짜별 퀴즈
@@ -771,6 +771,47 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
         return `${count}个术语`
       default:
         return `${count}개 용어`
+    }
+  }
+
+  // 다국어 텍스트 번역 함수들
+  const getWrongNotesEmptyMessageByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'ko': return '오답 노트에 등록된 문제가 없습니다.'
+      case 'en': return 'No questions registered in wrong notes.'
+      case 'ja': return '間違いノートに登録された問題がありません。'
+      case 'zh': return '错题本中没有注册的问题。'
+      default: return '오답 노트에 등록된 문제가 없습니다.'
+    }
+  }
+
+  const getWrongNotesQuizMessageByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh', count: number) => {
+    switch (language) {
+      case 'ko': return `오답 노트에서 ${count}개 문제를 가져왔습니다.`
+      case 'en': return `Retrieved ${count} questions from wrong notes.`
+      case 'ja': return `間違いノートから${count}個の問題を取得しました。`
+      case 'zh': return `从错题本中获取了${count}个问题。`
+      default: return `오답 노트에서 ${count}개 문제를 가져왔습니다.`
+    }
+  }
+
+  const getNoTermsMessageByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh') => {
+    switch (language) {
+      case 'ko': return '선택된 주제에 등록된 용어가 없습니다.'
+      case 'en': return 'No terms registered for the selected topic.'
+      case 'ja': return '選択されたトピックに登録された用語がありません。'
+      case 'zh': return '所选主题没有注册的术语。'
+      default: return '선택된 주제에 등록된 용어가 없습니다.'
+    }
+  }
+
+  const getQuizGeneratedMessageByLanguage = (language: 'ko' | 'en' | 'ja' | 'zh', title: string) => {
+    switch (language) {
+      case 'ko': return `${title} 주제의 용어로 퀴즈를 생성했습니다.`
+      case 'en': return `Generated quiz using terms from topic: ${title}`
+      case 'ja': return `${title}トピックの用語でクイズを生成しました。`
+      case 'zh': return `使用主题"${title}"的术语生成了测验。`
+      default: return `${title} 주제의 용어로 퀴즈를 생성했습니다.`
     }
   }
 
