@@ -508,14 +508,18 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                               ? 'text-emerald-100 group-hover:text-emerald-50'
                               : 'text-white group-hover:text-purple-200'
                           } transition-colors`}>
-                            📏 {t('ai.info.sort.by.length')}
+                            📏 {localLanguage === 'ko' ? '길이순' : 
+                                localLanguage === 'en' ? 'By Length' : 
+                                localLanguage === 'ja' ? '長さ順' : '按长度'}
                           </div>
                           <div className={`text-xs mt-0.5 leading-tight ${
                             sortBy === 'length'
                               ? 'text-emerald-100/80'
                               : 'text-white/90'
                           }`}>
-                            {t('ai.info.sort.by.length.description')}
+                            {localLanguage === 'ko' ? '내용 길이순 정렬' : 
+                             localLanguage === 'en' ? 'Sort by content length' : 
+                             localLanguage === 'ja' ? '内容長さ順並び替え' : '按内容长度排序'}
                           </div>
                         </div>
                         <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
