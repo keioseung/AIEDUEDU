@@ -304,10 +304,10 @@ def add_ai_info(ai_info_data: AIInfoCreate, db: Session = Depends(get_db)):
                 info3_content_en=ai_info_data.infos[2].content_en if len(ai_info_data.infos) >= 3 else "",
                 info3_content_ja=ai_info_data.infos[2].content_ja if len(ai_info_data.infos) >= 3 else "",
                 info3_content_zh=ai_info_data.infos[2].content_zh if len(ai_info_data.infos) >= 3 else "",
-                info3_terms_ko=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_ko or [])) if len(ai_info_data.infos) >= 2 else "[]",
-                info3_terms_en=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_en or [])) if len(ai_info_data.infos) >= 2 else "[]",
-                info3_terms_ja=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_ja or [])) if len(ai_info_data.infos) >= 2 else "[]",
-                info3_terms_zh=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_zh or [])) if len(ai_info_data.infos) >= 2 else "[]",
+                info3_terms_ko=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_ko or [])) if len(ai_info_data.infos) >= 3 else "[]",
+                info3_terms_en=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_en or [])) if len(ai_info_data.infos) >= 3 else "[]",
+                info3_terms_ja=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_ja or [])) if len(ai_info_data.infos) >= 3 else "[]",
+                info3_terms_zh=json.dumps(terms_to_dict(ai_info_data.infos[2].terms_zh or [])) if len(ai_info_data.infos) >= 3 else "[]",
                 info3_category=ai_info_data.infos[2].category if len(ai_info_data.infos) >= 3 else ""
             )
             db.add(db_ai_info)
