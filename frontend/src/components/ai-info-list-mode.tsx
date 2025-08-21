@@ -634,7 +634,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                  content: info.content,
                  terms: info.terms
                }}
-               index={info.info_index}
+                               index={info.info_index || 0}
                date={info.date}
                sessionId={sessionId}
                isLearned={false}
