@@ -7,6 +7,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { quizAPI, userProgressAPI } from '@/lib/api'
 import type { Quiz } from '@/types'
 import { t, getCurrentLanguage } from '@/lib/i18n'
+import { aiInfoAPI } from '@/lib/api'
 
 interface QuizSectionProps {
   sessionId: string
@@ -68,11 +69,55 @@ function QuizSection({ sessionId, currentLanguage }: QuizSectionProps) {
   })
 
   const { data: topics } = useQuery({
-    queryKey: ['quiz-topics', localLanguage],
+    queryKey: ['ai-info-topics', localLanguage],
     queryFn: async () => {
-      const response = await quizAPI.getTopics(localLanguage)
-      return response.data as string[]
+      try {
+        // AI Info의 모든 날짜 가져오기
+        const datesResponse = await aiInfoAPI.getAllDates()
+        const allDates = datesResponse.data || []
+        
+        if (allDates.length === 0) {
+          return ['AI', 'Machine Learning', 'Deep Learning', 'Natural Language Processing']
+        }
+        
+        const allTopics = new Set<string>()
+        
+        for (const date of allDates) {
+          try {
+            const dateResponse = await aiInfoAPI.getByDate(date)
+            const dateInfos = dateResponse.data
+            
+            if (Array.isArray(dateInfos)) {
+              dateInfos.forEach((info: any) => {
+                // 백엔드 API 응답 구조에 맞게 제목 가져오기
+                const title = info[`title_${localLanguage}`] || info.title_ko || ''
+                
+                if (title && title.trim()) {
+                  allTopics.add(title.trim())
+                }
+              })
+            }
+          } catch (error) {
+            console.log(`날짜 ${date}의 AI Info 가져오기 실패:`, error)
+          }
+        }
+        
+        const topicsList = Array.from(allTopics).sort()
+        
+        // 주제가 없으면 기본값 반환
+        if (topicsList.length === 0) {
+          return ['AI', 'Machine Learning', 'Deep Learning', 'Natural Language Processing']
+        }
+        
+        return topicsList
+        
+      } catch (error) {
+        console.error('주제 가져오기 실패:', error)
+        return ['AI', 'Machine Learning', 'Deep Learning', 'Natural Language Processing']
+      }
     },
+    refetchInterval: 10000,
+    refetchIntervalInBackground: true,
   })
 
   const { data: quizzes } = useQuery({
