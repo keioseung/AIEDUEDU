@@ -413,58 +413,82 @@ def get_all_ai_info_dates(db: Session = Depends(get_db)):
     return dates
 
 @router.get("/all")
-def get_all_ai_info(db: Session = Depends(get_db)):
+def get_all_ai_info(language: str = "ko", db: Session = Depends(get_db)):
     """모든 AI 정보를 제목과 날짜로 반환합니다."""
     try:
         all_ai_info = []
         ai_infos = db.query(AIInfo).order_by(AIInfo.date.desc()).all()
         
+        # 언어별 컬럼 선택
+        title_suffix = f"_title_{language}"
+        content_suffix = f"_content_{language}"
+        terms_suffix = f"_terms_{language}"
+        
+        print(f"DEBUG: get_all_ai_info called with language: {language}")
+        print(f"DEBUG: Using columns: title{title_suffix}, content{content_suffix}, terms{terms_suffix}")
+        
         for ai_info in ai_infos:
             # info1
-            if ai_info.info1_title_ko and ai_info.info1_content_ko:
+            info1_title = getattr(ai_info, f'info1{title_suffix}', None)
+            info1_content = getattr(ai_info, f'info1{content_suffix}', None)
+            info1_terms = getattr(ai_info, f'info1{terms_suffix}', None)
+            
+            if info1_title and info1_content:
                 try:
-                    terms1 = json.loads(ai_info.info1_terms_ko) if ai_info.info1_terms_ko else []
+                    terms1 = json.loads(info1_terms) if info1_terms else []
                 except json.JSONDecodeError:
                     terms1 = []
                 all_ai_info.append({
                     "id": f"{ai_info.date}_0",
                     "date": ai_info.date,
-                    "title": ai_info.info1_title_ko,
-                    "content": ai_info.info1_content_ko,
+                    "title": info1_title,
+                    "content": info1_content,
                     "terms": terms1,
                     "info_index": 0
                 })
+                print(f"DEBUG: Added info1 for date {ai_info.date} with title: {info1_title[:30]}...")
             
             # info2
-            if ai_info.info2_title_ko and ai_info.info2_content_ko:
+            info2_title = getattr(ai_info, f'info2{title_suffix}', None)
+            info2_content = getattr(ai_info, f'info2{content_suffix}', None)
+            info2_terms = getattr(ai_info, f'info2{terms_suffix}', None)
+            
+            if info2_title and info2_content:
                 try:
-                    terms2 = json.loads(ai_info.info2_terms_ko) if ai_info.info2_terms_ko else []
+                    terms2 = json.loads(info2_terms) if info2_terms else []
                 except json.JSONDecodeError:
                     terms2 = []
                 all_ai_info.append({
                     "id": f"{ai_info.date}_1",
                     "date": ai_info.date,
-                    "title": ai_info.info2_title_ko,
-                    "content": ai_info.info2_content_ko,
+                    "title": info2_title,
+                    "content": info2_content,
                     "terms": terms2,
                     "info_index": 1
                 })
+                print(f"DEBUG: Added info2 for date {ai_info.date} with title: {info2_title[:30]}...")
             
             # info3
-            if ai_info.info3_title_ko and ai_info.info3_content_ko:
+            info3_title = getattr(ai_info, f'info3{title_suffix}', None)
+            info3_content = getattr(ai_info, f'info3{content_suffix}', None)
+            info3_terms = getattr(ai_info, f'info3{terms_suffix}', None)
+            
+            if info3_title and info3_content:
                 try:
-                    terms3 = json.loads(ai_info.info3_terms_ko) if ai_info.info3_terms_ko else []
+                    terms3 = json.loads(info3_terms) if info3_terms else []
                 except json.JSONDecodeError:
                     terms3 = []
                 all_ai_info.append({
                     "id": f"{ai_info.date}_2",
                     "date": ai_info.date,
-                    "title": ai_info.info3_title_ko,
-                    "content": ai_info.info3_content_ko,
+                    "title": info3_title,
+                    "content": info3_content,
                     "terms": terms3,
                     "info_index": 2
                 })
+                print(f"DEBUG: Added info3 for date {ai_info.date} with title: {info3_title[:30]}...")
         
+        print(f"DEBUG: Total AI info items found: {len(all_ai_info)}")
         return all_ai_info
         
     except Exception as e:

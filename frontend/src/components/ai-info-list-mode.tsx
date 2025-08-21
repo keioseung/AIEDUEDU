@@ -67,7 +67,10 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     queryKey: ['all-ai-info', currentLanguage],
     queryFn: async () => {
       try {
+        console.log(`getAll API 호출 중... (언어: ${currentLanguage})`)
         const response = await aiInfoAPI.getAll(currentLanguage)
+        console.log(`getAll API 응답:`, response.data)
+        console.log(`getAll API 응답 데이터 개수:`, response.data?.length || 0)
         return response.data
       } catch (error) {
         console.log('getAll API 실패, getAllDates API 사용:', error)
