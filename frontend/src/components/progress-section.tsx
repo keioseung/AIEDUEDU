@@ -625,17 +625,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                               
                               // 각 학습된 AI 정보의 용어 학습 상태 확인
                               learnedIndices.forEach((infoIndex: number) => {
-                                // learnedTerms_{sessionId}_{date}_{infoIndex} 형식의 키 사용
-                                const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
-                                const learnedTerms = localStorage.getItem(learnedTermsKey)
-                                if (learnedTerms) {
-                                  try {
-                                    const terms = JSON.parse(learnedTerms)
-                                    if (Array.isArray(terms)) {
-                                      totalTermsLearned += terms.length
-                                    }
-                                  } catch (error) {
-                                    console.error('용어 데이터 파싱 오류:', error)
+                                // __terms__{date}_{info_index} 형식의 키 사용 (AI 정보 탭과 동일)
+                                const termKey = `__terms__${date}_${infoIndex}`
+                                if (sessionProgress[termKey]) {
+                                  const terms = sessionProgress[termKey]
+                                  if (Array.isArray(terms)) {
+                                    totalTermsLearned += terms.length
                                   }
                                 }
                               })
