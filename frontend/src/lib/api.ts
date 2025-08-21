@@ -275,9 +275,9 @@ export const aiInfoAPI = {
   getTotalCount: () => api.get('/api/ai-info/total-count'),
   getLearnedCount: (sessionId: string) => api.get(`/api/ai-info/learned-count/${sessionId}`),
 
-  getTermsQuiz: (sessionId: string) => api.get(`/api/ai-info/terms-quiz/${sessionId}`),
-  getTermsQuizByDate: (date: string) => api.get(`/api/ai-info/terms-quiz-by-date/${date}`),
-  getLearnedTerms: (sessionId: string) => api.get(`/api/ai-info/learned-terms/${sessionId}`),
+      getTermsQuiz: (sessionId: string, language: string = 'ko') => api.get(`/api/ai-info/terms-quiz/${sessionId}?language=${language}`),
+      getTermsQuizByDate: (date: string, language: string = 'ko') => api.get(`/api/ai-info/terms-quiz-by-date/${date}?language=${language}`),
+      getLearnedTerms: (sessionId: string, language: string = 'ko') => api.get(`/api/ai-info/learned-terms/${sessionId}?language=${language}`),
   
   // 용어 통계 관련 API
   getTotalTermsCount: () => api.get('/api/ai-info/terms-total-count'),

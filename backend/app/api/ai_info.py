@@ -742,7 +742,7 @@ def get_user_learned_terms_count(session_id: str, db: Session = Depends(get_db))
         raise HTTPException(status_code=500, detail=f"Failed to get user learned terms count: {str(e)}")
 
 @router.get("/terms-quiz/{session_id}")
-def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
+def get_terms_quiz(session_id: str, language: str = "ko", db: Session = Depends(get_db)):
     """사용자가 학습한 날짜의 모든 용어로 퀴즈를 생성합니다."""
     try:
         # 사용자의 학습 진행상황 가져오기
@@ -763,23 +763,15 @@ def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
                     learned_indices = json.loads(progress.learned_info)
                     ai_info = db.query(AIInfo).filter(AIInfo.date == progress.date).first()
                     if ai_info:
-                        # 각 학습한 info의 용어들 가져오기 (한국어 기준)
+                        # 언어별 컬럼 선택
+                        terms_suffix = f"_terms_{language}"
+                        
+                        # 각 학습한 info의 용어들 가져오기 (선택된 언어 기준)
                         for info_idx in learned_indices:
-                            if info_idx == 0 and ai_info.info1_terms_ko:
+                            info_terms_field = getattr(ai_info, f'info{info_idx + 1}{terms_suffix}', None)
+                            if info_terms_field:
                                 try:
-                                    terms = json.loads(ai_info.info1_terms_ko)
-                                    all_terms.extend(terms)
-                                except json.JSONDecodeError:
-                                    pass
-                            elif info_idx == 1 and ai_info.info2_terms_ko:
-                                try:
-                                    terms = json.loads(ai_info.info2_terms_ko)
-                                    all_terms.extend(terms)
-                                except json.JSONDecodeError:
-                                    pass
-                            elif info_idx == 2 and ai_info.info3_terms_ko:
-                                try:
-                                    terms = json.loads(ai_info.info3_terms_ko)
+                                    terms = json.loads(info_terms_field)
                                     all_terms.extend(terms)
                                 except json.JSONDecodeError:
                                     pass
@@ -812,15 +804,29 @@ def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
                 random.shuffle(options)
                 correct_index = options.index(term['description'])
                 
+                # 언어별 퀴즈 질문과 설명
+                if language == 'ko':
+                    question = f"'{term['term']}'의 올바른 뜻은?"
+                    explanation = f"'{term['term']}'는 '{term['description']}'을 의미합니다."
+                elif language == 'en':
+                    question = f"What is the correct meaning of '{term['term']}'?"
+                    explanation = f"'{term['term']}' means '{term['description']}'."
+                elif language == 'ja':
+                    question = f"'{term['term']}'の正しい意味は？"
+                    explanation = f"'{term['term']}'は'{term['description']}'を意味します。"
+                else:  # zh
+                    question = f"'{term['term']}'的正确含义是什么？"
+                    explanation = f"'{term['term']}'的意思是'{term['description']}'。"
+                
                 quizzes.append({
                     "id": i + 1,
-                    "question": f"'{term['term']}'의 올바른 뜻은?",
+                    "question": question,
                     "option1": options[0],
                     "option2": options[1],
                     "option3": options[2],
                     "option4": options[3],
                     "correct": correct_index,
-                    "explanation": f"'{term['term']}'는 '{term['description']}'을 의미합니다."
+                    "explanation": explanation
                 })
         
         return {"quizzes": quizzes, "total_terms": len(unique_terms)}
@@ -830,38 +836,44 @@ def get_terms_quiz(session_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Failed to generate terms quiz: {str(e)}")
 
 @router.get("/terms-quiz-by-date/{date}")
-def get_terms_quiz_by_date(date: str, db: Session = Depends(get_db)):
+def get_terms_quiz_by_date(date: str, language: str = "ko", db: Session = Depends(get_db)):
     """선택한 날짜의 모든 용어로 퀴즈를 생성합니다 (학습 여부와 상관없이)."""
     try:
+        # 언어별 컬럼 선택
+        terms_suffix = f"_terms_{language}"
+        
         # 선택한 날짜의 AI 정보 가져오기
         ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
         
         if not ai_info:
             return {"quizzes": [], "message": f"{date} 날짜의 AI 정보가 없습니다."}
         
-        # 모든 용어 수집
+        # 모든 용어 수집 (선택된 언어 기준)
         all_terms = []
         
-        # info1의 용어들 (한국어 기준)
-        if ai_info.info1_terms_ko:
+        # info1의 용어들 (선택된 언어 기준)
+        info1_terms_field = getattr(ai_info, f'info1{terms_suffix}', None)
+        if info1_terms_field:
             try:
-                terms1 = json.loads(ai_info.info1_terms_ko)
+                terms1 = json.loads(info1_terms_field)
                 all_terms.extend(terms1)
             except json.JSONDecodeError:
                 pass
         
-        # info2의 용어들 (한국어 기준)
-        if ai_info.info2_terms_ko:
+        # info2의 용어들 (선택된 언어 기준)
+        info2_terms_field = getattr(ai_info, f'info2{terms_suffix}', None)
+        if info2_terms_field:
             try:
-                terms2 = json.loads(ai_info.info2_terms_ko)
+                terms2 = json.loads(info2_terms_field)
                 all_terms.extend(terms2)
             except json.JSONDecodeError:
                 pass
         
-        # info3의 용어들 (한국어 기준)
-        if ai_info.info3_terms_ko:
+        # info3의 용어들 (선택된 언어 기준)
+        info3_terms_field = getattr(ai_info, f'info3{terms_suffix}', None)
+        if info3_terms_field:
             try:
-                terms3 = json.loads(ai_info.info3_terms_ko)
+                terms3 = json.loads(info3_terms_field)
                 all_terms.extend(terms3)
             except json.JSONDecodeError:
                 pass
@@ -892,15 +904,29 @@ def get_terms_quiz_by_date(date: str, db: Session = Depends(get_db)):
                 random.shuffle(options)
                 correct_index = options.index(term['description'])
                 
+                # 언어별 퀴즈 질문과 설명
+                if language == 'ko':
+                    question = f"'{term['term']}'의 올바른 뜻은?"
+                    explanation = f"'{term['term']}'는 '{term['description']}'을 의미합니다."
+                elif language == 'en':
+                    question = f"What is the correct meaning of '{term['term']}'?"
+                    explanation = f"'{term['term']}' means '{term['description']}'."
+                elif language == 'ja':
+                    question = f"'{term['term']}'の正しい意味は？"
+                    explanation = f"'{term['term']}'は'{term['description']}'を意味します。"
+                else:  # zh
+                    question = f"'{term['term']}'的正确含义是什么？"
+                    explanation = f"'{term['term']}'的意思是'{term['description']}'。"
+                
                 quizzes.append({
                     "id": i + 1,
-                    "question": f"'{term['term']}'의 올바른 뜻은?",
+                    "question": question,
                     "option1": options[0],
                     "option2": options[1],
                     "option3": options[2],
                     "option4": options[3],
                     "correct": correct_index,
-                    "explanation": f"'{term['term']}'는 '{term['description']}'을 의미합니다."
+                    "explanation": explanation
                 })
         
         return {"quizzes": quizzes, "total_terms": len(unique_terms)}
@@ -947,6 +973,9 @@ def get_learned_terms(session_id: str, language: str = "ko", db: Session = Depen
                                     try:
                                         terms = json.loads(info_terms_field)
                                         for term in terms:
+                                            # 언어별 용어 제목과 설명 추가
+                                            term['term'] = term.get('term', '')
+                                            term['description'] = term.get('description', '')
                                             term['learned_date'] = progress.date
                                             term['info_index'] = info_idx
                                         all_terms.extend(terms)
@@ -982,6 +1011,9 @@ def get_learned_terms(session_id: str, language: str = "ko", db: Session = Depen
                                     # 학습한 용어만 필터링
                                     for term in info_terms:
                                         if term.get('term') in learned_terms:
+                                            # 언어별 용어 제목과 설명 추가
+                                            term['term'] = term.get('term', '')
+                                            term['description'] = term.get('description', '')
                                             term['learned_date'] = date_part
                                             term['info_index'] = info_index
                                             all_terms.append(term)

@@ -107,7 +107,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
   const { data: learnedData, isLoading } = useQuery<LearnedTermsResponse>({
     queryKey: ['learned-terms', sessionId],
     queryFn: async () => {
-      const response = await aiInfoAPI.getLearnedTerms(sessionId)
+              const response = await aiInfoAPI.getLearnedTerms(sessionId, currentLanguage)
       return response.data
     },
     enabled: !!sessionId,

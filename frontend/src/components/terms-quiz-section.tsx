@@ -329,7 +329,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
         }
       } else {
         // 기존 방식: 날짜별 퀴즈
-        const response = await aiInfoAPI.getTermsQuizByDate(selectedDate)
+        const response = await aiInfoAPI.getTermsQuizByDate(selectedDate, currentLanguage)
         return response.data
       }
     },
