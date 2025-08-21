@@ -623,7 +623,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
             <FaStar className={`w-3.5 h-3.5 transition-all duration-300 ${
               showFavoritesOnly 
                 ? 'text-yellow-400 drop-shadow-sm' 
-                : 'text-white/30 border border-white/30 rounded-sm'
+                : 'text-white/30'
             }`} />
                                     <span className="text-xs">{t('ai.info.favorite')}</span>
           </button>

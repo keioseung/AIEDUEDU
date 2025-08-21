@@ -6,7 +6,8 @@ import { HelpCircle, CheckCircle, XCircle, RotateCcw, BookOpen, Target, Trophy, 
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import { useUpdateQuizScore, useCheckAchievements } from '@/hooks/use-user-progress'
-import { t } from '@/lib/i18n'
+import { t, getCurrentLanguage } from '@/lib/i18n'
+import { useEffect } from 'react'
 
 interface TermsQuizSectionProps {
   sessionId: string
@@ -58,6 +59,45 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
   const [showWrongAnswerAdded, setShowWrongAnswerAdded] = useState(false)
   const updateQuizScoreMutation = useUpdateQuizScore()
   const checkAchievementsMutation = useCheckAchievements()
+
+  // 언어 변경 감지 및 즉시 업데이트
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      const newLanguage = getCurrentLanguage()
+      if (newLanguage !== currentLanguage) {
+        // 언어가 변경되면 강제로 리렌더링
+        window.location.reload()
+      }
+    }
+
+    const handleForceUpdate = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        const newLanguage = event.detail.language
+        if (newLanguage !== currentLanguage) {
+          window.location.reload()
+        }
+      }
+    }
+
+    const handleLanguageChanged = (event: CustomEvent) => {
+      if (event.detail?.language) {
+        const newLanguage = event.detail.language
+        if (newLanguage !== currentLanguage) {
+          window.location.reload()
+        }
+      }
+    }
+
+    window.addEventListener('languageChange', handleLanguageChange)
+    window.addEventListener('forceUpdate', handleForceUpdate as EventListener)
+    window.addEventListener('languageChanged', handleLanguageChanged as EventListener)
+    
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange)
+      window.removeEventListener('forceUpdate', handleForceUpdate as EventListener)
+      window.removeEventListener('languageChanged', handleLanguageChanged as EventListener)
+    }
+  }, [currentLanguage])
 
   // 다국어 퀴즈 내용 가져오기
   const getQuizContent = (quiz: TermsQuiz, language: 'ko' | 'en' | 'ja' | 'zh') => {
