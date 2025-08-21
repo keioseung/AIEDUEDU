@@ -5,18 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { FaBrain, FaArrowLeft, FaPlus, FaEdit, FaTrash, FaRobot, FaFileAlt, FaCopy, FaSave, FaTimes, FaDownload, FaUpload } from 'react-icons/fa'
 import { aiInfoAPI, promptAPI, baseContentAPI } from '@/lib/api'
-
-interface TermItem {
-  term: string
-  description: string
-}
-
-interface AIInfoItem {
-  title: string
-  content: string
-  terms?: TermItem[]
-  category?: string
-}
+import { AIInfoItem, TermItem } from '@/types'
 
 interface ServerPrompt {
   id: number
@@ -67,12 +56,7 @@ export default function AdminAIInfoPage() {
   // 전체 AI 정보 관리 상태
   const [showAllAIInfo, setShowAllAIInfo] = useState(false)
   const [editingAIInfo, setEditingAIInfo] = useState<{id: string, index: number} | null>(null)
-  const [editingData, setEditingData] = useState<{
-    title_ko: string, title_en: string, title_ja: string, title_zh: string,
-    content_ko: string, content_en: string, content_ja: string, content_zh: string,
-    category: string, 
-    terms_ko: TermItem[], terms_en: TermItem[], terms_ja: TermItem[], terms_zh: TermItem[]
-  }>({
+  const [editingData, setEditingData] = useState<Partial<AIInfoItem>>({
     title_ko: '', title_en: '', title_ja: '', title_zh: '',
     content_ko: '', content_en: '', content_ja: '', content_zh: '',
     category: '', 
