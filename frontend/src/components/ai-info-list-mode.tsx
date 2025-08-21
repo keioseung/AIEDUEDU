@@ -614,22 +614,32 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           
           {/* 즐겨찾기만 버튼 */}
           <button
-            onClick={() => {
-              setShowFavoritesOnly(!showFavoritesOnly)
+            onTouchStart={() => {
+              if (isProcessing) return
+              setIsProcessing(true)
+              setShowFavoritesOnly(prev => !prev)
+              setTimeout(() => setIsProcessing(false), 300)
             }}
-            className={`px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2 min-h-[44px] min-w-[120px] ${
+            onClick={() => {
+              if (isProcessing) return
+              setIsProcessing(true)
+              setShowFavoritesOnly(prev => !prev)
+              setTimeout(() => setIsProcessing(false), 300)
+            }}
+            className={`px-2 py-2.5 rounded-xl text-xs font-medium transition-all touch-manipulation select-none min-h-[44px] min-w-[70px] webview-button flex items-center justify-center gap-2 ${
               showFavoritesOnly
-                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg border border-green-400/50'
-                : 'bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 text-white/70 hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40 backdrop-blur-xl'
+                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg ring-2 ring-green-400/30 border border-green-300/40'
+                : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 border border-white/20'
             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            <FaStar className={`w-3.5 h-3.5 transition-all duration-300 ${
-              showFavoritesOnly 
-                ? 'text-yellow-400 drop-shadow-sm' 
-                : 'text-white/30'
-            }`} />
-                                    <span className="text-xs">{t('ai.info.favorite')}</span>
+            <FaStar 
+              className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'text-yellow-400' : 'text-white'}`} 
+              fill={showFavoritesOnly ? 'currentColor' : 'none'} 
+              stroke={showFavoritesOnly ? 'none' : 'currentColor'} 
+              strokeWidth={showFavoritesOnly ? 0 : 2}
+            />
+            <span className="text-xs font-medium">{t('ai.info.favorite')}</span>
           </button>
         </div>
       </div>
