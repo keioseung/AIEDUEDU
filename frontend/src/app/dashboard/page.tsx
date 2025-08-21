@@ -100,6 +100,35 @@ export default function DashboardPage() {
   })
   
   const { data: aiInfo, isLoading: aiInfoLoading } = useAIInfo(selectedDate)
+  
+  // AI 정보 데이터 디버깅
+  useEffect(() => {
+    if (aiInfo) {
+      console.log('=== AI Info Data Debug ===')
+      console.log('Selected Date:', selectedDate)
+      console.log('AI Info Data:', aiInfo)
+      console.log('AI Info Length:', aiInfo.length)
+      
+      if (aiInfo.length > 0) {
+        aiInfo.forEach((info, index) => {
+          console.log(`Info ${index + 1}:`)
+          console.log(`  Title KO: ${info.title_ko}`)
+          console.log(`  Title EN: ${info.title_en}`)
+          console.log(`  Title JA: ${info.title_ja}`)
+          console.log(`  Title ZH: ${info.title_zh}`)
+          console.log(`  Content KO: ${info.content_ko?.substring(0, 50)}...`)
+          console.log(`  Content EN: ${info.content_en?.substring(0, 50) || 'None'}...`)
+          console.log(`  Content JA: ${info.content_ja?.substring(0, 50) || 'None'}...`)
+          console.log(`  Content ZH: ${info.content_zh?.substring(0, 50) || 'None'}...`)
+          console.log(`  Terms KO count: ${info.terms_ko?.length || 0}`)
+          console.log(`  Terms EN count: ${info.terms_en?.length || 0}`)
+          console.log(`  Terms JA count: ${info.terms_ja?.length || 0}`)
+          console.log(`  Terms ZH count: ${info.terms_zh?.length || 0}`)
+        })
+      }
+      console.log('========================')
+    }
+  }, [aiInfo, selectedDate])
   const { data: userProgress, isLoading: progressLoading, refetch: refetchUserProgress } = useUserProgress(sessionId)
   const { data: userStats, refetch: refetchUserStats } = useUserStats(sessionId)
   const router = useRouter()
