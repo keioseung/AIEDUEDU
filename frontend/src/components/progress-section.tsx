@@ -450,7 +450,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
            // 등록된 모든 AI 정보 중 유저가 학습한 정보 총 수
            const totalLearned = learnedCountData?.learned_count || 0
            // 전체 등록된 AI 정보 수 (날짜별로 계산)
-           const totalCards = aiInfoDates?.reduce((total, date) => {
+           const totalCards = aiInfoDates?.reduce((total: number, date: string) => {
              const dateAIInfo = aiInfoByDate[date] || []
              return total + dateAIInfo.length
            }, 0) || 0
@@ -541,9 +541,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                        <span className="text-white font-semibold text-sm">
          {(() => {
            // 등록된 모든 AI 정보의 관련 용어 총 수
-           const totalTerms = aiInfoDates?.reduce((total, date) => {
+           const totalTerms = aiInfoDates?.reduce((total: number, date: string) => {
              const dateAIInfo = aiInfoByDate[date] || []
-             return total + dateAIInfo.reduce((dateTotal, info) => {
+             return total + dateAIInfo.reduce((dateTotal: number, info: any) => {
                // 각 AI 정보의 용어 수 (기본값 20개)
                return dateTotal + (info.terms?.length || 20)
              }, 0)
