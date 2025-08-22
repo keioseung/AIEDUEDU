@@ -914,7 +914,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                     height: aiHeight,
                                     minHeight: data.ai_info > 0 ? 3 : 0,
                                     width: "100%",
-                                    marginTop: periodType === 'month' ? `${80 - aiHeight}px` : '0px'
+                                    marginTop: periodType === 'month' ? `${100 - aiHeight}px` : '0px'
                                   }}
                                 />
                                                                  {/* bar 위에 % */}
@@ -991,7 +991,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                     height: termsHeight,
                                     minHeight: data.terms > 0 ? 3 : 0,
                                     width: "100%",
-                                    marginTop: periodType === 'month' ? `${80 - termsHeight}px` : '0px'
+                                    marginTop: periodType === 'month' ? `${100 - termsHeight}px` : '0px'
                                   }}
                                 />
                                                                  {/* bar 위에 % */}
@@ -1067,7 +1067,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                     height: quizHeight,
                                     minHeight: data.quiz_score > 0 ? 3 : 0,
                                     width: "100%",
-                                    marginTop: periodType === 'month' ? `${80 - quizHeight}px` : '0px'
+                                    marginTop: periodType === 'month' ? `${100 - quizHeight}px` : '0px'
                                   }}
                                 />
                                                                  {/* bar 위에 % */}
