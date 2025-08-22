@@ -1197,7 +1197,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                          <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                   <Target className="w-5 h-5" />
-                  {t('terms.tab.filter.total.terms', { count: filteredTerms.length })}
+                  용어 목록({filteredTerms.length}개)
                 </h3>
                 <div className="flex items-center gap-2">
                   <div className="relative">
