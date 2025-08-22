@@ -617,27 +617,98 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
             except json.JSONDecodeError:
                 ai_count = 0
         
-        # 용어 학습 수 - 해당 날짜에 학습한 용어 개수
-        terms_progress = db.query(UserProgress).filter(
-            UserProgress.session_id == session_id,
-            UserProgress.date.like(f'__terms__{date}%')
-        ).all()
-        
+        # 용어 학습 수 - 해당 날짜에 등록된 AI정보 카드들의 관련 용어 중 학습완료된 용어 개수
         terms_count = 0
-        unique_terms = set()  # 중복 제거를 위한 set
         
-        for term_progress in terms_progress:
-            if term_progress.learned_info:
-                try:
-                    terms = json.loads(term_progress.learned_info)
-                    if isinstance(terms, list):
-                        unique_terms.update(terms)  # 중복 제거
-                    elif isinstance(terms, dict) and 'terms' in terms:
-                        unique_terms.update(terms['terms'])  # term-progress 형식
-                except json.JSONDecodeError:
-                    continue
-        
-        terms_count = len(unique_terms)
+        try:
+            # 해당 날짜에 등록된 AI정보 카드들의 관련 용어 가져오기
+            from app.models import AIInfo
+            ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
+            
+            if ai_info:
+                learned_terms_count = 0
+                
+                # info1의 용어들 확인
+                if ai_info.info1_terms_ko:
+                    try:
+                        terms1 = json.loads(ai_info.info1_terms_ko)
+                        if isinstance(terms1, list):
+                            for term in terms1:
+                                # 용어별 진행률 확인
+                                term_progress = db.query(UserProgress).filter(
+                                    UserProgress.session_id == session_id,
+                                    UserProgress.date.like(f'__terms__{date}%'),
+                                    UserProgress.learned_info.like(f'%{term}%')
+                                ).first()
+                                
+                                if term_progress and term_progress.learned_info:
+                                    try:
+                                        learned_data = json.loads(term_progress.learned_info)
+                                        if isinstance(learned_data, list) and term in learned_data:
+                                            learned_terms_count += 1
+                                        elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                            learned_terms_count += 1
+                                    except json.JSONDecodeError:
+                                        continue
+                    except json.JSONDecodeError:
+                        pass
+                
+                # info2의 용어들 확인
+                if ai_info.info2_terms_ko:
+                    try:
+                        terms2 = json.loads(ai_info.info2_terms_ko)
+                        if isinstance(terms2, list):
+                            for term in terms2:
+                                # 용어별 진행률 확인
+                                term_progress = db.query(UserProgress).filter(
+                                    UserProgress.session_id == session_id,
+                                    UserProgress.date.like(f'__terms__{date}%'),
+                                    UserProgress.learned_info.like(f'%{term}%')
+                                ).first()
+                                
+                                if term_progress and term_progress.learned_info:
+                                    try:
+                                        learned_data = json.loads(term_progress.learned_info)
+                                        if isinstance(learned_data, list) and term in learned_data:
+                                            learned_terms_count += 1
+                                        elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                            learned_terms_count += 1
+                                    except json.JSONDecodeError:
+                                        continue
+                    except json.JSONDecodeError:
+                        pass
+                
+                # info3의 용어들 확인
+                if ai_info.info3_terms_ko:
+                    try:
+                        terms3 = json.loads(ai_info.info3_terms_ko)
+                        if isinstance(terms3, list):
+                            for term in terms3:
+                                # 용어별 진행률 확인
+                                term_progress = db.query(UserProgress).filter(
+                                    UserProgress.session_id == session_id,
+                                    UserProgress.date.like(f'__terms__{date}%'),
+                                    UserProgress.learned_info.like(f'%{term}%')
+                                ).first()
+                                
+                                if term_progress and term_progress.learned_info:
+                                    try:
+                                        learned_data = json.loads(term_progress.learned_info)
+                                        if isinstance(learned_data, list) and term in learned_data:
+                                            learned_terms_count += 1
+                                        elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                            learned_terms_count += 1
+                                    except json.JSONDecodeError:
+                                        continue
+                    except json.JSONDecodeError:
+                        pass
+                
+                # 학습완료된 용어 수 반환
+                terms_count = learned_terms_count
+            
+        except Exception as e:
+            print(f"Error calculating terms count for date {date}: {e}")
+            terms_count = 0
         
         # 퀴즈 점수
         quiz_progress = db.query(UserProgress).filter(
@@ -825,4 +896,111 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         "streak_days": streak_days,
         "total_ai_info_available": total_learned,  # 호환성을 위해 추가
         "total_terms_available": total_terms_learned  # 호환성을 위해 추가
-    } 
+    }
+
+@router.get("/total-terms-stats/{session_id}")
+def get_total_terms_stats(session_id: str, db: Session = Depends(get_db)):
+    """등록된 모든 정보카드에서 학습완료한 관련용어의 총 수를 반환합니다."""
+    try:
+        # 모든 AI정보 카드의 관련 용어 가져오기
+        from app.models import AIInfo
+        all_ai_info = db.query(AIInfo).all()
+        
+        total_available_terms = 0
+        total_learned_terms = 0
+        
+        for ai_info in all_ai_info:
+            # info1의 용어들 확인
+            if ai_info.info1_terms_ko:
+                try:
+                    terms1 = json.loads(ai_info.info1_terms_ko)
+                    if isinstance(terms1, list):
+                        total_available_terms += len(terms1)
+                        
+                        # 각 용어의 학습 완료 여부 확인
+                        for term in terms1:
+                            term_progress = db.query(UserProgress).filter(
+                                UserProgress.session_id == session_id,
+                                UserProgress.date.like('__terms__%'),
+                                UserProgress.learned_info.like(f'%{term}%')
+                            ).first()
+                            
+                            if term_progress and term_progress.learned_info:
+                                try:
+                                    learned_data = json.loads(term_progress.learned_info)
+                                    if isinstance(learned_data, list) and term in learned_data:
+                                        total_learned_terms += 1
+                                    elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                        total_learned_terms += 1
+                                except json.JSONDecodeError:
+                                    continue
+                except json.JSONDecodeError:
+                    pass
+            
+            # info2의 용어들 확인
+            if ai_info.info2_terms_ko:
+                try:
+                    terms2 = json.loads(ai_info.info2_terms_ko)
+                    if isinstance(terms2, list):
+                        total_available_terms += len(terms2)
+                        
+                        # 각 용어의 학습 완료 여부 확인
+                        for term in terms2:
+                            term_progress = db.query(UserProgress).filter(
+                                UserProgress.session_id == session_id,
+                                UserProgress.date.like('__terms__%'),
+                                UserProgress.learned_info.like(f'%{term}%')
+                            ).first()
+                            
+                            if term_progress and term_progress.learned_info:
+                                try:
+                                    learned_data = json.loads(term_progress.learned_info)
+                                    if isinstance(learned_data, list) and term in learned_data:
+                                        total_learned_terms += 1
+                                    elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                        total_learned_terms += 1
+                                except json.JSONDecodeError:
+                                    continue
+                except json.JSONDecodeError:
+                    pass
+            
+            # info3의 용어들 확인
+            if ai_info.info3_terms_ko:
+                try:
+                    terms3 = json.loads(ai_info.info3_terms_ko)
+                    if isinstance(terms3, list):
+                        total_available_terms += len(terms3)
+                        
+                        # 각 용어의 학습 완료 여부 확인
+                        for term in terms3:
+                            term_progress = db.query(UserProgress).filter(
+                                UserProgress.session_id == session_id,
+                                UserProgress.date.like('__terms__%'),
+                                UserProgress.learned_info.like(f'%{term}%')
+                            ).first()
+                            
+                            if term_progress and term_progress.learned_info:
+                                try:
+                                    learned_data = json.loads(term_progress.learned_info)
+                                    if isinstance(learned_data, list) and term in learned_data:
+                                        total_learned_terms += 1
+                                    elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                        total_learned_terms += 1
+                                except json.JSONDecodeError:
+                                    continue
+                except json.JSONDecodeError:
+                    pass
+        
+        return {
+            "total_available_terms": total_available_terms,
+            "total_learned_terms": total_learned_terms,
+            "learning_progress_percentage": int((total_learned_terms / total_available_terms * 100)) if total_available_terms > 0 else 0
+        }
+        
+    except Exception as e:
+        print(f"Error calculating total terms stats: {e}")
+        return {
+            "total_available_terms": 0,
+            "total_learned_terms": 0,
+            "learning_progress_percentage": 0
+        } 

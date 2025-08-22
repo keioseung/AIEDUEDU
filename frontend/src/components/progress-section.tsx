@@ -143,6 +143,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     refetchIntervalInBackground: true,
   })
 
+  // 누적 총 용어수 통계 가져오기
+  const { data: totalTermsStats } = useQuery({
+    queryKey: ['total-terms-stats', sessionId],
+    queryFn: async () => {
+      try {
+        const response = await userProgressAPI.getTotalTermsStats(sessionId)
+        return response.data
+      } catch (error) {
+        console.log('누적 총 용어수 통계 가져오기 실패:', error)
+        return { total_available_terms: 0, total_learned_terms: 0, learning_progress_percentage: 0 }
+      }
+    },
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+  })
+
   // 기간별 데이터 계산
   const getPeriodDates = () => {
     const today = new Date()
@@ -394,6 +410,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const maxAI = totalAIInfo;
   const maxTerms = totalTerms;
   const maxQuiz = 100;
+  
+  // 오늘 날짜의 최대 용어 수 (AI정보 카드당 20개씩)
+  const todayMaxTerms = totalTerms || 40; // 기본값 40 (2개 카드 × 20개 용어)
 
   // 날짜 포맷 함수 (컴팩트 형식)
   const formatCompactDate = (dateString: string) => {
@@ -936,9 +955,18 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         </span>
                       </div>
                     </div>
-                    <span className="text-white/70 text-sm font-medium">
-                      {t('progress.graph.card.max')}: 100%
-                    </span>
+                    <div className="flex flex-col items-end text-right">
+                      <span className="text-white/70 text-sm font-medium">
+                        {t('progress.graph.card.max')}: 100%
+                      </span>
+                      {totalTermsStats && (
+                        <span className="text-purple-200 text-xs font-medium">
+                          {localLanguage === 'ko' ? '누적 총 용어수' : 
+                           localLanguage === 'en' ? 'Total Terms' : 
+                           localLanguage === 'ja' ? '累計用語数' : '累计术语数'}: {totalTermsStats.total_learned_terms}/{totalTermsStats.total_available_terms}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="w-full">
                     <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
@@ -953,7 +981,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
-                          const maxValue = 40; // 고정된 최대값 40 (각 날짜당 2개 카드 × 20개 용어)
+                          // 선택된 날짜의 AI정보 카드 수에 따라 최대값 동적 설정
+                          const maxValue = data.date === selectedDate ? todayMaxTerms : 40;
                           const termsHeight = Math.min(Math.max((data.terms / maxValue) * 40, data.terms > 0 ? 3 : 0), 40);
                           const isFullTerms = data.terms >= maxValue;
                           const percent = Math.min(Math.round((data.terms / maxValue) * 100), 100);
