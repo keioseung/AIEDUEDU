@@ -301,45 +301,28 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
               const dateStr = d.toISOString().split('T')[0]
               const localProgress = userData[dateStr] || []
-              const localTerms = userData.terms_by_date?.[dateStr] || []
               
               // selectedDate가 있는 경우 해당 날짜의 데이터를 우선적으로 반영
               let aiCount = localProgress.length
-              let termsCount = localTerms.length
               
-              // terms_by_date에서 가져온 값이 비정상적으로 크면 0으로 초기화
-              if (termsCount > 50) {
-                console.warn(`⚠️ ${dateStr} 날짜의 terms_by_date 값이 비정상적으로 큼: ${termsCount}, 0으로 초기화`)
-                termsCount = 0
-              }
-              
-              // 22일자 특별 처리 - 실제 학습된 용어가 없으면 0으로 설정
-              if (dateStr === '2025-08-22') {
-                console.log(`🔍 22일자 terms_by_date 값: ${termsCount}`)
-                // 실제로 학습된 용어가 있는지 확인
-                let actualLearnedTerms = 0
-                for (let infoIndex = 0; infoIndex < 3; infoIndex++) {
-                  const key = `learnedTerms_${sessionId}_${dateStr}_${infoIndex}`
-                  const stored = localStorage.getItem(key)
-                  if (stored) {
-                    try {
-                      const learnedArray = JSON.parse(stored)
-                      if (Array.isArray(learnedArray)) {
-                        actualLearnedTerms += learnedArray.length
-                      }
-                    } catch (e) {
-                      console.error(`❌ ${key} 파싱 오류:`, e)
+              // 실제 학습된 용어 수를 계산 (terms_by_date는 백엔드에서 학습된 용어를 그룹화한 것이므로 사용하지 않음)
+              let termsCount = 0
+              for (let infoIndex = 0; infoIndex < 3; infoIndex++) {
+                const key = `learnedTerms_${sessionId}_${dateStr}_${infoIndex}`
+                const stored = localStorage.getItem(key)
+                if (stored) {
+                  try {
+                    const learnedArray = JSON.parse(stored)
+                    if (Array.isArray(learnedArray)) {
+                      termsCount += learnedArray.length
                     }
+                  } catch (e) {
+                    console.error(`❌ ${key} 파싱 오류:`, e)
                   }
                 }
-                console.log(`🔍 22일자 실제 학습된 용어 수: ${actualLearnedTerms}`)
-                
-                // 실제 학습된 용어가 없으면 0으로 설정
-                if (actualLearnedTerms === 0) {
-                  console.log(`🔍 22일자 학습된 용어가 없으므로 0으로 설정`)
-                  termsCount = 0
-                }
               }
+              
+              console.log(`🔍 ${dateStr} 날짜: AI 정보 ${aiCount}개, 학습된 용어 ${termsCount}개`)
               
               // selectedDate가 현재 날짜와 같다면 로컬 데이터를 더 정확하게 반영
               
