@@ -526,14 +526,16 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                     let totalLearned = 0
                     if (typeof window !== 'undefined') {
                       try {
+                        // userProgress에서 학습완료된 카드 확인
                         const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                         const sessionProgress = userProgress[sessionId]
                         if (sessionProgress) {
-                          // 모든 날짜의 학습 데이터 수집
                           Object.keys(sessionProgress).forEach(date => {
                             if (date !== '__stats__' && date !== 'terms_by_date') {
                               const learnedIndices = sessionProgress[date] || []
-                              totalLearned += learnedIndices.length
+                              // 실제 학습완료된 카드 수만 계산 (중복 제거)
+                              const uniqueIndices = [...new Set(learnedIndices)]
+                              totalLearned += uniqueIndices.length
                             }
                           })
                         }
@@ -646,30 +648,28 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // localStorage에서 실제 학습된 용어 수 계산
+                    // localStorage에서 실제 학습된 용어 수 계산 (모든 카드에서 학습된 용어)
                     let totalTermsLearned = 0
                     
                     if (typeof window !== 'undefined') {
                       try {
-                        const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                        const sessionProgress = userProgress[sessionId]
-                        if (sessionProgress) {
-                          // 모든 날짜의 용어 학습 데이터 수집
-                          Object.keys(sessionProgress).forEach(date => {
-                            if (date !== '__stats__' && date !== 'terms_by_date') {
-                              const learnedIndices = sessionProgress[date] || []
-                              
-                              // 각 학습된 AI 정보의 용어 학습 상태 확인
-                              learnedIndices.forEach((infoIndex: number) => {
-                                // __terms__{date}_{info_index} 형식의 키 사용 (AI 정보 탭과 동일)
-                                const termKey = `__terms__${date}_${infoIndex}`
-                                if (sessionProgress[termKey]) {
-                                  const terms = sessionProgress[termKey]
+                        // 모든 날짜의 모든 카드(학습완료/미완료 관계없이)에서 학습된 용어 수 계산
+                        if (aiInfoDates) {
+                          aiInfoDates.forEach((date: string) => {
+                            // 각 날짜당 2개 카드 (0번, 1번) 모두 확인
+                            for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+                              const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
+                              const learnedTerms = localStorage.getItem(learnedTermsKey)
+                              if (learnedTerms) {
+                                try {
+                                  const terms = JSON.parse(learnedTerms)
                                   if (Array.isArray(terms)) {
                                     totalTermsLearned += terms.length
                                   }
+                                } catch (error) {
+                                  console.error('용어 데이터 파싱 오류:', error)
                                 }
-                              })
+                              }
                             }
                           })
                         }
@@ -894,7 +894,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       </div>
 
                       {/* bar + 날짜 */}
-                      <div className={`flex items-end h-20 ${getBarGap()}`}>
+                      <div className={`flex ${periodType === 'month' ? 'items-start' : 'items-end'} h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
                           const maxValue = 2; // 고정된 최대값 2 (각 날짜당 2개 카드)
@@ -913,19 +913,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   style={{
                                     height: aiHeight,
                                     minHeight: data.ai_info > 0 ? 3 : 0,
-                                    width: "100%"
+                                    width: "100%",
+                                    marginTop: periodType === 'month' ? `${80 - aiHeight}px` : '0px'
                                   }}
                                 />
-                                {/* bar 위에 % */}
-                                {data.ai_info > 0 && shouldShowPercentage() && (
-                                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
-                                    percent === 100 
-                                      ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
-                                      : 'bg-gradient-to-r from-blue-400 to-blue-300 text-white shadow-lg shadow-blue-500/30 px-1 py-0.5 rounded-md'
-                                  }`}>
-                                    {percent}%
-                                  </div>
-                                )}
+                                                                 {/* bar 위에 % */}
+                                 {data.ai_info > 0 && shouldShowPercentage() && (
+                                   <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-[4px] font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[10px] text-center ${
+                                     percent === 100 
+                                       ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
+                                       : 'bg-gradient-to-r from-blue-400 to-blue-300 text-white shadow-lg shadow-blue-500/30 px-0.5 py-0.5 rounded-md'
+                                   }`}>
+                                     {percent}%
+                                   </div>
+                                 )}
                               </div>
                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
@@ -955,18 +956,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end text-right">
-                      <span className="text-white/70 text-sm font-medium">
-                        {t('progress.graph.card.max')}: 100%
-                      </span>
-                      {totalTermsStats && (
-                        <span className="text-purple-200 text-xs font-medium">
-                          {localLanguage === 'ko' ? '누적 총 용어수' : 
-                           localLanguage === 'en' ? 'Total Terms' : 
-                           localLanguage === 'ja' ? '累計用語数' : '累计术语数'}: {totalTermsStats.total_learned_terms}/{totalTermsStats.total_available_terms}
-                        </span>
-                      )}
-                    </div>
+                    <span className="text-white/70 text-sm font-medium">
+                      {t('progress.graph.card.max')}: 100%
+                    </span>
                   </div>
                   <div className="w-full">
                     <div className="flex flex-row items-end h-28 relative px-2 md:px-4" style={{ minWidth: getContainerMinWidth() }}>
@@ -978,7 +970,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       </div>
 
                       {/* bar + 날짜 */}
-                      <div className={`flex items-end h-20 ${getBarGap()}`}>
+                      <div className={`flex ${periodType === 'month' ? 'items-start' : 'items-end'} h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
                           // 선택된 날짜의 AI정보 카드 수에 따라 최대값 동적 설정
@@ -998,19 +990,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   style={{
                                     height: termsHeight,
                                     minHeight: data.terms > 0 ? 3 : 0,
-                                    width: "100%"
+                                    width: "100%",
+                                    marginTop: periodType === 'month' ? `${80 - termsHeight}px` : '0px'
                                   }}
                                 />
-                                {/* bar 위에 % */}
-                                {data.terms > 0 && shouldShowPercentage() && (
-                                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
-                                    percent === 100 
-                                      ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
-                                      : 'bg-gradient-to-r from-purple-400 to-purple-300 text-white shadow-lg shadow-purple-500/30 px-1 py-0.5 rounded-md'
-                                  }`}>
-                                    {percent}%
-                                  </div>
-                                )}
+                                                                 {/* bar 위에 % */}
+                                 {data.terms > 0 && shouldShowPercentage() && (
+                                   <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-[4px] font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[10px] text-center ${
+                                     percent === 100 
+                                       ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
+                                       : 'bg-gradient-to-r from-purple-400 to-purple-300 text-white shadow-lg shadow-purple-500/30 px-0.5 py-0.5 rounded-md'
+                                   }`}>
+                                     {percent}%
+                                   </div>
+                                 )}
                               </div>
                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
@@ -1054,7 +1047,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       </div>
 
                       {/* bar + 날짜 */}
-                      <div className={`flex items-end h-20 ${getBarGap()}`}>
+                      <div className={`flex ${periodType === 'month' ? 'items-start' : 'items-end'} h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
                           const maxQuizScore = Math.max(...uniqueChartData.map(d => d.quiz_score), 1);
@@ -1073,19 +1066,20 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   style={{
                                     height: quizHeight,
                                     minHeight: data.quiz_score > 0 ? 3 : 0,
-                                    width: "100%"
+                                    width: "100%",
+                                    marginTop: periodType === 'month' ? `${80 - quizHeight}px` : '0px'
                                   }}
                                 />
-                                {/* bar 위에 % */}
-                                {data.quiz_score > 0 && shouldShowPercentage() && (
-                                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[36px] text-center ${
-                                    percent === 100 
-                                      ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-1.5 py-0.5 rounded-full border-2 border-yellow-300' 
-                                      : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-1 py-0.5 rounded-md'
-                                  }`}>
-                                    {percent}%
-                                  </div>
-                                )}
+                                                                 {/* bar 위에 % */}
+                                 {data.quiz_score > 0 && shouldShowPercentage() && (
+                                   <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-[4px] font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[10px] text-center ${
+                                     percent === 100 
+                                       ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
+                                       : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-0.5 py-0.5 rounded-md'
+                                   }`}>
+                                     {percent}%
+                                   </div>
+                                 )}
                               </div>
                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}

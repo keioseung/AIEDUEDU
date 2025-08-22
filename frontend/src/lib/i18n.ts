@@ -45,7 +45,7 @@ const ko: Record<string, string> = {
   'nav.ai.info': 'AI 정보',
   'nav.quiz': '퀴즈',
   'nav.progress': '진행률',
-      'nav.terms': '모든 용어',
+      'nav.terms': '용어 학습',
   'nav.admin': '관리자',
   'nav.logout': '로그아웃',
   
@@ -539,7 +539,7 @@ const en: Record<string, string> = {
   'nav.ai.info': 'AI Info',
   'nav.quiz': 'Quiz',
   'nav.progress': 'Progress',
-      'nav.terms': 'All Terms',
+      'nav.terms': 'Terms',
   'nav.admin': 'Admin',
   'nav.logout': 'Logout',
   
@@ -1029,7 +1029,7 @@ const ja: Record<string, string> = {
   'nav.ai.info': 'AI情報',
   'nav.quiz': 'クイズ',
   'nav.progress': '進捗',
-      'nav.terms': '全用語',
+      'nav.terms': '用語学習',
   'nav.admin': '管理者',
   'nav.logout': 'ログアウト',
   
@@ -1516,7 +1516,7 @@ const zh: Record<string, string> = {
   'nav.ai.info': 'AI信息',
   'nav.quiz': '测验',
   'nav.progress': '进度',
-      'nav.terms': '所有术语',
+      'nav.terms': '术语学习',
   'nav.admin': '管理员',
   'nav.logout': '登出',
   
