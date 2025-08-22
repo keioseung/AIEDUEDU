@@ -1211,7 +1211,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                       }`}
                       style={{ WebkitTapHighlightColor: 'transparent' }}
                     >
-                      {scrollMode ? '📱 스크롤' : (
+                                             {scrollMode ? t('terms.list.scroll.mode') : (
                         <div className="text-center leading-tight">
                           <div className="text-xs font-medium">
                             {localLanguage === 'ko' ? '스크롤 고정' : 

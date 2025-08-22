@@ -477,6 +477,7 @@ const ko: Record<string, string> = {
   // 용어학습 탭 목록 모드
   'terms.list.difficulty': '난이도',
   'terms.list.scroll.lock': '스크롤 고정(1초이상클릭)',
+  'terms.list.scroll.mode': '📱 스크롤',
   
   // 용어학습 탭 로딩 페이지
   'terms.tab.loading': '잠시만 기다려 주세요.',
@@ -933,6 +934,7 @@ const en: Record<string, string> = {
   // Terms Learning Tab List Mode
   'terms.list.difficulty': 'Difficulty',
   'terms.list.scroll.lock': 'Scroll Lock (Hold 1+ seconds)',
+  'terms.list.scroll.mode': '📱 Scroll',
   
   // Terms Learning Tab Loading Page
   'terms.tab.loading': 'Please wait a moment.',
@@ -1452,6 +1454,7 @@ const ja: Record<string, string> = {
   // 用語学習タブリストモード
   'terms.list.difficulty': '難易度',
   'terms.list.scroll.lock': 'スクロール固定(1秒以上長押し)',
+  'terms.list.scroll.mode': '📱 スクロール',
   
   // 用語学習タブローディングページ
   'terms.tab.loading': 'しばらくお待ちください。',
@@ -1938,6 +1941,7 @@ const zh: Record<string, string> = {
   // 术语学习标签页列表模式
   'terms.list.difficulty': '难度',
   'terms.list.scroll.lock': '滚动锁定(长按1秒以上)',
+  'terms.list.scroll.mode': '📱 滚动',
   
   // 术语学习标签页加载页面
   'terms.tab.loading': '请稍候。',
