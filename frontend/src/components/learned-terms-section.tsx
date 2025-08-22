@@ -34,6 +34,12 @@ interface LearnedTermsResponse {
   terms_by_date: Record<string, Term[]>
 }
 
+interface AllTermsResponse {
+  terms: Term[]
+  total_terms: number
+  message: string
+}
+
 function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSelectedDate, onDateChange }: LearnedTermsSectionProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
@@ -139,13 +145,13 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
     }
   }, [showSortDropdown])
   
-  const { data: learnedData, isLoading } = useQuery<LearnedTermsResponse>({
-    queryKey: ['learned-terms', sessionId],
+  const { data: allTermsData, isLoading } = useQuery<AllTermsResponse>({
+    queryKey: ['all-terms', currentLanguage],
     queryFn: async () => {
-      const response = await aiInfoAPI.getLearnedTerms(sessionId, currentLanguage)
+      const response = await aiInfoAPI.getAllTerms(currentLanguage)
       return response.data
     },
-    enabled: !!sessionId,
+    enabled: true,
     staleTime: 5 * 60 * 1000, // 5분간 데이터를 신선하게 유지
     gcTime: 10 * 60 * 1000, // 10분간 캐시 유지
     refetchOnWindowFocus: false, // 윈도우 포커스 시 새로고침 비활성화
@@ -153,32 +159,20 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
     refetchOnReconnect: false, // 네트워크 재연결 시 새로고침 비활성화
   })
 
-  // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
-  const actualLearnedTerms = new Set<string>()
-  
-  // React Query 데이터에서 문자열만 추가 (우선순위 높음)
-  if (learnedData?.terms) {
-    learnedData.terms.forEach(term => {
-      if (typeof term === 'string') {
-        actualLearnedTerms.add(term)
-      }
-    })
-  }
-  
   // 필터링 및 정렬된 용어 목록
   const filteredTerms = (() => {
-    if (!learnedData?.terms) return []
+    if (!allTermsData?.terms) return []
     
     let terms = selectedDate 
-      ? learnedData.terms.filter(term => term.learned_date === selectedDate)
-      : learnedData.terms
+      ? allTermsData.terms.filter(term => term.date === selectedDate)
+      : allTermsData.terms
 
-    // 중복 제거 (같은 용어가 여러 날짜에 있으면 최신 날짜 것만 유지)
+    // 중복 제거 (같은 용어라도 다른 날짜에 있다면 모두 포함)
     if (!selectedDate) {
       const uniqueTerms = new Map()
       terms.forEach(term => {
         const existing = uniqueTerms.get(term.term)
-        if (!existing || new Date(term.learned_date) > new Date(existing.learned_date)) {
+        if (!existing || new Date(term.date) > new Date(existing.date)) {
           uniqueTerms.set(term.term, term)
         }
       })
@@ -187,7 +181,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
 
     // 날짜가 선택된 경우 해당 날짜의 용어만 표시
     if (selectedDate) {
-      terms = terms.filter(term => term.learned_date === selectedDate)
+      terms = terms.filter(term => term.date === selectedDate)
     }
 
     // 검색 필터
@@ -211,7 +205,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
         return terms.sort((a, b) => a.term.localeCompare(b.term))
       case 'date':
       default:
-        return terms.sort((a, b) => new Date(b.learned_date).getTime() - new Date(a.learned_date).getTime())
+        return terms.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     }
   })()
 
@@ -249,7 +243,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
 
   // 자동 재생 기능 (단순화)
   useEffect(() => {
-    if (!autoPlay || !learnedData?.terms || filteredTerms.length === 0) {
+    if (!autoPlay || !allTermsData?.terms || filteredTerms.length === 0) {
       if (currentIntervalId) {
         clearTimeout(currentIntervalId)
         setCurrentIntervalId(null)
@@ -294,7 +288,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
         setCurrentIntervalId(null)
       }
     }
-  }, [autoPlay, autoPlayInterval, learnedData?.terms, filteredTerms.length, showFilters, showTermList])
+  }, [autoPlay, autoPlayInterval, allTermsData?.terms, filteredTerms.length, showFilters, showTermList])
 
   // 터치 제스처 처리
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -372,7 +366,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
       const data = filteredTerms.map(term => ({
         용어: term.term,
         설명: term.description,
-        [t('terms.card.learning.date')]: term.learned_date,
+        [t('terms.card.learning.date')]: term.date,
         [t('terms.list.difficulty')]: getDifficulty(term.term).level
       }))
       
@@ -559,17 +553,17 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
     )
   }
 
-  if (!learnedData?.terms || learnedData.terms.length === 0) {
+  if (!allTermsData?.terms || allTermsData.terms.length === 0) {
     return (
       <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
         <div className="text-center text-white">
           <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-60" />
-          <h3 className="text-lg font-semibold mb-2">{t('terms.tab.no.terms.message')}</h3>
+          <h3 className="text-lg font-semibold mb-2">등록된 용어가 없습니다</h3>
           <p className="text-white/70 mb-3 text-sm">
-            {t('terms.tab.no.terms.description')}
+            AI정보 탭에서 정보카드를 등록하면 관련 용어들이 표시됩니다
           </p>
           <div className="text-xs text-white/50">
-            {t('terms.tab.total.available.terms', { count: 0 })}
+            총 등록된 용어: 0개
           </div>
         </div>
       </div>
@@ -667,7 +661,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                    >
                      <div className="flex flex-col items-center">
                        <span className="text-sm font-bold">{t('terms.tab.filter.all')}</span>
-                       <span className="text-xs opacity-90">({learnedData.total_terms})</span>
+                       <span className="text-xs opacity-90">({allTermsData.total_terms})</span>
                      </div>
                    </button>
                  </div>
@@ -677,7 +671,10 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                    // 날짜를 월별로 그룹화
                    const monthlyGroups = new Map<string, { month: string, dates: string[], totalTerms: number }>()
                    
-                   learnedData.learned_dates.forEach(date => {
+                   // 모든 용어에서 고유한 날짜 추출
+                   const uniqueDates = [...new Set(allTermsData.terms.map(term => term.date))].sort().reverse()
+                   
+                   uniqueDates.forEach(date => {
                      const dateObj = new Date(date)
                      const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`
                      const monthLabel = (() => {
@@ -700,7 +697,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                      
                      const group = monthlyGroups.get(monthKey)!
                      group.dates.push(date)
-                     group.totalTerms += (learnedData.terms_by_date[date] || []).length
+                     group.totalTerms += allTermsData.terms.filter(term => term.date === date).length
                    })
                    
                    // 월별로 정렬 (최신순)
@@ -715,7 +712,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                        </div>
                        <div className="flex flex-wrap gap-1.5 ml-4">
                          {group.dates.map((date) => {
-                           const dateTerms = learnedData.terms_by_date[date] || []
+                           const dateTerms = allTermsData.terms.filter(term => term.date === date)
                            const formattedDate = (() => {
                              if (localLanguage === 'en') {
                                return new Date(date).toLocaleDateString('en-US', {
@@ -1049,7 +1046,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
           <div className="flex items-center justify-center text-white/60 text-sm">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span>{t('terms.card.learning.date')}: {currentTerm.learned_date}</span>
+              <span>{t('terms.card.learning.date')}: {currentTerm.date}</span>
             </div>
           </div>
 

@@ -1587,4 +1587,99 @@ def get_category_statistics(db: Session = Depends(get_db)):
         
     except Exception as e:
         print(f"Error getting category statistics: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to get category statistics: {str(e)}") 
+        raise HTTPException(status_code=500, detail=f"Failed to get category statistics: {str(e)}")
+
+@router.get("/all-terms/{language}")
+def get_all_terms(language: str = "ko", db: Session = Depends(get_db)):
+    """시스템에 등록된 모든 용어를 가져옵니다."""
+    try:
+        print(f"=== Getting All Terms for Language: {language} ===")
+        
+        # 언어별 컬럼 선택
+        terms_suffix = f"_terms_{language}"
+        
+        # 모든 AI 정보에서 용어 수집
+        all_ai_info = db.query(AIInfo).all()
+        all_terms = []
+        
+        for ai_info in all_ai_info:
+            # info1의 용어들
+            if ai_info.info1_title_ko and ai_info.info1_content_ko:
+                info1_terms_field = getattr(ai_info, f'info1{terms_suffix}', None)
+                if info1_terms_field:
+                    try:
+                        terms = json.loads(info1_terms_field)
+                        for term in terms:
+                            term_data = {
+                                'term': term.get('term', ''),
+                                'description': term.get('description', ''),
+                                'date': ai_info.date,
+                                'info_index': 0,
+                                'title': ai_info.info1_title_ko,
+                                'category': ai_info.info1_category or '미분류'
+                            }
+                            all_terms.append(term_data)
+                    except json.JSONDecodeError:
+                        pass
+            
+            # info2의 용어들
+            if ai_info.info2_title_ko and ai_info.info2_content_ko:
+                info2_terms_field = getattr(ai_info, f'info2{terms_suffix}', None)
+                if info2_terms_field:
+                    try:
+                        terms = json.loads(info2_terms_field)
+                        for term in terms:
+                            term_data = {
+                                'term': term.get('term', ''),
+                                'description': term.get('description', ''),
+                                'date': ai_info.date,
+                                'info_index': 1,
+                                'title': ai_info.info2_title_ko,
+                                'category': ai_info.info2_category or '미분류'
+                            }
+                            all_terms.append(term_data)
+                    except json.JSONDecodeError:
+                        pass
+            
+            # info3의 용어들
+            if ai_info.info3_title_ko and ai_info.info3_content_ko:
+                info3_terms_field = getattr(ai_info, f'info3{terms_suffix}', None)
+                if info3_terms_field:
+                    try:
+                        terms = json.loads(info3_terms_field)
+                        for term in terms:
+                            term_data = {
+                                'term': term.get('term', ''),
+                                'description': term.get('description', ''),
+                                'date': ai_info.date,
+                                'info_index': 2,
+                                'title': ai_info.info3_title_ko,
+                                'category': ai_info.info3_category or '미분류'
+                            }
+                            all_terms.append(term_data)
+                    except json.JSONDecodeError:
+                        pass
+        
+        print(f"Total terms found: {len(all_terms)}")
+        
+        # 중복 제거 (같은 용어라도 다른 날짜에 있다면 모두 포함)
+        unique_terms = []
+        seen_terms = set()
+        
+        for term in all_terms:
+            term_key = f"{term['term']}_{term['date']}_{term['info_index']}"
+            if term_key not in seen_terms:
+                seen_terms.add(term_key)
+                unique_terms.append(term)
+        
+        print(f"Unique terms after deduplication: {len(unique_terms)}")
+        
+        return {
+            "terms": unique_terms,
+            "total_terms": len(unique_terms),
+            "message": f"총 {len(unique_terms)}개의 용어를 찾았습니다."
+        }
+        
+    except Exception as e:
+        print(f"Error in get_all_terms: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get all terms: {str(e)}") 
