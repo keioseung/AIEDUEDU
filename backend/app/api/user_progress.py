@@ -909,6 +909,31 @@ def get_total_terms_stats(session_id: str, db: Session = Depends(get_db)):
         total_available_terms = 0
         total_learned_terms = 0
         
+        # 사용자의 모든 학습 진행 데이터 가져오기
+        user_progress_records = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id
+        ).all()
+        
+        # 학습 완료된 용어들을 추출
+        learned_terms_set = set()
+        for progress in user_progress_records:
+            if progress.learned_info:
+                try:
+                    learned_data = json.loads(progress.learned_info)
+                    if isinstance(learned_data, list):
+                        # 리스트 형태로 저장된 경우
+                        for term in learned_data:
+                            if isinstance(term, str):
+                                learned_terms_set.add(term)
+                    elif isinstance(learned_data, dict):
+                        # 딕셔너리 형태로 저장된 경우
+                        if 'terms' in learned_data and isinstance(learned_data['terms'], list):
+                            for term in learned_data['terms']:
+                                if isinstance(term, str):
+                                    learned_terms_set.add(term)
+                except json.JSONDecodeError:
+                    continue
+        
         for ai_info in all_ai_info:
             # info1의 용어들 확인
             if ai_info.info1_terms_ko:
@@ -917,23 +942,10 @@ def get_total_terms_stats(session_id: str, db: Session = Depends(get_db)):
                     if isinstance(terms1, list):
                         total_available_terms += len(terms1)
                         
-                        # 각 용어의 학습 완료 여부 확인
+                        # 학습 완료된 용어 수 계산
                         for term in terms1:
-                            term_progress = db.query(UserProgress).filter(
-                                UserProgress.session_id == session_id,
-                                UserProgress.date.like('__terms__%'),
-                                UserProgress.learned_info.like(f'%{term}%')
-                            ).first()
-                            
-                            if term_progress and term_progress.learned_info:
-                                try:
-                                    learned_data = json.loads(term_progress.learned_info)
-                                    if isinstance(learned_data, list) and term in learned_data:
-                                        total_learned_terms += 1
-                                    elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
-                                        total_learned_terms += 1
-                                except json.JSONDecodeError:
-                                    continue
+                            if term in learned_terms_set:
+                                total_learned_terms += 1
                 except json.JSONDecodeError:
                     pass
             
@@ -944,23 +956,10 @@ def get_total_terms_stats(session_id: str, db: Session = Depends(get_db)):
                     if isinstance(terms2, list):
                         total_available_terms += len(terms2)
                         
-                        # 각 용어의 학습 완료 여부 확인
+                        # 학습 완료된 용어 수 계산
                         for term in terms2:
-                            term_progress = db.query(UserProgress).filter(
-                                UserProgress.session_id == session_id,
-                                UserProgress.date.like('__terms__%'),
-                                UserProgress.learned_info.like(f'%{term}%')
-                            ).first()
-                            
-                            if term_progress and term_progress.learned_info:
-                                try:
-                                    learned_data = json.loads(term_progress.learned_info)
-                                    if isinstance(learned_data, list) and term in learned_data:
-                                        total_learned_terms += 1
-                                    elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
-                                        total_learned_terms += 1
-                                except json.JSONDecodeError:
-                                    continue
+                            if term in learned_terms_set:
+                                total_learned_terms += 1
                 except json.JSONDecodeError:
                     pass
             
@@ -971,23 +970,10 @@ def get_total_terms_stats(session_id: str, db: Session = Depends(get_db)):
                     if isinstance(terms3, list):
                         total_available_terms += len(terms3)
                         
-                        # 각 용어의 학습 완료 여부 확인
+                        # 학습 완료된 용어 수 계산
                         for term in terms3:
-                            term_progress = db.query(UserProgress).filter(
-                                UserProgress.session_id == session_id,
-                                UserProgress.date.like('__terms__%'),
-                                UserProgress.learned_info.like(f'%{term}%')
-                            ).first()
-                            
-                            if term_progress and term_progress.learned_info:
-                                try:
-                                    learned_data = json.loads(term_progress.learned_info)
-                                    if isinstance(learned_data, list) and term in learned_data:
-                                        total_learned_terms += 1
-                                    elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
-                                        total_learned_terms += 1
-                                except json.JSONDecodeError:
-                                    continue
+                            if term in learned_terms_set:
+                                total_learned_terms += 1
                 except json.JSONDecodeError:
                     pass
         
