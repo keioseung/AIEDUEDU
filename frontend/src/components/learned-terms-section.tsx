@@ -121,18 +121,54 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
     }
   }
 
-  // selectedDate가 변경될 때마다 currentTermIndex를 0으로 리셋
-  useEffect(() => {
-    setCurrentTermIndex(0)
-  }, [selectedDate])
+  // selectedDate가 변경될 때 currentTermIndex를 0으로 리셋하지 않음 (학습 상태 유지)
+  // useEffect(() => {
+  //   setCurrentTermIndex(0)
+  // }, [selectedDate])
 
-  // 컴포넌트 마운트 시 필터를 전체로 설정
+  // 컴포넌트 마운트 시 저장된 학습 상태 복원
   useEffect(() => {
-    setSelectedDate(null)
-    setShowFavoritesOnly(false)
-    setSearchQuery('')
-    setSortBy('date')
-  }, [])
+    if (typeof window !== 'undefined') {
+      try {
+        // 저장된 학습 상태 불러오기
+        const savedState = localStorage.getItem(`termsLearningState_${sessionId}`)
+        if (savedState) {
+          const parsedState = JSON.parse(savedState)
+          if (parsedState.currentTermIndex !== undefined) {
+            setCurrentTermIndex(parsedState.currentTermIndex)
+          }
+          if (parsedState.viewedTerms) {
+            setViewedTerms(new Set(parsedState.viewedTerms))
+          }
+          if (parsedState.selectedDate !== undefined) {
+            setSelectedDate(parsedState.selectedDate)
+          }
+          if (parsedState.searchQuery !== undefined) {
+            setSearchQuery(parsedState.searchQuery)
+          }
+          if (parsedState.sortBy !== undefined) {
+            setSortBy(parsedState.sortBy)
+          }
+          if (parsedState.showFavoritesOnly !== undefined) {
+            setShowFavoritesOnly(parsedState.showFavoritesOnly)
+          }
+        } else {
+          // 저장된 상태가 없으면 기본값 설정
+          setSelectedDate(null)
+          setShowFavoritesOnly(false)
+          setSearchQuery('')
+          setSortBy('date')
+        }
+      } catch (error) {
+        console.error('학습 상태 복원 오류:', error)
+        // 오류 발생 시 기본값 설정
+        setSelectedDate(null)
+        setShowFavoritesOnly(false)
+        setSearchQuery('')
+        setSortBy('date')
+      }
+    }
+  }, [sessionId])
 
   // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
@@ -227,6 +263,31 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
     }
   }, [currentTermIndex, filteredTerms])
 
+  // 학습 상태가 변경될 때마다 자동 저장
+  useEffect(() => {
+    saveLearningState()
+  }, [currentTermIndex, viewedTerms, selectedDate, searchQuery, sortBy, showFavoritesOnly])
+
+  // 학습 상태 저장 함수
+  const saveLearningState = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stateToSave = {
+          currentTermIndex,
+          viewedTerms: Array.from(viewedTerms),
+          selectedDate,
+          searchQuery,
+          sortBy,
+          showFavoritesOnly,
+          timestamp: Date.now()
+        }
+        localStorage.setItem(`termsLearningState_${sessionId}`, JSON.stringify(stateToSave))
+      } catch (error) {
+        console.error('학습 상태 저장 오류:', error)
+      }
+    }
+  }
+
   // 즐겨찾기 저장
   const toggleFavorite = (term: string) => {
     const newFavorites = new Set(favoriteTerms)
@@ -313,7 +374,8 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(selectedDate === date ? null : date)
-    setCurrentTermIndex(0)
+    // currentTermIndex를 0으로 리셋하지 않음 (학습 상태 유지)
+    // setCurrentTermIndex(0)
   }
 
   const handleNextTerm = () => {
