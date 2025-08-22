@@ -683,7 +683,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                    const monthlyGroups = new Map<string, { month: string, dates: string[], totalTerms: number }>()
                    
                    // 모든 용어에서 고유한 날짜 추출 (undefined 제거)
-                   const uniqueDates = [...new Set(allTermsData.terms.map(term => term.date).filter(Boolean))].sort().reverse()
+                   const uniqueDates = [...new Set(allTermsData.terms.map(term => term.date).filter((date): date is string => Boolean(date)))].sort().reverse()
                    
                    uniqueDates.forEach(date => {
                      const dateObj = new Date(date)
