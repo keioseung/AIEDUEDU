@@ -23,15 +23,18 @@ interface Term {
   description_en?: string
   description_ja?: string
   description_zh?: string
-  learned_date: string
+  learned_date?: string  // 기존 용어학습용 (선택적)
+  date?: string          // 새로운 모든 용어용 (선택적)
   info_index: number
+  title?: string         // AI정보 카드 제목
+  category?: string      // AI정보 카드 카테고리
 }
 
 interface LearnedTermsResponse {
   terms: Term[]
   total_terms: number
-  learned_dates: string[]
-  terms_by_date: Record<string, Term[]>
+  learned_dates?: string[]
+  terms_by_date?: Record<string, Term[]>
 }
 
 interface AllTermsResponse {
@@ -969,7 +972,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
       {/* 모바일 최적화 현재 용어 카드 */}
       {filteredTerms.length > 0 && currentTerm && (
         <motion.div
-          key={currentTerm.term + currentTerm.learned_date}
+                                  key={currentTerm.term + (currentTerm.date || currentTerm.learned_date || '')}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="bg-gradient-to-br from-purple-950/70 via-purple-900/80 to-purple-950/70 backdrop-blur-2xl rounded-xl p-4 md:p-6 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/40"
@@ -1255,7 +1258,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                 const termDifficulty = getDifficulty(term.term)
                 return (
                   <motion.div
-                    key={`${term.term}_${term.learned_date}_${term.info_index}`}
+                                            key={`${term.term}_${term.date || term.learned_date || ''}_${term.info_index}`}
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ delay: index * 0.05, type: "spring", stiffness: 300, damping: 25 }}
@@ -1331,7 +1334,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 text-white/50 text-xs">
                           <Calendar className="w-2.5 h-2.5" />
-                          <span className="font-medium">{term.learned_date}</span>
+                          <span className="font-medium">{term.date || term.learned_date || ''}</span>
                       </div>
                         
                         {/* 선택된 경우 진행 표시기 */}
