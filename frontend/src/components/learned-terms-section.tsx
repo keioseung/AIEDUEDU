@@ -170,20 +170,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
       ? allTermsData.terms.filter(term => term.date === selectedDate)
       : allTermsData.terms
 
-    // 중복 제거 (같은 용어라도 다른 날짜에 있다면 모두 포함)
-    if (!selectedDate) {
-      const uniqueTerms = new Map()
-      terms.forEach(term => {
-        const existing = uniqueTerms.get(term.term)
-        const termDate = term.date || term.learned_date || ''
-        const existingDate = existing?.date || existing?.learned_date || ''
-        
-        if (!existing || (termDate && existingDate && new Date(termDate) > new Date(existingDate))) {
-          uniqueTerms.set(term.term, term)
-        }
-      })
-      terms = Array.from(uniqueTerms.values())
-    }
+    // 중복 제거 로직 제거 - 모든 용어 표시 (200개)
 
     // 날짜가 선택된 경우 해당 날짜의 용어만 표시
     if (selectedDate) {
@@ -1394,7 +1381,9 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
           <div className="flex items-center gap-1.5 md:gap-2">
             <Star className="w-4 h-4 md:w-5 md:h-5 text-green-300" />
             <div>
-              <div className="text-white font-semibold text-xs md:text-sm">{favoriteTerms.size}</div>
+              <div className="text-white font-semibold text-xs md:text-sm">
+                {filteredTerms.filter(term => favoriteTerms.has(term.term)).length}
+              </div>
               <div className="text-white/60 text-xs">{t('terms.tab.stats.favorites')}</div>
             </div>
           </div>
@@ -1409,7 +1398,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
             <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-yellow-300" />
             <div>
               <div className="text-white font-semibold text-xs md:text-sm">
-                {Math.round((viewedTerms.size / filteredTerms.length) * 100)}%
+                {Math.round((viewedTerms.size / allTermsData.total_terms) * 100)}%
               </div>
               <div className="text-white/60 text-xs">{t('terms.tab.stats.learning.progress')}</div>
             </div>
