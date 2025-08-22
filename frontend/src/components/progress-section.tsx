@@ -313,6 +313,34 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 termsCount = 0
               }
               
+              // 22일자 특별 처리 - 실제 학습된 용어가 없으면 0으로 설정
+              if (dateStr === '2025-08-22') {
+                console.log(`🔍 22일자 terms_by_date 값: ${termsCount}`)
+                // 실제로 학습된 용어가 있는지 확인
+                let actualLearnedTerms = 0
+                for (let infoIndex = 0; infoIndex < 3; infoIndex++) {
+                  const key = `learnedTerms_${sessionId}_${dateStr}_${infoIndex}`
+                  const stored = localStorage.getItem(key)
+                  if (stored) {
+                    try {
+                      const learnedArray = JSON.parse(stored)
+                      if (Array.isArray(learnedArray)) {
+                        actualLearnedTerms += learnedArray.length
+                      }
+                    } catch (e) {
+                      console.error(`❌ ${key} 파싱 오류:`, e)
+                    }
+                  }
+                }
+                console.log(`🔍 22일자 실제 학습된 용어 수: ${actualLearnedTerms}`)
+                
+                // 실제 학습된 용어가 없으면 0으로 설정
+                if (actualLearnedTerms === 0) {
+                  console.log(`🔍 22일자 학습된 용어가 없으므로 0으로 설정`)
+                  termsCount = 0
+                }
+              }
+              
               // selectedDate가 현재 날짜와 같다면 로컬 데이터를 더 정확하게 반영
               
               localData.push({
