@@ -175,7 +175,10 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
       const uniqueTerms = new Map()
       terms.forEach(term => {
         const existing = uniqueTerms.get(term.term)
-        if (!existing || new Date(term.date) > new Date(existing.date)) {
+        const termDate = term.date || term.learned_date || ''
+        const existingDate = existing?.date || existing?.learned_date || ''
+        
+        if (!existing || (termDate && existingDate && new Date(termDate) > new Date(existingDate))) {
           uniqueTerms.set(term.term, term)
         }
       })
@@ -184,7 +187,7 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
 
     // 날짜가 선택된 경우 해당 날짜의 용어만 표시
     if (selectedDate) {
-      terms = terms.filter(term => term.date === selectedDate)
+      terms = terms.filter(term => (term.date || term.learned_date) === selectedDate)
     }
 
     // 검색 필터
@@ -208,7 +211,12 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
         return terms.sort((a, b) => a.term.localeCompare(b.term))
       case 'date':
       default:
-        return terms.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        return terms.sort((a, b) => {
+          const dateA = a.date || a.learned_date || ''
+          const dateB = b.date || b.learned_date || ''
+          if (!dateA || !dateB) return 0
+          return new Date(dateB).getTime() - new Date(dateA).getTime()
+        })
     }
   })()
 
