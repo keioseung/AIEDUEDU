@@ -307,6 +307,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               let aiCount = localProgress.length
               let termsCount = localTerms.length
               
+              // terms_by_date에서 가져온 값이 비정상적으로 크면 0으로 초기화
+              if (termsCount > 50) {
+                console.warn(`⚠️ ${dateStr} 날짜의 terms_by_date 값이 비정상적으로 큼: ${termsCount}, 0으로 초기화`)
+                termsCount = 0
+              }
+              
               // selectedDate가 현재 날짜와 같다면 로컬 데이터를 더 정확하게 반영
               
               localData.push({
