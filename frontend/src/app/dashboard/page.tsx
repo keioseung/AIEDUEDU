@@ -519,15 +519,7 @@ export default function DashboardPage() {
 
         {/* 언어 선택기 - 우측 상단 */}
         <div className="absolute top-3 right-3 md:top-4 md:right-4">
-          <div className="flex flex-col items-end gap-2">
-            <LanguageSelector />
-            <div className="text-xs text-white/60 bg-white/10 px-2 py-1 rounded-lg backdrop-blur-sm">
-              {currentLanguage === 'ko' && '🇰🇷 한국어'}
-              {currentLanguage === 'en' && '🇺🇸 English'}
-              {currentLanguage === 'ja' && '🇯🇵 日本語'}
-              {currentLanguage === 'zh' && '🇨🇳 中文'}
-            </div>
-          </div>
+          <LanguageSelector />
         </div>
 
         {/* 상단 아이콘과 제목 */}
