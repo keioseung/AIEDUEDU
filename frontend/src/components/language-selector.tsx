@@ -12,6 +12,28 @@ export default function LanguageSelector() {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
 
+  // 언어 코드를 세련된 텍스트로 변환
+  const getLanguageCode = (language: Language): string => {
+    switch (language) {
+      case 'ko': return 'KR'
+      case 'en': return 'EN'
+      case 'ja': return 'JA'
+      case 'zh': return 'ZH'
+      default: return 'KR'
+    }
+  }
+
+  // 언어 이름을 간단하게 표시
+  const getLanguageName = (language: Language): string => {
+    switch (language) {
+      case 'ko': return '한국어'
+      case 'en': return 'English'
+      case 'ja': return '日本語'
+      case 'zh': return '中文'
+      default: return '한국어'
+    }
+  }
+
   useEffect(() => {
     setCurrentLanguage(getCurrentLanguage())
     
@@ -73,14 +95,14 @@ export default function LanguageSelector() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-white/80 hover:text-white transition-colors duration-200 rounded-lg hover:bg-white/10"
+        className="flex items-center gap-3 px-4 py-2.5 text-white/90 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20"
         aria-label="언어 선택"
       >
-        <Globe size={20} />
-        <span className="text-lg">{languageFlags[currentLanguage]}</span>
+        <Globe size={18} className="text-purple-300" />
+        <span className="text-sm font-semibold tracking-wider">{getLanguageCode(currentLanguage)}</span>
         <ChevronDown 
-          size={16} 
-          className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          size={14} 
+          className={`transition-transform duration-300 text-white/60 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -91,21 +113,23 @@ export default function LanguageSelector() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full mt-2 w-48 bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-lg shadow-xl z-50"
+            className="absolute right-0 top-full mt-3 w-52 bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl shadow-black/50 z-50 overflow-hidden"
           >
             <div className="py-2">
               {languages.map((language) => (
                 <button
                   key={language}
                   onClick={() => handleLanguageChange(language)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 ${
-                    currentLanguage === language ? 'bg-blue-500/20 text-blue-300' : 'text-white/80 hover:text-white'
+                  className={`w-full flex items-center gap-4 px-5 py-3.5 text-left hover:bg-white/5 transition-all duration-300 ${
+                    currentLanguage === language 
+                      ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-200 border-r-2 border-purple-400' 
+                      : 'text-white/70 hover:text-white/90'
                   }`}
                 >
-                  <span className="text-xl">{languageFlags[language]}</span>
-                  <span className="font-medium">{languageNames[language]}</span>
+                  <span className="text-lg font-bold tracking-wider text-purple-300">{getLanguageCode(language)}</span>
+                  <span className="font-medium text-sm">{getLanguageName(language)}</span>
                   {currentLanguage === language && (
-                    <div className="ml-auto w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <div className="ml-auto w-2.5 h-2.5 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full animate-pulse"></div>
                   )}
                 </button>
               ))}
