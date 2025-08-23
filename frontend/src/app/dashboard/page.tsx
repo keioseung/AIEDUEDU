@@ -697,19 +697,35 @@ export default function DashboardPage() {
                       <div className="glass backdrop-blur-xl rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center text-white shadow-xl min-h-[300px] border border-white/10 bg-gradient-to-br from-blue-900/40 via-purple-900/40 to-blue-900/40">
                         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-400 mx-auto mb-6"></div>
                         <h3 className="text-xl md:text-2xl font-semibold text-white mb-4">
-                          AI 정보를 불러오는 중...
+                          {currentLanguage === 'ko' ? 'AI 정보를 불러오는 중...' :
+                           currentLanguage === 'en' ? 'Loading AI Information...' :
+                           currentLanguage === 'ja' ? 'AI情報を読み込み中...' :
+                           '正在加载AI信息...'}
                         </h3>
                         <p className="text-white/70 text-base leading-relaxed max-w-md">
-                          선택하신 날짜의 AI 정보를 가져오고 있습니다. 잠시만 기다려주세요!
+                          {currentLanguage === 'ko' ? '선택하신 날짜의 AI 정보를 가져오고 있습니다. 잠시만 기다려주세요!' :
+                           currentLanguage === 'en' ? 'Fetching AI information for the selected date. Please wait a moment!' :
+                           currentLanguage === 'ja' ? '選択された日付のAI情報を取得しています。しばらくお待ちください！' :
+                           '正在获取所选日期的AI信息。请稍等片刻！'}
                         </p>
                         <div className="mt-6 flex items-center gap-4 text-sm text-white/50">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                            <span>데이터 검색</span>
+                            <span>
+                              {currentLanguage === 'ko' ? '데이터 검색' :
+                               currentLanguage === 'en' ? 'Data Search' :
+                               currentLanguage === 'ja' ? 'データ検索' :
+                               '数据搜索'}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                            <span>콘텐츠 준비</span>
+                            <span>
+                              {currentLanguage === 'ko' ? '콘텐츠 준비' :
+                               currentLanguage === 'en' ? 'Content Preparation' :
+                               currentLanguage === 'ja' ? 'コンテンツ準備' :
+                               '内容准备'}
+                            </span>
                           </div>
                         </div>
                       </div>
