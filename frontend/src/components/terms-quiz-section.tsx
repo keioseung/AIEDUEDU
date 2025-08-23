@@ -1002,20 +1002,39 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                 
                 {/* 메인 제목 */}
                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-violet-400 bg-clip-text text-transparent">
-                  {selectedQuizTitle === t('quiz.tab.wrong.notes') ? '오답 노트가 비어있습니다 📝' :
-                   selectedQuizTitle === t('quiz.tab.today.topic') ? '오늘은 퀴즈가 준비되지 않았습니다 🎯' : 
-                   `"${selectedQuizTitle}" 퀴즈가 준비되지 않았습니다 🎯`}
+                  {selectedQuizTitle === t('quiz.tab.wrong.notes') ? 
+                    (currentLanguage === 'ko' ? '오답 노트가 비어있습니다 📝' :
+                     currentLanguage === 'en' ? 'Wrong Notes is Empty 📝' :
+                     currentLanguage === 'ja' ? '間違いノートが空です 📝' :
+                     '错题本是空的 📝') :
+                   selectedQuizTitle === t('quiz.tab.today.topic') ? 
+                    (currentLanguage === 'ko' ? '오늘은 퀴즈가 준비되지 않았습니다 🎯' :
+                     currentLanguage === 'en' ? 'No Quiz Prepared for Today 🎯' :
+                     currentLanguage === 'ja' ? '今日はクイズが準備されていません 🎯' :
+                     '今天没有准备测验 🎯') : 
+                    (currentLanguage === 'ko' ? `"${selectedQuizTitle}" 퀴즈가 준비되지 않았습니다 🎯` :
+                     currentLanguage === 'en' ? `"${selectedQuizTitle}" Quiz Not Prepared 🎯` :
+                     currentLanguage === 'ja' ? `"${selectedQuizTitle}"クイズが準備されていません 🎯` :
+                     `"${selectedQuizTitle}"测验未准备 🎯`)}
                 </h3>
                 
                 {/* 설명 텍스트 */}
                 <p className="text-white/80 text-base md:text-lg leading-relaxed mb-6 max-w-md mx-auto">
                   {quizData?.message || 
                     (selectedQuizTitle === t('quiz.tab.wrong.notes')
-                      ? '아직 틀린 문제가 없습니다. 퀴즈를 풀어보고 오답을 만들어보세요!'
+                      ? (currentLanguage === 'ko' ? '아직 틀린 문제가 없습니다. 퀴즈를 풀어보고 오답을 만들어보세요!' :
+                         currentLanguage === 'en' ? 'No wrong questions yet. Try solving quizzes and create wrong notes!' :
+                         currentLanguage === 'ja' ? 'まだ間違った問題がありません。クイズを解いて間違いノートを作ってみてください！' :
+                         '还没有错题。尝试解答测验并创建错题本！')
                       : selectedQuizTitle === t('quiz.tab.today.topic') 
-                      ? `선택하신 날짜(${selectedDate})에는 퀴즈가 등록되지 않았습니다. 다른 날짜를 선택하거나 다른 학습 모드를 시도해보세요!`
-                      : `"${selectedQuizTitle}" 주제에는 아직 퀴즈가 준비되지 않았습니다. 다른 주제를 선택해보세요!`
-                    )
+                      ? (currentLanguage === 'ko' ? `선택하신 날짜(${selectedDate})에는 퀴즈가 등록되지 않았습니다. 다른 날짜를 선택하거나 다른 학습 모드를 시도해보세요!` :
+                         currentLanguage === 'en' ? `No quiz is registered for the selected date (${selectedDate}). Try selecting a different date or another learning mode!` :
+                         currentLanguage === 'ja' ? `選択された日付(${selectedDate})にはクイズが登録されていません。別の日付を選択するか、別の学習モードを試してみてください！` :
+                         `所选日期(${selectedDate})没有注册测验。请尝试选择其他日期或其他学习模式！`)
+                      : (currentLanguage === 'ko' ? `"${selectedQuizTitle}" 주제에는 아직 퀴즈가 준비되지 않았습니다. 다른 주제를 선택해보세요!` :
+                         currentLanguage === 'en' ? `Quiz for topic "${selectedQuizTitle}" is not prepared yet. Try selecting another topic!` :
+                         currentLanguage === 'ja' ? `"${selectedQuizTitle}"トピックにはまだクイズが準備されていません。別のトピックを選択してみてください！` :
+                         `主题"${selectedQuizTitle}"的测验尚未准备。请尝试选择其他主题！`))
                   }
                 </p>
                 
@@ -1027,13 +1046,19 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                         onClick={() => setSelectedQuizTitle(t('quiz.tab.wrong.notes'))}
                         className="px-4 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium text-sm hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                       >
-                        📝 오답 노트 보기
+                        📝 {currentLanguage === 'ko' ? '오답 노트 보기' :
+                            currentLanguage === 'en' ? 'View Wrong Notes' :
+                            currentLanguage === 'ja' ? '間違いノートを見る' :
+                            '查看错题本'}
                       </button>
                       <button
                         onClick={() => window.location.reload()}
                         className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg font-medium text-sm hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                       >
-                        🔄 새로고침
+                        🔄 {currentLanguage === 'ko' ? '새로고침' :
+                            currentLanguage === 'en' ? 'Refresh' :
+                            currentLanguage === 'ja' ? '更新' :
+                            '刷新'}
                       </button>
                     </>
                   )}
@@ -1042,7 +1067,10 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                       onClick={() => setSelectedQuizTitle(t('quiz.tab.today.topic'))}
                       className="px-4 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium text-sm hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
-                      🎯 오늘의 주제로 돌아가기
+                      🎯 {currentLanguage === 'ko' ? '오늘의 주제로 돌아가기' :
+                          currentLanguage === 'en' ? 'Back to Today\'s Topic' :
+                          currentLanguage === 'ja' ? '今日のトピックに戻る' :
+                          '回到今日主题'}
                     </button>
                   )}
                 </div>
@@ -1051,12 +1079,23 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                 <div className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl p-4 border border-emerald-400/30 mb-6">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-emerald-400">💡</span>
-                    <span className="text-emerald-200 font-semibold text-sm">학습 팁</span>
+                    <span className="text-emerald-200 font-semibold text-sm">
+                      {currentLanguage === 'ko' ? '학습 팁' :
+                       currentLanguage === 'en' ? 'Learning Tip' :
+                       currentLanguage === 'ja' ? '学習のヒント' :
+                       '学习提示'}
+                    </span>
                   </div>
                   <p className="text-emerald-100 text-sm leading-relaxed">
                     {selectedQuizTitle === t('quiz.tab.wrong.notes') 
-                      ? '틀린 문제를 복습하면 학습 효과가 높아집니다. 꾸준한 연습으로 실력을 키워보세요!'
-                      : '매일 새로운 퀴즈가 업데이트됩니다. 꾸준한 학습으로 AI 마스터가 되어보세요!'
+                      ? (currentLanguage === 'ko' ? '틀린 문제를 복습하면 학습 효과가 높아집니다. 꾸준한 연습으로 실력을 키워보세요!' :
+                         currentLanguage === 'en' ? 'Reviewing wrong questions improves learning effectiveness. Build your skills through consistent practice!' :
+                         currentLanguage === 'ja' ? '間違った問題を復習すると学習効果が高まります。継続的な練習でスキルを向上させましょう！' :
+                         '复习错题可以提高学习效果。通过持续练习提升技能！')
+                      : (currentLanguage === 'ko' ? '매일 새로운 퀴즈가 업데이트됩니다. 꾸준한 학습으로 AI 마스터가 되어보세요!' :
+                         currentLanguage === 'en' ? 'New quizzes are updated daily. Become an AI master through consistent learning!' :
+                         currentLanguage === 'ja' ? '毎日新しいクイズが更新されます。継続的な学習でAIマスターになりましょう！' :
+                         '每天都会更新新的测验。通过持续学习成为AI大师！')
                     }
                   </p>
                 </div>
@@ -1065,15 +1104,30 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                 <div className="flex items-center gap-6 text-sm text-white/60 justify-center">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                    <span>퀴즈 학습</span>
+                    <span>
+                      {currentLanguage === 'ko' ? '퀴즈 학습' :
+                       currentLanguage === 'en' ? 'Quiz Learning' :
+                       currentLanguage === 'ja' ? 'クイズ学習' :
+                       '测验学习'}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
-                    <span>오답 복습</span>
+                    <span>
+                      {currentLanguage === 'ko' ? '오답 복습' :
+                       currentLanguage === 'en' ? 'Wrong Answer Review' :
+                       currentLanguage === 'ja' ? '間違い復習' :
+                       '错题复习'}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <span>성장 발전</span>
+                    <span>
+                      {currentLanguage === 'ko' ? '성장 발전' :
+                       currentLanguage === 'en' ? 'Growth & Development' :
+                       currentLanguage === 'ja' ? '成長発展' :
+                       '成长发展'}
+                    </span>
                   </div>
                 </div>
               </div>

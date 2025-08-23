@@ -728,12 +728,18 @@ export default function DashboardPage() {
                         
                         {/* 메인 제목 */}
                         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                          AI 학습 여정을 시작해보세요! 🚀
+                          {currentLanguage === 'ko' ? 'AI 학습 여정을 시작해보세요! 🚀' :
+                           currentLanguage === 'en' ? 'Start Your AI Learning Journey! 🚀' :
+                           currentLanguage === 'ja' ? 'AI学習の旅を始めましょう！🚀' :
+                           '开始您的AI学习之旅！🚀'}
                         </h2>
                         
                         {/* 설명 텍스트 */}
                         <p className="text-white/80 text-base md:text-lg leading-relaxed mb-6 max-w-md">
-                          오늘은 AI 정보가 등록되지 않았습니다. 다른 날짜를 선택하거나 다른 학습 모드를 시도해보세요!
+                          {currentLanguage === 'ko' ? '오늘은 AI 정보가 등록되지 않았습니다. 다른 날짜를 선택하거나 다른 학습 모드를 시도해보세요!' :
+                           currentLanguage === 'en' ? 'No AI information is registered for today. Try selecting a different date or another learning mode!' :
+                           currentLanguage === 'ja' ? '今日はAI情報が登録されていません。別の日付を選択するか、別の学習モードを試してみてください！' :
+                           '今天没有注册AI信息。请尝试选择其他日期或其他学习模式！'}
                         </p>
                         
                         {/* 액션 버튼들 */}
@@ -742,13 +748,19 @@ export default function DashboardPage() {
                             onClick={() => setAiInfoMode('category')}
                             className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                           >
-                            🏷️ 카테고리별 보기
+                            🏷️ {currentLanguage === 'ko' ? '카테고리별 보기' :
+                                   currentLanguage === 'en' ? 'View by Category' :
+                                   currentLanguage === 'ja' ? 'カテゴリ別表示' :
+                                   '按类别查看'}
                           </button>
                           <button
                             onClick={() => setAiInfoMode('list')}
                             className="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg font-medium text-sm hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                           >
-                            📚 전체 목록 보기
+                            📚 {currentLanguage === 'ko' ? '전체 목록 보기' :
+                                   currentLanguage === 'en' ? 'View Full List' :
+                                   currentLanguage === 'ja' ? '全リスト表示' :
+                                   '查看完整列表'}
                           </button>
                         </div>
                         
@@ -756,10 +768,18 @@ export default function DashboardPage() {
                         <div className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl p-4 border border-emerald-400/30">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-emerald-400">💡</span>
-                            <span className="text-emerald-200 font-semibold text-sm">학습 팁</span>
+                            <span className="text-emerald-200 font-semibold text-sm">
+                              {currentLanguage === 'ko' ? '학습 팁' :
+                               currentLanguage === 'en' ? 'Learning Tip' :
+                               currentLanguage === 'ja' ? '学習のヒント' :
+                               '学习提示'}
+                            </span>
                           </div>
                           <p className="text-emerald-100 text-sm leading-relaxed">
-                            매일 새로운 AI 정보가 업데이트됩니다. 꾸준한 학습으로 AI 마스터가 되어보세요!
+                            {currentLanguage === 'ko' ? '매일 새로운 AI 정보가 업데이트됩니다. 꾸준한 학습으로 AI 마스터가 되어보세요!' :
+                             currentLanguage === 'en' ? 'New AI information is updated daily. Become an AI master through consistent learning!' :
+                             currentLanguage === 'ja' ? '毎日新しいAI情報が更新されます。継続的な学習でAIマスターになりましょう！' :
+                             '每天都会更新新的AI信息。通过持续学习成为AI大师！'}
                           </p>
                         </div>
                         
@@ -767,15 +787,30 @@ export default function DashboardPage() {
                         <div className="mt-6 flex items-center gap-6 text-sm text-white/60">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                            <span>AI 정보</span>
+                            <span>
+                              {currentLanguage === 'ko' ? 'AI 정보' :
+                               currentLanguage === 'en' ? 'AI Info' :
+                               currentLanguage === 'ja' ? 'AI情報' :
+                               'AI信息'}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                            <span>용어 학습</span>
+                            <span>
+                              {currentLanguage === 'ko' ? '용어 학습' :
+                               currentLanguage === 'en' ? 'Term Learning' :
+                               currentLanguage === 'ja' ? '用語学習' :
+                               '术语学习'}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span>퀴즈</span>
+                            <span>
+                              {currentLanguage === 'ko' ? '퀴즈' :
+                               currentLanguage === 'en' ? 'Quiz' :
+                               currentLanguage === 'ja' ? 'クイズ' :
+                               '测验'}
+                            </span>
                           </div>
                         </div>
                       </div>
