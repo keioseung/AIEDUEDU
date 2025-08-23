@@ -815,6 +815,75 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
     }
   }
 
+  // 백엔드 메시지를 언어별로 번역하는 함수
+  const translateBackendMessage = (message: string, language: 'ko' | 'en' | 'ja' | 'zh') => {
+    if (!message) return ''
+    
+    // 영어 메시지를 언어별로 번역
+    if (message.includes('No AI information available for date')) {
+      const dateMatch = message.match(/date (\d{4}-\d{2}-\d{2})/)
+      const date = dateMatch ? dateMatch[1] : ''
+      
+      switch (language) {
+        case 'ko': return `선택하신 날짜(${date})에는 AI 정보가 등록되지 않았습니다.`
+        case 'en': return message // 영어는 그대로
+        case 'ja': return `選択された日付(${date})にはAI情報が登録されていません。`
+        case 'zh': return `所选日期(${date})没有注册AI信息。`
+        default: return `선택하신 날짜(${date})에는 AI 정보가 등록되지 않았습니다.`
+      }
+    }
+    
+    if (message.includes('No quiz available for date')) {
+      const dateMatch = message.match(/date (\d{4}-\d{2}-\d{2})/)
+      const date = dateMatch ? dateMatch[1] : ''
+      
+      switch (language) {
+        case 'ko': return `선택하신 날짜(${date})에는 퀴즈가 등록되지 않았습니다.`
+        case 'en': return message // 영어는 그대로
+        case 'ja': return `選択された日付(${date})にはクイズが登録されていません。`
+        case 'zh': return `所选日期(${date})没有注册测验。`
+        default: return `선택하신 날짜(${date})에는 퀴즈가 등록되지 않았습니다.`
+      }
+    }
+    
+    if (message.includes('No terms available for date')) {
+      const dateMatch = message.match(/date (\d{4}-\d{2}-\d{2})/)
+      const date = dateMatch ? dateMatch[1] : ''
+      
+      switch (language) {
+        case 'ko': return `선택하신 날짜(${date})에는 용어가 등록되지 않았습니다.`
+        case 'en': return message // 영어는 그대로
+        case 'ja': return `選択された日付(${date})には用語が登録されていません。`
+        case 'zh': return `所选日期(${date})没有注册术语。`
+        default: return `선택하신 날짜(${date})에는 용어가 등록되지 않았습니다.`
+      }
+    }
+    
+    // 기타 일반적인 영어 메시지들
+    if (message.includes('No data available')) {
+      switch (language) {
+        case 'ko': return '사용 가능한 데이터가 없습니다.'
+        case 'en': return message
+        case 'ja': return '利用可能なデータがありません。'
+        case 'zh': return '没有可用数据。'
+        default: return '사용 가능한 데이터가 없습니다.'
+      }
+    }
+    
+    if (message.includes('No information found')) {
+      switch (language) {
+        case 'ko': return '찾을 수 있는 정보가 없습니다.'
+        case 'en': return message
+        case 'ja': return '見つかる情報がありません。'
+        case 'zh': return '找不到信息。'
+        default: return '찾을 수 있는 정보가 없습니다.'
+      }
+    }
+    
+    // 번역할 수 없는 메시지는 원본 반환
+    return message
+  }
+
   return (
     <section className="mb-8 relative">
       {/* 퀴즈 수 선택기 - 상단에 멋진 디자인으로 배치 */}
@@ -1020,7 +1089,7 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
                 
                 {/* 설명 텍스트 */}
                 <p className="text-white/80 text-base md:text-lg leading-relaxed mb-6 max-w-md mx-auto">
-                  {quizData?.message || 
+                  {translateBackendMessage(quizData?.message || '', currentLanguage) || 
                     (selectedQuizTitle === t('quiz.tab.wrong.notes')
                       ? (currentLanguage === 'ko' ? '아직 틀린 문제가 없습니다. 퀴즈를 풀어보고 오답을 만들어보세요!' :
                          currentLanguage === 'en' ? 'No wrong questions yet. Try solving quizzes and create wrong notes!' :
