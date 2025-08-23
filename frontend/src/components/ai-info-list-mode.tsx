@@ -330,7 +330,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[112vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[200vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
         <div className="text-center text-white">
           <div className="w-20 h-20 mx-auto mb-6 opacity-60">
             <FaRobot className="w-full h-full text-blue-400" />
