@@ -330,17 +330,17 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[112vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
         <div className="text-center text-white">
-          <div className="w-16 h-16 mx-auto mb-4 opacity-60">
+          <div className="w-20 h-20 mx-auto mb-6 opacity-60">
             <FaRobot className="w-full h-full text-blue-400" />
           </div>
-          <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-white">{t('ai.info.no.data.title')}</h3>
-            <p className="text-white/70 text-base">
+          <div className="space-y-4">
+            <h3 className="text-2xl font-semibold text-white">{t('ai.info.no.data.title')}</h3>
+            <p className="text-white/70 text-lg leading-relaxed">
               {t('ai.info.no.data.description')}
             </p>
-            <div className="text-sm text-white/50">
+            <div className="text-base text-white/50">
               {t('ai.info.no.data.waiting')}
             </div>
           </div>
