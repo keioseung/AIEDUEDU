@@ -256,12 +256,8 @@ export default function AuthPage() {
                       placeholder={t('auth.username.placeholder')}
                       value={username}
                       onChange={e => setUsername(e.target.value)}
-                      className="w-full p-3 bg-purple-900/40 border-2 border-purple-500/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/70 text-sm min-h-[44px]"
+                      className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm min-h-[44px] input-stable"
                       style={{
-                        fontSize: '16px',
-                        backgroundColor: 'rgba(88, 28, 135, 0.4)',
-                        borderColor: 'rgba(147, 51, 234, 0.5)',
-                        color: 'white',
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
                         appearance: 'none',
@@ -269,9 +265,13 @@ export default function AuthPage() {
                         WebkitTouchCallout: 'none',
                         WebkitUserSelect: 'none',
                         userSelect: 'none',
-                        transform: 'none',
-                        transition: 'none',
-                        willChange: 'auto'
+                        fontSize: '16px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        transition: 'all 0.2s ease-in-out',
+                        transform: 'translateZ(0)',
+                        backfaceVisibility: 'hidden',
+                        perspective: '1000px',
+                        willChange: 'transform'
                       }}
                     />
                   </div>
