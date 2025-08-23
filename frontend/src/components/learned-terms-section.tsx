@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, PanInfo } from 'framer-motion'
-import { BookOpen, Calendar, Brain, Target, Trophy, TrendingUp, Search, Star, Download, Filter, Shuffle, Bookmark, ChevronLeft, ChevronRight, Play, Pause, X, Menu, Settings } from 'lucide-react'
+import { BookOpen, Calendar, Brain, Target, Trophy, TrendingUp, Search, Star, Download, Filter, Shuffle, Bookmark, ChevronLeft, ChevronRight, Play, Pause, X, Menu, Settings, RefreshCw } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import { t, getCurrentLanguage } from '@/lib/i18n'
@@ -484,6 +484,19 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
     setTimeout(() => setIsProcessing(false), 300)
   }
   
+  // 학습 상태 초기화 함수
+  const resetLearningState = () => {
+    if (isProcessing) return
+    setIsProcessing(true)
+    
+    // 학습 진행 상태 초기화
+    setViewedTerms(new Set())
+    setCurrentTermIndex(0)
+    
+    // 중복 클릭 방지를 위한 딜레이
+    setTimeout(() => setIsProcessing(false), 300)
+  }
+  
   // 이전/다음 용어 이동 함수 (중복 방지)
   const handlePrevTermSafe = () => {
     if (isProcessing || filteredTerms.length === 0) return
@@ -663,6 +676,17 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
           >
             <Menu className={`w-4 h-4 ${showTermList ? 'text-white' : 'text-white/80'}`} />
             <span className="inline">{t('terms.list.button')}</span>
+          </button>
+          
+          {/* 학습 상태 초기화 버튼 */}
+          <button
+            onTouchStart={handleWebViewTouch(resetLearningState)}
+            onClick={resetLearningState}
+            className="px-3 py-2 rounded-lg transition-all text-sm font-medium flex items-center gap-1.5 touch-manipulation select-none min-h-[40px] min-w-[90px] justify-center webview-button bg-gradient-to-br from-purple-800/40 via-purple-700/50 to-purple-800/40 text-white hover:from-purple-700/60 hover:via-purple-600/70 hover:to-purple-700/60 active:from-purple-800/80 active:via-purple-700/90 active:to-purple-800/80 border border-purple-500/40"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span className="inline text-xs">초기화</span>
           </button>
         </div>
       </div>
