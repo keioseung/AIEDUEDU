@@ -991,25 +991,90 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
           {/* 데이터가 없을 때 */}
           {!quizData?.quizzes || quizData.quizzes.length === 0 && (
             <div className="glass rounded-3xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-purple-800/20 via-purple-700/25 to-purple-800/20 border border-purple-500/30 shadow-2xl shadow-purple-900/30">
-              <div className="text-center text-white">
-                <BookOpen className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-70" />
-                <h3 className="text-lg md:text-xl font-bold mb-3 mobile-text">
-                  {selectedQuizTitle === t('quiz.tab.wrong.notes') ? '오답 노트가 비어있습니다' :
-                   selectedQuizTitle === t('quiz.tab.today.topic') ? t('quiz.tab.no.terms.message') : t('quiz.tab.no.terms.selected.message')}
+              <div className="text-center text-white max-w-2xl mx-auto">
+                {/* 메인 아이콘 */}
+                <div className="relative mb-6">
+                  <Target className="w-16 h-16 md:w-20 md:h-20 text-purple-400 mb-4 mx-auto" />
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-bold text-white">✨</span>
+                  </div>
+                </div>
+                
+                {/* 메인 제목 */}
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-violet-400 bg-clip-text text-transparent">
+                  {selectedQuizTitle === t('quiz.tab.wrong.notes') ? '오답 노트가 비어있습니다 📝' :
+                   selectedQuizTitle === t('quiz.tab.today.topic') ? '오늘은 퀴즈가 준비되지 않았습니다 🎯' : 
+                   `"${selectedQuizTitle}" 퀴즈가 준비되지 않았습니다 🎯`}
                 </h3>
-                <p className="text-white/80 mb-4 text-base mobile-text">
+                
+                {/* 설명 텍스트 */}
+                <p className="text-white/80 text-base md:text-lg leading-relaxed mb-6 max-w-md mx-auto">
                   {quizData?.message || 
                     (selectedQuizTitle === t('quiz.tab.wrong.notes')
-                      ? t('quiz.tab.no.wrong.notes.message')
+                      ? '아직 틀린 문제가 없습니다. 퀴즈를 풀어보고 오답을 만들어보세요!'
                       : selectedQuizTitle === t('quiz.tab.today.topic') 
-                      ? t('quiz.tab.no.terms.date.message').replace('{date}', selectedDate)
-                      : t('quiz.tab.no.terms.topic.message').replace('{topic}', selectedQuizTitle)
+                      ? `선택하신 날짜(${selectedDate})에는 퀴즈가 등록되지 않았습니다. 다른 날짜를 선택하거나 다른 학습 모드를 시도해보세요!`
+                      : `"${selectedQuizTitle}" 주제에는 아직 퀴즈가 준비되지 않았습니다. 다른 주제를 선택해보세요!`
                     )
                   }
                 </p>
-                <div className="text-sm text-white/60 mobile-text">
-                  {selectedQuizTitle === t('quiz.tab.wrong.notes') ? t('quiz.tab.wrong.notes.mode') :
-                   selectedQuizTitle === t('quiz.tab.today.topic') ? t('quiz.tab.selected.date').replace('{date}', selectedDate) : t('quiz.tab.selected.topic.info').replace('{topic}', selectedQuizTitle)}
+                
+                {/* 액션 버튼들 */}
+                <div className="flex flex-col sm:flex-row gap-3 mb-6 justify-center">
+                  {selectedQuizTitle === t('quiz.tab.today.topic') && (
+                    <>
+                      <button
+                        onClick={() => setSelectedQuizTitle(t('quiz.tab.wrong.notes'))}
+                        className="px-4 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium text-sm hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      >
+                        📝 오답 노트 보기
+                      </button>
+                      <button
+                        onClick={() => window.location.reload()}
+                        className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg font-medium text-sm hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      >
+                        🔄 새로고침
+                      </button>
+                    </>
+                  )}
+                  {selectedQuizTitle === t('quiz.tab.wrong.notes') && (
+                    <button
+                      onClick={() => setSelectedQuizTitle(t('quiz.tab.today.topic'))}
+                      className="px-4 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium text-sm hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                      🎯 오늘의 주제로 돌아가기
+                    </button>
+                  )}
+                </div>
+                
+                {/* 학습 팁 */}
+                <div className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl p-4 border border-emerald-400/30 mb-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-emerald-400">💡</span>
+                    <span className="text-emerald-200 font-semibold text-sm">학습 팁</span>
+                  </div>
+                  <p className="text-emerald-100 text-sm leading-relaxed">
+                    {selectedQuizTitle === t('quiz.tab.wrong.notes') 
+                      ? '틀린 문제를 복습하면 학습 효과가 높아집니다. 꾸준한 연습으로 실력을 키워보세요!'
+                      : '매일 새로운 퀴즈가 업데이트됩니다. 꾸준한 학습으로 AI 마스터가 되어보세요!'
+                    }
+                  </p>
+                </div>
+                
+                {/* 통계 정보 */}
+                <div className="flex items-center gap-6 text-sm text-white/60 justify-center">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                    <span>퀴즈 학습</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
+                    <span>오답 복습</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span>성장 발전</span>
+                  </div>
                 </div>
               </div>
             </div>

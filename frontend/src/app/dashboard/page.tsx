@@ -697,10 +697,10 @@ export default function DashboardPage() {
                       <div className="glass backdrop-blur-xl rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center text-white shadow-xl min-h-[300px] border border-white/10 bg-gradient-to-br from-blue-900/40 via-purple-900/40 to-blue-900/40">
                         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-400 mx-auto mb-6"></div>
                         <h3 className="text-xl md:text-2xl font-semibold text-white mb-4">
-                          {t('ai.info.loading.title') || 'AI 정보를 불러오는 중...'}
+                          AI 정보를 불러오는 중...
                         </h3>
                         <p className="text-white/70 text-base leading-relaxed max-w-md">
-                          {t('ai.info.loading.description') || '선택하신 날짜의 AI 정보를 가져오고 있습니다. 잠시만 기다려주세요!'}
+                          선택하신 날짜의 AI 정보를 가져오고 있습니다. 잠시만 기다려주세요!
                         </p>
                         <div className="mt-6 flex items-center gap-4 text-sm text-white/50">
                           <div className="flex items-center gap-2">
@@ -728,12 +728,12 @@ export default function DashboardPage() {
                         
                         {/* 메인 제목 */}
                         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                          {t('ai.info.welcome.title') || 'AI 학습 여정을 시작해보세요! 🚀'}
+                          AI 학습 여정을 시작해보세요! 🚀
                         </h2>
                         
                         {/* 설명 텍스트 */}
                         <p className="text-white/80 text-base md:text-lg leading-relaxed mb-6 max-w-md">
-                          {t('ai.info.welcome.description') || '오늘은 AI 정보가 등록되지 않았습니다. 다른 날짜를 선택하거나 다른 학습 모드를 시도해보세요!'}
+                          오늘은 AI 정보가 등록되지 않았습니다. 다른 날짜를 선택하거나 다른 학습 모드를 시도해보세요!
                         </p>
                         
                         {/* 액션 버튼들 */}
@@ -742,13 +742,13 @@ export default function DashboardPage() {
                             onClick={() => setAiInfoMode('category')}
                             className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                           >
-                            🏷️ {t('ai.info.mode.category') || '카테고리별 보기'}
+                            🏷️ 카테고리별 보기
                           </button>
                           <button
                             onClick={() => setAiInfoMode('list')}
                             className="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg font-medium text-sm hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                           >
-                            📚 {t('ai.info.mode.full') || '전체 목록 보기'}
+                            📚 전체 목록 보기
                           </button>
                         </div>
                         
@@ -756,10 +756,10 @@ export default function DashboardPage() {
                         <div className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl p-4 border border-emerald-400/30">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-emerald-400">💡</span>
-                            <span className="text-emerald-200 font-semibold text-sm">{t('ai.info.welcome.tip.title') || '학습 팁'}</span>
+                            <span className="text-emerald-200 font-semibold text-sm">학습 팁</span>
                           </div>
                           <p className="text-emerald-100 text-sm leading-relaxed">
-                            {t('ai.info.welcome.tip.content') || '매일 새로운 AI 정보가 업데이트됩니다. 꾸준한 학습으로 AI 마스터가 되어보세요!'}
+                            매일 새로운 AI 정보가 업데이트됩니다. 꾸준한 학습으로 AI 마스터가 되어보세요!
                           </p>
                         </div>
                         
@@ -767,15 +767,15 @@ export default function DashboardPage() {
                         <div className="mt-6 flex items-center gap-6 text-sm text-white/60">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                            <span>{t('ai.info.welcome.stats.ai') || 'AI 정보'}</span>
+                            <span>AI 정보</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                            <span>{t('ai.info.welcome.stats.terms') || '용어 학습'}</span>
+                            <span>용어 학습</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span>{t('ai.info.welcome.stats.quiz') || '퀴즈'}</span>
+                            <span>퀴즈</span>
                           </div>
                         </div>
                       </div>

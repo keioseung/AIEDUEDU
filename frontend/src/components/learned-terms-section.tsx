@@ -686,7 +686,12 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <RefreshCw className="w-4 h-4" />
-            <span className="inline text-xs">초기화</span>
+            <span className="inline text-xs">
+              {localLanguage === 'ko' ? '초기화' :
+               localLanguage === 'en' ? 'Reset' :
+               localLanguage === 'ja' ? 'リセット' :
+               '重置'}
+            </span>
           </button>
         </div>
       </div>
