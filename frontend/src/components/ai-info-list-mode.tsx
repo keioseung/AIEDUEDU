@@ -685,7 +685,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                    {(() => {
                      // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
                      let isLearned = false
-                     if (typeof window !== 'undefined') {
+                     if (typeof window !== 'undefined' && info.date) {
                        try {
                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                          const sessionProgress = userProgress[sessionId]
