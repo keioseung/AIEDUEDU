@@ -1010,7 +1010,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         ))}
                       </div>
 
-                                            {/* bar + 날짜 */}
+                      {/* bar + 날짜 */}
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
@@ -1040,17 +1040,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                        ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
                                        : 'bg-gradient-to-r from-blue-400 to-blue-300 text-white shadow-lg shadow-blue-500/30 px-0.5 py-0.5 rounded-md'
                                    }`}>
-                                      {percent}%
-                                    </div>
-                                  )}
-                               </div>
-                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                               </div>
-                             </div>
-                           );
-                         })}
-                       </div>
+                                     {percent}%
+                                   </div>
+                                 )}
+                              </div>
+                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1085,7 +1085,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         ))}
                       </div>
 
-                                            {/* bar + 날짜 */}
+                      {/* bar + 날짜 */}
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
@@ -1116,17 +1116,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                        ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
                                        : 'bg-gradient-to-r from-purple-400 to-purple-300 text-white shadow-lg shadow-purple-500/30 px-0.5 py-0.5 rounded-md'
                                    }`}>
-                                      {percent}%
-                                    </div>
-                                  )}
-                               </div>
-                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                               </div>
-                             </div>
-                           );
-                         })}
-                       </div>
+                                     {percent}%
+                                   </div>
+                                 )}
+                              </div>
+                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1161,7 +1161,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         ))}
                       </div>
 
-                                            {/* bar + 날짜 */}
+                      {/* bar + 날짜 */}
                       <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
@@ -1192,17 +1192,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                        ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
                                        : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-0.5 py-0.5 rounded-md'
                                    }`}>
-                                      {percent}%
-                                    </div>
-                                  )}
-                               </div>
-                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                               </div>
-                             </div>
-                           );
-                         })}
-                       </div>
+                                     {percent}%
+                                   </div>
+                                 )}
+                              </div>
+                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>

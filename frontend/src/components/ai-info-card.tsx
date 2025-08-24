@@ -399,47 +399,69 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
 
   const handleNextTerm = async () => {
     if (hasTerms && info.terms) {
-      // 현재 용어를 학습 완료로 표시
+      // 현재 용어를 학습 완료로 표시 (토글 기능)
       const currentTerm = info.terms[currentTermIndex]
-      if (currentTerm && !actualLearnedTerms.has(currentTerm.term)) {
-        try {
-          // localStorage에 즉시 저장 (낙관적 업데이트)
-          const newLocalTerms = new Set([...localLearnedTerms, currentTerm.term])
-          setLocalLearnedTerms(newLocalTerms)
-          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-          
-          // 백엔드 업데이트
-          await updateTermProgressMutation.mutateAsync({
-            sessionId,
-            term: currentTerm.term,
-            date,
-            infoIndex: index
-          })
-
-          // 성취 확인 (지연 실행)
-          setTimeout(async () => {
-            try {
-              const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
-              if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
-                setShowAchievement(true)
-                setTimeout(() => setShowAchievement(false), 3000)
-              }
-            } catch (error) {
-              console.error('Failed to check achievements:', error)
+      if (currentTerm) {
+        if (actualLearnedTerms.has(currentTerm.term)) {
+          // 이미 학습된 용어 → 학습 해제
+          try {
+            const newLocalTerms = new Set([...localLearnedTerms])
+            newLocalTerms.delete(currentTerm.term)
+            setLocalLearnedTerms(newLocalTerms)
+            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+            
+            console.log(`❌ 용어 학습 해제: ${currentTerm.term}`)
+            
+            // 진행률 업데이트 콜백 호출
+            if (onProgressUpdate) {
+              onProgressUpdate()
             }
-          }, 1000)
-
-          // 진행률 업데이트 콜백 호출
-          if (onProgressUpdate) {
-            onProgressUpdate()
+          } catch (error) {
+            console.error('Failed to remove term progress:', error)
           }
-        } catch (error) {
-          console.error('Failed to update term progress:', error)
-          // 에러 시 localStorage 롤백
-          const rollbackTerms = new Set([...localLearnedTerms])
-          rollbackTerms.delete(currentTerm.term)
-          setLocalLearnedTerms(rollbackTerms)
-          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
+        } else {
+          // 아직 학습되지 않은 용어 → 학습 완료
+          try {
+            // localStorage에 즉시 저장 (낙관적 업데이트)
+            const newLocalTerms = new Set([...localLearnedTerms, currentTerm.term])
+            setLocalLearnedTerms(newLocalTerms)
+            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+            
+            // 백엔드 업데이트
+            await updateTermProgressMutation.mutateAsync({
+              sessionId,
+              term: currentTerm.term,
+              date,
+              infoIndex: index
+            })
+
+            console.log(`✅ 용어 학습 완료: ${currentTerm.term}`)
+
+            // 성취 확인 (지연 실행)
+            setTimeout(async () => {
+              try {
+                const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
+                if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
+                  setShowAchievement(true)
+                  setTimeout(() => setShowAchievement(false), 3000)
+                }
+              } catch (error) {
+                console.error('Failed to check achievements:', error)
+              }
+            }, 1000)
+
+            // 진행률 업데이트 콜백 호출
+            if (onProgressUpdate) {
+              onProgressUpdate()
+            }
+          } catch (error) {
+            console.error('Failed to update term progress:', error)
+            // 에러 시 localStorage 롤백
+            const rollbackTerms = new Set([...localLearnedTerms])
+            rollbackTerms.delete(currentTerm.term)
+            setLocalLearnedTerms(rollbackTerms)
+            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
+          }
         }
       }
       // 다음 용어로 이동
@@ -712,10 +734,27 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                       key={term.term}
                       onClick={async () => {
                         setCurrentTermIndex(idx);
-                        // 클릭한 용어를 학습완료로 표시
-                        if (!actualLearnedTerms.has(term.term)) {
+                        // 용어 학습 상태 토글 (이미 학습된 용어면 해제, 안된 용어면 학습)
+                        if (actualLearnedTerms.has(term.term)) {
+                          // 이미 학습된 용어 → 학습 해제
                           try {
-                            // localStorage에 즉시 저장 (낙관적 업데이트)
+                            const newLocalTerms = new Set([...localLearnedTerms])
+                            newLocalTerms.delete(term.term)
+                            setLocalLearnedTerms(newLocalTerms)
+                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                            
+                            console.log(`❌ 용어 학습 해제: ${term.term}`)
+                            
+                            // 진행률 업데이트 콜백 호출
+                            if (onProgressUpdate) {
+                              onProgressUpdate()
+                            }
+                          } catch (error) {
+                            console.error('Failed to remove term progress:', error)
+                          }
+                        } else {
+                          // 아직 학습되지 않은 용어 → 학습 완료
+                          try {
                             const newLocalTerms = new Set([...localLearnedTerms, term.term])
                             setLocalLearnedTerms(newLocalTerms)
                             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
@@ -727,6 +766,8 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                               date,
                               infoIndex: index
                             })
+                            
+                            console.log(`✅ 용어 학습 완료: ${term.term}`)
                             
                             // 진행률 업데이트 콜백 호출
                             if (onProgressUpdate) {
