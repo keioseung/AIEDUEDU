@@ -647,12 +647,55 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
       </div>
 
              {/* {t('ai.info.list.title')} */}
+       
+       {/* 즐겨찾기만 모드에서 즐겨찾기된 항목이 없을 때 */}
+       {showFavoritesOnly && filteredAIInfo.length === 0 && (
+         <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+           {/* 아이콘 */}
+           <div className="w-20 h-20 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full flex items-center justify-center mb-6 border-2 border-yellow-400/30">
+             <FaStar className="w-10 h-10 text-yellow-400" />
+             </div>
+           
+           {/* 제목 */}
+           <h3 className="text-2xl font-bold text-white mb-4">
+             {t('ai.info.no.favorites.title')}
+           </h3>
+           
+           {/* 설명 */}
+           <p className="text-white/80 text-base md:text-lg leading-relaxed mb-8 max-w-md whitespace-pre-line">
+             {t('ai.info.no.favorites.description')}
+           </p>
+           
+           {/* 액션 버튼 */}
+                     <button
+             onClick={() => setShowFavoritesOnly(false)}
+             className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl font-medium text-sm hover:from-purple-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+           >
+             🌟 {t('ai.info.mode.full')} {t('ai.info.favorite')}
+                     </button>
+                     
+           {/* 학습 팁 */}
+           <div className="mt-8 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl p-4 border border-yellow-400/30 max-w-md">
+             <div className="flex items-center gap-2 mb-2">
+               <span className="text-yellow-400">💡</span>
+                            <span className="text-yellow-200 font-semibold text-sm">
+               {t('ai.info.no.favorites.tip.title')}
+              </span>
+                    </div>
+           <p className="text-yellow-100 text-sm leading-relaxed">
+             {t('ai.info.no.favorites.tip.description')}
+           </p>
+                  </div>
+                            </div>
+       )}
+       
+       {/* AI 정보 목록 */}
        <div className="grid gap-4 w-full">
          {currentItems.map((info, index) => {
            const itemKey = generateFavoriteKey(info)
            const isExpanded = expandedItems.has(itemKey)
            const loadedContent = loadedContents.get(itemKey)
-           
+
            return (
            <div key={info.id} className="relative">
                {/* 제목 카드 */}
@@ -666,7 +709,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                        try {
                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                          const sessionProgress = userProgress[sessionId]
-                         
+
                          // 디버깅용 로그 - 전체 userProgress 구조 확인
                          console.log(`🔍 전체목록 모드 - ${info.date} 날짜 ${info.info_index}번 카드 학습 상태 확인:`, {
                            cardTitle: info.title,
@@ -676,12 +719,12 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                            userProgress: userProgress,
                            sessionProgress: sessionProgress
                          })
-                         
+
                          if (sessionProgress && sessionProgress[info.date]) {
                            const learnedIndices = sessionProgress[info.date] || []
                            // info_index가 배열에 포함되어 있는지 확인
                            isLearned = learnedIndices.includes(info.info_index)
-                           
+
                            console.log(`✅ ${info.date} 날짜 ${info.info_index}번 카드 학습 상태:`, {
                              learnedIndices,
                              isLearned,
@@ -694,7 +737,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                              sessionProgress: sessionProgress,
                              availableDates: sessionProgress ? Object.keys(sessionProgress) : []
                            })
-                           
+
                            // 추가 디버깅: 해당 날짜의 데이터가 없는 경우 전체 userProgress 구조 확인
                            if (sessionProgress) {
                              console.log(`🔍 사용 가능한 날짜들:`, Object.keys(sessionProgress))
@@ -717,7 +760,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                          cardTitle: info.title
                        })
                      }
-                     
+
                      return (
                        <div className={`flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium ${
                          isLearned 
@@ -729,7 +772,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                      )
                    })()}
                  </div>
-                 
+
                  <div className="flex items-center justify-between mb-3">
                    <div className="flex-1">
                      {/* 카테고리 정보를 제일 위로 이동 */}
@@ -740,7 +783,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                          </span>
                        </div>
                      )}
-                     
+
                      <h3 className="text-lg font-semibold text-white mb-2">{info.title}</h3>
                      <div className="flex items-center gap-3 text-sm text-white/70">
                        <span className="flex items-center gap-1">
@@ -749,7 +792,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                        </span>
                      </div>
                    </div>
-                   
+
                    <div className="flex items-center gap-2">
                      {/* 즐겨찾기 버튼 */}
                      <button
@@ -764,7 +807,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                          className={`w-4 h-4 ${favoriteInfos.has(itemKey) ? 'fill-current' : ''}`}
                        />
                      </button>
-                     
+
                      {/* 확장/축소 버튼 */}
                      <button
                        onClick={() => toggleItemExpansion(info as AITitleItem)}
@@ -774,7 +817,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                      </button>
                    </div>
                  </div>
-                 
+
                  {/* 확장된 상세 내용 */}
                  {isExpanded && (
                    <motion.div
@@ -833,7 +876,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           >
             <FaChevronLeft className="w-5 h-5" />
           </button>
-          
+
           <div className="flex gap-2">
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               let pageNum
@@ -846,7 +889,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
               } else {
                 pageNum = currentPage - 2 + i
               }
-              
+
               return (
                 <button
                   key={pageNum}
@@ -864,7 +907,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
               )
             })}
           </div>
-          
+
           <button
             onTouchStart={handleWebViewTouch(() => setCurrentPage(Math.min(totalPages, currentPage + 1)))}
             onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}

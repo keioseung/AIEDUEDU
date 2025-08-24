@@ -113,6 +113,10 @@ const ko: Record<string, string> = {
   'ai.info.no.data.waiting': '새로운 AI 정보를 기다리고 있습니다',
   'ai.info.no.data.admin': '등록된 AI 정보가 없습니다.',
   'ai.info.no.data.search': '검색 조건에 맞는 AI 정보가 없습니다.',
+  'ai.info.no.favorites.title': '즐겨찾기된 AI 정보가 없습니다',
+  'ai.info.no.favorites.description': '아직 즐겨찾기한 AI 정보가 없습니다.\n관심 있는 AI 정보를 즐겨찾기에 추가해보세요!',
+  'ai.info.no.favorites.tip.title': '즐겨찾기 팁',
+  'ai.info.no.favorites.tip.description': '관심 있는 AI 정보를 즐겨찾기에 추가하면 나중에 쉽게 찾을 수 있습니다!',
   'ai.info.loading': 'AI 정보를 불러오는 중...',
   'ai.info.items.per.page.select': '항목 수 선택',
   
@@ -596,6 +600,10 @@ const en: Record<string, string> = {
   'ai.info.no.data.waiting': 'Waiting for new AI information',
   'ai.info.no.data.admin': 'No registered AI information.',
   'ai.info.no.data.search': 'No AI information matches your search criteria.',
+  'ai.info.no.favorites.title': 'No Favorite AI Information',
+  'ai.info.no.favorites.description': 'You haven\'t added any AI information to favorites yet.\nAdd interesting AI information to your favorites!',
+  'ai.info.no.favorites.tip.title': 'Favorite Tip',
+  'ai.info.no.favorites.tip.description': 'Add interesting AI information to favorites to find them easily later!',
   'ai.info.loading': 'Loading AI information...',
   'ai.info.sort.options': 'Sort Options',
   'ai.info.items.per.page.select': 'Select Items Per Page',
@@ -710,8 +718,7 @@ const en: Record<string, string> = {
   'quiz.option.unrelated': 'This description is unrelated to',
   'quiz.explanation.correct.meaning': 'The correct meaning of',
   
-  // Loading Message
-  'loading.please.wait': 'Please wait a moment.',
+
   
   // Quiz
   'quiz.title': 'Quiz',
@@ -1120,6 +1127,10 @@ const ja: Record<string, string> = {
   'ai.info.no.data.waiting': '新しいAI情報をお待ちしています',
   'ai.info.no.data.admin': '登録されたAI情報がありません。',
   'ai.info.no.data.search': '検索条件に一致するAI情報がありません。',
+  'ai.info.no.favorites.title': 'お気に入りのAI情報がありません',
+  'ai.info.no.favorites.description': 'まだお気に入りに追加したAI情報がありません。\n興味のあるAI情報をお気に入りに追加してみてください！',
+  'ai.info.no.favorites.tip.title': 'お気に入りのヒント',
+  'ai.info.no.favorites.tip.description': '興味のあるAI情報をお気に入りに追加すると、後で簡単に見つけることができます！',
   'ai.info.loading': 'AI情報を読み込み中...',
   
   // AI Info List Mode UI
@@ -1209,8 +1220,7 @@ const ja: Record<string, string> = {
   'quiz.option.unrelated': 'とは関係のない説明です。',
   'quiz.explanation.correct.meaning': 'の正確な意味は：',
   
-  // Loading Message
-  'loading.please.wait': 'しばらくお待ちください。',
+
   
   // Quiz
   'quiz.title': 'クイズ',
@@ -1607,6 +1617,10 @@ const zh: Record<string, string> = {
   'ai.info.no.data.waiting': '正在等待新的AI信息',
   'ai.info.no.data.admin': '没有注册的AI信息。',
   'ai.info.no.data.search': '没有符合搜索条件的AI信息。',
+  'ai.info.no.favorites.title': '没有收藏的AI信息',
+  'ai.info.no.favorites.description': '您还没有收藏任何AI信息。\n将感兴趣的AI信息添加到收藏夹吧！',
+  'ai.info.no.favorites.tip.title': '收藏提示',
+  'ai.info.no.favorites.tip.description': '将感兴趣的AI信息添加到收藏夹，以后就能轻松找到！',
   'ai.info.loading': '正在加载AI信息...',
   
   // AI Info List Mode UI
@@ -1899,8 +1913,6 @@ const zh: Record<string, string> = {
   'progress.custom.period.start.date': '开始日期',
   'progress.custom.period.end.date': '结束日期',
   
-  // 加载消息
-  'loading.please.wait': '请稍等片刻',
   'loading.detail.content': '正在加载详细内容...',
   
   // 学习状态显示
