@@ -216,10 +216,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         console.log(`🔍 userModified 상태 없음 - 현재 상태 유지: ${isLearned}`);
       }
     }
-  }, []);
-  
-  // useEffect 제거 - localStorage를 읽어오지 않음
-  // 컴포넌트가 마운트될 때 props의 isLearnedProp만 사용
+  }, []); // 빈 의존성 배열로 한 번만 실행
 
   // 외부에서 전달받은 즐겨찾기 상태와 동기화
   useEffect(() => {
