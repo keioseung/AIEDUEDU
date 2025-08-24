@@ -505,7 +505,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       
       // userModified 키들 초기화
       if (aiInfoDates) {
-        aiInfoDates.forEach(date => {
+        aiInfoDates.forEach((date: string) => {
           for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
             const userModifiedKey = `userModified_${sessionId}_${date}_${infoIndex}`;
             localStorage.removeItem(userModifiedKey);
@@ -515,7 +515,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       
       // learnedTerms 키들 초기화
       if (aiInfoDates) {
-        aiInfoDates.forEach(date => {
+        aiInfoDates.forEach((date: string) => {
           for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
             const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`;
             localStorage.removeItem(learnedTermsKey);
