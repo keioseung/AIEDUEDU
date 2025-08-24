@@ -737,10 +737,10 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
         quiz_correct = 0
         quiz_total = 0
         
-        for quiz_progress in quiz_progress:
-            if quiz_progress.stats:
+        for quiz_progress_item in quiz_progress:
+            if quiz_progress_item.stats:
                 try:
-                    quiz_data = json.loads(quiz_progress.stats)
+                    quiz_data = json.loads(quiz_progress_item.stats)
                     quiz_correct += quiz_data.get('correct', 0)
                     quiz_total += quiz_data.get('total', 0)
                 except json.JSONDecodeError:

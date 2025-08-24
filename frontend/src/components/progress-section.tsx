@@ -361,34 +361,31 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     return []
   })()
   
-  // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선)
+  // 백엔드 데이터와 로컬 데이터 통합 (백엔드 데이터 우선)
   const uniqueChartData = (() => {
     const chartData = periodStats?.period_data || []
-    const combinedData = [...localAIProgress, ...chartData]
+    const combinedData = [...chartData, ...localAIProgress]
     
-
-    
-    // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선)
+    // 날짜별로 중복 제거하고 정렬 (백엔드 데이터 우선)
     const uniqueData = combinedData.reduce((acc: PeriodData[], current: PeriodData) => {
       const existingIndex = acc.findIndex(item => item.date === current.date)
       if (existingIndex === -1) {
         acc.push(current)
       } else {
-        // 중복된 날짜가 있으면 로컬 데이터를 우선적으로 사용
+        // 중복된 날짜가 있으면 백엔드 데이터를 우선적으로 사용
         const existing = acc[existingIndex]
         acc[existingIndex] = {
           ...existing,
           ai_info: Math.max(existing.ai_info, current.ai_info),
           terms: Math.max(existing.terms, current.terms),
-          quiz_score: Math.max(existing.quiz_score, current.quiz_score),
-          quiz_correct: Math.max(existing.quiz_correct, current.quiz_correct),
-          quiz_total: Math.max(existing.quiz_total, current.quiz_total)
+          // 퀴즈 점수는 백엔드 데이터를 우선적으로 사용
+          quiz_score: existing.quiz_score > 0 ? existing.quiz_score : current.quiz_score,
+          quiz_correct: existing.quiz_correct > 0 ? existing.quiz_correct : current.quiz_correct,
+          quiz_total: existing.quiz_total > 0 ? existing.quiz_total : current.quiz_total
         }
       }
       return acc
     }, []).sort((a: PeriodData, b: PeriodData) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    
-
     
     return uniqueData
   })()
@@ -1050,7 +1047,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                       <div className={`flex ${periodType === 'month' ? 'items-start' : 'items-end'} h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
-                          const maxQuizScore = Math.max(...uniqueChartData.map(d => d.quiz_score), 1);
+                          // 퀴즈 점수는 이미 백분율(0-100)이므로 100을 최대값으로 사용
+                          const maxQuizScore = 100;
                           const quizHeight = Math.min(Math.max((data.quiz_score / maxQuizScore) * 40, data.quiz_score > 0 ? 3 : 0), 40);
                           const isFullQuiz = data.quiz_score >= maxQuizScore;
                           const percent = Math.min(Math.round((data.quiz_score / maxQuizScore) * 100), 100);
@@ -1061,7 +1059,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   className={
                                     isFullQuiz
                                       ? "bg-gradient-to-t from-green-700 to-green-400 shadow-lg animate-pulse rounded-t-sm transition-all duration-500"
-                                      : "bg-gradient-to-t from-green-500 to-green-400 rounded-t-sm transition-all duration-500 hover:from-green-400 hover:to-green-300"
+                                      : "bg-gradient-to-t from-green-500 to-green-400 rounded-sm transition-all duration-500 hover:from-green-400 hover:to-green-300"
                                   }
                                   style={{
                                     height: quizHeight,
