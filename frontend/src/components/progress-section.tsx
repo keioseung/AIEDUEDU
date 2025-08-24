@@ -433,7 +433,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   }, [updateLocalAIProgress])
   
   // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선 - 날짜별 모드 반영)
-  const uniqueChartData = (() => {
+  const [uniqueChartData, setUniqueChartData] = useState<PeriodData[]>([])
+  
+  // uniqueChartData 업데이트 함수
+  const updateUniqueChartData = useCallback(() => {
     const chartData = periodStats?.period_data || []
     const combinedData = [...localAIProgress, ...chartData] // 로컬 데이터를 먼저 배치
     
@@ -458,8 +461,13 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       return acc
     }, []).sort((a: PeriodData, b: PeriodData) => new Date(a.date).getTime() - new Date(b.date).getTime())
     
-    return uniqueData
-  })()
+    setUniqueChartData(uniqueData)
+  }, [periodStats?.period_data, localAIProgress])
+  
+  // periodStats나 localAIProgress가 변경될 때 uniqueChartData 업데이트
+  useEffect(() => {
+    updateUniqueChartData()
+  }, [updateUniqueChartData])
   
   // 실제 데이터에서 총 정보 수와 총 용어 수 계산
   const totalAIInfo = aiInfoData?.length || 0
@@ -560,6 +568,19 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       
       // localAIProgress 업데이트
       updateLocalAIProgress();
+      
+      // uniqueChartData를 강제로 0으로 설정
+      if (aiInfoDates) {
+        const resetData: PeriodData[] = aiInfoDates.map((date: string) => ({
+          date,
+          ai_info: 0,
+          terms: 0,
+          quiz_score: 0,
+          quiz_correct: 0,
+          quiz_total: 0
+        }));
+        setUniqueChartData(resetData);
+      }
       
       alert('학습 데이터가 초기화되었습니다.');
     } catch (error) {
