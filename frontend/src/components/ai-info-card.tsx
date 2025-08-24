@@ -137,6 +137,9 @@ const getCategoryStyle = (category: string) => {
 }
 
 function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery, currentLanguage }: AIInfoCardProps) {
+  // props의 isLearned는 완전히 무시하고, userModified 상태만 사용
+  console.log(`🚨 AIInfoCard 마운트 - props isLearned: ${isLearnedProp} (무시됨)`);
+  
   // 컴포넌트가 마운트되었는지 추적
   const isMounted = useRef(false);
   
@@ -209,7 +212,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           console.log(`🔄 마운트 후 userModified 상태 동기화: ${isLearned} → ${shouldBeLearned}`);
           setIsLearned(shouldBeLearned);
         }
-        } else {
+      } else {
         console.log(`🔍 userModified 상태 없음 - 현재 상태 유지: ${isLearned}`);
       }
     }
