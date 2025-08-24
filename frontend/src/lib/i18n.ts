@@ -227,13 +227,7 @@ const ko: Record<string, string> = {
   'quiz.option.unrelated': '과 관련이 없는 설명입니다.',
   'quiz.explanation.correct.meaning': '의 정확한 의미는:',
   
-  // 로딩 메시지
-  'loading.please.wait': 'Please wait a moment.',
-  'loading.detail.content': 'Loading detailed content...',
-  
-  // 학습 상태 표시
-  'learning.status.completed': '✅ Completed',
-  'learning.status.not.learned': '⭕ Not Learned',
+
   
   // 퀴즈
   'quiz.title': '퀴즈',
