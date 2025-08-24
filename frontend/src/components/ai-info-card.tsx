@@ -327,8 +327,22 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
       } catch {}
     }
     
-    // useEffect 제거 - localStorage를 읽어오지 않음
-    // 컴포넌트가 마운트될 때 props의 isLearnedProp만 사용
+    // localStorage에서 학습된 용어들 불러오기
+    if (typeof window !== 'undefined') {
+      try {
+        const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${index}`;
+        const storedLearnedTerms = localStorage.getItem(learnedTermsKey);
+        if (storedLearnedTerms) {
+          const parsedTerms = JSON.parse(storedLearnedTerms);
+          if (Array.isArray(parsedTerms)) {
+            setLocalLearnedTerms(new Set(parsedTerms));
+            console.log(`📚 localStorage에서 학습된 용어 불러오기 완료: ${parsedTerms.length}개`);
+          }
+        }
+      } catch (error) {
+        console.error('학습된 용어 불러오기 오류:', error);
+      }
+    }
   }, []); // 빈 의존성 배열로 한 번만 실행
 
   // 용어가 있는지 확인
