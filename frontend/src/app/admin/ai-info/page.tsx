@@ -1052,7 +1052,7 @@ export default function AdminAIInfoPage() {
 
     // 모든 AI 정보 카드에서 용어 수집
     allAIInfos.forEach((dateGroup) => {
-      dateGroup.infos.forEach((info, index) => {
+      dateGroup.infos.forEach((info: AIInfoItem, index) => {
         if (info.terms && Array.isArray(info.terms)) {
           info.terms.forEach((term) => {
             if (!termCount[term.term]) {
@@ -1982,7 +1982,7 @@ export default function AdminAIInfoPage() {
                                           className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-lg font-medium hover:bg-yellow-500/30 transition text-sm border border-yellow-500/30"
                                         >
                                           📋 일괄 입력
-                                        </button>
+                                      </button>
                                       </div>
                                     </div>
                                     
