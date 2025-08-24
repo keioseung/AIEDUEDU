@@ -191,11 +191,13 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
       return response.data
     },
     enabled: true,
-    staleTime: 5 * 60 * 1000, // 5분간 데이터를 신선하게 유지
-    gcTime: 10 * 60 * 1000, // 10분간 캐시 유지
+    staleTime: 15 * 60 * 1000, // 15분간 데이터를 신선하게 유지 (기존 5분에서 증가)
+    gcTime: 30 * 60 * 1000, // 30분간 캐시 유지 (기존 10분에서 증가)
     refetchOnWindowFocus: false, // 윈도우 포커스 시 새로고침 비활성화
     refetchOnMount: false, // 컴포넌트 마운트 시 새로고침 비활성화
     refetchOnReconnect: false, // 네트워크 재연결 시 새로고침 비활성화
+    retry: 1, // 재시도 횟수 제한
+    retryDelay: 1000, // 재시도 간격 1초
   })
 
   // 필터링 및 정렬된 용어 목록

@@ -466,6 +466,36 @@ export default function DashboardPage() {
     return totalTerms > 0 ? Math.round((learnedTermsCount / totalTerms) * 100) : 0
   }
 
+  // 탭 변경 시 프리페칭으로 성능 향상
+  const handleTabChange = (newTab: 'ai' | 'quiz' | 'progress' | 'term') => {
+    setActiveTab(newTab)
+    
+    // 탭별 프리페칭으로 데이터 미리 로딩
+    if (newTab === 'term') {
+      // 용어학습 탭 프리페칭
+      queryClient.prefetchQuery({
+        queryKey: ['all-terms', currentLanguage],
+        queryFn: async () => {
+          const response = await userProgressAPI.getAllTerms(currentLanguage)
+          return response.data
+        },
+        staleTime: 15 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
+      })
+    } else if (newTab === 'quiz') {
+      // 퀴즈 탭 프리페칭
+      queryClient.prefetchQuery({
+        queryKey: ['terms-quiz', selectedDate, t('quiz.tab.today.topic'), undefined],
+        queryFn: async () => {
+          const response = await userProgressAPI.getTermsQuizByDate(selectedDate, currentLanguage)
+          return response.data
+        },
+        staleTime: 10 * 60 * 1000,
+        gcTime: 20 * 60 * 1000,
+      })
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden px-4 safe-area-padding navigation-safe">
       {/* 고급스러운 배경 효과 */}
@@ -592,7 +622,7 @@ export default function DashboardPage() {
                     ? `bg-gradient-to-r ${tab.gradient} text-white shadow-xl transform scale-105 ring-1 ring-white/30` 
                     : 'text-white/80 hover:text-white hover:bg-white/10 active:scale-95'
                 }`}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => handleTabChange(tab.id as any)}
               >
                 {/* 활성 탭 배경 효과 */}
                 {activeTab === tab.id && (

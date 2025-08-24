@@ -379,6 +379,13 @@ function TermsQuizSection({ sessionId, selectedDate, currentLanguage, onProgress
       }
     },
     enabled: !!selectedDate && (selectedQuizTitle === t('quiz.tab.today.topic') || selectedQuizTitle === t('quiz.tab.wrong.notes') || !!selectedAIInfo),
+    staleTime: 10 * 60 * 1000, // 10분간 데이터를 신선하게 유지
+    gcTime: 20 * 60 * 1000, // 20분간 캐시 유지
+    refetchOnWindowFocus: false, // 윈도우 포커스 시 새로고침 비활성화
+    refetchOnMount: false, // 컴포넌트 마운트 시 새로고침 비활성화
+    refetchOnReconnect: false, // 네트워크 재연결 시 새로고침 비활성화
+    retry: 1, // 재시도 횟수 제한
+    retryDelay: 1000, // 재시도 간격 1초
   })
 
   const currentQuiz = quizData?.quizzes?.[currentQuizIndex]
