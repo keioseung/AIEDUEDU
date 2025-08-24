@@ -698,18 +698,17 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                      if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
                        try {
                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                         const sessionProgress = userProgress[sessionId]
                          
-                         // sessionId 확인 및 디버깅
+                         // 디버깅용 로그 - 전체 userProgress 구조 확인
                          console.log(`🔍 전체목록 모드 - ${info.date} 날짜 ${info.info_index}번 카드 학습 상태 확인:`, {
                            cardTitle: info.title,
                            cardDate: info.date,
                            cardInfoIndex: info.info_index,
                            sessionId: sessionId,
                            userProgress: userProgress,
-                           sessionProgress: userProgress[sessionId]
+                           sessionProgress: sessionProgress
                          })
-                         
-                         const sessionProgress = userProgress[sessionId]
                          
                          if (sessionProgress && sessionProgress[info.date]) {
                            const learnedIndices = sessionProgress[info.date] || []
@@ -728,6 +727,16 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                              sessionProgress: sessionProgress,
                              availableDates: sessionProgress ? Object.keys(sessionProgress) : []
                            })
+                           
+                           // 추가 디버깅: 해당 날짜의 데이터가 없는 경우 전체 userProgress 구조 확인
+                           if (sessionProgress) {
+                             console.log(`🔍 사용 가능한 날짜들:`, Object.keys(sessionProgress))
+                             Object.keys(sessionProgress).forEach(date => {
+                               if (date !== '__stats__' && date !== 'terms_by_date') {
+                                 console.log(`📅 ${date} 날짜 데이터:`, sessionProgress[date])
+                               }
+                             })
+                           }
                          }
                        } catch (error) {
                          console.error('로컬 스토리지 데이터 파싱 오류:', error)
