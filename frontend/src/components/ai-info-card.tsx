@@ -271,9 +271,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     }
   }
   
-  // prop이 바뀌거나 forceUpdate, selectedDate가 바뀌면 동기화
+  // 컴포넌트 마운트 시에만 초기 상태 설정 (한 번만 실행)
   useEffect(() => {
-    // localStorage의 userProgress를 우선시하여 학습 상태 동기화 (날짜별 모드 우선)
+    // localStorage의 userProgress를 우선시하여 초기 학습 상태 설정 (날짜별 모드 우선)
     let learned = false;
     if (typeof window !== 'undefined') {
       try {
@@ -290,12 +290,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     // userProgress가 있으면 그것을 우선시, 없으면 prop 사용
     const finalLearned = learned || isLearnedProp;
     
-    // 현재 상태와 다를 때만 업데이트 (무한 루프 방지)
+    // 초기 상태 설정 (한 번만)
     if (isLearned !== finalLearned) {
-      console.log(`🔄 useEffect - 상태 동기화: ${isLearned} → ${finalLearned}`)
+      console.log(`🚀 초기 상태 설정: ${isLearned} → ${finalLearned}`)
       setIsLearned(finalLearned);
     }
-  }, [isLearnedProp, date, sessionId, index]); // isLearned 의존성 제거
+  }, []); // 빈 의존성 배열로 한 번만 실행
 
   // 용어가 있는지 확인
   const hasTerms = info.terms_ko && info.terms_ko.length > 0
