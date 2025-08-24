@@ -157,24 +157,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   // localStorage에서 용어 학습 상태 백업
   const [localLearnedTerms, setLocalLearnedTerms] = useState<Set<string>>(new Set())
   
-  // localStorage에서 용어 학습 상태 불러오기
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        // 정확한 날짜와 info_index를 사용하여 용어 학습 상태 확인
-        const stored = localStorage.getItem(`learnedTerms_${sessionId}_${date}_${index}`)
-        if (stored) {
-          setLocalLearnedTerms(new Set(JSON.parse(stored)))
-        } else {
-          // 해당 날짜와 info_index에 대한 데이터가 없으면 빈 Set으로 초기화
-          setLocalLearnedTerms(new Set())
-        }
-      } catch {
-        // 에러 발생 시 빈 Set으로 초기화
-        setLocalLearnedTerms(new Set())
-      }
-    }
-  }, [sessionId, date, index])
+  // useEffect 제거 - localStorage를 읽어오지 않음
+  // 컴포넌트가 마운트될 때 props의 isLearnedProp만 사용
 
   // 외부에서 전달받은 즐겨찾기 상태와 동기화
   useEffect(() => {
@@ -405,6 +389,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         console.log(`🔄 ${date} 날짜 ${index}번 카드 학습 상태 초기화 시작...`)
         
         // 학습완료 상태에서 버튼 클릭 시 → 학습하기 상태로 초기화
+        // 상태를 먼저 변경
+        setIsLearned(false)
+        console.log(`✅ 상태 변경 완료: isLearned = false`)
+        
+        // localStorage 업데이트
         const currentProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
         if (currentProgress[sessionId] && currentProgress[sessionId][date]) {
           const learnedIndices = currentProgress[sessionId][date].filter((i: number) => i !== index)
@@ -425,10 +414,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           console.log('백엔드 삭제 실패 (무시됨):', e)
         }
         
-        // 상태 즉시 변경
-        setIsLearned(false)
-        console.log(`✅ 상태 변경 완료: isLearned = false`)
-        
         // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
         queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
         queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
@@ -443,14 +428,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         console.log(`🔄 ${date} 날짜 ${index}번 카드 학습 시작...`)
         
         // 학습하기 상태에서 버튼 클릭 시 → 학습완료 상태로 변경
-    
-        await updateProgressMutation.mutateAsync({
-          sessionId,
-          date,
-          infoIndex: index
-        })
+        // 상태를 먼저 변경
+        setIsLearned(true)
+        setShowLearnComplete(true)
+        setTimeout(() => setShowLearnComplete(false), 3000)
         
-        // 로컬 스토리지에 즉시 저장 (낙관적 업데이트)
+        // localStorage 업데이트
         const currentProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
         if (!currentProgress[sessionId]) currentProgress[sessionId] = {}
         if (!currentProgress[sessionId][date]) currentProgress[sessionId][date] = []
@@ -459,10 +442,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         }
         localStorage.setItem('userProgress', JSON.stringify(currentProgress))
         
-        // 상태 즉시 변경
-        setIsLearned(true)
-        setShowLearnComplete(true)
-        setTimeout(() => setShowLearnComplete(false), 3000)
+        // 백엔드 업데이트
+        await updateProgressMutation.mutateAsync({
+          sessionId,
+          date,
+          infoIndex: index
+        })
          
         // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
         queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
