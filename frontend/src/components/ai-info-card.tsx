@@ -410,12 +410,16 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
             setLocalLearnedTerms(newLocalTerms)
             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
             
-            console.log(`❌ 용어 학습 해제: ${currentTerm.term}`)
-            
-            // 진행률 업데이트 콜백 호출
-            if (onProgressUpdate) {
-              onProgressUpdate()
-            }
+                                         console.log(`❌ 용어 학습 해제: ${currentTerm.term}`)
+                             
+                             // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
+                             queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+                             queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+                             
+                             // 진행률 업데이트 콜백 호출
+                             if (onProgressUpdate) {
+                               onProgressUpdate()
+                             }
           } catch (error) {
             console.error('Failed to remove term progress:', error)
           }
@@ -435,10 +439,14 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
               infoIndex: index
             })
 
-            console.log(`✅ 용어 학습 완료: ${currentTerm.term}`)
+                                         console.log(`✅ 용어 학습 완료: ${currentTerm.term}`)
 
-            // 성취 확인 (지연 실행)
-            setTimeout(async () => {
+                             // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
+                             queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+                             queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+
+                             // 성취 확인 (지연 실행)
+                             setTimeout(async () => {
               try {
                 const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
                 if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
@@ -748,6 +756,10 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              
                              console.log(`❌ 용어 학습 해제: ${term.term}`)
                              
+                             // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
+                             queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+                             queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+                             
                              // 진행률 업데이트 콜백 호출
                              if (onProgressUpdate) {
                                onProgressUpdate()
@@ -774,6 +786,10 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
                              
                              console.log(`✅ 용어 학습 완료: ${term.term}`)
+                             
+                             // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
+                             queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+                             queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
                              
                              // 진행률 업데이트 콜백 호출
                              if (onProgressUpdate) {
