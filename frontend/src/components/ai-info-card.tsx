@@ -137,7 +137,23 @@ const getCategoryStyle = (category: string) => {
 }
 
 function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery, currentLanguage }: AIInfoCardProps) {
-  const [isLearned, setIsLearned] = useState(isLearnedProp)
+  // localStorage에서 직접 학습 상태를 읽어와서 초기화
+  const getInitialLearnedState = () => {
+    if (typeof window !== 'undefined' && date) {
+      try {
+        const stored = localStorage.getItem('userProgress');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed[sessionId] && parsed[sessionId][date]) {
+            return parsed[sessionId][date].includes(index);
+          }
+        }
+      } catch {}
+    }
+    return false;
+  };
+
+  const [isLearned, setIsLearned] = useState(getInitialLearnedState())
   const [showTerms, setShowTerms] = useState(false)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
   const [isExpanded, setIsExpanded] = useState(false)
