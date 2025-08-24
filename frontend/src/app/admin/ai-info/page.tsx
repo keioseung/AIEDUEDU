@@ -81,6 +81,22 @@ export default function AdminAIInfoPage() {
   const [bulkTermsTextZh, setBulkTermsTextZh] = useState('')
   const [showBulkInput, setShowBulkInput] = useState<number | null>(null)
 
+  // 날짜별 AI 정보 관리 상태
+  const [selectedDate, setSelectedDate] = useState('')
+  const [selectedDateAIInfo, setSelectedDateAIInfo] = useState<AIInfoItem[]>([])
+  const [availableDates, setAvailableDates] = useState<string[]>([])
+  const [categories] = useState([
+    "챗봇/대화형 AI",
+    "이미지 생성 AI", 
+    "코딩/개발 도구",
+    "음성/오디오 AI",
+    "데이터 분석/ML",
+    "AI 윤리/정책",
+    "AI 하드웨어/인프라",
+    "AI 응용 서비스",
+    "미분류"
+  ])
+
   // 서버에서 날짜별 AI 정보 목록 불러오기
   const { data: dates = [], refetch: refetchDates } = useQuery({
     queryKey: ['ai-info-dates'],
@@ -964,6 +980,50 @@ export default function AdminAIInfoPage() {
     return () => { if (node) node.removeEventListener('keydown', handleKeyDown) }
   }, [])
 
+  // 날짜별 AI 정보 관리 useEffect
+  useEffect(() => {
+    if (dates && dates.length > 0) {
+      setAvailableDates(dates)
+    }
+  }, [dates])
+
+  useEffect(() => {
+    if (selectedDate && aiInfos && aiInfos.length > 0) {
+      setSelectedDateAIInfo(aiInfos)
+    } else {
+      setSelectedDateAIInfo([])
+    }
+  }, [selectedDate, aiInfos])
+
+  // 날짜별 AI 정보 관리 핸들러
+  const handleEditDateAIInfo = (date: string, index: number) => {
+    const info = selectedDateAIInfo[index]
+    if (info) {
+      setEditingAIInfo({ id: date, index })
+      setEditingData({
+        title_ko: info.title || '',
+        title_en: info.title_en || '',
+        title_ja: info.title_ja || '',
+        title_zh: info.title_zh || '',
+        content_ko: info.content || '',
+        content_en: info.content_en || '',
+        content_ja: info.content_ja || '',
+        content_zh: info.content_zh || '',
+        category: info.category || '',
+        terms_ko: info.terms || [],
+        terms_en: info.terms_en || [],
+        terms_ja: info.terms_ja || [],
+        terms_zh: info.terms_zh || []
+      })
+    }
+  }
+
+  const handleDeleteDateAIInfo = (date: string, index: number) => {
+    if (window.confirm('정말 이 항목을 삭제하시겠습니까?')) {
+      deleteItemMutation.mutate({ date, itemIndex: index })
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
       {/* 배경 효과 */}
@@ -1075,7 +1135,7 @@ export default function AdminAIInfoPage() {
                         
                         {/* 수정 버튼 */}
                         <button
-                          onClick={() => handleEdit(selectedDate, index)}
+                          onClick={() => handleEditDateAIInfo(selectedDate, index)}
                           className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
                         >
                           수정
@@ -1083,7 +1143,7 @@ export default function AdminAIInfoPage() {
                         
                         {/* 삭제 버튼 */}
                         <button
-                          onClick={() => handleDelete(selectedDate, index)}
+                          onClick={() => handleDeleteDateAIInfo(selectedDate, index)}
                           className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors"
                         >
                           삭제
