@@ -149,7 +149,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     
     if (typeof window !== 'undefined' && date) {
       try {
-        // 1순위: 사용자가 직접 변경한 상태 확인 (절대 우선시)
+        // userModified 상태만 확인 (userProgress는 절대 읽지 않음)
         const modifiedKey = getUserModifiedKey();
         const modifiedState = localStorage.getItem(modifiedKey);
         console.log(`🔍 userModified 키: ${modifiedKey}, 값: ${modifiedState}`);
@@ -159,20 +159,12 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           return modifiedState === 'true';
         }
         
-        // 2순위: userProgress에서 상태 확인 (초기 로드 시에만)
-        if (!isMounted.current) {
-          const stored = localStorage.getItem('userProgress');
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            if (parsed[sessionId] && parsed[sessionId][date]) {
-              const learned = parsed[sessionId][date].includes(index);
-              console.log(`🔍 userProgress에서 상태 확인: ${learned}`);
-              return learned;
-            }
-          }
-        }
+        // userModified 상태가 없으면 기본값 false 반환
+        console.log(`🔍 userModified 상태 없음 - 기본값 false 반환`);
+        return false;
       } catch (error) {
         console.error('getInitialLearnedState 에러:', error);
+        return false;
       }
     }
     return false;
@@ -203,7 +195,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     console.log(`🚀 useEffect 실행 - date: ${date}, index: ${index}`);
     isMounted.current = true;
     
-    // 마운트 후에도 userModified 상태가 있으면 그것을 우선시
+    // userModified 상태만 확인하고, userProgress는 절대 읽지 않음
     if (typeof window !== 'undefined' && date) {
       const modifiedKey = getUserModifiedKey();
       const modifiedState = localStorage.getItem(modifiedKey);
