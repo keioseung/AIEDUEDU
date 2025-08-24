@@ -1162,7 +1162,7 @@ export default function AdminAIInfoPage() {
     // 이미 사용된 용어들과 겹치지 않는 용어들 선택
     const usedTerms = new Set<string>()
     allAIInfos.forEach((dateGroup) => {
-      dateGroup.infos.forEach((info) => {
+      dateGroup.infos.forEach((info: AIInfoItem) => {
         if (info.terms && Array.isArray(info.terms)) {
           info.terms.forEach((term) => {
             usedTerms.add(term.term)
