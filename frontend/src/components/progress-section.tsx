@@ -708,15 +708,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   {(() => {
                     // selectedDate가 있으면 해당 날짜의 실제 학습 데이터를 표시
                     if (selectedDate) {
-                      // 백엔드 데이터를 우선적으로 사용
-                      if (uniqueChartData.length > 0) {
-                        const selectedDateData = uniqueChartData.find(data => data.date === selectedDate)
-                        if (selectedDateData && selectedDateData.terms > 0) {
-                          return selectedDateData.terms
-                        }
-                      }
-                      
-                      // 백엔드 데이터가 없거나 0인 경우 실제 학습 상태 확인
+                      // selectedDate가 있을 때는 바로 실제 학습 상태 확인 (uniqueChartData 무시)
                       if (typeof window !== 'undefined') {
                         try {
                           let totalTermsLearned = 0
@@ -737,6 +729,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                             }
                           }
                           
+                          console.log(`🔍 ${selectedDate} 날짜 용어 학습 수: ${totalTermsLearned}개`)
                           return totalTermsLearned
                         } catch (error) {
                           console.error('로컬 스토리지 데이터 파싱 오류:', error)
