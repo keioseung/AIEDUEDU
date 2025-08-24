@@ -706,16 +706,19 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       <div className="flex gap-2 md:gap-3">
         <button
           onClick={handleLearnToggle}
-          disabled={isLearned}
           className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target ${
             isLearned
-              ? 'bg-green-500 text-white cursor-default'
-              : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+              ? 'bg-red-500 text-white hover:bg-red-600 cursor-pointer'
+              : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 cursor-pointer'
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span className="hidden sm:inline">{isLearned ? t('ai.info.card.learning.button') : t('ai.info.card.learning.button')}</span>
-          <span className="sm:hidden">{isLearned ? t('ai.info.card.complete.button') : t('ai.info.card.learning.button.short')}</span>
+          <span className="hidden sm:inline">
+            {isLearned ? '학습완료 해제' : t('ai.info.card.learning.button')}
+          </span>
+          <span className="sm:hidden">
+            {isLearned ? '해제' : t('ai.info.card.learning.button.short')}
+          </span>
         </button>
       </div>
 
