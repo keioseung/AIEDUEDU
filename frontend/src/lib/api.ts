@@ -330,6 +330,8 @@ export const userProgressAPI = {
     api.get(`/api/user-progress/achievements/${sessionId}`),
   deleteByDate: (sessionId: string, date: string) => api.delete(`/api/user-progress/${sessionId}/${date}`),
   deleteInfoIndex: (sessionId: string, date: string, infoIndex: number) => api.delete(`/api/user-progress/${sessionId}/${date}/${infoIndex}`),
+  // 새로운 API: 모든 학습 진행 데이터 초기화
+  resetAllProgress: (sessionId: string) => api.post(`/api/user-progress/reset-all-progress/${sessionId}`),
 }
 
 // Prompt API

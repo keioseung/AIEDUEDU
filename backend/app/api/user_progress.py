@@ -1006,4 +1006,72 @@ def get_total_terms_stats(session_id: str, db: Session = Depends(get_db)):
             "total_available_terms": 0,
             "total_learned_terms": 0,
             "learning_progress_percentage": 0
-        } 
+        }
+
+@router.post("/reset-all-progress/{session_id}")
+def reset_all_user_progress(session_id: str, db: Session = Depends(get_db)):
+    """사용자의 모든 학습 진행 데이터를 초기화합니다."""
+    try:
+        # 1. AI 정보 학습 진행 데이터 삭제
+        ai_info_progress = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id,
+            UserProgress.date.notlike('__%')  # 특수 키가 아닌 일반 날짜 데이터
+        ).all()
+        
+        for progress in ai_info_progress:
+            db.delete(progress)
+        
+        # 2. 용어 학습 진행 데이터 삭제
+        terms_progress = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id,
+            UserProgress.date.like('__terms__%')
+        ).all()
+        
+        for progress in terms_progress:
+            db.delete(progress)
+        
+        # 3. 퀴즈 진행 데이터 삭제
+        quiz_progress = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id,
+            UserProgress.date.like('__quiz__%')
+        ).all()
+        
+        for progress in quiz_progress:
+            db.delete(progress)
+        
+        # 4. 통계 데이터 삭제
+        stats_progress = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id,
+            UserProgress.date == '__stats__'
+        ).all()
+        
+        for progress in stats_progress:
+            db.delete(progress)
+        
+        # 5. 날짜별 용어 통계 데이터 삭제
+        terms_by_date_progress = db.query(UserProgress).filter(
+            UserProgress.session_id == session_id,
+            UserProgress.date == 'terms_by_date'
+        ).all()
+        
+        for progress in terms_by_date_progress:
+            db.delete(progress)
+        
+        # 변경사항 커밋
+        db.commit()
+        
+        print(f"Successfully reset all progress for session: {session_id}")
+        
+        return {
+            "message": "All user progress has been reset successfully",
+            "session_id": session_id,
+            "reset_timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        db.rollback()
+        print(f"Error resetting user progress: {e}")
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to reset user progress: {str(e)}"
+        ) 
