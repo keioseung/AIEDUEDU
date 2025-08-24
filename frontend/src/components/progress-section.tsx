@@ -165,6 +165,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     },
   })
 
+  // 초기화 상태를 추적하는 state
+  const [isReset, setIsReset] = useState(false)
+  
   // AI 정보 날짜 목록을 가져와서 총 개수 계산 (각 날짜당 2개 카드)
   const { data: aiInfoDates } = useQuery({
     queryKey: ['ai-info-dates'],
@@ -248,7 +251,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       const response = await userProgressAPI.getPeriodStats(sessionId, periodDates.start, periodDates.end)
       return response.data
     },
-    enabled: !!sessionId && !!periodDates.start && !!periodDates.end,
+    enabled: !!sessionId && !!periodDates.start && !!periodDates.end && !isReset, // 초기화 상태에서는 비활성화
   })
 
 
@@ -432,16 +435,24 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     updateLocalAIProgress()
   }, [updateLocalAIProgress])
   
-  // 초기화 상태를 추적하는 state
-  const [isReset, setIsReset] = useState(false)
-  
   // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선 - 날짜별 모드 반영)
   const [uniqueChartData, setUniqueChartData] = useState<PeriodData[]>([])
   
   // uniqueChartData 업데이트 함수
   const updateUniqueChartData = useCallback(() => {
     // 초기화 후에는 periodStats 데이터를 완전히 무시하고 localAIProgress만 사용
-    const chartData = isReset ? [] : (periodStats?.period_data || [])
+    let chartData: PeriodData[] = []
+    
+    if (isReset) {
+      // 초기화 상태에서는 백엔드 데이터 완전 무시
+      chartData = []
+      console.log('🔧 초기화 상태: 백엔드 데이터 무시됨')
+    } else {
+      // 초기화되지 않은 상태에서만 백엔드 데이터 사용
+      chartData = periodStats?.period_data || []
+      console.log('📊 정상 상태: 백엔드 데이터 사용됨', chartData.length)
+    }
+    
     const combinedData = [...localAIProgress, ...chartData] // 로컬 데이터를 먼저 배치
     
     // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선 - 날짜별 모드 반영)
