@@ -41,6 +41,61 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const { data: stats } = useUserStats(sessionId)
   const queryClient = useQueryClient()
   
+  // userModified 상태를 우선시하는 헬퍼 함수
+  const getActualLearningStatus = (date: string, infoIndex: number): boolean => {
+    if (typeof window === 'undefined') return false
+    
+    try {
+      // userModified 키 확인 (사용자가 명시적으로 변경한 상태)
+      const userModifiedKey = `userModified_${sessionId}_${date}_${infoIndex}`
+      const userModified = localStorage.getItem(userModifiedKey)
+      
+      if (userModified !== null) {
+        // 사용자가 명시적으로 변경한 상태가 있으면 그것을 우선시
+        return JSON.parse(userModified)
+      }
+      
+      // userModified가 없으면 userProgress에서 확인
+      const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+      const sessionProgress = userProgress[sessionId]
+      if (sessionProgress && sessionProgress[date]) {
+        return sessionProgress[date].includes(infoIndex)
+      }
+      
+      return false
+    } catch (error) {
+      console.error('학습 상태 확인 오류:', error)
+      return false
+    }
+  }
+  
+  // 특정 날짜의 실제 학습완료된 AI 정보 카드 수 계산
+  const getActualLearnedCount = (date: string): number => {
+    if (typeof window === 'undefined') return 0
+    
+    let count = 0
+    // 각 날짜당 2개 카드 (0번, 1번)
+    for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+      if (getActualLearningStatus(date, infoIndex)) {
+        count++
+      }
+    }
+    return count
+  }
+  
+  // 전체 실제 학습완료된 AI 정보 카드 수 계산
+  const getTotalActualLearnedCount = (): number => {
+    if (typeof window === 'undefined') return 0
+    
+    let totalCount = 0
+    if (aiInfoDates) {
+      aiInfoDates.forEach((date: string) => {
+        totalCount += getActualLearnedCount(date)
+      })
+    }
+    return totalCount
+  }
+
   // 언어 변경 감지 및 즉시 반영
   useEffect(() => {
     const handleLanguageChange = () => {
@@ -490,17 +545,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         }
                       }
                       
-                      // 백엔드 데이터가 없거나 0인 경우 로컬 스토리지 확인
+                      // 백엔드 데이터가 없거나 0인 경우 실제 학습 상태 확인
                       if (typeof window !== 'undefined') {
-                        try {
-                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                          const sessionProgress = userProgress[sessionId]
-                          if (sessionProgress && sessionProgress[selectedDate]) {
-                            return sessionProgress[selectedDate].length
-                          }
-                        } catch (error) {
-                          console.error('로컬 스토리지 데이터 파싱 오류:', error)
-                        }
+                        return getActualLearnedCount(selectedDate)
                       }
                       
                       return 0
@@ -517,26 +564,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.accumulated.total.learning')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // localStorage에서 실제 학습완료된 AI 정보 카드 수 계산 (날짜별 모드와 동일)
-                    let totalLearned = 0
-                    if (typeof window !== 'undefined') {
-                      try {
-                        // userProgress에서 학습완료된 카드 확인
-                        const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                        const sessionProgress = userProgress[sessionId]
-                        if (sessionProgress) {
-                          Object.keys(sessionProgress).forEach(date => {
-                            if (date !== '__stats__' && date !== 'terms_by_date') {
-                              const learnedIndices = sessionProgress[date] || []
-                              // 중복 제거하지 않고 모든 학습완료된 카드 수 계산 (날짜별 모드와 동일)
-                              totalLearned += learnedIndices.length
-                            }
-                          })
-                        }
-                      } catch (error) {
-                        console.error('로컬 스토리지 데이터 파싱 오류:', error)
-                      }
-                    }
+                    // 실제 학습완료된 AI 정보 카드 수 계산 (userModified 상태 우선시)
+                    const totalLearned = getTotalActualLearnedCount()
                     
                     // 전체 등록된 AI 정보 수 (각 날짜당 2개 카드)
                     const totalCards = (aiInfoDates?.length || 0) * 2
@@ -584,19 +613,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         }
                       }
                       
-                      // 백엔드 데이터가 없거나 0인 경우 로컬 스토리지 확인
+                      // 백엔드 데이터가 없거나 0인 경우 실제 학습 상태 확인
                       if (typeof window !== 'undefined') {
                         try {
                           let totalTermsLearned = 0
                           // 해당 날짜의 모든 AI 정보에 대해 용어 학습 상태 확인
-                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                          const sessionProgress = userProgress[sessionId]
-                          if (sessionProgress && sessionProgress[selectedDate]) {
-                            // 해당 날짜에 학습한 AI 정보의 인덱스들
-                            const learnedIndices = sessionProgress[selectedDate]
-                            
-                            // 각 학습된 AI 정보의 용어 학습 상태 확인
-                            learnedIndices.forEach((infoIndex: number) => {
+                          for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+                            // userModified 상태가 true인 경우만 용어 학습 상태 확인
+                            if (getActualLearningStatus(selectedDate, infoIndex)) {
                               const learnedTermsKey = `learnedTerms_${sessionId}_${selectedDate}_${infoIndex}`
                               const learnedTerms = localStorage.getItem(learnedTermsKey)
                               if (learnedTerms) {
@@ -607,10 +631,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   console.error('용어 데이터 파싱 오류:', error)
                                 }
                               }
-                            })
-                            
-                            return totalTermsLearned
+                            }
                           }
+                          
+                          return totalTermsLearned
                         } catch (error) {
                           console.error('로컬 스토리지 데이터 파싱 오류:', error)
                         }
@@ -642,26 +666,29 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // localStorage에서 실제 학습된 용어 수 계산 (모든 카드에서 학습된 용어)
+                    // 실제 학습된 용어 수 계산 (userModified 상태가 true인 카드에서만)
                     let totalTermsLearned = 0
                     
                     if (typeof window !== 'undefined') {
                       try {
-                        // 모든 날짜의 모든 카드(학습완료/미완료 관계없이)에서 학습된 용어 수 계산
+                        // 모든 날짜의 모든 카드에서 userModified 상태가 true인 경우만 용어 학습 상태 확인
                         if (aiInfoDates) {
                           aiInfoDates.forEach((date: string) => {
-                            // 각 날짜당 2개 카드 (0번, 1번) 모두 확인
+                            // 각 날짜당 2개 카드 (0번, 1번) 확인
                             for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
-                              const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
-                              const learnedTerms = localStorage.getItem(learnedTermsKey)
-                              if (learnedTerms) {
-                                try {
-                                  const terms = JSON.parse(learnedTerms)
-                                  if (Array.isArray(terms)) {
-                                    totalTermsLearned += terms.length
+                              // userModified 상태가 true인 경우만 용어 학습 상태 확인
+                              if (getActualLearningStatus(date, infoIndex)) {
+                                const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
+                                const learnedTerms = localStorage.getItem(learnedTermsKey)
+                                if (learnedTerms) {
+                                  try {
+                                    const terms = JSON.parse(learnedTerms)
+                                    if (Array.isArray(terms)) {
+                                      totalTermsLearned += terms.length
+                                    }
+                                  } catch (error) {
+                                    console.error('용어 데이터 파싱 오류:', error)
                                   }
-                                } catch (error) {
-                                  console.error('용어 데이터 파싱 오류:', error)
                                 }
                               }
                             }
