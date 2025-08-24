@@ -1711,7 +1711,7 @@ def get_all_terms(language: str = "ko", db: Session = Depends(get_db)):
         
     except Exception as e:
         print(f"Error in get_all_terms: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to get all terms: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get all terms: {str(e)}") 
 
 @router.get("/titles/{language}")
 def get_all_titles(language: str = "ko", db: Session = Depends(get_db)):

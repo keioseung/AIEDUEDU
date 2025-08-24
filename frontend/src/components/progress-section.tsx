@@ -299,7 +299,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   // 그래프 데이터 준비 - 백엔드 데이터와 로컬 데이터 통합
   const chartData = periodStats?.period_data || []
   
-  // 로컬 스토리지에서 AI 정보 학습 데이터 가져오기
+  // 로컬 스토리지에서 AI 정보 학습 데이터 가져오기 (날짜별 모드 우선시)
   const localAIProgress = (() => {
     if (typeof window !== 'undefined') {
       try {
@@ -318,7 +318,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               const dateStr = d.toISOString().split('T')[0]
               const localProgress = userData[dateStr] || []
               
-              // selectedDate가 있는 경우 해당 날짜의 데이터를 우선적으로 반영
+              // 날짜별 모드의 학습 상태를 우선시 (userProgress에서 직접 계산)
               let aiCount = localProgress.length
               
               // 실제 학습된 용어 수를 계산 (terms_by_date는 백엔드에서 학습된 용어를 그룹화한 것이므로 사용하지 않음)
@@ -338,9 +338,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 }
               }
               
-              console.log(`🔍 ${dateStr} 날짜: AI 정보 ${aiCount}개, 학습된 용어 ${termsCount}개`)
-              
-              // selectedDate가 현재 날짜와 같다면 로컬 데이터를 더 정확하게 반영
+              console.log(`🔍 ${dateStr} 날짜: AI 정보 ${aiCount}개 (날짜별 모드 우선), 학습된 용어 ${termsCount}개`)
               
               localData.push({
                 date: dateStr,
@@ -361,23 +359,23 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     return []
   })()
   
-  // 백엔드 데이터와 로컬 데이터 통합 (백엔드 데이터 우선)
+  // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선 - 날짜별 모드 반영)
   const uniqueChartData = (() => {
     const chartData = periodStats?.period_data || []
-    const combinedData = [...chartData, ...localAIProgress]
+    const combinedData = [...localAIProgress, ...chartData] // 로컬 데이터를 먼저 배치
     
-    // 날짜별로 중복 제거하고 정렬 (백엔드 데이터 우선)
+    // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선 - 날짜별 모드 반영)
     const uniqueData = combinedData.reduce((acc: PeriodData[], current: PeriodData) => {
       const existingIndex = acc.findIndex(item => item.date === current.date)
       if (existingIndex === -1) {
         acc.push(current)
       } else {
-        // 중복된 날짜가 있으면 백엔드 데이터를 우선적으로 사용
+        // 중복된 날짜가 있으면 로컬 데이터를 우선적으로 사용 (날짜별 모드 우선)
         const existing = acc[existingIndex]
         acc[existingIndex] = {
           ...existing,
-          ai_info: Math.max(existing.ai_info, current.ai_info),
-          terms: Math.max(existing.terms, current.terms),
+          ai_info: existing.ai_info > 0 ? existing.ai_info : current.ai_info, // 로컬 데이터 우선
+          terms: existing.terms > 0 ? existing.terms : current.terms, // 로컬 데이터 우선
           // 퀴즈 점수는 백엔드 데이터를 우선적으로 사용
           quiz_score: existing.quiz_score > 0 ? existing.quiz_score : current.quiz_score,
           quiz_correct: existing.quiz_correct > 0 ? existing.quiz_correct : current.quiz_correct,

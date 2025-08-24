@@ -148,7 +148,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
         const response = await aiInfoAPI.getAll(localLanguage)
         console.log('전체 API 응답:', response)
         return response.data
-      } catch (error) {
+        } catch (error) {
         console.error('전체 API 호출 실패:', error)
         throw error
       }
@@ -300,11 +300,11 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   }
 
   // 로딩 상태 표시 개선
-  if (isLoading) {
-    return (
-      <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
-        <div className="flex flex-col items-center justify-center text-white -mt-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+      if (isLoading) {
+        return (
+          <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center text-white -mt-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
           <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려주세요</p>
         </div>
       </div>
@@ -325,10 +325,10 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           >
             다시 시도
           </button>
-        </div>
-      </div>
-    )
-  }
+            </div>
+          </div>
+        )
+      }
 
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
@@ -338,10 +338,10 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           <FaRobot className="w-12 h-12 mx-auto mb-3 opacity-60" />
           <h3 className="text-lg font-semibold mb-2">{t('ai.info.no.data.title')}</h3>
           <p className="text-white/70 mb-3 text-sm">
-            {t('ai.info.no.data.description')}
-          </p>
+              {t('ai.info.no.data.description')}
+            </p>
           <div className="text-xs text-white/50">
-            {t('ai.info.no.data.waiting')}
+              {t('ai.info.no.data.waiting')}
           </div>
         </div>
       </div>
@@ -357,8 +357,8 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           {t('ai.info.list.mode.title')}
         </h2>
         <div className="flex flex-col items-end gap-1">
-          <div className="text-white/60 text-sm">
-            {t('ai.info.list.total.count').replace('{count}', String(filteredAIInfo.length))}
+        <div className="text-white/60 text-sm">
+          {t('ai.info.list.total.count').replace('{count}', String(filteredAIInfo.length))}
           </div>
           <div className="text-white/80 text-xs">
             {(() => {
@@ -677,9 +677,39 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
            const loadedContent = loadedContents.get(itemKey)
            
            return (
-             <div key={info.id} className="relative">
+           <div key={info.id} className="relative">
                {/* 제목 카드 */}
                <div className="bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl p-4 shadow-lg shadow-purple-900/30 backdrop-blur-xl">
+                 {/* 학습 상태 표시 (오른쪽 상단) */}
+                 <div className="absolute top-3 right-3">
+                   {(() => {
+                     // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
+                     let isLearned = false
+                     if (typeof window !== 'undefined') {
+                       try {
+                         const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                         const sessionProgress = userProgress[sessionId]
+                         if (sessionProgress && sessionProgress[info.date]) {
+                           const learnedIndices = sessionProgress[info.date] || []
+                           isLearned = learnedIndices.includes(info.info_index)
+                         }
+                       } catch (error) {
+                         console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                       }
+                     }
+                     
+                     return (
+                       <div className={`flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium ${
+                         isLearned 
+                           ? 'bg-green-500/20 text-green-400 border border-green-400/30' 
+                           : 'bg-blue-500/20 text-blue-400 border border-blue-400/30'
+                       }`}>
+                         {isLearned ? '✅ 학습완료' : '⭕ 미학습'}
+                       </div>
+                     )
+                   })()}
+                 </div>
+                 
                  <div className="flex items-center justify-between mb-3">
                    <div className="flex-1">
                      {/* 카테고리 정보를 제일 위로 이동 */}
@@ -736,22 +766,22 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                    >
                      {loadedContent ? (
                        <div className="mt-4 pt-4 border-t border-purple-600/30">
-                         <AIInfoCard
-                           info={{
+             <AIInfoCard
+               info={{
                              title: loadedContent.title,
                              content: loadedContent.content,
                              terms: loadedContent.terms
                            }}
                            index={loadedContent.info_index || 0}
                            date={loadedContent.date || ''}
-                           sessionId={sessionId}
-                           isLearned={false}
-                           onProgressUpdate={onProgressUpdate}
+               sessionId={sessionId}
+               isLearned={false}
+               onProgressUpdate={onProgressUpdate}
                            isFavorite={favoriteInfos.has(itemKey)}
                            onFavoriteToggle={() => toggleFavorite(itemKey)}
-                           searchQuery={searchQuery}
-                         />
-                       </div>
+               searchQuery={searchQuery}
+             />
+           </div>
                      ) : (
                        <div className="mt-4 pt-4 border-t border-purple-600/30 flex items-center justify-center py-8">
                          <div className="flex items-center gap-3">
@@ -768,7 +798,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
          })}
        </div>
 
-       {/* 페이지네이션 */}
+      {/* 페이지네이션 */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4">
           <button

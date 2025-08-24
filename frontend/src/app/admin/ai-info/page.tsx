@@ -1114,8 +1114,8 @@ export default function AdminAIInfoPage() {
                         <div className="flex items-center gap-4 text-sm text-gray-400">
                           <span>인덱스: {index}</span>
                           <span>카테고리: {info.category || '미분류'}</span>
-                        </div>
-                      </div>
+              </div>
+            </div>
                       
                       {/* 액션 버튼들 */}
                       <div className="flex items-center gap-2 ml-4">
