@@ -376,31 +376,60 @@ def delete_ai_info_item(date: str, item_index: int, db: Session = Depends(get_db
         if not ai_info:
             raise HTTPException(status_code=404, detail="AI info not found")
         
-        # item_index에 따라 해당 필드를 비움
+        # item_index에 따라 해당 필드를 비움 (다국어 필드 사용)
         if item_index == 0:
-            ai_info.info1_title = ""
-            ai_info.info1_content = ""
-            ai_info.info1_terms = "[]"
+            ai_info.info1_title_ko = ""
+            ai_info.info1_content_ko = ""
+            ai_info.info1_terms_ko = "[]"
+            ai_info.info1_title_en = ""
+            ai_info.info1_content_en = ""
+            ai_info.info1_terms_en = "[]"
+            ai_info.info1_title_ja = ""
+            ai_info.info1_content_ja = ""
+            ai_info.info1_terms_ja = "[]"
+            ai_info.info1_title_zh = ""
+            ai_info.info1_content_zh = ""
+            ai_info.info1_terms_zh = "[]"
+            ai_info.info1_category = ""
         elif item_index == 1:
-            ai_info.info2_title = ""
-            ai_info.info2_content = ""
-            ai_info.info2_terms = "[]"
+            ai_info.info2_title_ko = ""
+            ai_info.info2_content_ko = ""
+            ai_info.info2_terms_ko = "[]"
+            ai_info.info2_title_en = ""
+            ai_info.info2_content_en = ""
+            ai_info.info2_terms_en = "[]"
+            ai_info.info2_title_ja = ""
+            ai_info.info2_content_ja = ""
+            ai_info.info2_terms_ja = "[]"
+            ai_info.info2_title_zh = ""
+            ai_info.info2_content_zh = ""
+            ai_info.info2_terms_zh = "[]"
+            ai_info.info2_category = ""
         elif item_index == 2:
-            ai_info.info3_title = ""
-            ai_info.info3_content = ""
-            ai_info.info3_terms = "[]"
+            ai_info.info3_title_ko = ""
+            ai_info.info3_content_ko = ""
+            ai_info.info3_terms_ko = "[]"
+            ai_info.info3_title_en = ""
+            ai_info.info3_content_en = ""
+            ai_info.info3_terms_en = "[]"
+            ai_info.info3_title_ja = ""
+            ai_info.info3_content_ja = ""
+            ai_info.info3_terms_ja = "[]"
+            ai_info.info3_title_zh = ""
+            ai_info.info3_content_zh = ""
+            ai_info.info3_terms_zh = "[]"
+            ai_info.info3_category = ""
         else:
             raise HTTPException(status_code=400, detail="Invalid item index. Must be 0, 1, or 2.")
         
         # 모든 필드가 비어있으면 전체 레코드 삭제
-        if (not ai_info.info1_title and not ai_info.info1_content and
-            not ai_info.info2_title and not ai_info.info2_content and
-            not ai_info.info3_title and not ai_info.info3_content):
+        if (not ai_info.info1_title_ko and not ai_info.info1_content_ko and
+            not ai_info.info2_title_ko and not ai_info.info2_content_ko and
+            not ai_info.info3_title_ko and not ai_info.info3_content_ko):
             db.delete(ai_info)
         else:
             db.commit()
         
-        db.commit()
         return {"message": f"Item {item_index} deleted successfully"}
         
     except Exception as e:

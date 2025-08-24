@@ -200,9 +200,13 @@ export default function AdminAIInfoPage() {
   // AI 정보 삭제
   const deleteMutation = useMutation({
     mutationFn: async (date: string) => {
-      return aiInfoAPI.delete(date)
+      console.log('🗑️ 삭제 시도:', date)
+      const response = await aiInfoAPI.delete(date)
+      console.log('✅ 삭제 성공:', response)
+      return response
     },
-    onSuccess: () => {
+    onSuccess: (data, date) => {
+      console.log('🎉 삭제 완료:', date, data)
       refetchAIInfo()
       refetchDates()
       refetchAllAIInfo()
@@ -216,41 +220,91 @@ export default function AdminAIInfoPage() {
       setEditId(false)
       setSuccess('삭제가 완료되었습니다!')
     },
-    onError: () => {
-      setError('삭제에 실패했습니다. 다시 시도해주세요.')
+    onError: (error: any, date) => {
+      console.error('❌ 삭제 실패:', date, error)
+      console.error('에러 상세:', {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+        statusText: error?.response?.statusText
+      })
+      setError(`삭제에 실패했습니다: ${error?.response?.data?.detail || error?.message || '알 수 없는 오류'}`)
     }
   })
 
   // AI 정보 개별 항목 삭제
   const deleteItemMutation = useMutation({
     mutationFn: async ({ date, itemIndex }: { date: string; itemIndex: number }) => {
-      return aiInfoAPI.deleteItem(date, itemIndex)
+      console.log('🗑️ 항목 삭제 시도:', { date, itemIndex })
+      const response = await aiInfoAPI.deleteItem(date, itemIndex)
+      console.log('✅ 항목 삭제 성공:', response)
+      return response
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      console.log('🎉 항목 삭제 완료:', variables, data)
       refetchAIInfo()
       refetchDates()
       refetchAllAIInfo()
       setSuccess('항목이 삭제되었습니다!')
     },
-    onError: () => {
-      setError('항목 삭제에 실패했습니다. 다시 시도해주세요.')
+    onError: (error: any, variables) => {
+      console.error('❌ 항목 삭제 실패:', variables, error)
+      console.error('에러 상세:', {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+        statusText: error?.response?.statusText
+      })
+      setError(`항목 삭제에 실패했습니다: ${error?.response?.data?.detail || error?.message || '알 수 없는 오류'}`)
     }
   })
 
   // AI 정보 개별 항목 수정
   const updateItemMutation = useMutation({
     mutationFn: async ({ date, itemIndex, data }: { date: string; itemIndex: number; data: AIInfoItem }) => {
+      console.log('✏️ 항목 수정 시도:', { date, itemIndex, data })
+      
       // 기존 데이터를 가져와서 특정 항목만 수정
-      const existingData = allAIInfos.find(item => item.date === date)
-      if (!existingData) throw new Error('해당 날짜의 데이터를 찾을 수 없습니다.')
+      let existingData = allAIInfos.find(item => item.date === date)
+      
+      // allAIInfos에서 찾지 못한 경우, 직접 API로 데이터를 가져옴
+      if (!existingData) {
+        console.log('⚠️ allAIInfos에서 데이터를 찾을 수 없음, API로 직접 가져오기 시도...')
+        try {
+          const response = await aiInfoAPI.getByDate(date)
+          if (response.data && response.data.length > 0) {
+            existingData = {
+              date: date,
+              infos: response.data
+            }
+            console.log('✅ API로 데이터 가져오기 성공:', existingData)
+          } else {
+            throw new Error(`날짜 ${date}에 대한 데이터가 없습니다.`)
+          }
+        } catch (error) {
+          console.error('❌ API로 데이터 가져오기 실패:', error)
+          throw new Error(`데이터를 가져올 수 없습니다: ${error}`)
+        }
+      }
+      
+      if (!existingData) {
+        console.error('❌ 해당 날짜의 데이터를 찾을 수 없음:', date)
+        console.log('현재 allAIInfos:', allAIInfos)
+        throw new Error(`해당 날짜(${date})의 데이터를 찾을 수 없습니다.`)
+      }
       
       const updatedInfos = [...existingData.infos]
       updatedInfos[itemIndex] = data
       
+      console.log('📝 수정된 데이터:', { date, updatedInfos })
+      
       // 전체 데이터를 다시 저장
-      return aiInfoAPI.add({ date, infos: updatedInfos })
+      const response = await aiInfoAPI.add({ date, infos: updatedInfos })
+      console.log('✅ 항목 수정 성공:', response)
+      return response
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      console.log('🎉 항목 수정 완료:', variables, data)
       refetchAIInfo()
       refetchDates()
       refetchAllAIInfo()
@@ -263,8 +317,15 @@ export default function AdminAIInfoPage() {
       })
       setSuccess('항목이 수정되었습니다!')
     },
-    onError: () => {
-      setError('항목 수정에 실패했습니다. 다시 시도해주세요.')
+    onError: (error: any, variables) => {
+      console.error('❌ 항목 수정 실패:', variables, error)
+      console.error('에러 상세:', {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+        statusText: error?.response?.statusText
+      })
+      setError(`항목 수정에 실패했습니다: ${error?.response?.data?.detail || error?.message || '알 수 없는 오류'}`)
     }
   })
 
