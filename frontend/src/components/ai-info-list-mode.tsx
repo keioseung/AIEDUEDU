@@ -368,15 +368,25 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                 try {
                   const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                   const sessionProgress = userProgress[sessionId]
+                  
+                  console.log('🔍 전체목록 모드 헤더 - 학습완료 개수 계산:', {
+                    sessionId: sessionId,
+                    userProgress: userProgress,
+                    sessionProgress: sessionProgress
+                  })
+                  
                   if (sessionProgress) {
                     Object.keys(sessionProgress).forEach(date => {
                       if (date !== '__stats__' && date !== 'terms_by_date') {
                         const learnedIndices = sessionProgress[date] || []
                         // 중복 제거하지 않고 모든 학습완료된 카드 수 계산 (날짜별 모드와 동일)
                         totalLearned += learnedIndices.length
+                        console.log(`📅 ${date} 날짜: ${learnedIndices.length}개 학습완료 (인덱스: ${learnedIndices})`)
                       }
                     })
                   }
+                  
+                  console.log(`✅ 전체목록 모드 헤더 - 총 학습완료: ${totalLearned}개`)
                 } catch (error) {
                   console.error('로컬 스토리지 데이터 파싱 오류:', error)
                 }
@@ -688,17 +698,18 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                      if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
                        try {
                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                         const sessionProgress = userProgress[sessionId]
                          
-                         // 디버깅용 로그 - 전체 userProgress 구조 확인
+                         // sessionId 확인 및 디버깅
                          console.log(`🔍 전체목록 모드 - ${info.date} 날짜 ${info.info_index}번 카드 학습 상태 확인:`, {
                            cardTitle: info.title,
                            cardDate: info.date,
                            cardInfoIndex: info.info_index,
-                           sessionProgress: sessionProgress,
-                           dateProgress: sessionProgress?.[info.date],
-                           learnedIndices: sessionProgress?.[info.date] || []
+                           sessionId: sessionId,
+                           userProgress: userProgress,
+                           sessionProgress: userProgress[sessionId]
                          })
+                         
+                         const sessionProgress = userProgress[sessionId]
                          
                          if (sessionProgress && sessionProgress[info.date]) {
                            const learnedIndices = sessionProgress[info.date] || []
@@ -713,7 +724,9 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                          } else {
                            console.log(`❌ ${info.date} 날짜에 대한 학습 데이터가 없음:`, {
                              cardTitle: info.title,
-                             sessionProgress: sessionProgress
+                             sessionId: sessionId,
+                             sessionProgress: sessionProgress,
+                             availableDates: sessionProgress ? Object.keys(sessionProgress) : []
                            })
                          }
                        } catch (error) {
