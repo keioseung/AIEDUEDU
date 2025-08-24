@@ -373,22 +373,30 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               const dateStr = d.toISOString().split('T')[0]
               const localProgress = userData[dateStr] || []
               
-              // 날짜별 모드의 학습 상태를 우선시 (userProgress에서 직접 계산)
-              let aiCount = localProgress.length
+              // userModified 상태를 우선시하여 실제 학습 상태 계산
+              let aiCount = 0
+              for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+                if (getActualLearningStatus(dateStr, infoIndex)) {
+                  aiCount++
+                }
+              }
               
-              // 실제 학습된 용어 수를 계산 (terms_by_date는 백엔드에서 학습된 용어를 그룹화한 것이므로 사용하지 않음)
+              // userModified 상태가 true인 카드에서만 실제 학습된 용어 수 계산
               let termsCount = 0
-              for (let infoIndex = 0; infoIndex < 3; infoIndex++) {
-                const key = `learnedTerms_${sessionId}_${dateStr}_${infoIndex}`
-                const stored = localStorage.getItem(key)
-                if (stored) {
-                  try {
-                    const learnedArray = JSON.parse(stored)
-                    if (Array.isArray(learnedArray)) {
-                      termsCount += learnedArray.length
+              for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+                // userModified 상태가 true인 경우만 용어 학습 상태 확인
+                if (getActualLearningStatus(dateStr, infoIndex)) {
+                  const key = `learnedTerms_${sessionId}_${dateStr}_${infoIndex}`
+                  const stored = localStorage.getItem(key)
+                  if (stored) {
+                    try {
+                      const learnedArray = JSON.parse(stored)
+                      if (Array.isArray(learnedArray)) {
+                        termsCount += learnedArray.length
+                      }
+                    } catch (e) {
+                      console.error(`❌ ${key} 파싱 오류:`, e)
                     }
-                  } catch (e) {
-                    console.error(`❌ ${key} 파싱 오류:`, e)
                   }
                 }
               }
