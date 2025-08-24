@@ -828,7 +828,21 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                            index={loadedContent.info_index || 0}
                            date={loadedContent.date || ''}
                sessionId={sessionId}
-               isLearned={false}
+               isLearned={(() => {
+                 // userProgress에서 실제 학습 상태 확인
+                 if (typeof window !== 'undefined' && loadedContent.date) {
+                   try {
+                     const stored = localStorage.getItem('userProgress');
+                     if (stored) {
+                       const parsed = JSON.parse(stored);
+                       if (parsed[sessionId] && parsed[sessionId][loadedContent.date]) {
+                         return parsed[sessionId][loadedContent.date].includes(loadedContent.info_index);
+                       }
+                     }
+                   } catch {}
+                 }
+                 return false;
+               })()}
                onProgressUpdate={onProgressUpdate}
                            isFavorite={favoriteInfos.has(itemKey)}
                            onFavoriteToggle={() => toggleFavorite(itemKey)}
