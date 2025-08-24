@@ -672,7 +672,7 @@ const en: Record<string, string> = {
   
   // Category Mode
   'category.mode.select': 'Category List',
-  'category.mode.loading': 'Please wait a moment.',
+  'category.mode.loading': 'しばらくお待ちください。',
   'category.mode.count': 'items',
   
   // Category names (display string based)
@@ -957,7 +957,7 @@ const en: Record<string, string> = {
   'terms.list.scroll.mode': '📱 Scroll',
   
   // Terms Learning Tab Loading Page
-  'terms.tab.loading': 'Please wait a moment.',
+  'terms.tab.loading': 'しばらくお待ちください。',
   
   // Terms Learning Tab Playback Speed Settings
   'terms.playback.speed': 'Playback Speed',
@@ -999,7 +999,7 @@ const en: Record<string, string> = {
   'progress.graph.no.data': 'No learning data available for the selected period.',
   
   // Progress Period Change Loading
-  'progress.period.change.loading': 'Please wait a moment.',
+  'progress.period.change.loading': 'しばらくお待ちください。',
   
   // Progress Custom Period Settings
   'progress.custom.period.start.date': 'Start Date',
@@ -1112,8 +1112,8 @@ const ja: Record<string, string> = {
   'ai.info.items.per.page.display': 'ページあたり{count}件表示',
   
   // ローディングメッセージ
-  'loading.please.wait': '少々お待ちください',
-  'loading.detail.content': '詳細内容を読み込み中...',
+  'loading.please.wait': 'しばらくお待ちください。',
+  'loading.detail.content': 'しばらくお待ちください。',
   
   // 学習状態表示
   'learning.status.completed': '✅ 学習完了',
@@ -1139,7 +1139,7 @@ const ja: Record<string, string> = {
   'ai.info.no.favorites.description': 'まだお気に入りに追加したAI情報がありません。\n興味のあるAI情報をお気に入りに追加してみてください！',
   'ai.info.no.favorites.tip.title': 'お気に入りのヒント',
   'ai.info.no.favorites.tip.description': '興味のあるAI情報をお気に入りに追加すると、後で簡単に見つけることができます！',
-  'ai.info.loading': 'AI情報を読み込み中...',
+  'ai.info.loading': 'しばらくお待ちください。',
   
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI情報リスト',
