@@ -897,7 +897,6 @@ export default function DashboardPage() {
                           index={index}
                           date={selectedDate}
                           sessionId={sessionId}
-                          isLearned={isLearned}
                           onProgressUpdate={handleProgressUpdate}
                           forceUpdate={forceUpdate}
                           setForceUpdate={setForceUpdate}

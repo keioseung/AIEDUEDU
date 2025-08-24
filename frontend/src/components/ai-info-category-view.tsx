@@ -481,7 +481,6 @@ export default function AIInfoCategoryView({ sessionId, currentLanguage, onProgr
                          index={index}
                          date={info.date || new Date().toISOString().split('T')[0]}
                          sessionId={sessionId}
-                         isLearned={false}
                          onProgressUpdate={onProgressUpdate}
                          forceUpdate={forceUpdate}
                          setForceUpdate={setForceUpdate}
