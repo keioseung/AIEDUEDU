@@ -1752,73 +1752,283 @@ export default function AdminAIInfoPage() {
                                   <div>
                                     <div className="flex items-center justify-between mb-2">
                                       <label className="block text-white/80 font-medium">관련 용어 (한국어 기준)</label>
-                                      <button
-                                        type="button"
-                                        onClick={() => setEditingData({
-                                          ...editingData,
-                                          terms_ko: [...(editingData.terms_ko || []), { term: '', description: '' }]
-                                        })}
-                                        className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
-                                      >
-                                        + 용어 추가
-                                      </button>
+                                      <div className="flex gap-2">
+                                        <button
+                                          type="button"
+                                          onClick={() => setEditingData({
+                                            ...editingData,
+                                            terms_ko: [...(editingData.terms_ko || []), { term: '', description: '' }]
+                                          })}
+                                          className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
+                                        >
+                                          + 용어 추가
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            // 일괄 입력 모달 표시
+                                            setShowBulkInput('edit')
+                                            setBulkTermsText('')
+                                            setBulkTermsTextEn('')
+                                            setBulkTermsTextJa('')
+                                            setBulkTermsTextZh('')
+                                          }}
+                                          className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-lg font-medium hover:bg-yellow-500/30 transition text-sm border border-yellow-500/30"
+                                        >
+                                          📋 일괄 입력
+                                        </button>
+                                      </div>
                                     </div>
                                     
+                                    {/* 일괄 입력 모달 (수정 모드용) */}
+                                    {showBulkInput === 'edit' && (
+                                      <div className="bg-yellow-500/10 border-2 border-yellow-500/30 rounded-xl p-4 mb-4">
+                                        <div className="flex items-center justify-between mb-3">
+                                          <h4 className="font-bold text-yellow-300">📋 전문용어 일괄 입력 (수정 모드)</h4>
+                                          <button 
+                                            type="button" 
+                                            onClick={() => setShowBulkInput(null)}
+                                            className="text-yellow-400 hover:text-yellow-200"
+                                          >
+                                            ✕
+                                          </button>
+                                        </div>
+                                        <div className="mb-3">
+                                          <p className="text-sm text-yellow-200 mb-2">
+                                            각 언어별로 전문용어를 복사해서 붙여넣으세요. 탭(→) 또는 공백으로 구분됩니다.
+                                          </p>
+                                          <div className="text-xs text-yellow-300 bg-yellow-500/20 p-2 rounded mb-2">
+                                            <strong>예시:</strong><br/>
+                                            LLM	GPT 같은 대형 언어 모델<br/>
+                                            자연어	우리가 일상에서 쓰는 언어<br/>
+                                            DSL	특정 분야 전용 프로그래밍 언어
+                                          </div>
+                                        </div>
+                                        
+                                        {/* 한국어 용어 입력 */}
+                                        <div className="mb-3">
+                                          <label className="block text-sm font-medium text-yellow-300 mb-2">🇰🇷 한국어 용어</label>
+                                          <textarea
+                                            value={bulkTermsText}
+                                            onChange={(e) => setBulkTermsText(e.target.value)}
+                                            placeholder="용어	뜻&#10;LLM	GPT 같은 대형 언어 모델&#10;자연어	우리가 일상에서 쓰는 언어"
+                                            className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                                            rows={3}
+                                          />
+                                        </div>
+                                        
+                                        {/* 영어 용어 입력 */}
+                                        <div className="mb-3">
+                                          <label className="block text-sm font-medium text-yellow-300 mb-2">🇺🇸 영어 용어</label>
+                                          <textarea
+                                            value={bulkTermsTextEn}
+                                            onChange={(e) => setBulkTermsTextEn(e.target.value)}
+                                            placeholder="term	meaning&#10;LLM	Large Language Model like GPT&#10;Natural Language	Language we use in daily life"
+                                            className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                                            rows={3}
+                                          />
+                                        </div>
+                                        
+                                        {/* 일본어 용어 입력 */}
+                                        <div className="mb-3">
+                                          <label className="block text-sm font-medium text-yellow-300 mb-2">🇯🇵 일본어 용어</label>
+                                          <textarea
+                                            value={bulkTermsTextJa}
+                                            onChange={(e) => setBulkTermsTextJa(e.target.value)}
+                                            placeholder="用語	意味&#10;LLM	GPTのような大規模言語モデル&#10;自然言語	私たちが日常で使う言語"
+                                            className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                                            rows={3}
+                                          />
+                                        </div>
+                                        
+                                        {/* 중국어 용어 입력 */}
+                                        <div className="mb-3">
+                                          <label className="block text-sm font-medium text-yellow-300 mb-2">🇨🇳 중국어 용어</label>
+                                          <textarea
+                                            value={bulkTermsTextZh}
+                                            onChange={(e) => setBulkTermsTextZh(e.target.value)}
+                                            placeholder="术语	含义&#10;LLM	像GPT这样的大型语言模型&#10;自然语言	我们日常使用的语言"
+                                            className="w-full p-2 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                                            rows={3}
+                                          />
+                                        </div>
+                                        
+                                        <div className="flex gap-2 mt-3">
+                                          <button 
+                                            type="button" 
+                                            onClick={() => {
+                                              // 수정 모드에서 일괄 입력 처리
+                                              let totalAdded = 0
+                                              
+                                              // 한국어 용어 처리
+                                              if (bulkTermsText.trim()) {
+                                                const parsedTermsKo = parseTermsFromText(bulkTermsText)
+                                                if (parsedTermsKo.length > 0) {
+                                                  setEditingData({
+                                                    ...editingData,
+                                                    terms_ko: [...(editingData.terms_ko || []), ...parsedTermsKo]
+                                                  })
+                                                  totalAdded += parsedTermsKo.length
+                                                }
+                                              }
+                                              
+                                              // 영어 용어 처리
+                                              if (bulkTermsTextEn.trim()) {
+                                                const parsedTermsEn = parseTermsFromText(bulkTermsTextEn)
+                                                if (parsedTermsEn.length > 0) {
+                                                  setEditingData({
+                                                    ...editingData,
+                                                    terms_en: [...(editingData.terms_en || []), ...parsedTermsEn]
+                                                  })
+                                                  totalAdded += parsedTermsEn.length
+                                                }
+                                              }
+                                              
+                                              // 일본어 용어 처리
+                                              if (bulkTermsTextJa.trim()) {
+                                                const parsedTermsJa = parseTermsFromText(bulkTermsTextJa)
+                                                if (parsedTermsJa.length > 0) {
+                                                  setEditingData({
+                                                    ...editingData,
+                                                    terms_ja: [...(editingData.terms_ja || []), ...parsedTermsJa]
+                                                  })
+                                                  totalAdded += parsedTermsJa.length
+                                                }
+                                              }
+                                              
+                                              // 중국어 용어 처리
+                                              if (bulkTermsTextZh.trim()) {
+                                                const parsedTermsZh = parseTermsFromText(bulkTermsTextZh)
+                                                if (parsedTermsZh.length > 0) {
+                                                  setEditingData({
+                                                    ...editingData,
+                                                    terms_zh: [...(editingData.terms_zh || []), ...parsedTermsZh]
+                                                  })
+                                                  totalAdded += parsedTermsZh.length
+                                                }
+                                              }
+                                              
+                                              if (totalAdded > 0) {
+                                                alert(`총 ${totalAdded}개의 용어가 추가되었습니다!`)
+                                              } else {
+                                                alert('파싱할 수 있는 용어가 없습니다. 형식을 확인해주세요.')
+                                              }
+                                              
+                                              setShowBulkInput(null)
+                                              setBulkTermsText('')
+                                              setBulkTermsTextEn('')
+                                              setBulkTermsTextJa('')
+                                              setBulkTermsTextZh('')
+                                            }}
+                                            className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition text-sm"
+                                          >
+                                            용어 추가
+                                          </button>
+                                          <button 
+                                            type="button" 
+                                            onClick={() => setShowBulkInput(null)}
+                                            className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition text-sm"
+                                          >
+                                            취소
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
+                                    
                                     {editingData.terms_ko?.map((term, termIdx) => (
-                                      <div key={termIdx} className="flex gap-2 items-start mb-2">
-                                        <div className="flex-1 flex gap-2">
+                                      <div key={termIdx} className="flex gap-2 items-start mb-2 p-3 bg-white/5 rounded-lg border border-white/10">
+                                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
                                           <input
                                             type="text"
                                             placeholder="용어"
                                             value={term.term}
-                                                                                         onChange={(e) => {
-                                               const newTerms = [...(editingData.terms_ko || [])]
-                                               newTerms[termIdx] = { ...term, term: e.target.value }
-                                               setEditingData({ ...editingData, terms_ko: newTerms })
-                                             }}
-                                            className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
+                                            onChange={(e) => {
+                                              const newTerms = [...(editingData.terms_ko || [])]
+                                              newTerms[termIdx] = { ...term, term: e.target.value }
+                                              setEditingData({ ...editingData, terms_ko: newTerms })
+                                            }}
+                                            className="w-full p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
                                           <input
                                             type="text"
                                             placeholder="용어 설명"
                                             value={term.description}
-                                                                                         onChange={(e) => {
-                                               const newTerms = [...(editingData.terms_ko || [])]
-                                               newTerms[termIdx] = { ...term, description: e.target.value }
-                                               setEditingData({ ...editingData, terms_ko: newTerms })
-                                             }}
-                                            className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
+                                            onChange={(e) => {
+                                              const newTerms = [...(editingData.terms_ko || [])]
+                                              newTerms[termIdx] = { ...term, description: e.target.value }
+                                              setEditingData({ ...editingData, terms_ko: newTerms })
+                                            }}
+                                            className="w-full p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
                                         </div>
-                                        <button
-                                          type="button"
-                                                                                     onClick={() => {
-                                             const newTerms = (editingData.terms_ko || []).filter((_, i) => i !== termIdx)
-                                             setEditingData({ ...editingData, terms_ko: newTerms })
-                                           }}
-                                          className="px-2 py-1 bg-red-500/20 text-red-300 rounded font-medium hover:bg-red-500/30 transition text-sm border border-red-500/30"
-                                        >
-                                          삭제
-                                        </button>
+                                        <div className="flex gap-1">
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              const newTerms = (editingData.terms_ko || []).filter((_, i) => i !== termIdx)
+                                              setEditingData({ ...editingData, terms_ko: newTerms })
+                                            }}
+                                            className="px-2 py-1 bg-red-500/20 text-red-300 rounded font-medium hover:bg-red-500/30 transition text-sm border border-red-500/30"
+                                            title="용어 삭제"
+                                          >
+                                            🗑️
+                                          </button>
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              // 용어 순서 위로 이동
+                                              if (termIdx > 0) {
+                                                const newTerms = [...(editingData.terms_ko || [])]
+                                                const temp = newTerms[termIdx]
+                                                newTerms[termIdx] = newTerms[termIdx - 1]
+                                                newTerms[termIdx - 1] = temp
+                                                setEditingData({ ...editingData, terms_ko: newTerms })
+                                              }
+                                            }}
+                                            disabled={termIdx === 0}
+                                            className={`px-2 py-1 rounded font-medium transition text-sm border ${
+                                              termIdx === 0 
+                                                ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed border-gray-500/30' 
+                                                : 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border-blue-500/30'
+                                            }`}
+                                            title="위로 이동"
+                                          >
+                                            ⬆️
+                                          </button>
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              // 용어 순서 아래로 이동
+                                              if (termIdx < (editingData.terms_ko || []).length - 1) {
+                                                const newTerms = [...(editingData.terms_ko || [])]
+                                                const temp = newTerms[termIdx]
+                                                newTerms[termIdx] = newTerms[termIdx + 1]
+                                                newTerms[termIdx + 1] = temp
+                                                setEditingData({ ...editingData, terms_ko: newTerms })
+                                              }
+                                            }}
+                                            disabled={termIdx === (editingData.terms_ko || []).length - 1}
+                                            className={`px-2 py-1 rounded font-medium transition text-sm border ${
+                                              termIdx === (editingData.terms_ko || []).length - 1 
+                                                ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed border-gray-500/30' 
+                                                : 'bg-green-500/20 text-green-300 hover:bg-green-500/30 border-green-500/30'
+                                            }`}
+                                            title="아래로 이동"
+                                          >
+                                            ⬇️
+                                          </button>
+                                        </div>
                                       </div>
                                     ))}
-                                  </div>
-                                  
-                                  <div className="flex gap-2">
-                                    <button
-                                      onClick={handleUpdateAIInfo}
-                                      disabled={updateItemMutation.isPending}
-                                      className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition flex items-center gap-2 disabled:opacity-50"
-                                    >
-                                      <FaSave className="w-4 h-4" />
-                                      {updateItemMutation.isPending ? '저장 중...' : '저장'}
-                                    </button>
-                                    <button
-                                      onClick={handleCancelEdit}
-                                      className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition"
-                                    >
-                                      취소
-                                    </button>
+                                    
+                                    {/* 용어가 없을 때 안내 메시지 */}
+                                    {(!editingData.terms_ko || editingData.terms_ko.length === 0) && (
+                                      <div className="text-center py-6 text-white/50 bg-white/5 rounded-lg border border-white/10">
+                                        <p className="mb-2">등록된 용어가 없습니다.</p>
+                                        <p className="text-sm">위의 '용어 추가' 버튼을 클릭하여 용어를 추가하거나,</p>
+                                        <p className="text-sm">'일괄 입력' 버튼을 클릭하여 여러 용어를 한 번에 입력할 수 있습니다.</p>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               ) : (
