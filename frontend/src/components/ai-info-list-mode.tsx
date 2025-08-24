@@ -829,16 +829,22 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                            date={loadedContent.date || ''}
                sessionId={sessionId}
                isLearned={(() => {
+                 console.log(`🔍 ai-info-list-mode isLearned 계산 시작 - date: ${loadedContent.date}, index: ${loadedContent.info_index}`);
+                 
                  // 1순위: userModified 상태 확인 (사용자가 직접 변경한 상태)
                  if (typeof window !== 'undefined' && loadedContent.date) {
                    try {
                      const modifiedKey = `userModified_${sessionId}_${loadedContent.date}_${loadedContent.info_index}`;
                      const modifiedState = localStorage.getItem(modifiedKey);
+                     console.log(`🔍 ai-info-list-mode에서 userModified 확인 - 키: ${modifiedKey}, 값: ${modifiedState}`);
+                     
                      if (modifiedState !== null) {
                        console.log(`🔍 ai-info-list-mode에서 userModified 발견: ${modifiedKey} = ${modifiedState}`);
                        return modifiedState === 'true';
                      }
-                   } catch {}
+                   } catch (error) {
+                     console.error('ai-info-list-mode userModified 확인 에러:', error);
+                   }
                  }
                  
                  // 2순위: userProgress에서 실제 학습 상태 확인 (백업용)
@@ -850,11 +856,16 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                        if (parsed[sessionId] && parsed[sessionId][loadedContent.date]) {
                          const learned = parsed[sessionId][loadedContent.date].includes(loadedContent.info_index);
                          console.log(`🔍 ai-info-list-mode에서 userProgress 확인: ${learned}`);
+                         console.log(`🔍 ai-info-list-mode userProgress 데이터:`, parsed[sessionId][loadedContent.date]);
                          return learned;
                        }
                      }
-                   } catch {}
+                   } catch (error) {
+                     console.error('ai-info-list-mode userProgress 확인 에러:', error);
+                   }
                  }
+                 
+                 console.log(`🔍 ai-info-list-mode 기본값 false 반환`);
                  return false;
                })()}
                onProgressUpdate={onProgressUpdate}
