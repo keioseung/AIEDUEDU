@@ -302,18 +302,23 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 로딩 상태 표시 개선
   if (isLoading) {
     return (
-      <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
-        <div className="relative">
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-          <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-400 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-        </div>
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">AI 정보를 불러오는 중...</h3>
-          <p className="text-sm text-gray-500">
-            {isLoadingTitles ? '제목 정보 로딩 중...' : 
-             isLoadingDates ? '날짜별 정보 로딩 중...' : 
-             isLoadingAll ? '전체 정보 로딩 중...' : '데이터 처리 중...'}
-          </p>
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[200vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+        <div className="text-center text-white">
+          <div className="w-20 h-20 mx-auto mb-6 opacity-60">
+            <FaRobot className="w-full h-full text-blue-400" />
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-2xl font-semibold text-white">AI 정보를 불러오는 중...</h3>
+            <p className="text-white/70 text-lg leading-relaxed">
+              {isLoadingTitles ? '제목 정보 로딩 중...' : 
+               isLoadingDates ? '날짜별 정보 로딩 중...' : 
+               isLoadingAll ? '전체 정보 로딩 중...' : '데이터 처리 중...'}
+            </p>
+            <div className="flex items-center justify-center gap-2">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+              <span className="text-white/80 text-sm font-medium">잠시만 기다려주세요...</span>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -322,16 +327,21 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 에러 상태 표시
   if (titlesError && datesError && allError) {
     return (
-      <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-red-600 mb-2">데이터 로딩 실패</h3>
-          <p className="text-sm text-gray-500 mb-4">AI 정보를 불러올 수 없습니다.</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            다시 시도
-          </button>
+      <div className="glass rounded-2xl p-80 md:p-96 min-h-[200vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+        <div className="text-center text-white">
+          <div className="w-20 h-20 mx-auto mb-6 opacity-60">
+            <FaRobot className="w-full h-full text-red-400" />
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-2xl font-semibold text-white">데이터 로딩 실패</h3>
+            <p className="text-white/70 text-lg leading-relaxed">AI 정보를 불러올 수 없습니다.</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+            >
+              다시 시도
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -667,17 +677,21 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                <div className="bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl p-4 shadow-lg shadow-purple-900/30 backdrop-blur-xl">
                  <div className="flex items-center justify-between mb-3">
                    <div className="flex-1">
+                     {/* 카테고리 정보를 제일 위로 이동 */}
+                     {info.category && (
+                       <div className="mb-2">
+                         <span className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-blue-600/40 border border-purple-500/50 rounded-lg text-xs font-medium text-white/90 shadow-sm">
+                          🏷️ {info.category}
+                         </span>
+                       </div>
+                     )}
+                     
                      <h3 className="text-lg font-semibold text-white mb-2">{info.title}</h3>
                      <div className="flex items-center gap-3 text-sm text-white/70">
                        <span className="flex items-center gap-1">
                          <FaCalendar className="w-3 h-3" />
                          {info.date}
                        </span>
-                       {info.category && (
-                         <span className="px-2 py-1 bg-purple-600/30 rounded-lg text-xs">
-                           {info.category}
-                         </span>
-                       )}
                      </div>
                    </div>
                    
