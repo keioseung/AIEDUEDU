@@ -685,17 +685,48 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                    {(() => {
                      // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
                      let isLearned = false
-                     if (typeof window !== 'undefined' && info.date) {
+                     if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
                        try {
                          const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
                          const sessionProgress = userProgress[sessionId]
+                         
+                         // 디버깅용 로그 - 전체 userProgress 구조 확인
+                         console.log(`🔍 전체목록 모드 - ${info.date} 날짜 ${info.info_index}번 카드 학습 상태 확인:`, {
+                           cardTitle: info.title,
+                           cardDate: info.date,
+                           cardInfoIndex: info.info_index,
+                           sessionProgress: sessionProgress,
+                           dateProgress: sessionProgress?.[info.date],
+                           learnedIndices: sessionProgress?.[info.date] || []
+                         })
+                         
                          if (sessionProgress && sessionProgress[info.date]) {
                            const learnedIndices = sessionProgress[info.date] || []
+                           // info_index가 배열에 포함되어 있는지 확인
                            isLearned = learnedIndices.includes(info.info_index)
+                           
+                           console.log(`✅ ${info.date} 날짜 ${info.info_index}번 카드 학습 상태:`, {
+                             learnedIndices,
+                             isLearned,
+                             cardTitle: info.title
+                           })
+                         } else {
+                           console.log(`❌ ${info.date} 날짜에 대한 학습 데이터가 없음:`, {
+                             cardTitle: info.title,
+                             sessionProgress: sessionProgress
+                           })
                          }
                        } catch (error) {
                          console.error('로컬 스토리지 데이터 파싱 오류:', error)
                        }
+                     } else {
+                       console.log(`⚠️ 카드 정보 부족:`, {
+                         hasWindow: typeof window !== 'undefined',
+                         hasDate: !!info.date,
+                         hasInfoIndex: typeof info.info_index === 'number',
+                         infoIndex: info.info_index,
+                         cardTitle: info.title
+                       })
                      }
                      
                      return (
