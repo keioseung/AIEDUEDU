@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 import json
+from datetime import datetime
 
 from ..database import get_db
 from ..models import UserProgress

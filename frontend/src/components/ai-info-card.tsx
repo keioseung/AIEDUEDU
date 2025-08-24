@@ -14,7 +14,6 @@ interface AIInfoCardProps {
   index: number
   date: string
   sessionId: string
-  isLearned?: boolean  // 선택적으로 변경
   onProgressUpdate?: () => void
   forceUpdate?: number
   setForceUpdate?: (fn: (prev: number) => number) => void
@@ -136,9 +135,8 @@ const getCategoryStyle = (category: string) => {
   }
 }
 
-function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery, currentLanguage }: AIInfoCardProps) {
-  // props의 isLearned는 완전히 무시하고, userModified 상태만 사용
-  console.log(`🚨 AIInfoCard 마운트 - props isLearned: ${isLearnedProp} (무시됨)`);
+function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery, currentLanguage }: AIInfoCardProps) {
+  // props의 isLearned는 완전히 제거됨
   
   // 컴포넌트가 마운트되었는지 추적
   const isMounted = useRef(false);
