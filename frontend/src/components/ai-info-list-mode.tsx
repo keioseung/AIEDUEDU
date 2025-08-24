@@ -305,7 +305,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
             <div className="flex flex-col items-center justify-center text-white -mt-8">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-          <p className="text-white/80 text-lg font-medium whitespace-nowrap">잠시만 기다려주세요</p>
+          <p className="text-white/80 text-lg font-medium whitespace-nowrap">{t('loading.please.wait')}</p>
         </div>
       </div>
     )
@@ -360,40 +360,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
         <div className="text-white/60 text-sm">
           {t('ai.info.list.total.count').replace('{count}', String(filteredAIInfo.length))}
           </div>
-          <div className="text-white/80 text-xs">
-            {(() => {
-              // localStorage에서 실제 학습완료된 AI 정보 카드 수 계산 (날짜별 모드와 동일)
-              let totalLearned = 0
-              if (typeof window !== 'undefined') {
-                try {
-                  const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                  const sessionProgress = userProgress[sessionId]
-                  
-                  console.log('🔍 전체목록 모드 헤더 - 학습완료 개수 계산:', {
-                    sessionId: sessionId,
-                    userProgress: userProgress,
-                    sessionProgress: sessionProgress
-                  })
-                  
-                  if (sessionProgress) {
-                    Object.keys(sessionProgress).forEach(date => {
-                      if (date !== '__stats__' && date !== 'terms_by_date') {
-                        const learnedIndices = sessionProgress[date] || []
-                        // 중복 제거하지 않고 모든 학습완료된 카드 수 계산 (날짜별 모드와 동일)
-                        totalLearned += learnedIndices.length
-                        console.log(`📅 ${date} 날짜: ${learnedIndices.length}개 학습완료 (인덱스: ${learnedIndices})`)
-                      }
-                    })
-                  }
-                  
-                  console.log(`✅ 전체목록 모드 헤더 - 총 학습완료: ${totalLearned}개`)
-                } catch (error) {
-                  console.error('로컬 스토리지 데이터 파싱 오류:', error)
-                }
-              }
-              return `학습완료: ${totalLearned}개 (날짜별 모드와 일치)`
-            })()}
-          </div>
+
         </div>
       </div>
 
@@ -757,7 +724,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                            ? 'bg-green-500/20 text-green-400 border border-green-400/30' 
                            : 'bg-blue-500/20 text-blue-400 border border-blue-400/30'
                        }`}>
-                         {isLearned ? '✅ 학습완료' : '⭕ 미학습'}
+                         {isLearned ? t('learning.status.completed') : t('learning.status.not.learned')}
                        </div>
                      )
                    })()}
@@ -838,7 +805,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                        <div className="mt-4 pt-4 border-t border-purple-600/30 flex items-center justify-center py-8">
                          <div className="flex items-center gap-3">
                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400"></div>
-                           <span className="text-white/70 text-sm">상세 내용을 로딩 중...</span>
+                           <span className="text-white/70 text-sm">{t('loading.detail.content')}</span>
                          </div>
                        </div>
                      )}

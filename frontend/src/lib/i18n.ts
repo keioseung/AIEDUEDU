@@ -99,6 +99,14 @@ const ko: Record<string, string> = {
   'ai.info.mode.full': '전체목록',
   'ai.info.sort.options': '정렬 옵션',
   
+  // 로딩 메시지
+  'loading.please.wait': '잠시만 기다려 주세요',
+  'loading.detail.content': '상세 내용을 로딩 중...',
+  
+  // 학습 상태 표시
+  'learning.status.completed': '✅ 학습완료',
+  'learning.status.not.learned': '⭕ 미학습',
+  
   // AI 정보 없음 메시지
   'ai.info.no.data.title': 'AI 정보가 없습니다',
   'ai.info.no.data.description': '아직 등록된 AI 정보가 없습니다.\n관리자가 AI 정보를 등록한 후 이용해주세요!',
@@ -216,7 +224,12 @@ const ko: Record<string, string> = {
   'quiz.explanation.correct.meaning': '의 정확한 의미는:',
   
   // 로딩 메시지
-  'loading.please.wait': '잠시만 기다려 주세요.',
+  'loading.please.wait': 'Please wait a moment.',
+  'loading.detail.content': 'Loading detailed content...',
+  
+  // 학습 상태 표시
+  'learning.status.completed': '✅ Completed',
+  'learning.status.not.learned': '⭕ Not Learned',
   
   // 퀴즈
   'quiz.title': '퀴즈',
@@ -1083,6 +1096,14 @@ const ja: Record<string, string> = {
   // AI情報項目数オプション詳細説明
   'ai.info.items.per.page.display': 'ページあたり{count}件表示',
   
+  // ローディングメッセージ
+  'loading.please.wait': '少々お待ちください',
+  'loading.detail.content': '詳細内容を読み込み中...',
+  
+  // 学習状態表示
+  'learning.status.completed': '✅ 学習完了',
+  'learning.status.not.learned': '⭕ 未学習',
+  
   // AI情報リストタイトル
   'ai.info.list.title': 'AI情報リスト',
   
@@ -1877,6 +1898,14 @@ const zh: Record<string, string> = {
   // 进度自定义期间设置
   'progress.custom.period.start.date': '开始日期',
   'progress.custom.period.end.date': '结束日期',
+  
+  // 加载消息
+  'loading.please.wait': '请稍等片刻',
+  'loading.detail.content': '正在加载详细内容...',
+  
+  // 学习状态显示
+  'learning.status.completed': '✅ 学习完成',
+  'learning.status.not.learned': '⭕ 未学习',
   'progress.custom.period.select.dates': '请选择开始和结束日期',
   
   // 进度日期格式
