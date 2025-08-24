@@ -1038,53 +1038,83 @@ export default function AdminAIInfoPage() {
     suggestedTerms: string[]
   }[]>([])
 
-  // 중복 용어 분석 함수
-  const analyzeDuplicateTerms = () => {
+  // 특정 단어 검색 함수
+  const searchTermInCards = () => {
+    if (!searchTerm.trim()) {
+      setError('검색할 단어를 입력해주세요.')
+      return
+    }
+
     if (!allAIInfos || allAIInfos.length === 0) {
       setError('AI 정보 데이터를 먼저 불러와주세요.')
       return
     }
 
-    const termCount: Record<string, {
-      count: number
-      locations: Array<{date: string, index: number, cardTitle: string}>
-    }> = {}
+    const searchResults: Array<{
+      date: string
+      index: number
+      cardTitle: string
+      cardContent: string
+      matchedTerms: string[]
+    }> = []
 
-    // 모든 AI 정보 카드에서 용어 수집
+    // 모든 AI 정보 카드에서 특정 단어 검색
     allAIInfos.forEach((dateGroup) => {
       dateGroup.infos.forEach((info: AIInfoItem, index: number) => {
+        let hasMatchedTerm = false
+        const matchedTerms: string[] = []
+
+        // 용어에서 검색
         if (info.terms && Array.isArray(info.terms)) {
           info.terms.forEach((term) => {
-            if (!termCount[term.term]) {
-              termCount[term.term] = {
-                count: 0,
-                locations: []
-              }
+            if (term.term.toLowerCase().includes(searchTerm.toLowerCase())) {
+              hasMatchedTerm = true
+              matchedTerms.push(term.term)
             }
-            termCount[term.term].count++
-            termCount[term.term].locations.push({
-              date: dateGroup.date,
-              index: index,
-              cardTitle: info.title || `카드 ${index + 1}`
-            })
+          })
+        }
+
+        // 제목에서도 검색
+        if (info.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+          hasMatchedTerm = true
+          matchedTerms.push('제목')
+        }
+
+        // 내용에서도 검색
+        if (info.content.toLowerCase().includes(searchTerm.toLowerCase())) {
+          hasMatchedTerm = true
+          matchedTerms.push('내용')
+        }
+
+        if (hasMatchedTerm) {
+          searchResults.push({
+            date: dateGroup.date,
+            index: index,
+            cardTitle: info.title || `카드 ${index + 1}`,
+            cardContent: info.content || '',
+            matchedTerms: [...new Set(matchedTerms)] // 중복 제거
           })
         }
       })
     })
 
-    // 중복되는 용어만 필터링 (2번 이상 사용된 용어)
-    const duplicates = Object.entries(termCount)
-      .filter(([_, data]) => data.count > 1)
-      .map(([term, data]) => ({
-        term,
-        count: data.count,
-        locations: data.locations
-      }))
-      .sort((a, b) => b.count - a.count) // 중복 횟수 순으로 정렬
+    if (searchResults.length === 0) {
+      setError(`"${searchTerm}" 단어가 포함된 학습 내용을 찾을 수 없습니다.`)
+      return
+    }
 
-    setDuplicateTerms(duplicates)
+    setDuplicateTerms(searchResults.map(result => ({
+      term: result.matchedTerms.join(', '),
+      count: 1,
+      locations: [{
+        date: result.date,
+        index: result.index,
+        cardTitle: result.cardTitle
+      }]
+    })))
     setShowDuplicateAnalysis(true)
-    console.log('중복 용어 분석 결과:', duplicates)
+    setSuccess(`"${searchTerm}" 단어가 포함된 ${searchResults.length}개의 학습 내용을 찾았습니다.`)
+    console.log('단어 검색 결과:', searchResults)
   }
 
   // 대체 용어 제안 함수
@@ -1685,12 +1715,21 @@ export default function AdminAIInfoPage() {
                   >
                     {showAllAIInfo ? '전체 보기 숨기기' : '전체 AI 정보 보기'}
                   </button>
-                  <button
-                    onClick={analyzeDuplicateTerms}
-                    className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
-                  >
-                    🔍 중복 용어 분석
-                  </button>
+                          <div className="flex items-center gap-3">
+          <input
+            type="text"
+            placeholder="검색할 단어를 입력하세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm"
+          />
+          <button
+            onClick={searchTermInCards}
+            className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+          >
+            🔍 단어 검색
+          </button>
+        </div>
                 </div>
               )}
               
@@ -2585,7 +2624,7 @@ export default function AdminAIInfoPage() {
           <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                🔍 중복 용어 분석 결과
+                🔍 단어 검색 결과
               </h2>
               <button
                 onClick={() => setShowDuplicateAnalysis(false)}
@@ -2597,59 +2636,43 @@ export default function AdminAIInfoPage() {
 
             {duplicateTerms.length === 0 ? (
               <div className="text-center py-8 text-white/50">
-                중복되는 용어가 없습니다! 🎉
+                검색 결과가 없습니다.
               </div>
             ) : (
               <div className="space-y-6">
-                {/* 중복 용어 요약 */}
+                {/* 검색 결과 요약 */}
                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
-                  <h3 className="text-lg font-semibold text-blue-300 mb-2">📊 중복 현황 요약</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <h3 className="text-lg font-semibold text-blue-300 mb-2">📊 검색 결과 요약</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-blue-400">{duplicateTerms.length}</div>
-                      <div className="text-blue-300">중복 용어 수</div>
+                      <div className="text-blue-300">검색된 카드 수</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-orange-400">
                         {duplicateTerms.reduce((sum, term) => sum + term.count, 0)}
                       </div>
-                      <div className="text-orange-300">총 중복 횟수</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-red-400">
-                        {duplicateTerms[0]?.count || 0}
-                      </div>
-                      <div className="text-red-300">최대 중복 횟수</div>
+                      <div className="text-orange-300">총 매칭 항목</div>
                     </div>
                   </div>
                 </div>
 
-                {/* 대체 용어 제안 버튼 */}
-                <div className="text-center">
-                  <button
-                    onClick={generateReplacementSuggestions}
-                    className="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 mx-auto"
-                  >
-                    💡 대체 용어 제안 생성
-                  </button>
-                </div>
-
-                {/* 중복 용어 상세 목록 */}
+                {/* 검색된 카드 상세 목록 */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white">📋 중복 용어 상세</h3>
+                  <h3 className="text-lg font-semibold text-white">📋 검색된 학습 내용</h3>
                   {duplicateTerms.map((duplicate, idx) => (
                     <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <span className="text-lg font-bold text-white">{duplicate.term}</span>
-                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                            {duplicate.count}회 중복
+                          <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                            매칭됨
                           </span>
                         </div>
                       </div>
                       
                       <div className="space-y-2">
-                        <div className="text-sm text-white/70">사용 위치:</div>
+                        <div className="text-sm text-white/70">카드 정보:</div>
                         {duplicate.locations.map((location, locIdx) => (
                           <div key={locIdx} className="flex items-center justify-between bg-white/5 rounded-lg p-2">
                             <div className="text-sm text-white/80">
