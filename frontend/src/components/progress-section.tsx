@@ -608,7 +608,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             onClick={resetLearningData}
             className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium text-sm rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 transition-all duration-300 transform hover:scale-105"
           >
-            🔄 학습 데이터 초기화
+            🔄 {t('progress.reset.learning.data')}
           </button>
         </div>
       </div>

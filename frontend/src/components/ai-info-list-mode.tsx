@@ -779,7 +779,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                      {info.category && (
                        <div className="mb-2">
                          <span className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-blue-600/40 border border-purple-500/50 rounded-lg text-xs font-medium text-white/90 shadow-sm">
-                          🏷️ {info.category}
+                          🏷️ {t(`category.name.${info.category}`) || info.category}
                          </span>
                        </div>
                      )}

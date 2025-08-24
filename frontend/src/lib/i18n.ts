@@ -269,6 +269,9 @@ const ko: Record<string, string> = {
   'progress.ai.info.today.count': '오늘 학습 수',
   'progress.ai.info.daily.total': '일별 총 정보 수',
   'progress.ai.info.accumulated.total': '누적 총 학습 수',
+  
+  // 진행률 초기화
+  'progress.reset.learning.data': '학습 데이터 초기화',
   'progress.terms.learning.count': '학습 수',
   'progress.quiz.daily.accuracy': '일일 정답률',
   'progress.quiz.daily.accumulated': '일일 누적',
@@ -764,6 +767,9 @@ const en: Record<string, string> = {
   'progress.ai.info.today.count': 'Today\'s Learning Count',
   'progress.ai.info.daily.total': 'Daily Total Info Count',
   'progress.ai.info.accumulated.total': 'Accumulated Total Learning Count',
+  
+  // Progress Reset
+  'progress.reset.learning.data': 'Reset Learning Data',
   'progress.terms.learning.count': 'Learning Count',
   'progress.quiz.daily.accuracy': 'Daily Accuracy',
   'progress.quiz.daily.accumulated': 'Daily Accumulated',
@@ -1278,6 +1284,9 @@ const ja: Record<string, string> = {
   'progress.card.terms.daily.total': '日次総用語数',
   'progress.card.terms.accumulated.total': '累積総用語数',
   
+  // 進行率リセット
+  'progress.reset.learning.data': '学習データリセット',
+  
   // Terms Learning
   'terms.title': '用語学習',
   'terms.learned': '学習完了',
@@ -1764,6 +1773,9 @@ const zh: Record<string, string> = {
   'progress.quiz.daily.accumulated': '每日累计',
   'progress.quiz.accuracy': '正确率',
   'progress.quiz.accumulated.score': '累计分数',
+  
+  // 进度重置
+  'progress.reset.learning.data': '重置学习数据',
   
   // 术语学习
   'terms.title': '术语学习',
