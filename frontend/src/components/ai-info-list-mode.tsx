@@ -121,7 +121,8 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     queryFn: async () => {
       try {
         console.log(`날짜별 AI 정보 API 호출 중... (언어: ${localLanguage})`)
-        const response = await aiInfoAPI.getByDate('all', localLanguage)
+        // getByDate는 날짜만 받으므로 'all' 대신 다른 방식 사용
+        const response = await aiInfoAPI.getAll(localLanguage)
         console.log('날짜별 API 응답:', response)
         return response.data
       } catch (error) {
