@@ -137,15 +137,12 @@ const getCategoryStyle = (category: string) => {
 }
 
 function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery, currentLanguage }: AIInfoCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isLearned, setIsLearned] = useState(isLearnedProp)
   const [showTerms, setShowTerms] = useState(false)
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
-  const [showAchievement, setShowAchievement] = useState(false)
-  const [showTermAchievement, setShowTermAchievement] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [showLearnComplete, setShowLearnComplete] = useState(false)
-  const [isLearning, setIsLearning] = useState(false)
-  const [showAllTermsComplete, setShowAllTermsComplete] = useState(false)
-  const [showRelearnButton, setShowRelearnButton] = useState(false)
+  const [showAchievement, setShowAchievement] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
   const [isFavorite, setIsFavorite] = useState(isFavoriteProp || false)
@@ -153,7 +150,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   const updateProgressMutation = useUpdateUserProgress()
   const checkAchievementsMutation = useCheckAchievements()
   const updateTermProgressMutation = useUpdateTermProgress()
-  const [isLearned, setIsLearned] = useState(isLearnedProp)
   
   // 용어 학습 상태를 React Query로 관리
   const { data: learnedTerms = new Set<string>(), refetch: refetchLearnedTerms } = useLearnedTerms(sessionId, date, index)
@@ -384,10 +380,6 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             }
           }, 1000)
 
-          // N개 학습완료 알림 매번 표시
-          setShowAllTermsComplete(true)
-          setTimeout(() => setShowAllTermsComplete(false), 3000)
-
           // 진행률 업데이트 콜백 호출
           if (onProgressUpdate) {
             onProgressUpdate()
@@ -407,11 +399,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   }
 
   const handleLearnToggle = async () => {
-    if (isLearning) return
-    setIsLearning(true)
     try {
       if (isLearned) {
-        // 학습 이력 삭제 (학습완료 해제)
+        // 학습완료 상태에서 버튼 클릭 시 → 학습하기 상태로 초기화
         const currentProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
         if (currentProgress[sessionId] && currentProgress[sessionId][date]) {
           const learnedIndices = currentProgress[sessionId][date].filter((i: number) => i !== index)
@@ -422,15 +412,29 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           }
           localStorage.setItem('userProgress', JSON.stringify(currentProgress))
         }
+        
         // 백엔드 기록도 삭제
         try {
           await userProgressAPI.deleteInfoIndex(sessionId, date, index)
-        } catch (e) { /* 무시 */ }
+        } catch (e) { 
+          console.log('백엔드 삭제 실패 (무시됨):', e)
+        }
+        
+        // 상태 즉시 변경
         setIsLearned(false)
+        
+        // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
+        queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+        queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+        
+        // 부모 컴포넌트에 알림
         if (setForceUpdate) setForceUpdate(prev => prev + 1)
         if (onProgressUpdate) onProgressUpdate()
+        
+        console.log(`✅ ${date} 날짜 ${index}번 카드 학습 상태 초기화 완료`)
+        
       } else {
-        // 학습 전 상태에서 학습 완료 상태로 변경
+        // 학습하기 상태에서 버튼 클릭 시 → 학습완료 상태로 변경
     
         await updateProgressMutation.mutateAsync({
           sessionId,
@@ -447,6 +451,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         }
         localStorage.setItem('userProgress', JSON.stringify(currentProgress))
         
+        // 상태 즉시 변경
         setIsLearned(true)
         setShowLearnComplete(true)
         setTimeout(() => setShowLearnComplete(false), 3000)
@@ -455,6 +460,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
         queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
          
+        // 부모 컴포넌트에 알림
         if (onProgressUpdate) onProgressUpdate()
         
         // 성취 확인
@@ -467,11 +473,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         } catch (error) {
           console.error('Failed to check achievements:', error)
         }
+        
+        console.log(`✅ ${date} 날짜 ${index}번 카드 학습완료`)
       }
     } catch (error) {
       console.error('Failed to update progress:', error)
-    } finally {
-      setIsLearning(false)
     }
   }
 
@@ -700,13 +706,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       <div className="flex gap-2 md:gap-3">
         <button
           onClick={handleLearnToggle}
-          disabled={isLearned || isLearning}
+          disabled={isLearned}
           className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target ${
             isLearned
               ? 'bg-green-500 text-white cursor-default'
-              : isLearning
-                ? 'bg-blue-600 text-white cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+              : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
           }`}
         >
           <BookOpen className="w-4 h-4" />
