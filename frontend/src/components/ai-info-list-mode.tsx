@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash } from 'react-icons/fa'
+import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash, FaGraduationCap, FaLightbulb } from 'react-icons/fa'
 import { Settings, ChevronRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
@@ -762,12 +762,16 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                      }
 
                      return (
-                       <div className={`flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium ${
+                       <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm transition-all duration-200 ${
                          isLearned 
-                           ? 'bg-green-500/20 text-green-400 border border-green-400/30' 
-                           : 'bg-blue-500/20 text-blue-400 border border-blue-400/30'
+                           ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg shadow-green-500/25' 
+                           : 'bg-gradient-to-br from-slate-400 to-gray-500 text-white shadow-lg shadow-gray-500/25'
                        }`}>
-                         {isLearned ? t('learning.status.completed') : t('learning.status.not.learned')}
+                         {isLearned ? (
+                           <FaGraduationCap className="w-4 h-4" />
+                         ) : (
+                           <FaLightbulb className="w-4 h-4" />
+                         )}
                        </div>
                      )
                    })()}
