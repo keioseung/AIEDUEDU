@@ -718,6 +718,35 @@ export default function DashboardPage() {
                         </div>
                       </div>
                     </div>
+                    
+                    {/* 학습 초기화 버튼 */}
+                    <button
+                      onClick={() => {
+                        if (confirm(`${selectedDate} 날짜의 모든 학습완료 상태를 초기화하시겠습니까?`)) {
+                          // localStorage에서 해당 날짜의 학습 데이터 삭제
+                          try {
+                            const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                            if (userProgress[sessionId] && userProgress[sessionId][selectedDate]) {
+                              delete userProgress[sessionId][selectedDate]
+                              localStorage.setItem('userProgress', JSON.stringify(userProgress))
+                              
+                              // 진행률 업데이트를 위한 쿼리 무효화
+                              queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+                              queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+                              
+                              // 페이지 새로고침으로 상태 동기화
+                              window.location.reload()
+                            }
+                          } catch (error) {
+                            console.error('학습 초기화 실패:', error)
+                          }
+                        }
+                      }}
+                      className="ml-3 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 border border-red-400/30 hover:border-red-300/50 transform hover:scale-105 active:scale-95"
+                      title={`${selectedDate} 날짜의 모든 학습완료 상태 초기화`}
+                    >
+                      🔄 학습 초기화
+                    </button>
                   </div>
                   
                   {/* AI 정보 카드들 */}
