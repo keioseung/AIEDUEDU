@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation'
 import { logout } from '@/lib/api'
 
 import { useQueryClient } from '@tanstack/react-query'
-import { userProgressAPI } from '@/lib/api'
+import { userProgressAPI, aiInfoAPI } from '@/lib/api'
 import { t, getCurrentLanguage, Language } from '@/lib/i18n'
 import { AIInfoItem } from '@/types'
 
