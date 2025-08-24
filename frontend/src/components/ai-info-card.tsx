@@ -401,6 +401,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   const handleLearnToggle = async () => {
     try {
       if (isLearned) {
+        console.log(`🔄 ${date} 날짜 ${index}번 카드 학습 상태 초기화 시작...`)
+        
         // 학습완료 상태에서 버튼 클릭 시 → 학습하기 상태로 초기화
         const currentProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
         if (currentProgress[sessionId] && currentProgress[sessionId][date]) {
@@ -411,17 +413,20 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             currentProgress[sessionId][date] = learnedIndices
           }
           localStorage.setItem('userProgress', JSON.stringify(currentProgress))
+          console.log(`📝 localStorage 업데이트 완료:`, currentProgress[sessionId])
         }
         
         // 백엔드 기록도 삭제
         try {
           await userProgressAPI.deleteInfoIndex(sessionId, date, index)
+          console.log(`🗑️ 백엔드 삭제 완료`)
         } catch (e) { 
           console.log('백엔드 삭제 실패 (무시됨):', e)
         }
         
         // 상태 즉시 변경
         setIsLearned(false)
+        console.log(`✅ 상태 변경 완료: isLearned = false`)
         
         // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
         queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
@@ -434,6 +439,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         console.log(`✅ ${date} 날짜 ${index}번 카드 학습 상태 초기화 완료`)
         
       } else {
+        console.log(`🔄 ${date} 날짜 ${index}번 카드 학습 시작...`)
+        
         // 학습하기 상태에서 버튼 클릭 시 → 학습완료 상태로 변경
     
         await updateProgressMutation.mutateAsync({
@@ -706,10 +713,10 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       <div className="flex gap-2 md:gap-3">
         <button
           onClick={handleLearnToggle}
-          className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target ${
+          className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${
             isLearned
-              ? 'bg-green-500 text-white hover:bg-green-600 cursor-pointer'
-              : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 cursor-pointer'
+              ? 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700 cursor-pointer'
+              : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 cursor-pointer'
           }`}
         >
           <BookOpen className="w-4 h-4" />
