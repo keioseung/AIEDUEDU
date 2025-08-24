@@ -302,23 +302,10 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 로딩 상태 표시 개선
   if (isLoading) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[200vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
-        <div className="text-center text-white">
-          <div className="w-20 h-20 mx-auto mb-6 opacity-60">
-            <FaRobot className="w-full h-full text-blue-400" />
-          </div>
-          <div className="space-y-4">
-            <h3 className="text-2xl font-semibold text-white">AI 정보를 불러오는 중...</h3>
-            <p className="text-white/70 text-lg leading-relaxed">
-              {isLoadingTitles ? '제목 정보 로딩 중...' : 
-               isLoadingDates ? '날짜별 정보 로딩 중...' : 
-               isLoadingAll ? '전체 정보 로딩 중...' : '데이터 처리 중...'}
-            </p>
-            <div className="flex items-center justify-center gap-2">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-              <span className="text-white/80 text-sm font-medium">잠시만 기다려주세요...</span>
-            </div>
-          </div>
+      <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center text-white -mt-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+          <p className="text-white/80 text-lg font-medium whitespace-nowrap">AI 정보를 불러오는 중...</p>
         </div>
       </div>
     )
@@ -327,21 +314,17 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 에러 상태 표시
   if (titlesError && datesError && allError) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[200vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+      <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="w-20 h-20 mx-auto mb-6 opacity-60">
-            <FaRobot className="w-full h-full text-red-400" />
-          </div>
-          <div className="space-y-4">
-            <h3 className="text-2xl font-semibold text-white">데이터 로딩 실패</h3>
-            <p className="text-white/70 text-lg leading-relaxed">AI 정보를 불러올 수 없습니다.</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
-            >
-              다시 시도
-            </button>
-          </div>
+          <FaRobot className="w-12 h-12 mx-auto mb-3 opacity-60" />
+          <h3 className="text-lg font-semibold mb-2">데이터 로딩 실패</h3>
+          <p className="text-white/70 mb-3 text-sm">AI 정보를 불러올 수 없습니다.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg font-medium transition-all"
+          >
+            다시 시도
+          </button>
         </div>
       </div>
     )
@@ -350,19 +333,15 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
     return (
-      <div className="glass rounded-2xl p-80 md:p-96 min-h-[200vh] flex items-center justify-center bg-gradient-to-br from-purple-950/60 via-purple-900/70 to-purple-950/60 border-2 border-purple-600/50 shadow-2xl shadow-purple-900/50">
+      <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="w-20 h-20 mx-auto mb-6 opacity-60">
-            <FaRobot className="w-full h-full text-blue-400" />
-          </div>
-          <div className="space-y-4">
-            <h3 className="text-2xl font-semibold text-white">{t('ai.info.no.data.title')}</h3>
-            <p className="text-white/70 text-lg leading-relaxed">
-              {t('ai.info.no.data.description')}
-            </p>
-            <div className="text-base text-white/50">
-              {t('ai.info.no.data.waiting')}
-            </div>
+          <FaRobot className="w-12 h-12 mx-auto mb-3 opacity-60" />
+          <h3 className="text-lg font-semibold mb-2">{t('ai.info.no.data.title')}</h3>
+          <p className="text-white/70 mb-3 text-sm">
+            {t('ai.info.no.data.description')}
+          </p>
+          <div className="text-xs text-white/50">
+            {t('ai.info.no.data.waiting')}
           </div>
         </div>
       </div>
