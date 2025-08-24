@@ -497,7 +497,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   };
 
   // 학습 데이터 초기화 함수
-  const resetLearningData = () => {
+  const resetLearningData = async () => {
     if (typeof window === 'undefined') return;
     
     try {
@@ -537,6 +537,26 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       queryClient.invalidateQueries({ queryKey: ['period-stats'] });
       queryClient.invalidateQueries({ queryKey: ['ai-info-learned-count'] });
       queryClient.invalidateQueries({ queryKey: ['total-terms-stats'] });
+      
+      // 백엔드 데이터도 초기화 (API 호출)
+      try {
+        // 모든 날짜의 학습 데이터를 백엔드에서도 초기화
+        if (aiInfoDates) {
+          for (const date of aiInfoDates) {
+            for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+              try {
+                // 백엔드에서 해당 날짜의 학습 데이터 삭제
+                await userProgressAPI.deleteInfoIndex(sessionId, date, infoIndex);
+              } catch (error) {
+                // 백엔드 삭제 실패 시 무시 (로컬 데이터는 이미 초기화됨)
+                console.log(`백엔드 ${date} ${infoIndex} 삭제 실패 (무시됨):`, error);
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('백엔드 초기화 오류:', error);
+      }
       
       // localAIProgress 업데이트
       updateLocalAIProgress();
