@@ -163,7 +163,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   })
 
   // 실제 사용할 AI 정보 (제목 API가 성공하면 그것을, 실패하면 날짜별 정보를 사용)
-  const actualAIInfo: (AITitleItem | AIInfoItem)[] = (titlesData?.titles && titlesData.titles.length > 0) ? titlesData.titles : dateBasedAIInfo
+  const actualAIInfo: (AITitleItem | AIInfoItem)[] = (titlesData?.titles && titlesData.titles.length > 0) ? titlesData.titles : (dateBasedAIInfo || [])
   const isLoading = isLoadingTitles || isLoadingDates || isLoadingAll
 
   // 즐겨찾기 불러오기
