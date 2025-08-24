@@ -145,9 +145,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   
   // localStorage에서 직접 학습 상태를 읽어와서 초기화 (마운트 시에만)
   const getInitialLearnedState = () => {
-    if (typeof window !== 'undefined' && date && !isMounted.current) {
+    if (typeof window !== 'undefined' && date) {
       try {
-        // 1순위: 사용자가 직접 변경한 상태 확인
+        // 1순위: 사용자가 직접 변경한 상태 확인 (절대 우선시)
         const modifiedKey = getUserModifiedKey();
         const modifiedState = localStorage.getItem(modifiedKey);
         if (modifiedState !== null) {
@@ -155,14 +155,16 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           return modifiedState === 'true';
         }
         
-        // 2순위: userProgress에서 상태 확인
-        const stored = localStorage.getItem('userProgress');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed[sessionId] && parsed[sessionId][date]) {
-            const learned = parsed[sessionId][date].includes(index);
-            console.log(`🔍 userProgress에서 상태 확인: ${learned}`);
-            return learned;
+        // 2순위: userProgress에서 상태 확인 (초기 로드 시에만)
+        if (!isMounted.current) {
+          const stored = localStorage.getItem('userProgress');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed[sessionId] && parsed[sessionId][date]) {
+              const learned = parsed[sessionId][date].includes(index);
+              console.log(`🔍 userProgress에서 상태 확인: ${learned}`);
+              return learned;
+            }
           }
         }
       } catch {}
@@ -193,6 +195,19 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   // 컴포넌트 마운트 완료 표시
   useEffect(() => {
     isMounted.current = true;
+    
+    // 마운트 후에도 userModified 상태가 있으면 그것을 우선시
+    if (typeof window !== 'undefined' && date) {
+      const modifiedKey = getUserModifiedKey();
+      const modifiedState = localStorage.getItem(modifiedKey);
+      if (modifiedState !== null) {
+        const shouldBeLearned = modifiedState === 'true';
+        if (isLearned !== shouldBeLearned) {
+          console.log(`🔄 마운트 후 userModified 상태 동기화: ${isLearned} → ${shouldBeLearned}`);
+          setIsLearned(shouldBeLearned);
+        }
+      }
+    }
   }, []);
   
   // useEffect 제거 - localStorage를 읽어오지 않음
