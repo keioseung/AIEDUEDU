@@ -708,23 +708,23 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                   {(() => {
                     // selectedDate가 있으면 해당 날짜의 실제 학습 데이터를 표시
                     if (selectedDate) {
-                      // selectedDate가 있을 때는 바로 실제 학습 상태 확인 (uniqueChartData 무시)
+                      // selectedDate가 있을 때는 바로 실제 학습 상태 확인 (AI 정보 카드 학습 여부와 상관없이)
                       if (typeof window !== 'undefined') {
                         try {
                           let totalTermsLearned = 0
-                          // 해당 날짜의 모든 AI 정보에 대해 용어 학습 상태 확인
+                          // 해당 날짜의 모든 AI 정보에 대해 용어 학습 상태 확인 (AI 정보 카드 학습 여부 무관)
                           for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
-                            // userModified 상태가 true인 경우만 용어 학습 상태 확인
-                            if (getActualLearningStatus(selectedDate, infoIndex)) {
-                              const learnedTermsKey = `learnedTerms_${sessionId}_${selectedDate}_${infoIndex}`
-                              const learnedTerms = localStorage.getItem(learnedTermsKey)
-                              if (learnedTerms) {
-                                try {
-                                  const terms = JSON.parse(learnedTerms)
+                            // AI 정보 카드 학습 여부와 상관없이 용어 학습 상태만 확인
+                            const learnedTermsKey = `learnedTerms_${sessionId}_${selectedDate}_${infoIndex}`
+                            const learnedTerms = localStorage.getItem(learnedTermsKey)
+                            if (learnedTerms) {
+                              try {
+                                const terms = JSON.parse(learnedTerms)
+                                if (Array.isArray(terms)) {
                                   totalTermsLearned += terms.length
-                                } catch (error) {
-                                  console.error('용어 데이터 파싱 오류:', error)
                                 }
+                              } catch (error) {
+                                console.error('용어 데이터 파싱 오류:', error)
                               }
                             }
                           }
@@ -762,29 +762,27 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.terms.accumulated.total')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // 실제 학습된 용어 수 계산 (userModified 상태가 true인 카드에서만)
+                    // 실제 학습된 용어 수 계산 (AI 정보 카드 학습 여부와 상관없이)
                     let totalTermsLearned = 0
                     
                     if (typeof window !== 'undefined') {
                       try {
-                        // 모든 날짜의 모든 카드에서 userModified 상태가 true인 경우만 용어 학습 상태 확인
+                        // 모든 날짜의 모든 카드에서 AI 정보 카드 학습 여부와 상관없이 용어 학습 상태 확인
                         if (aiInfoDates) {
                           aiInfoDates.forEach((date: string) => {
                             // 각 날짜당 2개 카드 (0번, 1번) 확인
                             for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
-                              // userModified 상태가 true인 경우만 용어 학습 상태 확인
-                              if (getActualLearningStatus(date, infoIndex)) {
-                                const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
-                                const learnedTerms = localStorage.getItem(learnedTermsKey)
-                                if (learnedTerms) {
-                                  try {
-                                    const terms = JSON.parse(learnedTerms)
-                                    if (Array.isArray(terms)) {
-                                      totalTermsLearned += terms.length
-                                    }
-                                  } catch (error) {
-                                    console.error('용어 데이터 파싱 오류:', error)
+                              // AI 정보 카드 학습 여부와 상관없이 용어 학습 상태만 확인
+                              const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`
+                              const learnedTerms = localStorage.getItem(learnedTermsKey)
+                              if (learnedTerms) {
+                                try {
+                                  const terms = JSON.parse(learnedTerms)
+                                  if (Array.isArray(terms)) {
+                                    totalTermsLearned += terms.length
                                   }
+                                } catch (error) {
+                                  console.error('용어 데이터 파싱 오류:', error)
                                 }
                               }
                             }

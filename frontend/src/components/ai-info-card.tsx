@@ -250,8 +250,13 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
   
   // 용어 학습 상태 변경 시 즉시 시각적 반영을 위한 강제 리렌더링
   useEffect(() => {
-    // localLearnedTerms가 변경될 때마다 강제 리렌더링
+    // localLearnedTerms가 변경될 때마다 강제 리렌더링 (더 강화)
     setForceUpdate && setForceUpdate(prev => prev + 1)
+    
+    // 추가 강제 리렌더링으로 시각적 반영 보장
+    setTimeout(() => {
+      setForceUpdate && setForceUpdate(prev => prev + 1)
+    }, 0)
   }, [localLearnedTerms, setForceUpdate])
 
   // 터치 제스처 처리
@@ -435,8 +440,13 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              setLocalLearnedTerms(newLocalTerms)
                              localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
                              
-                             // 즉시 시각적 반영을 위해 강제 리렌더링
+                             // 즉시 시각적 반영을 위해 강제 리렌더링 (더 강화)
                              setForceUpdate && setForceUpdate(prev => prev + 1)
+                             
+                             // 상태 변경을 즉시 반영하기 위한 추가 강제 리렌더링
+                             setTimeout(() => {
+                               setForceUpdate && setForceUpdate(prev => prev + 1)
+                             }, 0)
                              
                              // React Query 캐시 무효화하여 즉시 UI 업데이트
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
@@ -785,8 +795,13 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              setLocalLearnedTerms(newLocalTerms)
                              localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
                              
-                             // 즉시 시각적 반영을 위해 강제 리렌더링
+                             // 즉시 시각적 반영을 위해 강제 리렌더링 (더 강화)
                              setForceUpdate && setForceUpdate(prev => prev + 1)
+                             
+                             // 상태 변경을 즉시 반영하기 위한 추가 강제 리렌더링
+                             setTimeout(() => {
+                               setForceUpdate && setForceUpdate(prev => prev + 1)
+                             }, 0)
                              
                              // React Query 캐시 무효화하여 즉시 UI 업데이트
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
