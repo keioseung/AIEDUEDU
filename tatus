@@ -1,0 +1,5 @@
+[33mbbf37b2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix admin page delete and edit functionality - improve error handling and fix backend field mapping
+[33mfbaeff5[m Fix quiz score display in progress graph - show actual score percentage instead of relative height
+[33m043a941[m 개선
+[33md7f29f0[m 안내 매세지 번역
+[33m97fe0bf[m AI 정보 로딩 페이지 다국어 번역 완료 (한/영/일/중)

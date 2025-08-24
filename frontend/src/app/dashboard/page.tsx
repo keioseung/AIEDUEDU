@@ -832,10 +832,33 @@ export default function DashboardPage() {
                       </div>
                     )}
                     {aiInfoFixed.map((info, index) => {
-                      // 로컬 스토리지와 백엔드 데이터를 모두 확인하여 학습 상태 결정
-                      const isLearnedLocally = localProgress.includes(index)
-                      const isLearnedBackend = backendProgress.includes(index)
-                      const isLearned = isLearnedLocally || isLearnedBackend
+                      // 실제 학습 완료 상태를 더 정확하게 확인
+                      let isLearned = false
+                      
+                      // 1. 백엔드 데이터 확인
+                      if (backendProgress.includes(index)) {
+                        isLearned = true
+                      }
+                      // 2. 로컬 스토리지에서 실제 학습 완료 상태 확인
+                      else if (localProgress.includes(index)) {
+                        // 로컬 스토리지에 있다고 해서 무조건 학습 완료가 아님
+                        // 실제로 용어를 학습했는지 추가 확인
+                        if (typeof window !== 'undefined') {
+                          try {
+                            const learnedTermsKey = `learnedTerms_${sessionId}_${selectedDate}_${index}`
+                            const learnedTerms = localStorage.getItem(learnedTermsKey)
+                            if (learnedTerms) {
+                              const terms = JSON.parse(learnedTerms)
+                              // 실제로 학습된 용어가 있으면 학습 완료로 간주
+                              if (Array.isArray(terms) && terms.length > 0) {
+                                isLearned = true
+                              }
+                            }
+                          } catch (error) {
+                            console.error('용어 데이터 파싱 오류:', error)
+                          }
+                        }
+                      }
                       
                       return (
                         <AIInfoCard
