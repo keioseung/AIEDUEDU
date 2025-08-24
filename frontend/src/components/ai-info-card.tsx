@@ -238,24 +238,21 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
     }
   }, [date, index])
   
-  // 실제 학습된 용어는 React Query 데이터와 localStorage 데이터를 합침
+  // 실제 학습된 용어는 localStorage 데이터만 사용 (React Query 데이터는 백엔드 동기화용)
   const actualLearnedTerms = new Set<string>()
   
-  // React Query 데이터에서 문자열만 추가 (우선순위 높음)
-  if (learnedTerms instanceof Set) {
-    for (const term of learnedTerms) {
-      if (typeof term === 'string') {
-        actualLearnedTerms.add(term)
-      }
-    }
-  }
-  
-  // localStorage 데이터 추가 (백업용) - 현재 날짜와 info_index에 해당하는 데이터만
+  // localStorage에서 실제 학습된 용어만 가져오기
   if (localLearnedTerms.size > 0) {
     for (const term of localLearnedTerms) {
       actualLearnedTerms.add(term)
     }
   }
+  
+  // 용어 학습 상태 변경 시 즉시 시각적 반영을 위한 강제 리렌더링
+  useEffect(() => {
+    // localLearnedTerms가 변경될 때마다 강제 리렌더링
+    setForceUpdate && setForceUpdate(prev => prev + 1)
+  }, [localLearnedTerms, setForceUpdate])
 
   // 터치 제스처 처리
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -441,11 +438,17 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              // 즉시 시각적 반영을 위해 강제 리렌더링
                              setForceUpdate && setForceUpdate(prev => prev + 1)
                              
-                             console.log(`❌ 용어 학습 해제: ${currentTerm.term}`)
+                             // React Query 캐시 무효화하여 즉시 UI 업데이트
+                             queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
                              
                              // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
                              queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
                              queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+                             
+                             // 백엔드에서 용어 학습 상태 삭제 (API가 없으므로 생략)
+                             // 용어 학습 상태는 localStorage에서만 관리
+                             
+                             console.log(`❌ 용어 학습 해제: ${currentTerm.term}`)
                              
                              // 진행률 업데이트 콜백 호출
                              if (onProgressUpdate) {
@@ -788,11 +791,14 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              // React Query 캐시 무효화하여 즉시 UI 업데이트
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
                              
-                             console.log(`❌ 용어 학습 해제: ${term.term}`)
-                             
                              // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
                              queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
                              queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+                             
+                             // 백엔드에서 용어 학습 상태 삭제 (API가 없으므로 생략)
+                             // 용어 학습 상태는 localStorage에서만 관리
+                             
+                             console.log(`❌ 용어 학습 해제: ${term.term}`)
                              
                              // 진행률 업데이트 콜백 호출
                              if (onProgressUpdate) {
@@ -885,17 +891,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
            </span>
          </button>
          
-         {/* 용어 학습 데이터 초기화 버튼 */}
-         {hasTermsInCurrentLanguage && (
-           <button
-             onClick={resetLearnedTerms}
-             className="px-3 py-2.5 md:py-3 bg-red-500/80 text-white rounded-lg text-sm font-medium hover:bg-red-600/80 transition-all touch-optimized mobile-touch-target active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-400/50"
-             title="관련용어 학습 데이터 초기화"
-           >
-             <span className="hidden sm:inline">초기화</span>
-             <span className="sm:hidden">초기</span>
-           </button>
-         )}
+         
        </div>
 
       {/* 학습 완료 알림 */}
