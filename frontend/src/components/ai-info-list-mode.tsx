@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { FaRobot, FaCalendar, FaStar, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash } from 'react-icons/fa'
 import { Settings, ChevronRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { aiInfoAPI } from '@/lib/api'
 import { t, getCurrentLanguage } from '@/lib/i18n'
-import type { AIInfoItem } from '@/types'
+import type { AIInfoItem, AITitleItem } from '@/types'
 import AIInfoCard from './ai-info-card'
 
 interface AIInfoListModeProps {
@@ -23,11 +23,15 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'length'>('date')
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [itemsPerPage, setItemsPerPage] = useState(20)
   const [isProcessing, setIsProcessing] = useState(false)
   const [showSortDropdown, setShowSortDropdown] = useState(false)
   const [showItemsPerPageDropdown, setShowItemsPerPageDropdown] = useState(false)
   const [localLanguage, setLocalLanguage] = useState(currentLanguage)
+  
+  // 성능 최적화: 제목만 먼저 로딩, 상세 내용은 필요시 로딩
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [loadedContents, setLoadedContents] = useState<Map<string, AIInfoItem>>(new Map())
 
   // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
@@ -45,7 +49,6 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [showSortDropdown, showItemsPerPageDropdown])
-
 
   // 웹뷰 터치 이벤트 핸들러
   const handleWebViewTouch = (callback: (e?: React.TouchEvent) => void) => (e: React.TouchEvent) => {
@@ -88,48 +91,28 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     }
   }, [])
 
-
-  // 모든 AI 정보 가져오기 (getAll API 시도)
-  const { data: allAIInfo = [], isLoading: isLoadingAll, error: getAllError } = useQuery<AIInfoItem[]>({
-    queryKey: ['all-ai-info', localLanguage],
+  // 제목만 가져오기 (성능 최적화)
+  const { data: titlesData, isLoading: isLoadingTitles, error: titlesError } = useQuery<{titles: AITitleItem[]}>({
+    queryKey: ['ai-info-titles', localLanguage],
     queryFn: async () => {
       try {
-        console.log(`getAll API 호출 중... (언어: ${localLanguage})`)
-        console.log(`API URL: /api/ai-info/all?language=${localLanguage}`)
-        
-        const response = await aiInfoAPI.getAll(localLanguage)
-        console.log(`getAll API 전체 응답:`, response)
-        console.log(`getAll API 응답 데이터:`, response.data)
-        console.log(`getAll API 응답 데이터 개수:`, response.data?.length || 0)
-        console.log(`getAll API 응답 데이터 타입:`, typeof response.data)
-        
-        if (response.data && Array.isArray(response.data)) {
-          console.log(`getAll API 성공: ${response.data.length}개 항목 반환`)
-          response.data.forEach((item, index) => {
-            console.log(`항목 ${index}:`, {
-              id: item.id,
-              date: item.date,
-              title: item.title,
-              contentLength: item.content?.length || 0,
-              termsCount: item.terms?.length || 0
-            })
-          })
-        } else {
-          console.log(`getAll API 응답이 배열이 아님:`, response.data)
-        }
-        
-        return response.data || []
+        console.log(`제목만 가져오는 API 호출 중... (언어: ${localLanguage})`)
+        const response = await aiInfoAPI.getAllTitles(localLanguage)
+        console.log(`제목 API 성공: ${response.data.titles?.length || 0}개 제목 반환`)
+        return response.data
       } catch (error) {
-        console.error('getAll API 실패:', error)
-        console.log('getAll API 실패, getAllDates API 사용:', error)
-        return []
+        console.error('제목 API 실패:', error)
+        return { titles: [] }
       }
     },
-    refetchInterval: 5000,
-    refetchIntervalInBackground: true,
+    // 성능 최적화: 리페치 간격 증가, 백그라운드 업데이트 비활성화
+    refetchInterval: 60000, // 60초
+    refetchIntervalInBackground: false,
+    staleTime: 300000, // 5분
+    gcTime: 600000,    // 10분
   })
 
-  // 날짜별 AI 정보 가져오기 (getAll API가 실패할 경우 사용)
+  // 날짜별 AI 정보 가져오기 (제목 API가 실패할 경우 사용)
   const { data: allDates = [], isLoading: isLoadingDates } = useQuery<string[]>({
     queryKey: ['all-ai-info-dates'],
     queryFn: async () => {
@@ -141,7 +124,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
         return []
       }
     },
-    enabled: getAllError !== null || allAIInfo.length === 0,
+    enabled: titlesError !== null || !titlesData?.titles?.length,
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
   })
@@ -184,14 +167,14 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
       
       return allInfo
     },
-    enabled: allDates.length > 0 && (getAllError !== null || allAIInfo.length === 0),
+    enabled: allDates.length > 0 && (titlesError !== null || !titlesData?.titles?.length),
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
   })
 
-  // 실제 사용할 AI 정보 (getAll이 성공하면 그것을, 실패하면 날짜별 정보를 사용)
-  const actualAIInfo = allAIInfo.length > 0 ? allAIInfo : dateBasedAIInfo
-  const isLoading = isLoadingAll || isLoadingDates || isLoadingDateBased
+  // 실제 사용할 AI 정보 (제목 API가 성공하면 그것을, 실패하면 날짜별 정보를 사용)
+  const actualAIInfo = titlesData?.titles?.length > 0 ? titlesData.titles : dateBasedAIInfo
+  const isLoading = isLoadingTitles || isLoadingDates || isLoadingDateBased
 
   // 즐겨찾기 불러오기
   useEffect(() => {
@@ -240,47 +223,63 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   }
 
   // 즐겨찾기 키 생성 함수
-  const generateFavoriteKey = (info: AIInfoItem) => {
+  const generateFavoriteKey = (info: AITitleItem | AIInfoItem) => {
     // info.id가 있으면 그것을 사용, 없으면 date와 info_index 조합 사용
     // 모든 키를 문자열로 변환하여 반환
     return String(info.id || `${info.date}_${info.info_index}`)
   }
 
+  // 항목 확장/축소 토글
+  const toggleItemExpansion = async (item: AITitleItem) => {
+    const itemKey = generateFavoriteKey(item)
+    
+    if (expandedItems.has(itemKey)) {
+      // 축소
+      setExpandedItems(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(itemKey)
+        return newSet
+      })
+    } else {
+      // 확장 - 상세 내용 로딩
+      setExpandedItems(prev => new Set(prev).add(itemKey))
+      
+      // 이미 로딩된 내용이 있으면 사용, 없으면 새로 로딩
+      if (!loadedContents.has(itemKey)) {
+        try {
+          console.log(`상세 내용 로딩 중: ${item.date}, ${item.info_index}`)
+          const response = await aiInfoAPI.getContentByIndex(item.date, item.info_index, localLanguage)
+          setLoadedContents(prev => new Map(prev).set(itemKey, response.data))
+        } catch (error) {
+          console.error('상세 내용 로딩 실패:', error)
+        }
+      }
+    }
+  }
 
   // 필터링 및 정렬된 AI 정보
-  const filteredAIInfo = (() => {
+  const filteredAIInfo = useMemo(() => {
     let filtered = actualAIInfo
 
     // 검색 필터
     if (searchQuery) {
       filtered = filtered.filter(info => 
-        info.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        info.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        info.terms?.some(term => 
-          term.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          term.description.toLowerCase().includes(searchQuery.toLowerCase())
-        ) || false
+        info.title.toLowerCase().includes(searchQuery.toLowerCase())
       )
     }
 
     // 즐겨찾기 필터
     if (showFavoritesOnly) {
-      console.log('즐겨찾기만 필터 적용, 현재 즐겨찾기 목록:', [...favoriteInfos])
       filtered = filtered.filter(info => {
         const favoriteKey = generateFavoriteKey(info)
-        const isFavorite = favoriteInfos.has(favoriteKey)
-        console.log(`정보 ${info.title} (${favoriteKey}) 즐겨찾기 상태:`, isFavorite)
-        return isFavorite
+        return favoriteInfos.has(favoriteKey)
       })
-      console.log('필터링 후 결과:', filtered.length, '개')
     }
 
     // 정렬
     switch (sortBy) {
       case 'title':
         return filtered.sort((a, b) => a.title.localeCompare(b.title))
-      case 'length':
-        return filtered.sort((a, b) => a.content.length - b.content.length)
       case 'date':
       default:
         return filtered.sort((a, b) => {
@@ -289,7 +288,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           return dateB - dateA
         })
     }
-  })()
+  }, [actualAIInfo, searchQuery, showFavoritesOnly, sortBy, favoriteInfos])
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(filteredAIInfo.length / itemsPerPage)
@@ -301,11 +300,6 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
   useEffect(() => {
     setCurrentPage(1)
   }, [searchQuery, showFavoritesOnly, sortBy, itemsPerPage])
-
-  // expandedItems 상태가 변경되지 않도록 안정화
-  useEffect(() => {
-    // 컴포넌트가 마운트된 후 expandedItems 상태를 유지
-  }, [])
 
   const selectInfo = (info: AIInfoItem) => {
     setSelectedInfo(info)
@@ -646,26 +640,114 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
 
              {/* {t('ai.info.list.title')} */}
        <div className="grid gap-4 w-full">
-         {currentItems.map((info, index) => (
-           <div key={info.id} className="relative">
-             <AIInfoCard
-               info={{
-                 title: info.title,
-                 content: info.content,
-                 terms: info.terms
-               }}
-               index={info.info_index || 0}
-               date={info.date || ''}
-               sessionId={sessionId}
-               isLearned={false}
-               onProgressUpdate={onProgressUpdate}
-               isFavorite={favoriteInfos.has(generateFavoriteKey(info))}
-               onFavoriteToggle={() => toggleFavorite(generateFavoriteKey(info))}
-               searchQuery={searchQuery}
-             />
-           </div>
-         ))}
+         {currentItems.map((info, index) => {
+           const itemKey = generateFavoriteKey(info)
+           const isExpanded = expandedItems.has(itemKey)
+           const loadedContent = loadedContents.get(itemKey)
+           
+           return (
+             <div key={info.id} className="relative">
+               {/* 제목 카드 */}
+               <div className="bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl p-4 shadow-lg shadow-purple-900/30 backdrop-blur-xl">
+                 <div className="flex items-center justify-between mb-3">
+                   <div className="flex-1">
+                     <h3 className="text-lg font-semibold text-white mb-2">{info.title}</h3>
+                     <div className="flex items-center gap-3 text-sm text-white/70">
+                       <span className="flex items-center gap-1">
+                         <FaCalendar className="w-3 h-3" />
+                         {info.date}
+                       </span>
+                       {info.category && (
+                         <span className="px-2 py-1 bg-purple-600/30 rounded-lg text-xs">
+                           {info.category}
+                         </span>
+                       )}
+                     </div>
+                   </div>
+                   
+                   <div className="flex items-center gap-2">
+                     {/* 즐겨찾기 버튼 */}
+                     <button
+                       onClick={() => toggleFavorite(itemKey)}
+                       className={`p-2 rounded-lg transition-all ${
+                         favoriteInfos.has(itemKey)
+                           ? 'text-yellow-400 bg-yellow-400/20'
+                           : 'text-white/70 hover:text-white hover:bg-white/20'
+                       }`}
+                     >
+                       <FaStar 
+                         className={`w-4 h-4 ${favoriteInfos.has(itemKey) ? 'fill-current' : ''}`}
+                       />
+                     </button>
+                     
+                     {/* 확장/축소 버튼 */}
+                     <button
+                       onClick={() => toggleItemExpansion(info as AITitleItem)}
+                       className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/20 transition-all"
+                     >
+                       {isExpanded ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                     </button>
+                   </div>
+                 </div>
+                 
+                 {/* 확장된 상세 내용 */}
+                 {isExpanded && (
+                   <motion.div
+                     initial={{ opacity: 0, height: 0 }}
+                     animate={{ opacity: 1, height: 'auto' }}
+                     exit={{ opacity: 0, height: 0 }}
+                     transition={{ duration: 0.3 }}
+                     className="overflow-hidden"
+                   >
+                     {loadedContent ? (
+                       <div className="mt-4 pt-4 border-t border-purple-600/30">
+                         <AIInfoCard
+                           info={{
+                             title: loadedContent.title,
+                             content: loadedContent.content,
+                             terms: loadedContent.terms
+                           }}
+                           index={loadedContent.info_index || 0}
+                           date={loadedContent.date || ''}
+                           sessionId={sessionId}
+                           isLearned={false}
+                           onProgressUpdate={onProgressUpdate}
+                           isFavorite={favoriteInfos.has(itemKey)}
+                           onFavoriteToggle={() => toggleFavorite(itemKey)}
+                           searchQuery={searchQuery}
+                         />
+                       </div>
+                     ) : (
+                       <div className="mt-4 pt-4 border-t border-purple-600/30 flex items-center justify-center py-8">
+                         <div className="flex items-center gap-3">
+                           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400"></div>
+                           <span className="text-white/70 text-sm">상세 내용을 로딩 중...</span>
+                         </div>
+                       </div>
+                     )}
+                   </motion.div>
+                 )}
+               </div>
+             </div>
+           )
+         })}
        </div>
+
+      {/* 성능 통계 표시 */}
+      <div className="mt-6 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl border border-blue-400/30">
+        <div className="text-center text-white/80 text-sm">
+          <div className="flex justify-center gap-6 mb-2">
+            <span>총 항목: {actualAIInfo.length}</span>
+            <span>표시 중: {currentItems.length}</span>
+            <span>필터링: {filteredAIInfo.length}</span>
+            <span>확장됨: {expandedItems.size}</span>
+          </div>
+          <div className="text-xs text-white/60">
+            🚀 제목 우선 로딩 모드 - 성능 최적화
+            {expandedItems.size > 0 && ` | 📖 ${expandedItems.size}개 상세 내용 로딩됨`}
+          </div>
+        </div>
+      </div>
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (

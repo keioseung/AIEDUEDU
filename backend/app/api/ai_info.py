@@ -1711,4 +1711,137 @@ def get_all_terms(language: str = "ko", db: Session = Depends(get_db)):
         
     except Exception as e:
         print(f"Error in get_all_terms: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to get all terms: {str(e)}") 
+        raise HTTPException(status_code=500, detail=f"Failed to get all terms: {str(e)}")
+
+@router.get("/titles/{language}")
+def get_all_titles(language: str = "ko", db: Session = Depends(get_db)):
+    """모든 AI 정보의 제목만 가져옵니다 (성능 최적화용)."""
+    try:
+        print(f"=== Getting All Titles for Language: {language} ===")
+        
+        # 언어별 컬럼 선택
+        title_suffix = f"_title_{language}"
+        
+        # 모든 AI 정보에서 제목만 수집
+        all_ai_info = db.query(AIInfo).all()
+        all_titles = []
+        
+        for ai_info in all_ai_info:
+            # info1의 제목
+            if ai_info.info1_title_ko and ai_info.info1_content_ko:
+                title = getattr(ai_info, f'info1{title_suffix}', None) or ai_info.info1_title_ko
+                if title:
+                    all_titles.append({
+                        'id': f"{ai_info.date}_0",
+                        'date': ai_info.date,
+                        'title': title,
+                        'info_index': 0,
+                        'category': ai_info.info1_category or '미분류',
+                        'has_content': True
+                    })
+            
+            # info2의 제목
+            if ai_info.info2_title_ko and ai_info.info2_content_ko:
+                title = getattr(ai_info, f'info2{title_suffix}', None) or ai_info.info2_title_ko
+                if title:
+                    all_titles.append({
+                        'id': f"{ai_info.date}_1",
+                        'date': ai_info.date,
+                        'title': title,
+                        'info_index': 1,
+                        'category': ai_info.info2_category or '미분류',
+                        'has_content': True
+                    })
+            
+            # info3의 제목
+            if ai_info.info3_title_ko and ai_info.info3_content_ko:
+                title = getattr(ai_info, f'info3{title_suffix}', None) or ai_info.info3_title_ko
+                if title:
+                    all_titles.append({
+                        'id': f"{ai_info.date}_2",
+                        'date': ai_info.date,
+                        'title': title,
+                        'info_index': 2,
+                        'category': ai_info.info3_category or '미분류',
+                        'has_content': True
+                    })
+        
+        print(f"Total titles found: {len(all_titles)}")
+        
+        return {
+            "titles": all_titles,
+            "total_titles": len(all_titles),
+            "message": f"총 {len(all_titles)}개의 제목을 찾았습니다."
+        }
+        
+    except Exception as e:
+        print(f"Error in get_all_titles: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get all titles: {str(e)}")
+
+@router.get("/content/{date}/{info_index}/{language}")
+def get_content_by_index(date: str, info_index: int, language: str = "ko", db: Session = Depends(get_db)):
+    """특정 날짜와 인덱스의 AI 정보 내용을 가져옵니다."""
+    try:
+        print(f"=== Getting Content for Date: {date}, Index: {info_index}, Language: {language} ===")
+        
+        ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
+        if not ai_info:
+            raise HTTPException(status_code=404, detail=f"No AI info found for date: {date}")
+        
+        # info_index에 따른 컬럼 선택
+        if info_index == 0:
+            title_field = f'info1_title_{language}'
+            content_field = f'info1_content_{language}'
+            terms_field = f'info1_terms_{language}'
+            category_field = 'info1_category'
+        elif info_index == 1:
+            title_field = f'info2_title_{language}'
+            content_field = f'info2_content_{language}'
+            terms_field = f'info2_terms_{language}'
+            category_field = 'info2_category'
+        elif info_index == 2:
+            title_field = f'info3_title_{language}'
+            content_field = f'info3_content_{language}'
+            terms_field = f'info3_terms_{language}'
+            category_field = 'info3_category'
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid info_index: {info_index}")
+        
+        # 기본값으로 한국어 사용
+        title = getattr(ai_info, title_field, None) or getattr(ai_info, f'info{info_index + 1}_title_ko', None)
+        content = getattr(ai_info, content_field, None) or getattr(ai_info, f'info{info_index + 1}_content_ko', None)
+        terms = getattr(ai_info, terms_field, None) or getattr(ai_info, f'info{info_index + 1}_terms_ko', None)
+        category = getattr(ai_info, category_field, None)
+        
+        if not title or not content:
+            raise HTTPException(status_code=404, detail=f"No content found for date: {date}, index: {info_index}")
+        
+        # 용어 파싱
+        try:
+            parsed_terms = json.loads(terms) if terms else []
+        except json.JSONDecodeError:
+            parsed_terms = []
+        
+        # 카테고리 자동 분류
+        classification = ai_classifier.classify_content(title, content)
+        
+        result = {
+            "id": f"{date}_{info_index}",
+            "date": date,
+            "title": title,
+            "content": content,
+            "terms": parsed_terms,
+            "category": category or classification["category"],
+            "subcategory": classification["subcategory"],
+            "confidence": classification["confidence"],
+            "info_index": info_index
+        }
+        
+        print(f"Content retrieved successfully: {title[:50]}...")
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error in get_content_by_index: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get content: {str(e)}")

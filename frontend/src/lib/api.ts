@@ -270,7 +270,12 @@ export const aiInfoAPI = {
   delete: (date: string) => api.delete(`/api/ai-info/${date}`),
   deleteItem: (date: string, itemIndex: number) => api.delete(`/api/ai-info/${date}/item/${itemIndex}`),
   getAllDates: () => api.get('/api/ai-info/dates/all'),
-      getAll: (language: string = 'ko') => api.get(`/api/ai-info/all?language=${language}`),
+  getAll: (language: string = 'ko') => api.get(`/api/ai-info/all?language=${language}`),
+  // 새로운 API: 제목만 가져오기
+  getAllTitles: (language: string = 'ko') => api.get(`/api/ai-info/titles/${language}`),
+  // 새로운 API: 특정 항목의 내용 가져오기
+  getContentByIndex: (date: string, infoIndex: number, language: string = 'ko') => 
+    api.get(`/api/ai-info/content/${date}/${infoIndex}/${language}`),
   getTotalDays: () => api.get('/api/ai-info/total-days'),
   getTotalCount: () => api.get('/api/ai-info/total-count'),
   getLearnedCount: (sessionId: string) => api.get(`/api/ai-info/learned-count/${sessionId}`),

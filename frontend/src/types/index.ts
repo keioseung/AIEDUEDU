@@ -39,6 +39,16 @@ export interface AIInfoItem {
   info_index?: number
 }
 
+// 제목만 가져오는 타입 (성능 최적화용)
+export interface AITitleItem {
+  id: string
+  date: string
+  title: string
+  info_index: number
+  category: string
+  has_content: boolean
+}
+
 export interface AIInfoCreate {
   date: string
   infos: AIInfoItem[]
