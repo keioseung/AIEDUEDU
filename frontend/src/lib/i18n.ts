@@ -419,7 +419,10 @@ const ko: Record<string, string> = {
   'progress.graph.y.axis.2': '2개',
   
   // 진행률 그래프 메시지
-  'progress.graph.no.data': '선택한 기간에 학습 데이터가 없습니다.',
+  'progress.graph.no.data.title': '학습 데이터가 없습니다',
+  'progress.graph.no.data.description': '선택한 기간에 학습한 AI 정보나 용어가 없습니다.\n새로운 내용을 학습해보세요!',
+  'progress.graph.no.data.tip.title': '학습 팁',
+  'progress.graph.no.data.tip.description': 'AI 정보 탭에서 다양한 주제를 학습하면 진행률을 추적할 수 있습니다!',
   
   // 진행률 기간 변경 로딩
   'progress.period.change.loading': '잠시만 기다려 주세요.',
@@ -996,7 +999,10 @@ const en: Record<string, string> = {
   'progress.graph.y.axis.2': '2 items',
   
   // Progress Graph Messages
-  'progress.graph.no.data': 'No learning data available for the selected period.',
+  'progress.graph.no.data.title': 'No Learning Data Available',
+  'progress.graph.no.data.description': 'There is no AI information or terms learned in the selected period.\nTry learning new content!',
+  'progress.graph.no.data.tip.title': 'Learning Tip',
+  'progress.graph.no.data.tip.description': 'Learn various topics in the AI Info tab to track your progress!',
   
   // Progress Period Change Loading
   'progress.period.change.loading': 'しばらくお待ちください。',
@@ -1424,7 +1430,10 @@ const ja: Record<string, string> = {
   'progress.graph.y.axis.2': '2件',
   
   // 進捗グラフメッセージ
-  'progress.graph.no.data': '選択した期間に学習データがありません。',
+  'progress.graph.no.data.title': '学習データがありません',
+  'progress.graph.no.data.description': '選択した期間に学習したAI情報や用語がありません。\n新しい内容を学習してみてください！',
+  'progress.graph.no.data.tip.title': '学習のヒント',
+  'progress.graph.no.data.tip.description': 'AI情報タブで様々なトピックを学習すると、進捗を追跡できます！',
   
   // 進捗期間変更ローディング
   'progress.period.change.loading': 'しばらくお待ちください。',
@@ -1918,7 +1927,10 @@ const zh: Record<string, string> = {
   'progress.graph.y.axis.2': '2个',
   
   // 进度图表消息
-  'progress.graph.no.data': '所选期间没有学习数据。',
+  'progress.graph.no.data.title': '没有学习数据',
+  'progress.graph.no.data.description': '所选期间没有学习AI信息或术语。\n尝试学习新内容！',
+  'progress.graph.no.data.tip.title': '学习提示',
+  'progress.graph.no.data.tip.description': '在AI信息标签页学习各种主题，可以跟踪您的进度！',
   
   // 进度期间更改加载
   'progress.period.change.loading': '请稍候。',

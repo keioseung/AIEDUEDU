@@ -1208,9 +1208,36 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 </div>
               </div>
             ) : (
-              <div className="text-center text-white/60 py-8">
-                <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-40" />
-                <p>{t('progress.graph.no.data')}</p>
+              <div className="glass rounded-2xl p-16 md:p-24 min-h-[60vh] flex items-center justify-center">
+                <div className="text-center text-white">
+                  {/* 아이콘 */}
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full flex items-center justify-center mb-6 border-2 border-blue-400/30">
+                    <BarChart3 className="w-10 h-10 text-blue-400" />
+                  </div>
+                  
+                  {/* 제목 */}
+                  <h3 className="text-2xl font-bold text-white mb-4">
+                    {t('progress.graph.no.data.title')}
+                  </h3>
+                  
+                  {/* 설명 */}
+                  <p className="text-white/80 text-base md:text-lg leading-relaxed mb-8 max-w-md whitespace-pre-line">
+                    {t('progress.graph.no.data.description')}
+                  </p>
+                  
+                  {/* 학습 팁 */}
+                  <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-4 border border-blue-400/30 max-w-md">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-blue-400">💡</span>
+                      <span className="text-blue-200 font-semibold text-sm">
+                        {t('progress.graph.no.data.tip.title')}
+                      </span>
+                    </div>
+                    <p className="text-blue-100 text-sm leading-relaxed">
+                      {t('progress.graph.no.data.tip.description')}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
