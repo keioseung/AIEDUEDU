@@ -140,15 +140,29 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   // 컴포넌트가 마운트되었는지 추적
   const isMounted = useRef(false);
   
+  // 사용자가 직접 변경한 상태를 별도로 저장하는 키
+  const getUserModifiedKey = () => `userModified_${sessionId}_${date}_${index}`;
+  
   // localStorage에서 직접 학습 상태를 읽어와서 초기화 (마운트 시에만)
   const getInitialLearnedState = () => {
     if (typeof window !== 'undefined' && date && !isMounted.current) {
       try {
+        // 1순위: 사용자가 직접 변경한 상태 확인
+        const modifiedKey = getUserModifiedKey();
+        const modifiedState = localStorage.getItem(modifiedKey);
+        if (modifiedState !== null) {
+          console.log(`🔍 사용자 변경 상태 발견: ${modifiedState}`);
+          return modifiedState === 'true';
+        }
+        
+        // 2순위: userProgress에서 상태 확인
         const stored = localStorage.getItem('userProgress');
         if (stored) {
           const parsed = JSON.parse(stored);
           if (parsed[sessionId] && parsed[sessionId][date]) {
-            return parsed[sessionId][date].includes(index);
+            const learned = parsed[sessionId][date].includes(index);
+            console.log(`🔍 userProgress에서 상태 확인: ${learned}`);
+            return learned;
           }
         }
       } catch {}
@@ -417,6 +431,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         setIsLearned(false)
         console.log(`✅ 상태 변경 완료: isLearned = false`)
         
+        // 사용자가 변경한 상태를 별도로 저장
+        const modifiedKey = getUserModifiedKey();
+        localStorage.setItem(modifiedKey, 'false');
+        console.log(`💾 사용자 변경 상태 저장: ${modifiedKey} = false`);
+        
         // localStorage 업데이트
         const currentProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
         if (currentProgress[sessionId] && currentProgress[sessionId][date]) {
@@ -456,6 +475,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
         setIsLearned(true)
         setShowLearnComplete(true)
         setTimeout(() => setShowLearnComplete(false), 3000)
+        
+        // 사용자가 변경한 상태를 별도로 저장
+        const modifiedKey = getUserModifiedKey();
+        localStorage.setItem(modifiedKey, 'true');
+        console.log(`💾 사용자 변경 상태 저장: ${modifiedKey} = true`);
         
         // localStorage 업데이트
         const currentProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
