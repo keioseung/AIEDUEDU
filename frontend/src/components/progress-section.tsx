@@ -519,7 +519,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <span className="text-white/70 text-xs">{t('progress.card.accumulated.total.learning')}</span>
                 <span className="text-white font-semibold text-sm">
                   {(() => {
-                    // localStorage에서 실제 학습완료된 AI 정보 카드 수 계산
+                    // localStorage에서 실제 학습완료된 AI 정보 카드 수 계산 (날짜별 모드와 동일)
                     let totalLearned = 0
                     if (typeof window !== 'undefined') {
                       try {
@@ -530,9 +530,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                           Object.keys(sessionProgress).forEach(date => {
                             if (date !== '__stats__' && date !== 'terms_by_date') {
                               const learnedIndices = sessionProgress[date] || []
-                              // 실제 학습완료된 카드 수만 계산 (중복 제거)
-                              const uniqueIndices = [...new Set(learnedIndices)]
-                              totalLearned += uniqueIndices.length
+                              // 중복 제거하지 않고 모든 학습완료된 카드 수 계산 (날짜별 모드와 동일)
+                              totalLearned += learnedIndices.length
                             }
                           })
                         }

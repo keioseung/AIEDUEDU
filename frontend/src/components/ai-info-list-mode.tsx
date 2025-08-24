@@ -356,8 +356,34 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
           <FaRobot className="text-blue-400" />
           {t('ai.info.list.mode.title')}
         </h2>
-        <div className="text-white/60 text-sm">
-          {t('ai.info.list.total.count').replace('{count}', String(filteredAIInfo.length))}
+        <div className="flex flex-col items-end gap-1">
+          <div className="text-white/60 text-sm">
+            {t('ai.info.list.total.count').replace('{count}', String(filteredAIInfo.length))}
+          </div>
+          <div className="text-white/80 text-xs">
+            {(() => {
+              // localStorage에서 실제 학습완료된 AI 정보 카드 수 계산 (날짜별 모드와 동일)
+              let totalLearned = 0
+              if (typeof window !== 'undefined') {
+                try {
+                  const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                  const sessionProgress = userProgress[sessionId]
+                  if (sessionProgress) {
+                    Object.keys(sessionProgress).forEach(date => {
+                      if (date !== '__stats__' && date !== 'terms_by_date') {
+                        const learnedIndices = sessionProgress[date] || []
+                        // 중복 제거하지 않고 모든 학습완료된 카드 수 계산 (날짜별 모드와 동일)
+                        totalLearned += learnedIndices.length
+                      }
+                    })
+                  }
+                } catch (error) {
+                  console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                }
+              }
+              return `학습완료: ${totalLearned}개 (날짜별 모드와 일치)`
+            })()}
+          </div>
         </div>
       </div>
 
