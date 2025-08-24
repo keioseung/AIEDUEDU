@@ -600,16 +600,39 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
         date_list.append(current_dt.strftime('%Y-%m-%d'))
         current_dt += timedelta(days=1)
     
+    # 배치 쿼리: 여러 날짜의 데이터를 한 번에 가져오기
+    from app.models import AIInfo
+    
+    # 1. AI 정보 데이터 배치 쿼리
+    all_ai_info = db.query(AIInfo).filter(AIInfo.date.in_(date_list)).all()
+    ai_info_dict = {info.date: info for info in all_ai_info}
+    
+    # 2. UserProgress 데이터 배치 쿼리
+    all_progress = db.query(UserProgress).filter(
+        UserProgress.session_id == session_id,
+        UserProgress.date.in_(date_list)
+    ).all()
+    progress_dict = {p.date: p for p in all_progress}
+    
+    # 3. 용어 학습 데이터 배치 쿼리
+    all_term_progress = db.query(UserProgress).filter(
+        UserProgress.session_id == session_id,
+        UserProgress.date.like('__terms__%')
+    ).all()
+    
+    # 4. 퀴즈 데이터 배치 쿼리
+    all_quiz_progress = db.query(UserProgress).filter(
+        UserProgress.session_id == session_id,
+        UserProgress.date.like('__quiz__%')
+    ).all()
+    
     period_data = []
     
     for date in date_list:
-        # AI 정보 학습 수 - 해당 날짜에 학습한 AI 정보 개수
-        ai_progress = db.query(UserProgress).filter(
-            UserProgress.session_id == session_id,
-            UserProgress.date == date
-        ).first()
-        
+        # AI 정보 학습 수 - 배치 쿼리 결과 사용
+        ai_progress = progress_dict.get(date)
         ai_count = 0
+        
         if ai_progress and ai_progress.learned_info:
             try:
                 learned_data = json.loads(ai_progress.learned_info)
@@ -617,14 +640,11 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
             except json.JSONDecodeError:
                 ai_count = 0
         
-        # 용어 학습 수 - 해당 날짜에 등록된 AI정보 카드들의 관련 용어 중 학습완료된 용어 개수
+        # 용어 학습 수 - 배치 쿼리 결과 사용
         terms_count = 0
         
         try:
-            # 해당 날짜에 등록된 AI정보 카드들의 관련 용어 가져오기
-            from app.models import AIInfo
-            ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
-            
+            ai_info = ai_info_dict.get(date)
             if ai_info:
                 learned_terms_count = 0
                 
@@ -634,22 +654,21 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
                         terms1 = json.loads(ai_info.info1_terms_ko)
                         if isinstance(terms1, list):
                             for term in terms1:
-                                # 용어별 진행률 확인
-                                term_progress = db.query(UserProgress).filter(
-                                    UserProgress.session_id == session_id,
-                                    UserProgress.date.like(f'__terms__{date}%'),
-                                    UserProgress.learned_info.like(f'%{term}%')
-                                ).first()
-                                
-                                if term_progress and term_progress.learned_info:
-                                    try:
-                                        learned_data = json.loads(term_progress.learned_info)
-                                        if isinstance(learned_data, list) and term in learned_data:
-                                            learned_terms_count += 1
-                                        elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
-                                            learned_terms_count += 1
-                                    except json.JSONDecodeError:
-                                        continue
+                                # 용어별 진행률 확인 - 배치 쿼리 결과 사용
+                                for term_progress in all_term_progress:
+                                    if (term_progress.date.startswith(f'__terms__{date}') and 
+                                        term_progress.learned_info and 
+                                        term in term_progress.learned_info):
+                                        try:
+                                            learned_data = json.loads(term_progress.learned_info)
+                                            if isinstance(learned_data, list) and term in learned_data:
+                                                learned_terms_count += 1
+                                                break
+                                            elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                                learned_terms_count += 1
+                                                break
+                                        except json.JSONDecodeError:
+                                            continue
                     except json.JSONDecodeError:
                         pass
                 
@@ -659,22 +678,21 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
                         terms2 = json.loads(ai_info.info2_terms_ko)
                         if isinstance(terms2, list):
                             for term in terms2:
-                                # 용어별 진행률 확인
-                                term_progress = db.query(UserProgress).filter(
-                                    UserProgress.session_id == session_id,
-                                    UserProgress.date.like(f'__terms__{date}%'),
-                                    UserProgress.learned_info.like(f'%{term}%')
-                                ).first()
-                                
-                                if term_progress and term_progress.learned_info:
-                                    try:
-                                        learned_data = json.loads(term_progress.learned_info)
-                                        if isinstance(learned_data, list) and term in learned_data:
-                                            learned_terms_count += 1
-                                        elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
-                                            learned_terms_count += 1
-                                    except json.JSONDecodeError:
-                                        continue
+                                # 용어별 진행률 확인 - 배치 쿼리 결과 사용
+                                for term_progress in all_term_progress:
+                                    if (term_progress.date.startswith(f'__terms__{date}') and 
+                                        term_progress.learned_info and 
+                                        term in term_progress.learned_info):
+                                        try:
+                                            learned_data = json.loads(term_progress.learned_info)
+                                            if isinstance(learned_data, list) and term in learned_data:
+                                                learned_terms_count += 1
+                                                break
+                                            elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                                learned_terms_count += 1
+                                                break
+                                        except json.JSONDecodeError:
+                                            continue
                     except json.JSONDecodeError:
                         pass
                 
@@ -684,22 +702,21 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
                         terms3 = json.loads(ai_info.info3_terms_ko)
                         if isinstance(terms3, list):
                             for term in terms3:
-                                # 용어별 진행률 확인
-                                term_progress = db.query(UserProgress).filter(
-                                    UserProgress.session_id == session_id,
-                                    UserProgress.date.like(f'__terms__{date}%'),
-                                    UserProgress.learned_info.like(f'%{term}%')
-                                ).first()
-                                
-                                if term_progress and term_progress.learned_info:
-                                    try:
-                                        learned_data = json.loads(term_progress.learned_info)
-                                        if isinstance(learned_data, list) and term in learned_data:
-                                            learned_terms_count += 1
-                                        elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
-                                            learned_terms_count += 1
-                                    except json.JSONDecodeError:
-                                        continue
+                                # 용어별 진행률 확인 - 배치 쿼리 결과 사용
+                                for term_progress in all_term_progress:
+                                    if (term_progress.date.startswith(f'__terms__{date}') and 
+                                        term_progress.learned_info and 
+                                        term in term_progress.learned_info):
+                                        try:
+                                            learned_data = json.loads(term_progress.learned_info)
+                                            if isinstance(learned_data, list) and term in learned_data:
+                                                learned_terms_count += 1
+                                                break
+                                            elif isinstance(learned_data, dict) and 'terms' in learned_data and term in learned_data['terms']:
+                                                learned_terms_count += 1
+                                                break
+                                        except json.JSONDecodeError:
+                                            continue
                     except json.JSONDecodeError:
                         pass
                 

@@ -165,11 +165,18 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
+        // 정확한 날짜와 info_index를 사용하여 용어 학습 상태 확인
         const stored = localStorage.getItem(`learnedTerms_${sessionId}_${date}_${index}`)
         if (stored) {
           setLocalLearnedTerms(new Set(JSON.parse(stored)))
+        } else {
+          // 해당 날짜와 info_index에 대한 데이터가 없으면 빈 Set으로 초기화
+          setLocalLearnedTerms(new Set())
         }
-      } catch {}
+      } catch {
+        // 에러 발생 시 빈 Set으로 초기화
+        setLocalLearnedTerms(new Set())
+      }
     }
   }, [sessionId, date, index])
 
@@ -207,9 +214,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     }
   }
   
-  // localStorage 데이터 추가 (백업용)
-  for (const term of localLearnedTerms) {
-    actualLearnedTerms.add(term)
+  // localStorage 데이터 추가 (백업용) - 현재 날짜와 info_index에 해당하는 데이터만
+  if (localLearnedTerms.size > 0) {
+    for (const term of localLearnedTerms) {
+      actualLearnedTerms.add(term)
+    }
   }
 
   // 터치 제스처 처리
