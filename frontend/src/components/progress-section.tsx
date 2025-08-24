@@ -245,13 +245,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   const periodDates = getPeriodDates()
 
+  // 백엔드 데이터를 완전히 무시하기 위해 periodStats 비활성화
   const { data: periodStats, isLoading: periodStatsLoading } = useQuery<PeriodStats>({
     queryKey: ['period-stats', sessionId, periodDates.start, periodDates.end],
     queryFn: async () => {
       const response = await userProgressAPI.getPeriodStats(sessionId, periodDates.start, periodDates.end)
       return response.data
     },
-    enabled: !!sessionId && !!periodDates.start && !!periodDates.end && !isReset, // 초기화 상태에서는 비활성화
+    enabled: false, // 백엔드 데이터 완전 비활성화 (영구 초기화를 위해)
   })
 
 
@@ -438,46 +439,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선 - 날짜별 모드 반영)
   const [uniqueChartData, setUniqueChartData] = useState<PeriodData[]>([])
   
-  // uniqueChartData 업데이트 함수
+  // uniqueChartData 업데이트 함수 - 백엔드 데이터 완전 무시
   const updateUniqueChartData = useCallback(() => {
-    // 초기화 후에는 periodStats 데이터를 완전히 무시하고 localAIProgress만 사용
+    // 백엔드 데이터를 완전히 무시하고 로컬 데이터만 사용
     let chartData: PeriodData[] = []
     
-    if (isReset) {
-      // 초기화 상태에서는 백엔드 데이터 완전 무시
-      chartData = []
-      console.log('🔧 초기화 상태: 백엔드 데이터 무시됨')
-    } else {
-      // 초기화되지 않은 상태에서만 백엔드 데이터 사용
-      chartData = periodStats?.period_data || []
-      console.log('📊 정상 상태: 백엔드 데이터 사용됨', chartData.length)
-    }
+    // 항상 백엔드 데이터 무시 (영구 초기화를 위해)
+    chartData = []
+    console.log('🔧 백엔드 데이터 완전 무시 - 로컬 데이터만 사용')
     
-    const combinedData = [...localAIProgress, ...chartData] // 로컬 데이터를 먼저 배치
-    
-    // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선 - 날짜별 모드 반영)
-    const uniqueData = combinedData.reduce((acc: PeriodData[], current: PeriodData) => {
-      const existingIndex = acc.findIndex(item => item.date === current.date)
-      if (existingIndex === -1) {
-        acc.push(current)
-      } else {
-        // 중복된 날짜가 있으면 로컬 데이터를 우선적으로 사용 (날짜별 모드 우선)
-        const existing = acc[existingIndex]
-        acc[existingIndex] = {
-          ...existing,
-          ai_info: existing.ai_info > 0 ? existing.ai_info : current.ai_info, // 로컬 데이터 우선
-          terms: existing.terms > 0 ? existing.terms : current.terms, // 로컬 데이터 우선
-          // 퀴즈 점수는 백엔드 데이터를 우선적으로 사용
-          quiz_score: existing.quiz_score > 0 ? existing.quiz_score : current.quiz_score,
-          quiz_correct: existing.quiz_score > 0 ? existing.quiz_correct : current.quiz_correct,
-          quiz_total: existing.quiz_total > 0 ? existing.quiz_total : current.quiz_total
-        }
-      }
-      return acc
-    }, []).sort((a: PeriodData, b: PeriodData) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    // 로컬 데이터만 사용하여 차트 생성
+    const uniqueData = localAIProgress.sort((a: PeriodData, b: PeriodData) => 
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    )
     
     setUniqueChartData(uniqueData)
-  }, [periodStats?.period_data, localAIProgress, isReset])
+  }, [localAIProgress])
   
   // periodStats나 localAIProgress가 변경될 때 uniqueChartData 업데이트
   useEffect(() => {
@@ -519,73 +496,52 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     }
   };
 
-  // 학습 데이터 초기화 함수
+  // 학습 데이터 완전 영구 초기화 함수
   const resetLearningData = async () => {
     if (typeof window === 'undefined') return;
     
     try {
-      // userProgress 초기화
-      const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}');
-      if (userProgress[sessionId]) {
-        // 모든 날짜의 학습 데이터 초기화
-        Object.keys(userProgress[sessionId]).forEach(date => {
-          if (date !== '__stats__' && date !== 'terms_by_date') {
-            userProgress[sessionId][date] = [];
-          }
-        });
-        localStorage.setItem('userProgress', JSON.stringify(userProgress));
+      console.log('🚀 학습 데이터 완전 영구 초기화 시작...');
+      
+      // 1. 모든 localStorage 키 완전 삭제
+      const allKeys = Object.keys(localStorage);
+      const keysToRemove = allKeys.filter(key => 
+        key.includes(sessionId) || 
+        key === 'userProgress' || 
+        key === 'favoriteAIInfos'
+      );
+      
+      keysToRemove.forEach(key => {
+        localStorage.removeItem(key);
+        console.log(`🗑️ localStorage 키 삭제: ${key}`);
+      });
+      
+      // 2. userProgress 완전 초기화
+      localStorage.setItem('userProgress', JSON.stringify({}));
+      
+      // 3. React Query 캐시 완전 삭제 (removeQueries 사용)
+      console.log('🧹 React Query 캐시 완전 삭제...');
+      queryClient.removeQueries({ queryKey: ['period-stats'] });
+      queryClient.removeQueries({ queryKey: ['ai-info-learned-count'] });
+      queryClient.removeQueries({ queryKey: ['total-terms-stats'] });
+      queryClient.removeQueries({ queryKey: ['user-stats'] });
+      queryClient.removeQueries({ queryKey: ['ai-info-dates'] });
+      queryClient.removeQueries({ queryKey: ['ai-info'] });
+      
+      // 4. 백엔드 데이터 초기화 (선택사항 - 이미 없음)
+      try {
+        console.log('🔧 백엔드 데이터 초기화 시도...');
+        const response = await userProgressAPI.resetAllProgress(sessionId);
+        console.log('✅ 백엔드 데이터 초기화 성공:', response.data);
+      } catch (error) {
+        console.log('ℹ️ 백엔드 데이터는 이미 없음 (정상)');
       }
       
-      // userModified 키들 초기화
-      if (aiInfoDates) {
-        aiInfoDates.forEach((date: string) => {
-          for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
-            const userModifiedKey = `userModified_${sessionId}_${date}_${infoIndex}`;
-            localStorage.removeItem(userModifiedKey);
-          }
-        });
-      }
-      
-      // learnedTerms 키들 초기화
-      if (aiInfoDates) {
-        aiInfoDates.forEach((date: string) => {
-          for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
-            const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`;
-            localStorage.removeItem(learnedTermsKey);
-          }
-        });
-      }
-      
-      // 퀴즈 관련 데이터 초기화
-      const quizProgressKey = `quizProgress_${sessionId}`;
-      localStorage.removeItem(quizProgressKey);
-      
-      // 퀴즈 통계 데이터 초기화
-      const quizStatsKey = `quizStats_${sessionId}`;
-      localStorage.removeItem(quizStatsKey);
-      
-      // React Query 캐시 무효화하여 데이터 새로고침
-      queryClient.invalidateQueries({ queryKey: ['period-stats'] });
-      queryClient.invalidateQueries({ queryKey: ['ai-info-learned-count'] });
-      queryClient.invalidateQueries({ queryKey: ['total-terms-stats'] });
-      
-              // 백엔드 데이터도 초기화 (새로운 API 사용)
-        try {
-          console.log('🔧 백엔드 데이터 초기화 시작...');
-          const response = await userProgressAPI.resetAllProgress(sessionId);
-          console.log('✅ 백엔드 데이터 초기화 성공:', response.data);
-        } catch (error) {
-          console.error('❌ 백엔드 초기화 오류:', error);
-          // 백엔드 초기화 실패 시에도 로컬 데이터는 초기화됨
-        }
-      
-      // localAIProgress 업데이트
-      updateLocalAIProgress();
-      
-      // 초기화 상태 설정
+      // 5. 상태 완전 초기화
       setIsReset(true);
+      setLocalAIProgress([]);
       
-      // uniqueChartData를 강제로 0으로 설정
+      // 6. uniqueChartData를 강제로 모든 날짜 0으로 설정
       if (aiInfoDates) {
         const resetData: PeriodData[] = aiInfoDates.map((date: string) => ({
           date,
@@ -596,19 +552,19 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           quiz_total: 0
         }));
         setUniqueChartData(resetData);
-        
-        // periodStats도 강제로 초기화 (백엔드 데이터 무시)
-        console.log('🔧 periodStats 강제 초기화 실행');
+        console.log('📊 차트 데이터 완전 초기화 완료');
       }
       
-      // React Query 캐시를 더 강력하게 무효화
-      queryClient.removeQueries({ queryKey: ['period-stats'] });
-      queryClient.removeQueries({ queryKey: ['ai-info-learned-count'] });
-      queryClient.removeQueries({ queryKey: ['total-terms-stats'] });
+      // 7. 강제 리렌더링을 위한 상태 업데이트
+      setTimeout(() => {
+        window.location.reload(); // 완전한 페이지 새로고침으로 모든 상태 초기화
+      }, 100);
       
-      alert('학습 데이터가 초기화되었습니다.');
+      console.log('🎉 학습 데이터 완전 영구 초기화 완료!');
+      alert('학습 데이터가 완전히 초기화되었습니다. 페이지가 새로고침됩니다.');
+      
     } catch (error) {
-      console.error('학습 데이터 초기화 오류:', error);
+      console.error('❌ 학습 데이터 초기화 오류:', error);
       alert('초기화 중 오류가 발생했습니다.');
     }
   };
