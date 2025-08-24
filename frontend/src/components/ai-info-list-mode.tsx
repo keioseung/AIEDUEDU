@@ -763,29 +763,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
          })}
        </div>
 
-      {/* 성능 통계 표시 */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl border border-blue-400/30">
-        <div className="text-center text-white/80 text-sm">
-          <div className="flex justify-center gap-6 mb-2">
-            <span>📊 총 항목: {actualAIInfo.length}</span>
-            <span>🖥️ 표시 중: {currentItems.length}</span>
-            <span>🔍 필터링: {filteredAIInfo.length}</span>
-            <span>📖 확장됨: {expandedItems.size}</span>
-          </div>
-          <div className="text-xs text-white/60 mb-2">
-            {titlesData?.titles ? 
-              '🚀 제목 우선 로딩 모드 - 빠른 응답 (클릭 시 상세 내용 로딩)' : 
-              '📅 전체 내용 로딩 모드 - 즉시 사용 가능'
-            }
-          </div>
-          <div className="text-xs text-white/50">
-            {expandedItems.size > 0 && `📖 ${expandedItems.size}개 상세 내용 로딩됨 | `}
-            ⚡ 로딩 시간: {isLoading ? '처리 중...' : '완료'}
-          </div>
-        </div>
-      </div>
-
-      {/* 페이지네이션 */}
+       {/* 페이지네이션 */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4">
           <button
