@@ -212,7 +212,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           console.log(`🔄 마운트 후 userModified 상태 동기화: ${isLearned} → ${shouldBeLearned}`);
           setIsLearned(shouldBeLearned);
         }
-      } else {
+        } else {
         console.log(`🔍 userModified 상태 없음 - 현재 상태 유지: ${isLearned}`);
       }
     }
@@ -329,14 +329,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
       } catch {}
     }
     
-    // userProgress가 있으면 그것을 우선시, 없으면 prop 사용
-    const finalLearned = learned || isLearnedProp;
-    
-    // 초기 상태 설정 (한 번만)
-    if (isLearned !== finalLearned) {
-      console.log(`🚀 초기 상태 설정: ${isLearned} → ${finalLearned}`)
-      setIsLearned(finalLearned);
-    }
+    // useEffect 제거 - localStorage를 읽어오지 않음
+    // 컴포넌트가 마운트될 때 props의 isLearnedProp만 사용
   }, []); // 빈 의존성 배열로 한 번만 실행
 
   // 용어가 있는지 확인
