@@ -432,12 +432,16 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     updateLocalAIProgress()
   }, [updateLocalAIProgress])
   
+  // 초기화 상태를 추적하는 state
+  const [isReset, setIsReset] = useState(false)
+  
   // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선 - 날짜별 모드 반영)
   const [uniqueChartData, setUniqueChartData] = useState<PeriodData[]>([])
   
   // uniqueChartData 업데이트 함수
   const updateUniqueChartData = useCallback(() => {
-    const chartData = periodStats?.period_data || []
+    // 초기화 후에는 periodStats 데이터를 완전히 무시하고 localAIProgress만 사용
+    const chartData = isReset ? [] : (periodStats?.period_data || [])
     const combinedData = [...localAIProgress, ...chartData] // 로컬 데이터를 먼저 배치
     
     // 날짜별로 중복 제거하고 정렬 (로컬 데이터 우선 - 날짜별 모드 반영)
@@ -454,7 +458,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           terms: existing.terms > 0 ? existing.terms : current.terms, // 로컬 데이터 우선
           // 퀴즈 점수는 백엔드 데이터를 우선적으로 사용
           quiz_score: existing.quiz_score > 0 ? existing.quiz_score : current.quiz_score,
-          quiz_correct: existing.quiz_correct > 0 ? existing.quiz_correct : current.quiz_correct,
+          quiz_correct: existing.quiz_score > 0 ? existing.quiz_correct : current.quiz_correct,
           quiz_total: existing.quiz_total > 0 ? existing.quiz_total : current.quiz_total
         }
       }
@@ -462,7 +466,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     }, []).sort((a: PeriodData, b: PeriodData) => new Date(a.date).getTime() - new Date(b.date).getTime())
     
     setUniqueChartData(uniqueData)
-  }, [periodStats?.period_data, localAIProgress])
+  }, [periodStats?.period_data, localAIProgress, isReset])
   
   // periodStats나 localAIProgress가 변경될 때 uniqueChartData 업데이트
   useEffect(() => {
@@ -569,6 +573,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       // localAIProgress 업데이트
       updateLocalAIProgress();
       
+      // 초기화 상태 설정
+      setIsReset(true);
+      
       // uniqueChartData를 강제로 0으로 설정
       if (aiInfoDates) {
         const resetData: PeriodData[] = aiInfoDates.map((date: string) => ({
@@ -580,7 +587,15 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           quiz_total: 0
         }));
         setUniqueChartData(resetData);
+        
+        // periodStats도 강제로 초기화 (백엔드 데이터 무시)
+        console.log('🔧 periodStats 강제 초기화 실행');
       }
+      
+      // React Query 캐시를 더 강력하게 무효화
+      queryClient.removeQueries({ queryKey: ['period-stats'] });
+      queryClient.removeQueries({ queryKey: ['ai-info-learned-count'] });
+      queryClient.removeQueries({ queryKey: ['total-terms-stats'] });
       
       alert('학습 데이터가 초기화되었습니다.');
     } catch (error) {
