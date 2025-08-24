@@ -100,8 +100,8 @@ const ko: Record<string, string> = {
   'ai.info.sort.options': '정렬 옵션',
   
   // 로딩 메시지
-  'loading.please.wait': '잠시만 기다려 주세요',
-  'loading.detail.content': '상세 내용을 로딩 중...',
+  'loading.please.wait': '잠시만 기다려 주세요.',
+  'loading.detail.content': '잠시만 기다려 주세요.',
   
   // 학습 상태 표시
   'learning.status.completed': '✅ 학습완료',
@@ -117,7 +117,7 @@ const ko: Record<string, string> = {
   'ai.info.no.favorites.description': '아직 즐겨찾기한 AI 정보가 없습니다.\n관심 있는 AI 정보를 즐겨찾기에 추가해보세요!',
   'ai.info.no.favorites.tip.title': '즐겨찾기 팁',
   'ai.info.no.favorites.tip.description': '관심 있는 AI 정보를 즐겨찾기에 추가하면 나중에 쉽게 찾을 수 있습니다!',
-  'ai.info.loading': 'AI 정보를 불러오는 중...',
+  'ai.info.loading': '잠시만 기다려 주세요.',
   'ai.info.items.per.page.select': '항목 수 선택',
   
   // AI 정보 정렬 옵션
@@ -601,7 +601,7 @@ const en: Record<string, string> = {
   'ai.info.no.favorites.description': 'You haven\'t added any AI information to favorites yet.\nAdd interesting AI information to your favorites!',
   'ai.info.no.favorites.tip.title': 'Favorite Tip',
   'ai.info.no.favorites.tip.description': 'Add interesting AI information to favorites to find them easily later!',
-  'ai.info.loading': 'Loading AI information...',
+  'ai.info.loading': 'Please wait a moment.',
   'ai.info.sort.options': 'Sort Options',
   'ai.info.items.per.page.select': 'Select Items Per Page',
   
@@ -1012,7 +1012,7 @@ const en: Record<string, string> = {
   
   // Loading Messages
   'loading.please.wait': 'Please wait a moment.',
-  'loading.detail.content': 'Loading detailed content...',
+  'loading.detail.content': 'Please wait a moment.',
   
   // Learning Status Display
   'learning.status.completed': '✅ Completed',
