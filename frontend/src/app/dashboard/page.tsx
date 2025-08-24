@@ -476,7 +476,7 @@ export default function DashboardPage() {
       queryClient.prefetchQuery({
         queryKey: ['all-terms', currentLanguage],
         queryFn: async () => {
-          const response = await userProgressAPI.getAllTerms(currentLanguage)
+          const response = await aiInfoAPI.getAllTerms(currentLanguage)
           return response.data
         },
         staleTime: 15 * 60 * 1000,
@@ -487,7 +487,7 @@ export default function DashboardPage() {
       queryClient.prefetchQuery({
         queryKey: ['terms-quiz', selectedDate, t('quiz.tab.today.topic'), undefined],
         queryFn: async () => {
-          const response = await userProgressAPI.getTermsQuizByDate(selectedDate, currentLanguage)
+          const response = await aiInfoAPI.getTermsQuizByDate(selectedDate, currentLanguage)
           return response.data
         },
         staleTime: 10 * 60 * 1000,
