@@ -98,83 +98,72 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
       try {
         console.log(`제목만 가져오는 API 호출 중... (언어: ${localLanguage})`)
         const response = await aiInfoAPI.getAllTitles(localLanguage)
-        console.log(`제목 API 성공: ${response.data.titles?.length || 0}개 제목 반환`)
+        console.log('제목 API 응답:', response)
         return response.data
       } catch (error) {
-        console.error('제목 API 실패:', error)
-        return { titles: [] }
+        console.error('제목 API 호출 실패:', error)
+        throw error
       }
     },
-    // 성능 최적화: 리페치 간격 증가, 백그라운드 업데이트 비활성화
-    refetchInterval: 60000, // 60초
-    refetchIntervalInBackground: false,
-    staleTime: 300000, // 5분
-    gcTime: 600000,    // 10분
+    // 성능 최적화: 캐시 설정 개선
+    staleTime: 5 * 60 * 1000, // 5분
+    gcTime: 10 * 60 * 1000,   // 10분
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: 1,
+    retryDelay: 1000
   })
 
-  // 날짜별 AI 정보 가져오기 (제목 API가 실패할 경우 사용)
-  const { data: allDates = [], isLoading: isLoadingDates } = useQuery<string[]>({
-    queryKey: ['all-ai-info-dates'],
+  // 날짜별 AI 정보 (제목 API가 실패한 경우에만 사용)
+  const { data: dateBasedAIInfo, isLoading: isLoadingDates, error: datesError } = useQuery<AIInfoItem[]>({
+    queryKey: ['ai-info-by-date', localLanguage],
     queryFn: async () => {
       try {
-        const response = await aiInfoAPI.getAllDates()
+        console.log(`날짜별 AI 정보 API 호출 중... (언어: ${localLanguage})`)
+        const response = await aiInfoAPI.getByDate('all', localLanguage)
+        console.log('날짜별 API 응답:', response)
         return response.data
       } catch (error) {
-        console.log('getAllDates API도 실패:', error)
-        return []
+        console.error('날짜별 API 호출 실패:', error)
+        throw error
       }
     },
-    enabled: titlesError !== null || !titlesData?.titles?.length,
-    refetchInterval: 5000,
-    refetchIntervalInBackground: true,
+    // 제목 API가 성공하면 사용하지 않음
+    enabled: !!titlesError || !titlesData?.titles?.length,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false
   })
 
-  // 각 날짜별 AI 정보 가져오기 (언어별 데이터 사용)
-  const { data: dateBasedAIInfo = [], isLoading: isLoadingDateBased } = useQuery<AIInfoItem[]>({
-    queryKey: ['date-based-ai-info', allDates, localLanguage],
+  // 전체 AI 정보 (제목 API가 실패한 경우에만 사용)
+  const { data: allAIInfo, isLoading: isLoadingAll, error: allError } = useQuery<AIInfoItem[]>({
+    queryKey: ['all-ai-info', localLanguage],
     queryFn: async () => {
-      if (allDates.length === 0) return []
-      
-      const allInfo: AIInfoItem[] = []
-      
-      for (const date of allDates) {
-        try {
-          const response = await aiInfoAPI.getByDate(date)
-          const dateInfos = response.data
-          
-          dateInfos.forEach((info: any, index: number) => {
-            // 현재 언어에 맞는 데이터만 사용
-            const title = info[`title_${localLanguage}`] || info.title_ko || info.title
-            const content = info[`content_${localLanguage}`] || info.content_ko || info.content
-            const terms = info[`terms_${localLanguage}`] || info.terms_ko || info.terms || []
-            
-            if (title && content) {
-              allInfo.push({
-                id: `${date}_${index}`,
-                date: date,
-                title: title,
-                content: content,
-                terms: terms,
-                category: info.category || '',
-                info_index: index
-              })
-            }
-          })
-        } catch (error) {
-          console.log(`날짜 ${date}의 AI 정보 가져오기 실패:`, error)
-        }
+      try {
+        console.log(`전체 AI 정보 API 호출 중... (언어: ${localLanguage})`)
+        const response = await aiInfoAPI.getAll(localLanguage)
+        console.log('전체 API 응답:', response)
+        return response.data
+      } catch (error) {
+        console.error('전체 API 호출 실패:', error)
+        throw error
       }
-      
-      return allInfo
     },
-    enabled: allDates.length > 0 && (titlesError !== null || !titlesData?.titles?.length),
-    refetchInterval: 5000,
-    refetchIntervalInBackground: true,
+    // 제목 API가 성공하면 사용하지 않음
+    enabled: !!titlesError || !titlesData?.titles?.length,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false
   })
 
   // 실제 사용할 AI 정보 (제목 API가 성공하면 그것을, 실패하면 날짜별 정보를 사용)
   const actualAIInfo: (AITitleItem | AIInfoItem)[] = (titlesData?.titles && titlesData.titles.length > 0) ? titlesData.titles : dateBasedAIInfo
-  const isLoading = isLoadingTitles || isLoadingDates || isLoadingDateBased
+  const isLoading = isLoadingTitles || isLoadingDates || isLoadingAll
 
   // 즐겨찾기 불러오기
   useEffect(() => {
@@ -309,17 +298,43 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
     setSelectedInfo(null)
   }
 
-      // 로딩 중인 경우
-      if (isLoading) {
-        return (
-          <div className="glass rounded-2xl p-48 md:p-64 min-h-[50vh] flex items-center justify-center">
-            <div className="flex flex-col items-center justify-center text-white -mt-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-              <p className="text-white/80 text-lg font-medium whitespace-nowrap">{t('loading.please.wait')}</p>
-            </div>
-          </div>
-        )
-      }
+  // 로딩 상태 표시 개선
+  if (isLoading) {
+    return (
+      <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-400 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+        </div>
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">AI 정보를 불러오는 중...</h3>
+          <p className="text-sm text-gray-500">
+            {isLoadingTitles ? '제목 정보 로딩 중...' : 
+             isLoadingDates ? '날짜별 정보 로딩 중...' : 
+             isLoadingAll ? '전체 정보 로딩 중...' : '데이터 처리 중...'}
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // 에러 상태 표시
+  if (titlesError && datesError && allError) {
+    return (
+      <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-red-600 mb-2">데이터 로딩 실패</h3>
+          <p className="text-sm text-gray-500 mb-4">AI 정보를 불러올 수 없습니다.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            다시 시도
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   // 데이터가 없는 경우
   if (actualAIInfo.length === 0) {
@@ -737,14 +752,20 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
       <div className="mt-6 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl border border-blue-400/30">
         <div className="text-center text-white/80 text-sm">
           <div className="flex justify-center gap-6 mb-2">
-            <span>총 항목: {actualAIInfo.length}</span>
-            <span>표시 중: {currentItems.length}</span>
-            <span>필터링: {filteredAIInfo.length}</span>
-            <span>확장됨: {expandedItems.size}</span>
+            <span>📊 총 항목: {actualAIInfo.length}</span>
+            <span>🖥️ 표시 중: {currentItems.length}</span>
+            <span>🔍 필터링: {filteredAIInfo.length}</span>
+            <span>📖 확장됨: {expandedItems.size}</span>
           </div>
-          <div className="text-xs text-white/60">
-            🚀 제목 우선 로딩 모드 - 성능 최적화
-            {expandedItems.size > 0 && ` | 📖 ${expandedItems.size}개 상세 내용 로딩됨`}
+          <div className="text-xs text-white/60 mb-2">
+            {titlesData?.titles ? 
+              '🚀 제목 우선 로딩 모드 - 빠른 응답 (클릭 시 상세 내용 로딩)' : 
+              '📅 전체 내용 로딩 모드 - 즉시 사용 가능'
+            }
+          </div>
+          <div className="text-xs text-white/50">
+            {expandedItems.size > 0 && `📖 ${expandedItems.size}개 상세 내용 로딩됨 | `}
+            ⚡ 로딩 시간: {isLoading ? '처리 중...' : '완료'}
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { FaBrain, FaArrowLeft, FaPlus, FaEdit, FaTrash, FaRobot, FaFileAlt, FaCopy, FaSave, FaTimes, FaDownload, FaUpload } from 'react-icons/fa'
+import { FaBrain, FaArrowLeft, FaPlus, FaEdit, FaTrash, FaRobot, FaFileAlt, FaCopy, FaSave, FaTimes, FaDownload, FaUpload, FaCog } from 'react-icons/fa'
 import { aiInfoAPI, promptAPI, baseContentAPI } from '@/lib/api'
 import { AIInfoItem, TermItem } from '@/types'
 import { t } from '@/lib/i18n'
@@ -1010,23 +1010,98 @@ export default function AdminAIInfoPage() {
           {/* AI 정보 관리 */}
           <section className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
             <h2 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
-              <FaBrain className="text-blue-400" />
-              AI 정보 관리 (다국어 지원)
+              <FaCog className="text-blue-400" />
+              AI 정보 관리
             </h2>
             
-            <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-              <h3 className="text-lg font-semibold text-blue-300 mb-2">🌍 다국어 지원 안내</h3>
-              <p className="text-blue-200 text-sm">
-                각 AI 정보에 대해 한국어, 영어, 일본어, 중국어 버전을 모두 입력할 수 있습니다. 
-                사용자가 선택한 언어에 따라 해당 언어 버전의 내용이 표시됩니다.
-              </p>
-              <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇰🇷 한국어 (기본)</div>
-                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇺🇸 영어</div>
-                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇯🇵 일본어</div>
-                <div className="bg-blue-500/20 p-2 rounded text-blue-200">🇨🇳 중국어</div>
-              </div>
+            {/* 날짜 선택 */}
+            <div className="mb-6">
+              <label htmlFor="dateSelect" className="block text-sm font-medium text-gray-300 mb-2">
+                날짜 선택
+              </label>
+              <select
+                id="dateSelect"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">날짜를 선택하세요</option>
+                {availableDates.map((date) => (
+                  <option key={date} value={date}>
+                    {date}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            {/* 선택된 날짜의 AI 정보 표시 */}
+            {selectedDate && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  {selectedDate} AI 정보
+                </h3>
+                
+                {selectedDateAIInfo.map((info, index) => (
+                  <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h4 className="text-lg font-medium text-white mb-2">
+                          {info.title || `정보 ${index + 1}`}
+                        </h4>
+                        <p className="text-gray-300 text-sm mb-2">
+                          {info.content ? (info.content.length > 100 ? `${info.content.substring(0, 100)}...` : info.content) : '내용 없음'}
+                        </p>
+                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                          <span>인덱스: {index}</span>
+                          <span>카테고리: {info.category || '미분류'}</span>
+                        </div>
+                      </div>
+                      
+                      {/* 액션 버튼들 */}
+                      <div className="flex items-center gap-2 ml-4">
+                        {/* 카테고리 변경 */}
+                        <select
+                          value={info.category || ''}
+                          onChange={(e) => handleCategoryChange(selectedDate, index, e.target.value, info.category || '')}
+                          className="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-sm text-white focus:ring-1 focus:ring-blue-500"
+                        >
+                          <option value="">카테고리 선택</option>
+                          {categories.map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                        </select>
+                        
+                        {/* 수정 버튼 */}
+                        <button
+                          onClick={() => handleEdit(selectedDate, index)}
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                        >
+                          수정
+                        </button>
+                        
+                        {/* 삭제 버튼 */}
+                        <button
+                          onClick={() => handleDelete(selectedDate, index)}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* AI 정보 추가 */}
+          <section className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
+            <h2 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
+              <FaPlus className="text-green-400" />
+              AI 정보 추가
+            </h2>
             
             <form onSubmit={handleSubmit} className="mb-8 bg-white/5 rounded-xl p-6 border border-white/10 flex flex-col gap-6">
               <div className="flex flex-col md:flex-row md:items-end gap-4">
@@ -2024,100 +2099,7 @@ export default function AdminAIInfoPage() {
             </div>
           </section>
 
-          {/* 카테고리 관리 */}
-          <section className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
-            <h2 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
-              <FaEdit className="text-orange-400" />
-              카테고리 빠른 수정
-            </h2>
-            
-            <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
-              <h3 className="text-lg font-semibold text-orange-300 mb-2">🏷️ 카테고리 빠른 수정 안내</h3>
-              <p className="text-orange-200 text-sm">
-                날짜별로 AI 정보를 불러와서 카테고리만 빠르게 수정할 수 있습니다. 
-                제목과 내용은 그대로 두고 카테고리만 변경하여 시간을 절약하세요.
-              </p>
-            </div>
-            
-            {/* 날짜 선택 */}
-            <div className="mb-6">
-              <label className="block text-white/80 font-medium mb-2">📅 날짜 선택</label>
-              <select 
-                value={date} 
-                onChange={e => setDate(e.target.value)} 
-                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-              >
-                <option value="">날짜를 선택하세요</option>
-                {dates.map(dateItem => (
-                  <option key={dateItem} value={dateItem} className="text-black">{dateItem}</option>
-                ))}
-              </select>
-            </div>
-            
-            {/* 선택된 날짜의 AI 정보 표시 및 카테고리 수정 */}
-            {date && aiInfos.length > 0 && (
-              <div className="space-y-4">
-                <div className="text-center text-white/70 mb-4">
-                  📅 {date} - {aiInfos.length}개 항목
-                </div>
-                
-                {aiInfos.map((info, idx) => (
-                  <div key={idx} className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="mb-3">
-                      <div className="font-bold text-lg text-white mb-2">{info.title}</div>
-                      <div className="text-white/70 text-sm line-clamp-2">{info.content}</div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <span className="text-white/60 text-sm">현재 카테고리:</span>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        info.category 
-                          ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
-                          : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
-                      }`}>
-                        {info.category || '미분류'}
-                      </span>
-                      
-                      <span className="text-white/40">→</span>
-                      
-                      <select 
-                        value={info.category || ''} 
-                        onChange={e => {
-                          const newCategory = e.target.value
-                          if (newCategory && newCategory !== info.category) {
-                            handleCategoryChange(date, idx, newCategory, info.category || '')
-                          }
-                        }}
-                        className="px-4 py-2 bg-orange-500/20 text-orange-300 rounded-lg font-medium border border-orange-500/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm"
-                      >
-                        <option value="">카테고리 선택</option>
-                        <option value="챗봇/대화형 AI">챗봇/대화형 AI</option>
-                        <option value="이미지 생성 AI">이미지 생성 AI</option>
-                        <option value="코딩/개발 도구">코딩/개발 도구</option>
-                        <option value="음성/오디오 AI">음성/오디오 AI</option>
-                        <option value="데이터 분석/ML">데이터 분석/ML</option>
-                        <option value="AI 윤리/정책">AI 윤리/정책</option>
-                        <option value="AI 하드웨어/인프라">AI 하드웨어/인프라</option>
-                        <option value="AI 응용 서비스">AI 응용 서비스</option>
-                      </select>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            {date && aiInfos.length === 0 && (
-              <div className="text-center text-white/50 py-8">
-                선택한 날짜에 AI 정보가 없습니다.
-              </div>
-            )}
-            
-            {!date && (
-              <div className="text-center text-white/50 py-8">
-                날짜를 선택하여 AI 정보의 카테고리를 수정하세요.
-              </div>
-            )}
-          </section>
+
         </div>
       </div>
     </div>
