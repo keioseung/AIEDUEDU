@@ -209,7 +209,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           console.log(`🔄 마운트 후 userModified 상태 동기화: ${isLearned} → ${shouldBeLearned}`);
           setIsLearned(shouldBeLearned);
         }
-      } else {
+        } else {
         console.log(`🔍 userModified 상태 없음 - 현재 상태 유지: ${isLearned}`);
       }
     }
