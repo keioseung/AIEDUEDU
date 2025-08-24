@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { BarChart3, TrendingUp, BookOpen, Target, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useUserStats } from '@/hooks/use-user-progress'
@@ -355,7 +355,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   const chartData = periodStats?.period_data || []
   
   // 로컬 스토리지에서 AI 정보 학습 데이터 가져오기 (날짜별 모드 우선시)
-  const localAIProgress = (() => {
+  const [localAIProgress, setLocalAIProgress] = useState<PeriodData[]>([])
+  
+  // localAIProgress 업데이트 함수
+  const updateLocalAIProgress = useCallback(() => {
     if (typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem('userProgress')
@@ -412,15 +415,22 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 quiz_total: 0
               })
             }
-            return localData
+            setLocalAIProgress(localData)
           }
         }
       } catch (error) {
         // 로컬 데이터 파싱 실패 시 무시
+        setLocalAIProgress([])
       }
+    } else {
+      setLocalAIProgress([])
     }
-    return []
-  })()
+  }, [sessionId, periodDates.start, periodDates.end])
+  
+  // 컴포넌트 마운트 시와 periodDates 변경 시 localAIProgress 업데이트
+  useEffect(() => {
+    updateLocalAIProgress()
+  }, [updateLocalAIProgress])
   
   // 백엔드 데이터와 로컬 데이터 통합 (로컬 데이터 우선 - 날짜별 모드 반영)
   const uniqueChartData = (() => {
@@ -527,6 +537,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
       queryClient.invalidateQueries({ queryKey: ['period-stats'] });
       queryClient.invalidateQueries({ queryKey: ['ai-info-learned-count'] });
       queryClient.invalidateQueries({ queryKey: ['total-terms-stats'] });
+      
+      // localAIProgress 업데이트
+      updateLocalAIProgress();
       
       alert('학습 데이터가 초기화되었습니다.');
     } catch (error) {
