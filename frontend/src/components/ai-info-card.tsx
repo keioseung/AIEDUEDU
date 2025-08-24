@@ -145,11 +145,15 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   
   // localStorage에서 직접 학습 상태를 읽어와서 초기화 (마운트 시에만)
   const getInitialLearnedState = () => {
+    console.log(`🔍 getInitialLearnedState 호출 - date: ${date}, isMounted: ${isMounted.current}`);
+    
     if (typeof window !== 'undefined' && date) {
       try {
         // 1순위: 사용자가 직접 변경한 상태 확인 (절대 우선시)
         const modifiedKey = getUserModifiedKey();
         const modifiedState = localStorage.getItem(modifiedKey);
+        console.log(`🔍 userModified 키: ${modifiedKey}, 값: ${modifiedState}`);
+        
         if (modifiedState !== null) {
           console.log(`🔍 사용자 변경 상태 발견: ${modifiedState}`);
           return modifiedState === 'true';
@@ -167,7 +171,9 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             }
           }
         }
-      } catch {}
+      } catch (error) {
+        console.error('getInitialLearnedState 에러:', error);
+      }
     }
     return false;
   };
@@ -194,18 +200,25 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   
   // 컴포넌트 마운트 완료 표시
   useEffect(() => {
+    console.log(`🚀 useEffect 실행 - date: ${date}, index: ${index}`);
     isMounted.current = true;
     
     // 마운트 후에도 userModified 상태가 있으면 그것을 우선시
     if (typeof window !== 'undefined' && date) {
       const modifiedKey = getUserModifiedKey();
       const modifiedState = localStorage.getItem(modifiedKey);
+      console.log(`🔍 useEffect에서 userModified 확인 - 키: ${modifiedKey}, 값: ${modifiedState}`);
+      
       if (modifiedState !== null) {
         const shouldBeLearned = modifiedState === 'true';
+        console.log(`🔍 현재 상태: ${isLearned}, userModified 상태: ${shouldBeLearned}`);
+        
         if (isLearned !== shouldBeLearned) {
           console.log(`🔄 마운트 후 userModified 상태 동기화: ${isLearned} → ${shouldBeLearned}`);
           setIsLearned(shouldBeLearned);
         }
+      } else {
+        console.log(`🔍 userModified 상태 없음 - 현재 상태 유지: ${isLearned}`);
       }
     }
   }, []);
