@@ -486,12 +486,62 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     }
   };
 
+  // 학습 데이터 초기화 함수
+  const resetLearningData = () => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      // userProgress 초기화
+      const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}');
+      if (userProgress[sessionId]) {
+        // 모든 날짜의 학습 데이터 초기화
+        Object.keys(userProgress[sessionId]).forEach(date => {
+          if (date !== '__stats__' && date !== 'terms_by_date') {
+            userProgress[sessionId][date] = [];
+          }
+        });
+        localStorage.setItem('userProgress', JSON.stringify(userProgress));
+      }
+      
+      // userModified 키들 초기화
+      if (aiInfoDates) {
+        aiInfoDates.forEach(date => {
+          for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+            const userModifiedKey = `userModified_${sessionId}_${date}_${infoIndex}`;
+            localStorage.removeItem(userModifiedKey);
+          }
+        });
+      }
+      
+      // learnedTerms 키들 초기화
+      if (aiInfoDates) {
+        aiInfoDates.forEach(date => {
+          for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
+            const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${infoIndex}`;
+            localStorage.removeItem(learnedTermsKey);
+          }
+        });
+      }
+      
+      // React Query 캐시 무효화하여 데이터 새로고침
+      queryClient.invalidateQueries({ queryKey: ['period-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['ai-info-learned-count'] });
+      queryClient.invalidateQueries({ queryKey: ['total-terms-stats'] });
+      
+      alert('학습 데이터가 초기화되었습니다.');
+    } catch (error) {
+      console.error('학습 데이터 초기화 오류:', error);
+      alert('초기화 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div className="space-y-8 relative" key={localLanguage}>
       
 
-      {/* 모드 선택 */}
-      <div className="flex justify-center mb-3">
+      {/* 모드 선택 및 초기화 */}
+      <div className="flex flex-col items-center gap-3 mb-3">
+        {/* 모드 선택 */}
         <div className="glass backdrop-blur-xl rounded-2xl p-1.5 shadow-xl border border-white/10">
           <div className="flex gap-1.5">
             <button
@@ -516,6 +566,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             </button>
           </div>
         </div>
+        
+        {/* 초기화 버튼 */}
+        <button
+          onClick={resetLearningData}
+          className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium text-sm rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 transition-all duration-300 transform hover:scale-105"
+        >
+          🔄 학습 데이터 초기화
+        </button>
       </div>
 
       {/* 모드별 콘텐츠 */}
