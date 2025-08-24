@@ -1037,8 +1037,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   style={{
                                     height: aiHeight,
                                     minHeight: data.ai_info > 0 ? 3 : 0,
-                                    width: "100%",
-                                    marginTop: periodType === 'month' ? `${60 - aiHeight}px` : '0px'
+                                    width: "100%"
                                   }}
                                 />
                                                                  {/* bar 위에 % */}
@@ -1114,8 +1113,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   style={{
                                     height: termsHeight,
                                     minHeight: data.terms > 0 ? 3 : 0,
-                                    width: "100%",
-                                    marginTop: periodType === 'month' ? `${60 - termsHeight}px` : '0px'
+                                    width: "100%"
                                   }}
                                 />
                                                                  {/* bar 위에 % */}
@@ -1191,8 +1189,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                   style={{
                                     height: quizHeight,
                                     minHeight: data.quiz_score > 0 ? 3 : 0,
-                                    width: "100%",
-                                    marginTop: periodType === 'month' ? `${60 - quizHeight}px` : '0px'
+                                    width: "100%"
                                   }}
                                 />
                                                                  {/* bar 위에 % */}
