@@ -1192,7 +1192,7 @@ export default function AdminAIInfoPage() {
       }
 
       // 용어 교체
-      const updatedTerms = cardInfo.terms?.map(term => 
+      const updatedTerms = cardInfo.terms?.map((term: TermItem) => 
         term.term === originalTerm 
           ? { ...term, term: newTerm }
           : term
