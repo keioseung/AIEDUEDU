@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle, Circle, BookOpen, ExternalLink, Brain, Trophy, Star, Sparkles, ChevronLeft, ChevronRight, Image, MessageSquare, Cpu, Globe, Zap, Shield, Palette, Bot, Settings } from 'lucide-react'
 import { useUpdateUserProgress, useCheckAchievements, useUpdateTermProgress, useLearnedTerms } from '@/hooks/use-user-progress'
@@ -137,9 +137,12 @@ const getCategoryStyle = (category: string) => {
 }
 
 function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, onProgressUpdate, forceUpdate, setForceUpdate, isFavorite: isFavoriteProp, onFavoriteToggle, searchQuery, currentLanguage }: AIInfoCardProps) {
-  // localStorage에서 직접 학습 상태를 읽어와서 초기화
+  // 컴포넌트가 마운트되었는지 추적
+  const isMounted = useRef(false);
+  
+  // localStorage에서 직접 학습 상태를 읽어와서 초기화 (마운트 시에만)
   const getInitialLearnedState = () => {
-    if (typeof window !== 'undefined' && date) {
+    if (typeof window !== 'undefined' && date && !isMounted.current) {
       try {
         const stored = localStorage.getItem('userProgress');
         if (stored) {
@@ -172,6 +175,11 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
   
   // localStorage에서 용어 학습 상태 백업
   const [localLearnedTerms, setLocalLearnedTerms] = useState<Set<string>>(new Set())
+  
+  // 컴포넌트 마운트 완료 표시
+  useEffect(() => {
+    isMounted.current = true;
+  }, []);
   
   // useEffect 제거 - localStorage를 읽어오지 않음
   // 컴포넌트가 마운트될 때 props의 isLearnedProp만 사용
