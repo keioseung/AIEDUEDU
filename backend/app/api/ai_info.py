@@ -1845,3 +1845,49 @@ def get_content_by_index(date: str, info_index: int, language: str = "ko", db: S
     except Exception as e:
         print(f"Error in get_content_by_index: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get content: {str(e)}")
+
+@router.patch("/{date}/category/{info_index}")
+def update_category_only(date: str, info_index: int, category: str, db: Session = Depends(get_db)):
+    """특정 날짜와 인덱스의 AI 정보 카테고리만 업데이트합니다."""
+    try:
+        print(f"=== Updating Category for Date: {date}, Index: {info_index}, Category: {category} ===")
+        
+        ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
+        if not ai_info:
+            raise HTTPException(status_code=404, detail=f"No AI info found for date: {date}")
+        
+        # info_index에 따른 카테고리 필드 선택
+        if info_index == 0:
+            category_field = 'info1_category'
+        elif info_index == 1:
+            category_field = 'info2_category'
+        elif info_index == 2:
+            category_field = 'info3_category'
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid info_index: {info_index}")
+        
+        # 해당 필드에 제목과 내용이 있는지 확인
+        title_field = f'info{info_index + 1}_title_ko'
+        content_field = f'info{info_index + 1}_content_ko'
+        
+        if not getattr(ai_info, title_field) or not getattr(ai_info, content_field):
+            raise HTTPException(status_code=404, detail=f"No content found for date: {date}, index: {info_index}")
+        
+        # 카테고리 업데이트
+        setattr(ai_info, category_field, category)
+        db.commit()
+        db.refresh(ai_info)
+        
+        print(f"Category updated successfully: {category}")
+        return {
+            "message": "카테고리가 업데이트되었습니다.",
+            "date": date,
+            "info_index": info_index,
+            "category": category
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error in update_category_only: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to update category: {str(e)}")

@@ -720,41 +720,11 @@ export default function AdminAIInfoPage() {
     try {
       console.log('카테고리 변경 시작:', { date, index, oldCategory, newCategory })
       
-      // allAIInfos에서 직접 해당 데이터 찾기
-      const existingDateGroup = allAIInfos.find(item => item.date === date)
-      if (!existingDateGroup || !existingDateGroup.infos[index]) {
-        setError('해당 항목을 찾을 수 없습니다.')
-        return
-      }
+      // 새로운 API를 사용하여 카테고리만 업데이트
+      const response = await aiInfoAPI.updateCategoryOnly(date, index, newCategory)
+      console.log('카테고리 업데이트 성공:', response)
       
-      console.log('기존 데이터 그룹:', existingDateGroup)
-      console.log('수정할 항목:', existingDateGroup.infos[index])
-      console.log('기존 infos 길이:', existingDateGroup.infos.length)
-      
-      // 해당 항목의 카테고리만 변경
-      const updatedInfos = [...existingDateGroup.infos]
-      updatedInfos[index] = { ...updatedInfos[index], category: newCategory }
-      console.log('수정된 데이터:', updatedInfos)
-      console.log('수정된 infos 길이:', updatedInfos.length)
-      
-      // 먼저 해당 날짜의 모든 데이터를 삭제
-      console.log('기존 데이터 삭제 시작...')
-      await aiInfoAPI.delete(date)
-      console.log('기존 데이터 삭제 완료')
-      
-      // 수정된 데이터로 다시 추가
-      console.log('수정된 데이터 추가 시작...')
-      const saveResult = await aiInfoAPI.add({ date, infos: updatedInfos })
-      console.log('저장 결과:', saveResult)
-      console.log('저장된 infos 길이:', saveResult.data.infos?.length)
-      
-      // 저장된 데이터가 예상과 다른 경우 경고
-      if (saveResult.data.infos && saveResult.data.infos.length !== updatedInfos.length) {
-        console.warn('⚠️ 저장된 데이터 길이가 예상과 다릅니다!')
-        console.warn('예상 길이:', updatedInfos.length, '실제 길이:', saveResult.data.infos.length)
-      }
-      
-      // 로컬 상태만 업데이트 (전체 데이터 다시 로딩하지 않음)
+      // 로컬 상태 업데이트
       queryClient.setQueryData(['all-ai-info'], (oldData: any) => {
         if (!oldData) return oldData
         
@@ -770,6 +740,17 @@ export default function AdminAIInfoPage() {
           return item
         })
       })
+      
+      // 현재 선택된 날짜의 데이터도 업데이트
+      if (date === date) {
+        queryClient.setQueryData(['ai-info', date], (oldData: any) => {
+          if (!oldData) return oldData
+          
+          return oldData.map((info: any, i: number) => 
+            i === index ? { ...info, category: newCategory } : info
+          )
+        })
+      }
       
       console.log('로컬 상태 업데이트 완료')
       setSuccess(`카테고리가 "${oldCategory || '미분류'}"에서 "${newCategory}"로 변경되었습니다!`)
@@ -2041,6 +2022,101 @@ export default function AdminAIInfoPage() {
                 {getCombinedText() || '선택된 프롬프트와 기반 내용이 여기에 미리보기로 표시됩니다.'}
               </div>
             </div>
+          </section>
+
+          {/* 카테고리 관리 */}
+          <section className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
+            <h2 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
+              <FaEdit className="text-orange-400" />
+              카테고리 빠른 수정
+            </h2>
+            
+            <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
+              <h3 className="text-lg font-semibold text-orange-300 mb-2">🏷️ 카테고리 빠른 수정 안내</h3>
+              <p className="text-orange-200 text-sm">
+                날짜별로 AI 정보를 불러와서 카테고리만 빠르게 수정할 수 있습니다. 
+                제목과 내용은 그대로 두고 카테고리만 변경하여 시간을 절약하세요.
+              </p>
+            </div>
+            
+            {/* 날짜 선택 */}
+            <div className="mb-6">
+              <label className="block text-white/80 font-medium mb-2">📅 날짜 선택</label>
+              <select 
+                value={date} 
+                onChange={e => setDate(e.target.value)} 
+                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              >
+                <option value="">날짜를 선택하세요</option>
+                {dates.map(dateItem => (
+                  <option key={dateItem} value={dateItem} className="text-black">{dateItem}</option>
+                ))}
+              </select>
+            </div>
+            
+            {/* 선택된 날짜의 AI 정보 표시 및 카테고리 수정 */}
+            {date && aiInfos.length > 0 && (
+              <div className="space-y-4">
+                <div className="text-center text-white/70 mb-4">
+                  📅 {date} - {aiInfos.length}개 항목
+                </div>
+                
+                {aiInfos.map((info, idx) => (
+                  <div key={idx} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="mb-3">
+                      <div className="font-bold text-lg text-white mb-2">{info.title}</div>
+                      <div className="text-white/70 text-sm line-clamp-2">{info.content}</div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <span className="text-white/60 text-sm">현재 카테고리:</span>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        info.category 
+                          ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
+                          : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+                      }`}>
+                        {info.category || '미분류'}
+                      </span>
+                      
+                      <span className="text-white/40">→</span>
+                      
+                      <select 
+                        value={info.category || ''} 
+                        onChange={e => {
+                          const newCategory = e.target.value
+                          if (newCategory && newCategory !== info.category) {
+                            handleCategoryChange(date, idx, newCategory, info.category || '')
+                          }
+                        }}
+                        className="px-4 py-2 bg-orange-500/20 text-orange-300 rounded-lg font-medium border border-orange-500/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm"
+                      >
+                        <option value="">카테고리 선택</option>
+                        <option value="챗봇/대화형 AI">챗봇/대화형 AI</option>
+                        <option value="이미지 생성 AI">이미지 생성 AI</option>
+                        <option value="코딩/개발 도구">코딩/개발 도구</option>
+                        <option value="음성/오디오 AI">음성/오디오 AI</option>
+                        <option value="데이터 분석/ML">데이터 분석/ML</option>
+                        <option value="AI 윤리/정책">AI 윤리/정책</option>
+                        <option value="AI 하드웨어/인프라">AI 하드웨어/인프라</option>
+                        <option value="AI 응용 서비스">AI 응용 서비스</option>
+                      </select>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {date && aiInfos.length === 0 && (
+              <div className="text-center text-white/50 py-8">
+                선택한 날짜에 AI 정보가 없습니다.
+              </div>
+            )}
+            
+            {!date && (
+              <div className="text-center text-white/50 py-8">
+                날짜를 선택하여 AI 정보의 카테고리를 수정하세요.
+              </div>
+            )}
           </section>
         </div>
       </div>

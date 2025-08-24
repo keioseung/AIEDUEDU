@@ -292,8 +292,12 @@ export const aiInfoAPI = {
   // 카테고리 관련 API
   getAllCategories: () => api.get('/api/ai-info/categories/all'),
   getSubcategories: (category: string) => api.get(`/api/ai-info/categories/${category}/subcategories`),
-      getByCategory: (category: string, language: string = 'ko') => api.get(`/api/ai-info/by-category/${category}?language=${language}`),
+  getByCategory: (category: string, language: string = 'ko') => api.get(`/api/ai-info/by-category/${category}?language=${language}`),
   getCategoryStats: () => api.get('/api/ai-info/categories/stats'),
+  
+  // 카테고리만 업데이트하는 새로운 API
+  updateCategoryOnly: (date: string, infoIndex: number, category: string) => 
+    api.patch(`/api/ai-info/${date}/category/${infoIndex}?category=${category}`),
 }
 
 // Quiz API
