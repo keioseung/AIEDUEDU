@@ -700,127 +700,86 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
            <div key={info.id} className="relative">
                {/* 제목 카드 */}
                <div className="bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl p-4 shadow-lg shadow-purple-900/30 backdrop-blur-xl">
-                 {/* 학습 상태 표시 (오른쪽 상단) */}
-                 <div className="absolute top-3 right-3">
-                   {(() => {
-                     // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
-                     let isLearned = false
-                     if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
-                       try {
-                         const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                         const sessionProgress = userProgress[sessionId]
+                 
 
-                         // 디버깅용 로그 - 전체 userProgress 구조 확인
-                         console.log(`🔍 전체목록 모드 - ${info.date} 날짜 ${info.info_index}번 카드 학습 상태 확인:`, {
-                           cardTitle: info.title,
-                           cardDate: info.date,
-                           cardInfoIndex: info.info_index,
-                           sessionId: sessionId,
-                           userProgress: userProgress,
-                           sessionProgress: sessionProgress
-                         })
+                                   <div className="flex items-center justify-between mb-3">
+                    <div className="flex-1">
+                      {/* 카테고리 정보를 제일 위로 이동 */}
+                      {info.category && (
+                        <div className="mb-2">
+                          <span className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-blue-600/40 border border-purple-500/50 rounded-lg text-xs font-medium text-white/90 shadow-sm">
+                           🏷️ {t(`category.name.${info.category}`) || info.category}
+                          </span>
+                        </div>
+                      )}
 
-                         if (sessionProgress && sessionProgress[info.date]) {
-                           const learnedIndices = sessionProgress[info.date] || []
-                           // info_index가 배열에 포함되어 있는지 확인
-                           isLearned = learnedIndices.includes(info.info_index)
+                      <h3 className="text-lg font-semibold text-white mb-2">{info.title}</h3>
+                      <div className="flex items-center gap-3 text-sm text-white/70">
+                        <span className="flex items-center gap-1">
+                          <FaCalendar className="w-3 h-3" />
+                          {info.date}
+                        </span>
+                      </div>
+                    </div>
 
-                           console.log(`✅ ${info.date} 날짜 ${info.info_index}번 카드 학습 상태:`, {
-                             learnedIndices,
-                             isLearned,
-                             cardTitle: info.title
-                           })
-                         } else {
-                           console.log(`❌ ${info.date} 날짜에 대한 학습 데이터가 없음:`, {
-                             cardTitle: info.title,
-                             sessionId: sessionId,
-                             sessionProgress: sessionProgress,
-                             availableDates: sessionProgress ? Object.keys(sessionProgress) : []
-                           })
+                    {/* 3개 아이콘을 카테고리 오른쪽에 나란히 배열 */}
+                    <div className="flex items-center gap-2 ml-4">
+                      {/* 1. 학습완료 여부 아이콘 */}
+                      {(() => {
+                        // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
+                        let isLearned = false
+                        if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
+                          try {
+                            const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                            const sessionProgress = userProgress[sessionId]
 
-                           // 추가 디버깅: 해당 날짜의 데이터가 없는 경우 전체 userProgress 구조 확인
-                           if (sessionProgress) {
-                             console.log(`🔍 사용 가능한 날짜들:`, Object.keys(sessionProgress))
-                             Object.keys(sessionProgress).forEach(date => {
-                               if (date !== '__stats__' && date !== 'terms_by_date') {
-                                 console.log(`📅 ${date} 날짜 데이터:`, sessionProgress[date])
-                               }
-                             })
-                           }
-                         }
-                       } catch (error) {
-                         console.error('로컬 스토리지 데이터 파싱 오류:', error)
-                       }
-                     } else {
-                       console.log(`⚠️ 카드 정보 부족:`, {
-                         hasWindow: typeof window !== 'undefined',
-                         hasDate: !!info.date,
-                         hasInfoIndex: typeof info.info_index === 'number',
-                         infoIndex: info.info_index,
-                         cardTitle: info.title
-                       })
-                     }
+                            if (sessionProgress && sessionProgress[info.date]) {
+                              const learnedIndices = sessionProgress[info.date] || []
+                              isLearned = learnedIndices.includes(info.info_index)
+                            }
+                          } catch (error) {
+                            console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                          }
+                        }
 
-                     return (
-                       <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm transition-all duration-200 ${
-                         isLearned 
-                           ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg shadow-green-500/25' 
-                           : 'bg-gradient-to-br from-slate-400 to-gray-500 text-white shadow-lg shadow-gray-500/25'
-                       }`}>
-                         {isLearned ? (
-                           <FaGraduationCap className="w-4 h-4" />
-                         ) : (
-                           <FaLightbulb className="w-4 h-4" />
-                         )}
-                       </div>
-                     )
-                   })()}
-                 </div>
+                        return (
+                          <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm transition-all duration-200 ${
+                            isLearned 
+                              ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg shadow-green-500/25' 
+                              : 'bg-gradient-to-br from-slate-400 to-gray-500 text-white shadow-lg shadow-gray-500/25'
+                          }`}>
+                            {isLearned ? (
+                              <FaGraduationCap className="w-4 h-4" />
+                            ) : (
+                              <FaLightbulb className="w-4 h-4" />
+                            )}
+                          </div>
+                        )
+                      })()}
 
-                 <div className="flex items-center justify-between mb-3">
-                   <div className="flex-1">
-                     {/* 카테고리 정보를 제일 위로 이동 */}
-                     {info.category && (
-                       <div className="mb-2">
-                         <span className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-blue-600/40 border border-purple-500/50 rounded-lg text-xs font-medium text-white/90 shadow-sm">
-                          🏷️ {t(`category.name.${info.category}`) || info.category}
-                         </span>
-                       </div>
-                     )}
+                      {/* 2. 즐겨찾기 아이콘 */}
+                      <button
+                        onClick={() => toggleFavorite(itemKey)}
+                        className={`p-2 rounded-lg transition-all ${
+                          favoriteInfos.has(itemKey)
+                            ? 'text-yellow-400 bg-yellow-400/20'
+                            : 'text-white/70 hover:text-white hover:bg-white/20'
+                        }`}
+                      >
+                        <FaStar 
+                          className={`w-4 h-4 ${favoriteInfos.has(itemKey) ? 'fill-current' : ''}`}
+                        />
+                      </button>
 
-                     <h3 className="text-lg font-semibold text-white mb-2">{info.title}</h3>
-                     <div className="flex items-center gap-3 text-sm text-white/70">
-                       <span className="flex items-center gap-1">
-                         <FaCalendar className="w-3 h-3" />
-                         {info.date}
-                       </span>
-                     </div>
-                   </div>
-
-                   <div className="flex items-center gap-2">
-                     {/* 즐겨찾기 버튼 */}
-                     <button
-                       onClick={() => toggleFavorite(itemKey)}
-                       className={`p-2 rounded-lg transition-all ${
-                         favoriteInfos.has(itemKey)
-                           ? 'text-yellow-400 bg-yellow-400/20'
-                           : 'text-white/70 hover:text-white hover:bg-white/20'
-                       }`}
-                     >
-                       <FaStar 
-                         className={`w-4 h-4 ${favoriteInfos.has(itemKey) ? 'fill-current' : ''}`}
-                       />
-                     </button>
-
-                     {/* 확장/축소 버튼 */}
-                     <button
-                       onClick={() => toggleItemExpansion(info as AITitleItem)}
-                       className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/20 transition-all"
-                     >
-                       {isExpanded ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
-                     </button>
-                   </div>
-                 </div>
+                      {/* 3. 상세내용 보기 아이콘 */}
+                      <button
+                        onClick={() => toggleItemExpansion(info as AITitleItem)}
+                        className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/20 transition-all"
+                      >
+                        {isExpanded ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
 
                  {/* 확장된 상세 내용 */}
                  {isExpanded && (
