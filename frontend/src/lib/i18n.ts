@@ -1003,6 +1003,14 @@ const en: Record<string, string> = {
   // Progress Date Format
   'progress.date.format.month': 'M',
   'progress.date.format.day': 'D',
+  
+  // Loading Messages
+  'loading.please.wait': 'Please wait a moment.',
+  'loading.detail.content': 'Loading detailed content...',
+  
+  // Learning Status Display
+  'learning.status.completed': '✅ Completed',
+  'learning.status.not.learned': '⭕ Not Learned',
 }
 
 // 일본어
