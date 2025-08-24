@@ -545,6 +545,14 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
         });
       }
       
+      // 퀴즈 관련 데이터 초기화
+      const quizProgressKey = `quizProgress_${sessionId}`;
+      localStorage.removeItem(quizProgressKey);
+      
+      // 퀴즈 통계 데이터 초기화
+      const quizStatsKey = `quizStats_${sessionId}`;
+      localStorage.removeItem(quizStatsKey);
+      
       // React Query 캐시 무효화하여 데이터 새로고침
       queryClient.invalidateQueries({ queryKey: ['period-stats'] });
       queryClient.invalidateQueries({ queryKey: ['ai-info-learned-count'] });
@@ -610,39 +618,42 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
       {/* 모드 선택 및 초기화 */}
       <div className="flex flex-col items-center gap-3 mb-3">
-        {/* 모드 선택 */}
-        <div className="glass backdrop-blur-xl rounded-2xl p-1.5 shadow-xl border border-white/10">
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => setViewMode('cards')}
-              className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
-                viewMode === 'cards'
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
-              }`}
-            >
-              📊 {t('progress.tab.trend.card')}
-            </button>
-            <button
-              onClick={() => setViewMode('graph')}
-              className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
-                viewMode === 'graph'
-                  ? 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg transform scale-105'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
-              }`}
-            >
-              📈 {t('progress.tab.trend.graph')}
-            </button>
+        {/* 모드 선택과 초기화 버튼을 한 줄에 배치 */}
+        <div className="flex items-center gap-4">
+          {/* 모드 선택 */}
+          <div className="glass backdrop-blur-xl rounded-2xl p-1.5 shadow-xl border border-white/10">
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => setViewMode('cards')}
+                className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                  viewMode === 'cards'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
+                }`}
+              >
+                📊 {t('progress.tab.trend.card')}
+              </button>
+              <button
+                onClick={() => setViewMode('graph')}
+                className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                  viewMode === 'graph'
+                    ? 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg transform scale-105'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 active:bg-white/30 hover:text-white/90'
+                }`}
+              >
+                📈 {t('progress.tab.trend.graph')}
+              </button>
+            </div>
           </div>
+          
+          {/* 초기화 버튼 */}
+          <button
+            onClick={resetLearningData}
+            className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium text-sm rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 transition-all duration-300 transform hover:scale-105"
+          >
+            🔄 학습 데이터 초기화
+          </button>
         </div>
-        
-        {/* 초기화 버튼 */}
-        <button
-          onClick={resetLearningData}
-          className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium text-sm rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 transition-all duration-300 transform hover:scale-105"
-        >
-          🔄 학습 데이터 초기화
-        </button>
       </div>
 
       {/* 모드별 콘텐츠 */}
