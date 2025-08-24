@@ -1017,8 +1017,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         ))}
                       </div>
 
-                      {/* bar + 날짜 */}
-                      <div className={`flex ${periodType === 'month' ? 'items-start' : 'items-end'} h-20 ${getBarGap()}`}>
+                                            {/* bar + 날짜 */}
+                      <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
                           const maxValue = 2; // 고정된 최대값 2 (각 날짜당 2개 카드)
@@ -1047,17 +1047,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                        ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
                                        : 'bg-gradient-to-r from-blue-400 to-blue-300 text-white shadow-lg shadow-blue-500/30 px-0.5 py-0.5 rounded-md'
                                    }`}>
-                                     {percent}%
-                                   </div>
-                                 )}
-                              </div>
-                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                                      {percent}%
+                                    </div>
+                                  )}
+                               </div>
+                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                               </div>
+                             </div>
+                           );
+                         })}
+                       </div>
                     </div>
                   </div>
                 </div>
@@ -1092,8 +1092,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         ))}
                       </div>
 
-                      {/* bar + 날짜 */}
-                      <div className={`flex ${periodType === 'month' ? 'items-start' : 'items-end'} h-20 ${getBarGap()}`}>
+                                            {/* bar + 날짜 */}
+                      <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
                           // 선택된 날짜의 AI정보 카드 수에 따라 최대값 동적 설정
@@ -1123,17 +1123,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                        ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
                                        : 'bg-gradient-to-r from-purple-400 to-purple-300 text-white shadow-lg shadow-purple-500/30 px-0.5 py-0.5 rounded-md'
                                    }`}>
-                                     {percent}%
-                                   </div>
-                                 )}
-                              </div>
-                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                                      {percent}%
+                                    </div>
+                                  )}
+                               </div>
+                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                               </div>
+                             </div>
+                           );
+                         })}
+                       </div>
                     </div>
                   </div>
                 </div>
@@ -1168,8 +1168,8 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                         ))}
                       </div>
 
-                      {/* bar + 날짜 */}
-                      <div className={`flex ${periodType === 'month' ? 'items-start' : 'items-end'} h-20 ${getBarGap()}`}>
+                                            {/* bar + 날짜 */}
+                      <div className={`flex items-end h-20 ${getBarGap()}`}>
                         {uniqueChartData.map((data, index) => {
                           const barMaxHeight = 80;
                           // 퀴즈 점수는 이미 백분율(0-100)이므로 100을 최대값으로 사용
@@ -1199,17 +1199,17 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                                        ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-0.5 py-0.5 rounded-full border border-yellow-300' 
                                        : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-0.5 py-0.5 rounded-md'
                                    }`}>
-                                     {percent}%
-                                   </div>
-                                 )}
-                              </div>
-                              <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
-                                {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                                      {percent}%
+                                    </div>
+                                  )}
+                               </div>
+                               <div className={`text-xs mt-1.5 text-center ${data.date === selectedDate ? 'text-yellow-400 font-bold' : 'text-white/60'}`} style={{fontSize:'9px', minHeight: '14px'}}>
+                                 {shouldShowXAxisLabel(index) ? new Date(data.date).getDate() : ''}
+                               </div>
+                             </div>
+                           );
+                         })}
+                       </div>
                     </div>
                   </div>
                 </div>
