@@ -292,9 +292,10 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
     
     // 현재 상태와 다를 때만 업데이트 (무한 루프 방지)
     if (isLearned !== finalLearned) {
+      console.log(`🔄 useEffect - 상태 동기화: ${isLearned} → ${finalLearned}`)
       setIsLearned(finalLearned);
     }
-  }, [isLearnedProp, date, sessionId, index, isLearned]);
+  }, [isLearnedProp, date, sessionId, index]); // isLearned 의존성 제거
 
   // 용어가 있는지 확인
   const hasTerms = info.terms_ko && info.terms_ko.length > 0
