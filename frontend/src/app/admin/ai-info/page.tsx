@@ -1052,7 +1052,7 @@ export default function AdminAIInfoPage() {
 
     // 모든 AI 정보 카드에서 용어 수집
     allAIInfos.forEach((dateGroup) => {
-      dateGroup.infos.forEach((info: AIInfoItem, index) => {
+      dateGroup.infos.forEach((info: AIInfoItem, index: number) => {
         if (info.terms && Array.isArray(info.terms)) {
           info.terms.forEach((term) => {
             if (!termCount[term.term]) {
