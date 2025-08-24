@@ -831,7 +831,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                isLearned={(() => {
                  console.log(`🔍 ai-info-list-mode isLearned 계산 시작 - date: ${loadedContent.date}, index: ${loadedContent.info_index}`);
                  
-                 // 1순위: userModified 상태 확인 (사용자가 직접 변경한 상태)
+                 // userModified 상태만 확인 (userProgress는 절대 읽지 않음)
                  if (typeof window !== 'undefined' && loadedContent.date) {
                    try {
                      const modifiedKey = `userModified_${sessionId}_${loadedContent.date}_${loadedContent.info_index}`;
@@ -847,25 +847,8 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                    }
                  }
                  
-                 // 2순위: userProgress에서 실제 학습 상태 확인 (백업용)
-                 if (typeof window !== 'undefined' && loadedContent.date) {
-                   try {
-                     const stored = localStorage.getItem('userProgress');
-                     if (stored) {
-                       const parsed = JSON.parse(stored);
-                       if (parsed[sessionId] && parsed[sessionId][loadedContent.date]) {
-                         const learned = parsed[sessionId][loadedContent.date].includes(loadedContent.info_index);
-                         console.log(`🔍 ai-info-list-mode에서 userProgress 확인: ${learned}`);
-                         console.log(`🔍 ai-info-list-mode userProgress 데이터:`, parsed[sessionId][loadedContent.date]);
-                         return learned;
-                       }
-                     }
-                   } catch (error) {
-                     console.error('ai-info-list-mode userProgress 확인 에러:', error);
-                   }
-                 }
-                 
-                 console.log(`🔍 ai-info-list-mode 기본값 false 반환`);
+                 // userModified 상태가 없으면 기본값 false 반환
+                 console.log(`🔍 ai-info-list-mode userModified 상태 없음 - 기본값 false 반환`);
                  return false;
                })()}
                onProgressUpdate={onProgressUpdate}
