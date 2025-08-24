@@ -311,6 +311,34 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
     }
   }
   
+  // 기존 용어 학습 데이터 초기화 함수
+  const resetLearnedTerms = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        // 현재 카드의 학습된 용어 데이터 삭제
+        const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${index}`;
+        localStorage.removeItem(learnedTermsKey);
+        
+        // 상태 초기화
+        setLocalLearnedTerms(new Set());
+        
+        // React Query 캐시 무효화
+        queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
+        queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
+        queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
+        
+        console.log(`🔄 ${date} 날짜 ${index}번 카드 용어 학습 데이터 초기화 완료`);
+        
+        // 진행률 업데이트 콜백 호출
+        if (onProgressUpdate) {
+          onProgressUpdate()
+        }
+      } catch (error) {
+        console.error('용어 학습 데이터 초기화 오류:', error);
+      }
+    }
+  };
+
   // 컴포넌트 마운트 시에만 초기 상태 설정 (한 번만 실행)
   useEffect(() => {
     // localStorage의 userProgress를 우선시하여 초기 학습 상태 설정 (날짜별 모드 우선)
@@ -405,12 +433,15 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
         if (actualLearnedTerms.has(currentTerm.term)) {
           // 이미 학습된 용어 → 학습 해제
           try {
-            const newLocalTerms = new Set([...localLearnedTerms])
-            newLocalTerms.delete(currentTerm.term)
-            setLocalLearnedTerms(newLocalTerms)
-            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-            
-                                         console.log(`❌ 용어 학습 해제: ${currentTerm.term}`)
+                                         const newLocalTerms = new Set([...localLearnedTerms])
+                             newLocalTerms.delete(currentTerm.term)
+                             setLocalLearnedTerms(newLocalTerms)
+                             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                             
+                             // 즉시 시각적 반영을 위해 강제 리렌더링
+                             setForceUpdate && setForceUpdate(prev => prev + 1)
+                             
+                             console.log(`❌ 용어 학습 해제: ${currentTerm.term}`)
                              
                              // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
                              queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
@@ -744,12 +775,15 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                          setCurrentTermIndex(idx);
                          // 용어 학습 상태 토글 (이미 학습된 용어면 해제, 안된 용어면 학습)
                          if (actualLearnedTerms.has(term.term)) {
-                           // 이미 학습된 용어 → 학습 해제
+                           // 이미 학습된 용어 → 학습 해제 (즉시 시각적 반영)
                            try {
                              const newLocalTerms = new Set([...localLearnedTerms])
                              newLocalTerms.delete(term.term)
                              setLocalLearnedTerms(newLocalTerms)
                              localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                             
+                             // 즉시 시각적 반영을 위해 강제 리렌더링
+                             setForceUpdate && setForceUpdate(prev => prev + 1)
                              
                              // React Query 캐시 무효화하여 즉시 UI 업데이트
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
@@ -832,25 +866,37 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
         </div>
       )}
 
-      {/* 액션 버튼 */}
-      <div className="flex gap-2 md:gap-3">
-        <button
-          onClick={handleLearnToggle}
-          className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${
-            isLearned
-              ? 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700 cursor-pointer'
-              : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 cursor-pointer'
-          }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          <span className="hidden sm:inline">
-            {isLearned ? '학습완료' : '학습하기'}
-          </span>
-          <span className="sm:hidden">
-            {isLearned ? '완료' : '학습'}
-          </span>
-        </button>
-      </div>
+             {/* 액션 버튼 */}
+       <div className="flex gap-2 md:gap-3">
+         <button
+           onClick={handleLearnToggle}
+           className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${
+             isLearned
+               ? 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700 cursor-pointer'
+               : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 cursor-pointer'
+           }`}
+         >
+           <BookOpen className="w-4 h-4" />
+           <span className="hidden sm:inline">
+             {isLearned ? '학습완료' : '학습하기'}
+           </span>
+           <span className="sm:hidden">
+             {isLearned ? '완료' : '학습'}
+           </span>
+         </button>
+         
+         {/* 용어 학습 데이터 초기화 버튼 */}
+         {hasTermsInCurrentLanguage && (
+           <button
+             onClick={resetLearnedTerms}
+             className="px-3 py-2.5 md:py-3 bg-red-500/80 text-white rounded-lg text-sm font-medium hover:bg-red-600/80 transition-all touch-optimized mobile-touch-target active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-400/50"
+             title="관련용어 학습 데이터 초기화"
+           >
+             <span className="hidden sm:inline">초기화</span>
+             <span className="sm:hidden">초기</span>
+           </button>
+         )}
+       </div>
 
       {/* 학습 완료 알림 */}
       <AnimatePresence>
