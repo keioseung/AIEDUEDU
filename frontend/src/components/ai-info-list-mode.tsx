@@ -828,29 +828,6 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                            index={loadedContent.info_index || 0}
                            date={loadedContent.date || ''}
                sessionId={sessionId}
-               isLearned={(() => {
-                 console.log(`🔍 ai-info-list-mode isLearned 계산 시작 - date: ${loadedContent.date}, index: ${loadedContent.info_index}`);
-                 
-                 // userModified 상태만 확인 (userProgress는 절대 읽지 않음)
-                 if (typeof window !== 'undefined' && loadedContent.date) {
-                   try {
-                     const modifiedKey = `userModified_${sessionId}_${loadedContent.date}_${loadedContent.info_index}`;
-                     const modifiedState = localStorage.getItem(modifiedKey);
-                     console.log(`🔍 ai-info-list-mode에서 userModified 확인 - 키: ${modifiedKey}, 값: ${modifiedState}`);
-                     
-                     if (modifiedState !== null) {
-                       console.log(`🔍 ai-info-list-mode에서 userModified 발견: ${modifiedKey} = ${modifiedState}`);
-                       return modifiedState === 'true';
-                     }
-                   } catch (error) {
-                     console.error('ai-info-list-mode userModified 확인 에러:', error);
-                   }
-                 }
-                 
-                 // userModified 상태가 없으면 기본값 false 반환
-                 console.log(`🔍 ai-info-list-mode userModified 상태 없음 - 기본값 false 반환`);
-                 return false;
-               })()}
                onProgressUpdate={onProgressUpdate}
                            isFavorite={favoriteInfos.has(itemKey)}
                            onFavoriteToggle={() => toggleFavorite(itemKey)}

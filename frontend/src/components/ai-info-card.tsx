@@ -14,7 +14,7 @@ interface AIInfoCardProps {
   index: number
   date: string
   sessionId: string
-  isLearned: boolean
+  isLearned?: boolean  // 선택적으로 변경
   onProgressUpdate?: () => void
   forceUpdate?: number
   setForceUpdate?: (fn: (prev: number) => number) => void
