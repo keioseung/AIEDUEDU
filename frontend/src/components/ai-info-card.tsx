@@ -732,57 +732,63 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                   {currentLanguageTerms?.map((term, idx) => (
                     <button
                       key={term.term}
-                      onClick={async () => {
-                        setCurrentTermIndex(idx);
-                        // 용어 학습 상태 토글 (이미 학습된 용어면 해제, 안된 용어면 학습)
-                        if (actualLearnedTerms.has(term.term)) {
-                          // 이미 학습된 용어 → 학습 해제
-                          try {
-                            const newLocalTerms = new Set([...localLearnedTerms])
-                            newLocalTerms.delete(term.term)
-                            setLocalLearnedTerms(newLocalTerms)
-                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-                            
-                            console.log(`❌ 용어 학습 해제: ${term.term}`)
-                            
-                            // 진행률 업데이트 콜백 호출
-                            if (onProgressUpdate) {
-                              onProgressUpdate()
-                            }
-                          } catch (error) {
-                            console.error('Failed to remove term progress:', error)
-                          }
-                        } else {
-                          // 아직 학습되지 않은 용어 → 학습 완료
-                          try {
-                            const newLocalTerms = new Set([...localLearnedTerms, term.term])
-                            setLocalLearnedTerms(newLocalTerms)
-                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-                            
-                            // 백엔드 업데이트
-                            await updateTermProgressMutation.mutateAsync({
-                              sessionId,
-                              term: term.term,
-                              date,
-                              infoIndex: index
-                            })
-                            
-                            console.log(`✅ 용어 학습 완료: ${term.term}`)
-                            
-                            // 진행률 업데이트 콜백 호출
-                            if (onProgressUpdate) {
-                              onProgressUpdate()
-                            }
-                          } catch (error) {
-                            console.error('Failed to update term progress:', error)
-                            // 에러 시 localStorage 롤백
-                            const rollbackTerms = new Set([...localLearnedTerms])
-                            rollbackTerms.delete(term.term)
-                            setLocalLearnedTerms(rollbackTerms)
-                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
-                          }
-                        }
-                      }}
+                                             onClick={async () => {
+                         setCurrentTermIndex(idx);
+                         // 용어 학습 상태 토글 (이미 학습된 용어면 해제, 안된 용어면 학습)
+                         if (actualLearnedTerms.has(term.term)) {
+                           // 이미 학습된 용어 → 학습 해제
+                           try {
+                             const newLocalTerms = new Set([...localLearnedTerms])
+                             newLocalTerms.delete(term.term)
+                             setLocalLearnedTerms(newLocalTerms)
+                             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                             
+                             // React Query 캐시 무효화하여 즉시 UI 업데이트
+                             queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
+                             
+                             console.log(`❌ 용어 학습 해제: ${term.term}`)
+                             
+                             // 진행률 업데이트 콜백 호출
+                             if (onProgressUpdate) {
+                               onProgressUpdate()
+                             }
+                           } catch (error) {
+                             console.error('Failed to remove term progress:', error)
+                           }
+                         } else {
+                           // 아직 학습되지 않은 용어 → 학습 완료
+                           try {
+                             const newLocalTerms = new Set([...localLearnedTerms, term.term])
+                             setLocalLearnedTerms(newLocalTerms)
+                             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                             
+                             // 백엔드 업데이트
+                             await updateTermProgressMutation.mutateAsync({
+                               sessionId,
+                               term: term.term,
+                               date,
+                               infoIndex: index
+                             })
+                             
+                             // React Query 캐시 무효화하여 즉시 UI 업데이트
+                             queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
+                             
+                             console.log(`✅ 용어 학습 완료: ${term.term}`)
+                             
+                             // 진행률 업데이트 콜백 호출
+                             if (onProgressUpdate) {
+                               onProgressUpdate()
+                             }
+                           } catch (error) {
+                             console.error('Failed to update term progress:', error)
+                             // 에러 시 localStorage 롤백
+                             const rollbackTerms = new Set([...localLearnedTerms])
+                             rollbackTerms.delete(term.term)
+                             setLocalLearnedTerms(rollbackTerms)
+                             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
+                           }
+                         }
+                       }}
                       className={`px-2 py-1 md:px-3 md:py-2 rounded text-xs font-bold border transition-all touch-optimized mobile-touch-target ${
                         idx === currentTermIndex 
                           ? 'bg-green-500 text-white border-green-600' 
