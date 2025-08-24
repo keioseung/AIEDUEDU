@@ -79,7 +79,7 @@ export default function AdminAIInfoPage() {
   const [bulkTermsTextEn, setBulkTermsTextEn] = useState('')
   const [bulkTermsTextJa, setBulkTermsTextJa] = useState('')
   const [bulkTermsTextZh, setBulkTermsTextZh] = useState('')
-  const [showBulkInput, setShowBulkInput] = useState<number | null>(null)
+  const [showBulkInput, setShowBulkInput] = useState<number | null | 'edit'>(null)
 
   // 날짜별 AI 정보 관리 상태
   const [selectedDate, setSelectedDate] = useState('')
@@ -1024,6 +1024,206 @@ export default function AdminAIInfoPage() {
     }
   }
 
+  // AI와 LLM 중복 용어 분석 및 교체 기능
+  const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false)
+  const [duplicateTerms, setDuplicateTerms] = useState<{
+    term: string
+    count: number
+    locations: Array<{date: string, index: number, cardTitle: string}>
+  }[]>([])
+  const [replacementSuggestions, setReplacementSuggestions] = useState<{
+    date: string
+    index: number
+    originalTerm: string
+    suggestedTerms: string[]
+  }[]>([])
+
+  // 중복 용어 분석 함수
+  const analyzeDuplicateTerms = () => {
+    if (!allAIInfos || allAIInfos.length === 0) {
+      setError('AI 정보 데이터를 먼저 불러와주세요.')
+      return
+    }
+
+    const termCount: Record<string, {
+      count: number
+      locations: Array<{date: string, index: number, cardTitle: string}>
+    }> = {}
+
+    // 모든 AI 정보 카드에서 용어 수집
+    allAIInfos.forEach((dateGroup) => {
+      dateGroup.infos.forEach((info, index) => {
+        if (info.terms && Array.isArray(info.terms)) {
+          info.terms.forEach((term) => {
+            if (!termCount[term.term]) {
+              termCount[term.term] = {
+                count: 0,
+                locations: []
+              }
+            }
+            termCount[term.term].count++
+            termCount[term.term].locations.push({
+              date: dateGroup.date,
+              index: index,
+              cardTitle: info.title || `카드 ${index + 1}`
+            })
+          })
+        }
+      })
+    })
+
+    // 중복되는 용어만 필터링 (2번 이상 사용된 용어)
+    const duplicates = Object.entries(termCount)
+      .filter(([_, data]) => data.count > 1)
+      .map(([term, data]) => ({
+        term,
+        count: data.count,
+        locations: data.locations
+      }))
+      .sort((a, b) => b.count - a.count) // 중복 횟수 순으로 정렬
+
+    setDuplicateTerms(duplicates)
+    setShowDuplicateAnalysis(true)
+    console.log('중복 용어 분석 결과:', duplicates)
+  }
+
+  // 대체 용어 제안 함수
+  const generateReplacementSuggestions = () => {
+    if (duplicateTerms.length === 0) return
+
+    const suggestions: typeof replacementSuggestions = []
+    
+    duplicateTerms.forEach((duplicate) => {
+      duplicate.locations.forEach((location) => {
+        const cardInfo = allAIInfos
+          .find(dateGroup => dateGroup.date === location.date)
+          ?.infos[location.index]
+        
+        if (cardInfo) {
+          const suggestedTerms = generateTermSuggestions(cardInfo, duplicate.term)
+          suggestions.push({
+            date: location.date,
+            index: location.index,
+            originalTerm: duplicate.term,
+            suggestedTerms: suggestedTerms
+          })
+        }
+      })
+    })
+
+    setReplacementSuggestions(suggestions)
+    console.log('대체 용어 제안:', suggestions)
+  }
+
+  // 카드 내용 기반으로 대체 용어 생성
+  const generateTermSuggestions = (cardInfo: AIInfoItem, originalTerm: string): string[] => {
+    const suggestions: string[] = []
+    
+    // 카테고리별 전문 용어 사전
+    const categoryTerms: Record<string, string[]> = {
+      '챗봇/대화형 AI': [
+        '자연어처리', '대화시스템', '의도분석', '엔티티추출', '감정분석', '대화흐름', '멀티턴', '컨텍스트', '프롬프트엔지니어링', '파인튜닝',
+        '제로샷러닝', '퓨샷러닝', '인퍼런스', '토큰화', '임베딩', '어텐션', '트랜스포머', 'RNN', 'LSTM', 'GRU'
+      ],
+      '이미지 생성 AI': [
+        '생성모델', 'GAN', 'VAE', '디퓨전', '스테이블디퓨전', 'DALL-E', 'Midjourney', '이미지합성', '스타일전이', '초해상도',
+        '이미지편집', '인페인팅', '아웃페인팅', '프롬프트', '네거티브프롬프트', 'CFG스케일', '샘플링스텝', '시드값', '노이즈', '스케줄러'
+      ],
+      '코딩/개발 도구': [
+        '코드생성', '코드분석', '리팩토링', '디버깅', '테스트자동화', 'CI/CD', '버전관리', '코드리뷰', '정적분석', '동적분석',
+        '성능프로파일링', '메모리관리', '동시성', '비동기처리', '마이크로서비스', 'API설계', '데이터베이스', '캐싱', '로깅', '모니터링'
+      ],
+      '음성/오디오 AI': [
+        '음성인식', '음성합성', 'STT', 'TTS', '화자식별', '감정인식', '노이즈제거', '에코캔슬링', '음성변조', '음악생성',
+        '오디오분석', '스펙트럼', '주파수', '진폭', '위상', '필터링', '압축', '인코딩', '디코딩', '스트리밍'
+      ],
+      '데이터 분석/ML': [
+        '머신러닝', '딥러닝', '지도학습', '비지도학습', '강화학습', '분류', '회귀', '클러스터링', '차원축소', '특성선택',
+        '교차검증', '하이퍼파라미터', '정규화', '드롭아웃', '배치정규화', '옵티마이저', '손실함수', '메트릭', '앙상블', '전이학습'
+      ],
+      'AI 윤리/정책': [
+        '편향성', '공정성', '투명성', '책임성', '개인정보', '데이터보호', '알고리즘감시', 'AI거버넌스', '윤리가이드라인', '사회적영향',
+        '고용영향', '교육혁신', '의료윤리', '자율주행윤리', '군사AI', 'AI안전', '인간중심AI', '지속가능성', '포용성', '다양성'
+      ],
+      'AI 하드웨어/인프라': [
+        'GPU', 'TPU', 'NPU', '클라우드컴퓨팅', '엣지컴퓨팅', '분산처리', '병렬처리', '메모리계층', '네트워크', '스토리지',
+        '가상화', '컨테이너', '오케스트레이션', '스케일링', '로드밸런싱', '장애복구', '백업', '보안', '암호화', '인증'
+      ],
+      'AI 응용 서비스': [
+        '추천시스템', '검색엔진', '번역서비스', '요약서비스', '질의응답', '문서분류', '감정분석', '이미지분류', '객체탐지', '얼굴인식',
+        '음성비서', '스마트홈', '자율주행', '의료진단', '금융분석', '교육플랫폼', '엔터테인먼트', '게임AI', '로봇공학', 'IoT'
+      ]
+    }
+
+    // 카드의 카테고리에 맞는 용어들에서 선택
+    const category = cardInfo.category || '미분류'
+    const availableTerms = categoryTerms[category] || categoryTerms['AI 응용 서비스']
+    
+    // 이미 사용된 용어들과 겹치지 않는 용어들 선택
+    const usedTerms = new Set<string>()
+    allAIInfos.forEach((dateGroup) => {
+      dateGroup.infos.forEach((info) => {
+        if (info.terms && Array.isArray(info.terms)) {
+          info.terms.forEach((term) => {
+            usedTerms.add(term.term)
+          })
+        }
+      })
+    })
+
+    // 사용되지 않은 용어들 중에서 선택
+    const unusedTerms = availableTerms.filter(term => !usedTerms.has(term))
+    
+    // 최대 5개까지 제안
+    return unusedTerms.slice(0, 5)
+  }
+
+  // 용어 교체 실행 함수
+  const executeTermReplacement = async (date: string, index: number, originalTerm: string, newTerm: string) => {
+    try {
+      // 해당 카드의 용어 목록에서 원래 용어를 새 용어로 교체
+      const cardInfo = allAIInfos
+        .find(dateGroup => dateGroup.date === date)
+        ?.infos[index]
+      
+      if (!cardInfo) {
+        setError('카드 정보를 찾을 수 없습니다.')
+        return
+      }
+
+      // 용어 교체
+      const updatedTerms = cardInfo.terms?.map(term => 
+        term.term === originalTerm 
+          ? { ...term, term: newTerm }
+          : term
+      ) || []
+
+      // 카드 정보 업데이트
+      const updatedCardInfo = {
+        ...cardInfo,
+        terms: updatedTerms
+      }
+
+      // API를 통해 업데이트
+      await updateItemMutation.mutateAsync({
+        date,
+        itemIndex: index,
+        data: updatedCardInfo
+      })
+
+      setSuccess(`용어 교체 완료: "${originalTerm}" → "${newTerm}"`)
+      
+      // 중복 분석 새로고침
+      setTimeout(() => {
+        analyzeDuplicateTerms()
+      }, 1000)
+      
+    } catch (error) {
+      console.error('용어 교체 실패:', error)
+      setError('용어 교체에 실패했습니다.')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
       {/* 배경 효과 */}
@@ -1485,6 +1685,12 @@ export default function AdminAIInfoPage() {
                   >
                     {showAllAIInfo ? '전체 보기 숨기기' : '전체 AI 정보 보기'}
                   </button>
+                  <button
+                    onClick={analyzeDuplicateTerms}
+                    className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
+                  >
+                    🔍 중복 용어 분석
+                  </button>
                 </div>
               )}
               
@@ -1753,16 +1959,16 @@ export default function AdminAIInfoPage() {
                                     <div className="flex items-center justify-between mb-2">
                                       <label className="block text-white/80 font-medium">관련 용어 (한국어 기준)</label>
                                       <div className="flex gap-2">
-                                        <button
-                                          type="button"
-                                          onClick={() => setEditingData({
-                                            ...editingData,
-                                            terms_ko: [...(editingData.terms_ko || []), { term: '', description: '' }]
-                                          })}
-                                          className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
-                                        >
-                                          + 용어 추가
-                                        </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => setEditingData({
+                                          ...editingData,
+                                          terms_ko: [...(editingData.terms_ko || []), { term: '', description: '' }]
+                                        })}
+                                        className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
+                                      >
+                                        + 용어 추가
+                                      </button>
                                         <button
                                           type="button"
                                           onClick={() => {
@@ -1942,38 +2148,38 @@ export default function AdminAIInfoPage() {
                                             type="text"
                                             placeholder="용어"
                                             value={term.term}
-                                            onChange={(e) => {
-                                              const newTerms = [...(editingData.terms_ko || [])]
-                                              newTerms[termIdx] = { ...term, term: e.target.value }
-                                              setEditingData({ ...editingData, terms_ko: newTerms })
-                                            }}
+                                                                                         onChange={(e) => {
+                                               const newTerms = [...(editingData.terms_ko || [])]
+                                               newTerms[termIdx] = { ...term, term: e.target.value }
+                                               setEditingData({ ...editingData, terms_ko: newTerms })
+                                             }}
                                             className="w-full p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
                                           <input
                                             type="text"
                                             placeholder="용어 설명"
                                             value={term.description}
-                                            onChange={(e) => {
-                                              const newTerms = [...(editingData.terms_ko || [])]
-                                              newTerms[termIdx] = { ...term, description: e.target.value }
-                                              setEditingData({ ...editingData, terms_ko: newTerms })
-                                            }}
+                                                                                         onChange={(e) => {
+                                               const newTerms = [...(editingData.terms_ko || [])]
+                                               newTerms[termIdx] = { ...term, description: e.target.value }
+                                               setEditingData({ ...editingData, terms_ko: newTerms })
+                                             }}
                                             className="w-full p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm"
                                           />
                                         </div>
                                         <div className="flex gap-1">
-                                          <button
-                                            type="button"
-                                            onClick={() => {
-                                              const newTerms = (editingData.terms_ko || []).filter((_, i) => i !== termIdx)
-                                              setEditingData({ ...editingData, terms_ko: newTerms })
-                                            }}
-                                            className="px-2 py-1 bg-red-500/20 text-red-300 rounded font-medium hover:bg-red-500/30 transition text-sm border border-red-500/30"
+                                        <button
+                                          type="button"
+                                                                                     onClick={() => {
+                                             const newTerms = (editingData.terms_ko || []).filter((_, i) => i !== termIdx)
+                                             setEditingData({ ...editingData, terms_ko: newTerms })
+                                           }}
+                                          className="px-2 py-1 bg-red-500/20 text-red-300 rounded font-medium hover:bg-red-500/30 transition text-sm border border-red-500/30"
                                             title="용어 삭제"
-                                          >
+                                        >
                                             🗑️
-                                          </button>
-                                          <button
+                                        </button>
+                                    <button
                                             type="button"
                                             onClick={() => {
                                               // 용어 순서 위로 이동
@@ -1994,8 +2200,8 @@ export default function AdminAIInfoPage() {
                                             title="위로 이동"
                                           >
                                             ⬆️
-                                          </button>
-                                          <button
+                                    </button>
+                                    <button
                                             type="button"
                                             onClick={() => {
                                               // 용어 순서 아래로 이동
@@ -2016,7 +2222,7 @@ export default function AdminAIInfoPage() {
                                             title="아래로 이동"
                                           >
                                             ⬇️
-                                          </button>
+                                    </button>
                                         </div>
                                       </div>
                                     ))}
@@ -2372,6 +2578,139 @@ export default function AdminAIInfoPage() {
 
         </div>
       </div>
+
+      {/* 중복 용어 분석 모달 */}
+      {showDuplicateAnalysis && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                🔍 중복 용어 분석 결과
+              </h2>
+              <button
+                onClick={() => setShowDuplicateAnalysis(false)}
+                className="text-gray-400 hover:text-white text-2xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            {duplicateTerms.length === 0 ? (
+              <div className="text-center py-8 text-white/50">
+                중복되는 용어가 없습니다! 🎉
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* 중복 용어 요약 */}
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+                  <h3 className="text-lg font-semibold text-blue-300 mb-2">📊 중복 현황 요약</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-400">{duplicateTerms.length}</div>
+                      <div className="text-blue-300">중복 용어 수</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-orange-400">
+                        {duplicateTerms.reduce((sum, term) => sum + term.count, 0)}
+                      </div>
+                      <div className="text-orange-300">총 중복 횟수</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-red-400">
+                        {duplicateTerms[0]?.count || 0}
+                      </div>
+                      <div className="text-red-300">최대 중복 횟수</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 대체 용어 제안 버튼 */}
+                <div className="text-center">
+                  <button
+                    onClick={generateReplacementSuggestions}
+                    className="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 mx-auto"
+                  >
+                    💡 대체 용어 제안 생성
+                  </button>
+                </div>
+
+                {/* 중복 용어 상세 목록 */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white">📋 중복 용어 상세</h3>
+                  {duplicateTerms.map((duplicate, idx) => (
+                    <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg font-bold text-white">{duplicate.term}</span>
+                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                            {duplicate.count}회 중복
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="text-sm text-white/70">사용 위치:</div>
+                        {duplicate.locations.map((location, locIdx) => (
+                          <div key={locIdx} className="flex items-center justify-between bg-white/5 rounded-lg p-2">
+                            <div className="text-sm text-white/80">
+                              📅 {location.date} - {location.cardTitle}
+                            </div>
+                            <div className="text-xs text-white/60">
+                              인덱스: {location.index}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 대체 용어 제안 결과 */}
+                {replacementSuggestions.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-white">💡 대체 용어 제안</h3>
+                    {replacementSuggestions.map((suggestion, idx) => (
+                      <div key={idx} className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                        <div className="mb-3">
+                          <div className="text-sm text-green-300 mb-1">
+                            📅 {suggestion.date} - 인덱스 {suggestion.index}
+                          </div>
+                          <div className="text-lg font-semibold text-white">
+                            "{suggestion.originalTerm}" → 대체 용어 선택
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-3">
+                          {suggestion.suggestedTerms.map((newTerm, termIdx) => (
+                            <button
+                              key={termIdx}
+                              onClick={() => executeTermReplacement(
+                                suggestion.date,
+                                suggestion.index,
+                                suggestion.originalTerm,
+                                newTerm
+                              )}
+                              className="px-3 py-2 bg-green-500/20 text-green-300 rounded-lg hover:bg-green-500/30 transition text-sm border border-green-500/30"
+                            >
+                              {newTerm}
+                            </button>
+                          ))}
+                        </div>
+                        
+                        {suggestion.suggestedTerms.length === 0 && (
+                          <div className="text-center py-4 text-yellow-400 bg-yellow-500/10 rounded-lg">
+                            ⚠️ 적합한 대체 용어가 없습니다. 수동으로 입력해주세요.
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 } 
