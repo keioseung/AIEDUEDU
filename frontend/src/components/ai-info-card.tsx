@@ -352,22 +352,32 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
       } catch {}
     }
     
-    // localStorage에서 학습된 용어들 불러오기
-    if (typeof window !== 'undefined') {
-      try {
-        const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${index}`;
-        const storedLearnedTerms = localStorage.getItem(learnedTermsKey);
-        if (storedLearnedTerms) {
-          const parsedTerms = JSON.parse(storedLearnedTerms);
-          if (Array.isArray(parsedTerms)) {
-            setLocalLearnedTerms(new Set(parsedTerms));
-            console.log(`📚 localStorage에서 학습된 용어 불러오기 완료: ${parsedTerms.length}개`);
-          }
+      // localStorage에서 학습된 용어들 불러오기
+  if (typeof window !== 'undefined') {
+    try {
+      const learnedTermsKey = `learnedTerms_${sessionId}_${date}_${index}`;
+      const storedLearnedTerms = localStorage.getItem(learnedTermsKey);
+      if (storedLearnedTerms) {
+        const parsedTerms = JSON.parse(storedLearnedTerms);
+        if (Array.isArray(parsedTerms) && parsedTerms.length > 0) {
+          setLocalLearnedTerms(new Set(parsedTerms));
+          console.log(`📚 localStorage에서 학습된 용어 불러오기 완료: ${parsedTerms.length}개`);
+        } else {
+          // 저장된 데이터가 없거나 빈 배열인 경우 빈 Set으로 초기화
+          setLocalLearnedTerms(new Set());
+          console.log(`📚 localStorage에서 학습된 용어 없음 - 빈 Set으로 초기화`);
         }
-      } catch (error) {
-        console.error('학습된 용어 불러오기 오류:', error);
+      } else {
+        // 저장된 데이터가 없는 경우 빈 Set으로 초기화
+        setLocalLearnedTerms(new Set());
+        console.log(`📚 localStorage에서 학습된 용어 없음 - 빈 Set으로 초기화`);
       }
+    } catch (error) {
+      console.error('학습된 용어 불러오기 오류:', error);
+      // 오류 발생 시에도 빈 Set으로 초기화
+      setLocalLearnedTerms(new Set());
     }
+  }
   }, []); // 빈 의존성 배열로 한 번만 실행
 
   // 용어가 있는지 확인

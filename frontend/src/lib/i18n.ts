@@ -960,7 +960,7 @@ const en: Record<string, string> = {
   'terms.list.scroll.mode': '📱 Scroll',
   
   // Terms Learning Tab Loading Page
-  'terms.tab.loading': 'しばらくお待ちください。',
+  'terms.tab.loading': 'Please wait a moment.',
   
   // Terms Learning Tab Playback Speed Settings
   'terms.playback.speed': 'Playback Speed',
