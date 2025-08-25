@@ -163,13 +163,13 @@ export default function AdminAIInfoPage() {
       
       if (response.data.success) {
         console.log('✅ 용어 수정 성공!')
-        
-        // 검색 결과 새로고침
-        if (wordSearchQuery.trim()) {
-          performWordSearch()
-        }
-        
-        setSuccess('용어가 성공적으로 업데이트되었습니다!')
+      
+      // 검색 결과 새로고침
+      if (wordSearchQuery.trim()) {
+        performWordSearch()
+      }
+      
+      setSuccess('용어가 성공적으로 업데이트되었습니다!')
       } else {
         throw new Error(response.data.message || '용어 수정에 실패했습니다.')
       }
@@ -684,12 +684,12 @@ export default function AdminAIInfoPage() {
   }
 
   const handleRemoveInput = (idx: number) => {
-    setInputs(inputs => inputs.length === 1 ? inputs : inputs.filter((_, i) => i !== idx))
+    setInputs((inputs: any) => inputs.length === 1 ? inputs : inputs.filter((_: any, i: number) => i !== idx))
   }
 
   // 용어 관리 핸들러 - 한국어 기준으로 수정
   const handleAddTerm = (infoIdx: number) => {
-    setInputs(inputs => inputs.map((input, i) => 
+    setInputs((inputs: any) => inputs.map((input: any, i: number) => 
       i === infoIdx 
         ? { ...input, terms_ko: [...input.terms_ko, { term: '', description: '' }] }
         : input
@@ -1998,8 +1998,12 @@ export default function AdminAIInfoPage() {
                                   {/* 수정 반영 버튼 */}
                                   <button
                                     onClick={() => {
-                                      // 수정된 용어와 설명 가져오기
-                                      const updatedTerm = newTerms.find(t => t.term === term.term)
+                                      // 현재 wordSearchResults에서 수정된 용어와 설명 가져오기
+                                      const currentWordSearchResults = [...wordSearchResults]
+                                      const termsKey = `terms_${term.language}` as keyof AIInfoItem
+                                      const currentTerms = [...(currentWordSearchResults[index][termsKey] as TermItem[] || [])]
+                                      const updatedTerm = currentTerms.find(t => t.term === term.term)
+                                      
                                       if (updatedTerm) {
                                         handleTermUpdate(
                                           info.date || '', 
@@ -3522,7 +3526,7 @@ export default function AdminAIInfoPage() {
                 >
                   <FaTimes className="w-6 h-6" />
                 </button>
-              </div>
+    </div>
               <div className="text-white/70">
                 <strong>제목:</strong> {editingTermsInfo.title}
               </div>
