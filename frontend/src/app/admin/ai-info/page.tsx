@@ -3682,13 +3682,21 @@ export default function AdminAIInfoPage() {
                         const originalInfo = updatedInfos[editingTermsInfo.infoIndex]
                         console.log('🔍 수정 전 원본 정보:', originalInfo)
                         
-                        // 수정할 용어 데이터를 더 자세히 로깅
-                        console.log('🔍 수정할 용어 데이터 상세:', {
-                          terms_ko_first: editingTermsInfo.terms_ko[0],
-                          terms_en_first: editingTermsInfo.terms_en[0],
-                          terms_ja_first: editingTermsInfo.terms_ja[0],
-                          terms_zh_first: editingTermsInfo.terms_zh[0]
-                        })
+                                              // 수정할 용어 데이터를 더 자세히 로깅
+                      console.log('🔍 수정할 용어 데이터 상세:', {
+                        terms_ko_first: editingTermsInfo.terms_ko[0],
+                        terms_en_first: editingTermsInfo.terms_en[0],
+                        terms_ja_first: editingTermsInfo.terms_ja[0],
+                        terms_zh_first: editingTermsInfo.terms_zh[0]
+                      })
+                      
+                      // 수정할 용어 데이터의 실제 내용을 더 구체적으로 로깅
+                      console.log('🔍 수정할 용어 데이터 실제 내용:', {
+                        terms_ko_first_term: editingTermsInfo.terms_ko[0]?.term,
+                        terms_ko_first_description: editingTermsInfo.terms_ko[0]?.description,
+                        terms_en_first_term: editingTermsInfo.terms_en[0]?.term,
+                        terms_en_first_description: editingTermsInfo.terms_en[0]?.description
+                      })
                         
                         updatedInfos[editingTermsInfo.infoIndex] = {
                           ...originalInfo,
@@ -3739,6 +3747,16 @@ export default function AdminAIInfoPage() {
                           terms_ko_first: info.terms_ko?.[0] || '없음',
                           terms_en_first: info.terms_en?.[0] || '없음'
                         }))
+                      })
+                      
+                      // 백엔드로 전송될 데이터의 실제 용어 내용을 더 구체적으로 로깅
+                      console.log('📤 백엔드로 전송될 용어 데이터 실제 내용:', {
+                        date: editingTermsInfo.date,
+                        target_index: editingTermsInfo.infoIndex,
+                        target_terms_ko_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_ko?.[0]?.term,
+                        target_terms_ko_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_ko?.[0]?.description,
+                        target_terms_en_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_en?.[0]?.term,
+                        target_terms_en_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_en?.[0]?.description
                       })
                       
                       const response = await aiInfoAPI.add({
