@@ -1590,6 +1590,122 @@ export default function AdminAIInfoPage() {
                         </button>
                       </div>
                     </div>
+                    
+                    {/* 관련 용어 검색 결과 상세 표시 */}
+                    {wordSearchType === 'terms' && (
+                      <div className="mt-4 p-4 bg-gray-700/30 rounded-lg border border-gray-600">
+                        <h5 className="text-md font-medium text-white mb-3 flex items-center gap-2">
+                          🔍 검색된 관련 용어
+                        </h5>
+                        <div className="space-y-3">
+                          {(() => {
+                            const matchedTerms: Array<{
+                              term: string
+                              description: string
+                              language: 'ko' | 'en' | 'ja' | 'zh'
+                            }> = []
+                            
+                            // 각 언어별로 검색어와 일치하는 용어 찾기
+                            const searchLower = wordSearchQuery.toLowerCase()
+                            ;['ko', 'en', 'ja', 'zh'].forEach(lang => {
+                              const terms = info[`terms_${lang}`] || []
+                              terms.forEach(term => {
+                                if (term.term.toLowerCase().includes(searchLower)) {
+                                  matchedTerms.push({
+                                    term: term.term,
+                                    description: term.description,
+                                    language: lang as 'ko' | 'en' | 'ja' | 'zh'
+                                  })
+                                }
+                              })
+                            })
+                            
+                            return matchedTerms.map((term, termIndex) => (
+                              <div key={termIndex} className="bg-gray-800/50 border border-gray-600 rounded-lg p-3">
+                                <div className="flex items-start justify-between mb-2">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <span className="text-sm font-medium text-white">{term.term}</span>
+                                      <span className={`text-xs px-2 py-1 rounded-full ${
+                                        term.language === 'ko' ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
+                                        term.language === 'en' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                                        term.language === 'ja' ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' :
+                                        'bg-orange-500/20 text-orange-300 border border-orange-400/30'
+                                      }`}>
+                                        {term.language === 'ko' ? '🇰🇷 한국어' : 
+                                         term.language === 'en' ? '🇺🇸 영어' : 
+                                         term.language === 'ja' ? '🇯🇵 일본어' : '🇨🇳 중국어'}
+                                      </span>
+                                    </div>
+                                    
+                                    <div className="text-sm text-gray-300 mb-2">
+                                      <strong>설명:</strong> {term.description}
+                                    </div>
+                                    
+                                    <div className="text-sm text-gray-400">
+                                      <strong>학습 제목:</strong> {info.title || '제목 없음'}
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* 용어 수정 폼 */}
+                                <div className="mt-3 space-y-2">
+                                  <div>
+                                    <label className="block text-xs font-medium text-gray-300 mb-1">용어 수정</label>
+                                    <input
+                                      type="text"
+                                      value={term.term}
+                                      onChange={(e) => {
+                                        // 용어 수정 로직
+                                        const newTerm = e.target.value
+                                        const newWordSearchResults = [...wordSearchResults]
+                                        const newTerms = [...(newWordSearchResults[index][`terms_${term.language}`] || [])]
+                                        const termToUpdate = newTerms.find(t => t.term === term.term)
+                                        if (termToUpdate) {
+                                          termToUpdate.term = newTerm
+                                          newWordSearchResults[index][`terms_${term.language}`] = newTerms
+                                          setWordSearchResults(newWordSearchResults)
+                                        }
+                                      }}
+                                      className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-sm text-white focus:ring-1 focus:ring-blue-500"
+                                    />
+                                  </div>
+                                  
+                                  <div>
+                                    <label className="block text-xs font-medium text-gray-300 mb-1">설명 수정</label>
+                                    <textarea
+                                      value={term.description}
+                                      onChange={(e) => {
+                                        // 설명 수정 로직
+                                        const newDescription = e.target.value
+                                        const newWordSearchResults = [...wordSearchResults]
+                                        const newTerms = [...(newWordSearchResults[index][`terms_${term.language}`] || [])]
+                                        const termToUpdate = newTerms.find(t => t.term === term.term)
+                                        if (termToUpdate) {
+                                                                                   termToUpdate.description = newDescription
+                                         newWordSearchResults[index][`terms_${term.language}`] = newTerms
+                                         setWordSearchResults(newWordSearchResults)
+                                        }
+                                      }}
+                                      rows={2}
+                                      className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-sm text-white focus:ring-1 focus:ring-blue-500 resize-none"
+                                    />
+                                  </div>
+                                  
+                                  {/* 수정 반영 버튼 */}
+                                  <button
+                                    onClick={() => handleTermUpdate(info.date || '', info.info_index || 0, term.language, term.term, term.term, term.description)}
+                                    className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-xs rounded transition-colors"
+                                  >
+                                    수정 반영
+                                  </button>
+                                </div>
+                              </div>
+                            ))
+                          })()}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

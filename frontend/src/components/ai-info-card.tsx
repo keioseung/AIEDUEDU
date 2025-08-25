@@ -802,10 +802,8 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                                onProgressUpdate()
                              }
                              
-                             // 즉시 시각적 반영을 위한 추가 강제 리렌더링
-                             setTimeout(() => {
-                               setForceUpdate && setForceUpdate(prev => prev + 1)
-                             }, 0)
+                             // 즉시 시각적 반영을 위한 강제 리렌더링
+                             setForceUpdate && setForceUpdate(prev => prev + 1)
                            } catch (error) {
                              console.error('Failed to remove term progress:', error)
                            }
