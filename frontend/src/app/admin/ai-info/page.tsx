@@ -3665,14 +3665,40 @@ export default function AdminAIInfoPage() {
                 <button
                   onClick={async () => {
                     try {
-                      // 수정된 용어를 데이터베이스에 저장
-                      const updatedItem = {
-                        ...editingTermsInfo,
-                        terms_ko: editingTermsInfo.terms_ko,
-                        terms_en: editingTermsInfo.terms_en,
-                        terms_ja: editingTermsInfo.terms_ja,
-                        terms_zh: editingTermsInfo.terms_zh
+                      // 기존 데이터를 가져와서 용어만 업데이트
+                      const existingResponse = await aiInfoAPI.getByDate(editingTermsInfo.date)
+                      if (!existingResponse.data || !existingResponse.data[editingTermsInfo.infoIndex]) {
+                        throw new Error('기존 데이터를 찾을 수 없습니다.')
                       }
+                      
+                      const existingInfo = existingResponse.data[editingTermsInfo.infoIndex]
+                      
+                      // 수정된 용어를 데이터베이스에 저장
+                      // 데이터베이스 컬럼 구조에 맞춰 데이터 구성
+                      const updatedItem = {
+                        // 기존 제목과 내용 유지
+                        [`info${editingTermsInfo.infoIndex + 1}_title_ko`]: existingInfo.title_ko || existingInfo.title || editingTermsInfo.title,
+                        [`info${editingTermsInfo.infoIndex + 1}_title_en`]: existingInfo.title_en || existingInfo.title || editingTermsInfo.title,
+                        [`info${editingTermsInfo.infoIndex + 1}_title_ja`]: existingInfo.title_ja || existingInfo.title || editingTermsInfo.title,
+                        [`info${editingTermsInfo.infoIndex + 1}_title_zh`]: existingInfo.title_zh || existingInfo.title || editingTermsInfo.title,
+                        [`info${editingTermsInfo.infoIndex + 1}_content_ko`]: existingInfo.content_ko || existingInfo.content || '',
+                        [`info${editingTermsInfo.infoIndex + 1}_content_en`]: existingInfo.content_en || existingInfo.content || '',
+                        [`info${editingTermsInfo.infoIndex + 1}_content_ja`]: existingInfo.content_ja || existingInfo.content || '',
+                        [`info${editingTermsInfo.infoIndex + 1}_content_zh`]: existingInfo.content_zh || existingInfo.content || '',
+                        // 용어만 새로 업데이트 (JSON 문자열로 변환)
+                        [`info${editingTermsInfo.infoIndex + 1}_terms_ko`]: JSON.stringify(editingTermsInfo.terms_ko),
+                        [`info${editingTermsInfo.infoIndex + 1}_terms_en`]: JSON.stringify(editingTermsInfo.terms_en),
+                        [`info${editingTermsInfo.infoIndex + 1}_terms_ja`]: JSON.stringify(editingTermsInfo.terms_ja),
+                        [`info${editingTermsInfo.infoIndex + 1}_terms_zh`]: JSON.stringify(editingTermsInfo.terms_zh),
+                        // 기존 카테고리 유지
+                        [`info${editingTermsInfo.infoIndex + 1}_category`]: existingInfo.category || ''
+                      }
+                      
+                      console.log('🚀 용어 수정 저장 시도:', {
+                        date: editingTermsInfo.date,
+                        itemIndex: editingTermsInfo.infoIndex,
+                        updatedItem
+                      })
                       
                       await updateItemMutation.mutateAsync({
                         date: editingTermsInfo.date,
