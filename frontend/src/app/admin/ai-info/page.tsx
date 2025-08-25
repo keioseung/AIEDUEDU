@@ -1031,6 +1031,17 @@ export default function AdminAIInfoPage() {
     count: number
     locations: Array<{date: string, index: number, cardTitle: string}>
   }[]>([])
+  const [searchResults, setSearchResults] = useState<Array<{
+    date: string
+    index: number
+    cardTitle: string
+    cardContent: string
+    matchedTerms: Array<{
+      term: string
+      type: 'term' | 'title' | 'content'
+      description?: string
+    }>
+  }>>([])
   const [replacementSuggestions, setReplacementSuggestions] = useState<{
     date: string
     index: number
@@ -1055,44 +1066,58 @@ export default function AdminAIInfoPage() {
       index: number
       cardTitle: string
       cardContent: string
-      matchedTerms: string[]
+      matchedTerms: Array<{
+        term: string
+        type: 'term' | 'title' | 'content'
+        description?: string
+      }>
     }> = []
 
     // 모든 AI 정보 카드에서 특정 단어 검색
     allAIInfos.forEach((dateGroup) => {
       dateGroup.infos.forEach((info: AIInfoItem, index: number) => {
-        let hasMatchedTerm = false
-        const matchedTerms: string[] = []
+        const matchedTerms: Array<{
+          term: string
+          type: 'term' | 'title' | 'content'
+          description?: string
+        }> = []
 
-        // 용어에서 검색
+        // 용어에서 검색 (20개 용어 중에서)
         if (info.terms && Array.isArray(info.terms)) {
           info.terms.forEach((term) => {
             if (term.term.toLowerCase().includes(searchTerm.toLowerCase())) {
-              hasMatchedTerm = true
-              matchedTerms.push(term.term)
+              matchedTerms.push({
+                term: term.term,
+                type: 'term',
+                description: term.description
+              })
             }
           })
         }
 
         // 제목에서도 검색
-        if (info.title.toLowerCase().includes(searchTerm.toLowerCase())) {
-          hasMatchedTerm = true
-          matchedTerms.push('제목')
+        if (info.title && info.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+          matchedTerms.push({
+            term: info.title,
+            type: 'title'
+          })
         }
 
         // 내용에서도 검색
-        if (info.content.toLowerCase().includes(searchTerm.toLowerCase())) {
-          hasMatchedTerm = true
-          matchedTerms.push('내용')
+        if (info.content && info.content.toLowerCase().includes(searchTerm.toLowerCase())) {
+          matchedTerms.push({
+            term: searchTerm,
+            type: 'content'
+          })
         }
 
-        if (hasMatchedTerm) {
+        if (matchedTerms.length > 0) {
           searchResults.push({
             date: dateGroup.date,
             index: index,
             cardTitle: info.title || `카드 ${index + 1}`,
             cardContent: info.content || '',
-            matchedTerms: [...new Set(matchedTerms)] // 중복 제거
+            matchedTerms: matchedTerms
           })
         }
       })
@@ -1103,9 +1128,10 @@ export default function AdminAIInfoPage() {
       return
     }
 
+    setSearchResults(searchResults)
     setDuplicateTerms(searchResults.map(result => ({
-      term: result.matchedTerms.join(', '),
-      count: 1,
+      term: `${result.matchedTerms.length}개 매칭`,
+      count: result.matchedTerms.length,
       locations: [{
         date: result.date,
         index: result.index,
@@ -1113,7 +1139,7 @@ export default function AdminAIInfoPage() {
       }]
     })))
     setShowDuplicateAnalysis(true)
-    setSuccess(`"${searchTerm}" 단어가 포함된 ${searchResults.length}개의 학습 내용을 찾았습니다.`)
+    setSuccess(`"${searchTerm}" 단어가 포함된 ${searchResults.length}개의 학습 내용에서 총 ${searchResults.reduce((sum, result) => sum + result.matchedTerms.length, 0)}개의 매칭을 찾았습니다.`)
     console.log('단어 검색 결과:', searchResults)
   }
 
@@ -1243,10 +1269,10 @@ export default function AdminAIInfoPage() {
 
       setSuccess(`용어 교체 완료: "${originalTerm}" → "${newTerm}"`)
       
-      // 중복 분석 새로고침
-      setTimeout(() => {
-        analyzeDuplicateTerms()
-      }, 1000)
+             // 검색 결과 새로고침
+       setTimeout(() => {
+         searchTermInCards()
+       }, 1000)
       
     } catch (error) {
       console.error('용어 교체 실패:', error)
@@ -2660,29 +2686,45 @@ export default function AdminAIInfoPage() {
                 {/* 검색된 카드 상세 목록 */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-white">📋 검색된 학습 내용</h3>
-                  {duplicateTerms.map((duplicate, idx) => (
+                  {searchResults.map((result, idx) => (
                     <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-bold text-white">{duplicate.term}</span>
+                          <span className="text-lg font-bold text-white">{result.cardTitle}</span>
                           <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                            매칭됨
+                            {result.matchedTerms.length}개 매칭
                           </span>
                         </div>
                       </div>
                       
-                      <div className="space-y-2">
-                        <div className="text-sm text-white/70">카드 정보:</div>
-                        {duplicate.locations.map((location, locIdx) => (
-                          <div key={locIdx} className="flex items-center justify-between bg-white/5 rounded-lg p-2">
-                            <div className="text-sm text-white/80">
-                              📅 {location.date} - {location.cardTitle}
+                      <div className="space-y-3">
+                        <div className="text-sm text-white/70">
+                          📅 {result.date} - 인덱스: {result.index}
+                        </div>
+                        
+                        {/* 매칭된 용어들 상세 표시 */}
+                        <div className="space-y-2">
+                          <div className="text-sm text-white/70 font-medium">매칭된 항목:</div>
+                          {result.matchedTerms.map((match, matchIdx) => (
+                            <div key={matchIdx} className="bg-white/5 rounded-lg p-3 border border-white/10">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className={`text-xs px-2 py-1 rounded-full ${
+                                  match.type === 'term' ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
+                                  match.type === 'title' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                                  'bg-purple-500/20 text-purple-300 border border-purple-400/30'
+                                }`}>
+                                  {match.type === 'term' ? '용어' : match.type === 'title' ? '제목' : '내용'}
+                                </span>
+                                <span className="text-sm font-semibold text-white">{match.term}</span>
+                              </div>
+                              {match.description && (
+                                <div className="text-xs text-white/60 ml-4">
+                                  {match.description}
+                                </div>
+                              )}
                             </div>
-                            <div className="text-xs text-white/60">
-                              인덱스: {location.index}
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
                     </div>
                   ))}
