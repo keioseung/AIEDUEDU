@@ -98,6 +98,7 @@ export default function AdminAIInfoPage() {
   // 단어 검색 기능 상태
   const [wordSearchQuery, setWordSearchQuery] = useState('')
   const [wordSearchType, setWordSearchType] = useState<'content' | 'terms' | 'exact' | 'contains'>('content')
+  const [searchCategory, setSearchCategory] = useState<'content' | 'terms'>('content') // 검색 카테고리 (내용/관련용어)
   const [showContentDropdown, setShowContentDropdown] = useState(false)
   const [showTermsDropdown, setShowTermsDropdown] = useState(false)
   
@@ -1573,10 +1574,11 @@ export default function AdminAIInfoPage() {
                       onClick={() => {
                         setShowContentDropdown(!showContentDropdown)
                         setShowTermsDropdown(false)
+                        setSearchCategory('content')
                         setWordSearchType('content')
                       }}
                       className={`px-4 py-2 rounded-lg border transition-colors ${
-                        wordSearchType === 'content' || wordSearchType === 'exact' || wordSearchType === 'contains'
+                        searchCategory === 'content'
                           ? 'bg-blue-600 text-white border-blue-600'
                           : 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
                       }`}
@@ -1632,10 +1634,11 @@ export default function AdminAIInfoPage() {
                       onClick={() => {
                         setShowTermsDropdown(!showTermsDropdown)
                         setShowContentDropdown(false)
+                        setSearchCategory('terms')
                         setWordSearchType('terms')
                       }}
                       className={`px-4 py-2 rounded-lg border transition-colors ${
-                        wordSearchType === 'terms'
+                        searchCategory === 'terms'
                           ? 'bg-blue-600 text-white border-blue-600'
                           : 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
                       }`}
