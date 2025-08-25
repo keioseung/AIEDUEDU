@@ -97,7 +97,7 @@ export default function AdminAIInfoPage() {
 
   // 단어 검색 기능 상태
   const [wordSearchQuery, setWordSearchQuery] = useState('')
-  const [wordSearchType, setWordSearchType] = useState<'content' | 'terms'>('content')
+  const [wordSearchType, setWordSearchType] = useState<'content' | 'terms' | 'exact' | 'contains'>('content')
   
   // 용어 업데이트 함수
   const handleTermUpdate = async (date: string, itemIndex: number, language: 'ko' | 'en' | 'ja' | 'zh', oldTerm: string, newTerm: string, newDescription: string) => {
@@ -214,6 +214,30 @@ export default function AdminAIInfoPage() {
             } else if (wordSearchType === 'terms') {
               // 관련 용어에서 검색
               if (info.terms_ko?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                  info.terms_en?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                  info.terms_ja?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                  info.terms_zh?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase()))) {
+                isMatch = true
+              }
+            } else if (wordSearchType === 'exact') {
+              // 정확히 일치하는 단어 검색
+              if (info.content_ko?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                  info.content_en?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                  info.content_ja?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                  info.content_zh?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                  info.terms_ko?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase()) ||
+                  info.terms_en?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase()) ||
+                  info.terms_ja?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase()) ||
+                  info.terms_zh?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase())) {
+                isMatch = true
+              }
+            } else if (wordSearchType === 'contains') {
+              // 포함된 단어 검색 (기존 content와 terms 검색과 동일)
+              if (info.content_ko?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_en?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_ja?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_zh?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.terms_ko?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
                   info.terms_en?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
                   info.terms_ja?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
                   info.terms_zh?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase()))) {
@@ -1532,13 +1556,13 @@ export default function AdminAIInfoPage() {
               </label>
               <div className="space-y-3">
                 {/* 검색 조건 선택 */}
-                <div className="flex gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   <label className="flex items-center gap-2 text-sm text-gray-300">
                     <input
                       type="radio"
                       value="content"
                       checked={wordSearchType === 'content'}
-                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms')}
+                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
                       className="text-blue-500 focus:ring-blue-500"
                     />
                     내용으로 검색
@@ -1548,10 +1572,30 @@ export default function AdminAIInfoPage() {
                       type="radio"
                       value="terms"
                       checked={wordSearchType === 'terms'}
-                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms')}
+                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
                       className="text-blue-500 focus:ring-blue-500"
                     />
                     관련 용어로 검색
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-gray-300">
+                    <input
+                      type="radio"
+                      value="exact"
+                      checked={wordSearchType === 'exact'}
+                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
+                      className="text-blue-500 focus:ring-blue-500"
+                    />
+                    정확히 일치
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-gray-300">
+                    <input
+                      type="radio"
+                      value="contains"
+                      checked={wordSearchType === 'contains'}
+                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
+                      className="text-blue-500 focus:ring-blue-500"
+                    />
+                    포함된 단어
                   </label>
                 </div>
                 
@@ -1587,7 +1631,7 @@ export default function AdminAIInfoPage() {
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <h4 className="text-lg font-medium text-white mb-2">
-                          {info.title || `정보 ${index + 1}`}
+                          {info.title_ko || info.title_en || info.title_ja || info.title_zh || `정보 ${index + 1}`}
                         </h4>
                         <p className="text-gray-300 text-sm mb-2">
                           {info.content ? (info.content.length > 100 ? `${info.content.substring(0, 100)}...` : info.content) : '내용 없음'}
@@ -1785,9 +1829,9 @@ export default function AdminAIInfoPage() {
                 {selectedDateAIInfo.map((info, index) => (
                   <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
                     <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
+                                            <div className="flex-1">
                         <h4 className="text-lg font-medium text-white mb-2">
-                          {info.title || `정보 ${index + 1}`}
+                          {info.title_ko || info.title_en || info.title_ja || info.title_zh || `정보 ${index + 1}`}
                         </h4>
                         <p className="text-gray-300 text-sm mb-2">
                           {info.content ? (info.content.length > 100 ? `${info.content.substring(0, 100)}...` : info.content) : '내용 없음'}
@@ -1795,8 +1839,8 @@ export default function AdminAIInfoPage() {
                         <div className="flex items-center gap-4 text-sm text-gray-400">
                           <span>인덱스: {index}</span>
                           <span>카테고리: {info.category || '미분류'}</span>
-              </div>
-            </div>
+                        </div>
+                      </div>
                       
                       {/* 액션 버튼들 */}
                       <div className="flex items-center gap-2 ml-4">
