@@ -700,23 +700,24 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
 
       {/* 모바일 최적화 검색바 */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4 z-10" />
+        <div className="absolute left-3 top-0 bottom-0 flex items-center pointer-events-none z-10">
+          <Search className="text-white text-sm font-light drop-shadow-sm" />
+        </div>
         <input
           ref={searchInputRef}
           type="text"
           placeholder={t('terms.search.placeholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-9 pr-12 py-2.5 bg-white/10 border-2 border-purple-600/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-sm shadow-lg shadow-purple-900/30"
+          className="w-full pl-10 pr-4 py-3 bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 shadow-lg shadow-purple-900/30 backdrop-blur-xl"
         />
         {searchQuery && (
           <button
             onTouchStart={handleWebViewTouch(() => setSearchQuery(''))}
             onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white min-h-[36px] min-w-[36px] webview-button z-10"
-            style={{ WebkitTapHighlightColor: 'transparent' }}
+            className="absolute right-3 top-0 bottom-0 flex items-center p-2 text-white/50 hover:text-white transition-colors"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         )}
       </div>
