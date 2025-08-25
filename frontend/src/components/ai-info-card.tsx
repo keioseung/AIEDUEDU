@@ -241,7 +241,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
   // 실제 학습된 용어는 localStorage 데이터만 사용 (React Query 데이터는 백엔드 동기화용)
   const actualLearnedTerms = new Set<string>()
   
-  // localStorage에서 실제 학습된 용어만 가져오기
+  // localStorage에서 실제 학습된 용어만 가져오기 (기본값 없음)
   if (localLearnedTerms.size > 0) {
     for (const term of localLearnedTerms) {
       actualLearnedTerms.add(term)
@@ -250,13 +250,8 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
   
   // 용어 학습 상태 변경 시 즉시 시각적 반영을 위한 강제 리렌더링
   useEffect(() => {
-    // localLearnedTerms가 변경될 때마다 강제 리렌더링 (더 강화)
+    // localLearnedTerms가 변경될 때마다 강제 리렌더링
     setForceUpdate && setForceUpdate(prev => prev + 1)
-    
-    // 추가 강제 리렌더링으로 시각적 반영 보장
-    setTimeout(() => {
-      setForceUpdate && setForceUpdate(prev => prev + 1)
-    }, 0)
   }, [localLearnedTerms, setForceUpdate])
 
   // 터치 제스처 처리
@@ -432,7 +427,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
       // 현재 용어를 학습 완료로 표시 (토글 기능)
       const currentTerm = info.terms[currentTermIndex]
       if (currentTerm) {
-        if (actualLearnedTerms.has(currentTerm.term)) {
+        if (localLearnedTerms.has(currentTerm.term)) {
           // 이미 학습된 용어 → 학습 해제
           try {
                                          const newLocalTerms = new Set([...localLearnedTerms])
@@ -440,13 +435,8 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              setLocalLearnedTerms(newLocalTerms)
                              localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
                              
-                             // 즉시 시각적 반영을 위해 강제 리렌더링 (더 강화)
+                             // 즉시 시각적 반영을 위해 강제 리렌더링
                              setForceUpdate && setForceUpdate(prev => prev + 1)
-                             
-                             // 상태 변경을 즉시 반영하기 위한 추가 강제 리렌더링
-                             setTimeout(() => {
-                               setForceUpdate && setForceUpdate(prev => prev + 1)
-                             }, 0)
                              
                              // React Query 캐시 무효화하여 즉시 UI 업데이트
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
@@ -718,7 +708,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
             {/* 항상 완료 개수 표시 */}
             {hasTermsInCurrentLanguage && (
               <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">
-                {actualLearnedTerms.size}{t('ai.info.card.terms.complete.count')}
+                {localLearnedTerms.size}{t('ai.info.card.terms.complete.count')}
               </span>
             )}
           </button>
@@ -738,7 +728,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                 <div className="mb-3">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-white/60">{currentTermIndex + 1} / {totalTerms}</span>
-                    <span className="text-xs text-green-400 font-bold">{actualLearnedTerms.size}{t('ai.info.card.terms.learning.complete.count')}</span>
+                    <span className="text-xs text-green-400 font-bold">{localLearnedTerms.size}{t('ai.info.card.terms.learning.complete.count')}</span>
                   </div>
                   <div className="w-full bg-white/20 rounded-full h-2">
                     <div
@@ -787,7 +777,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                                              onClick={async () => {
                          setCurrentTermIndex(idx);
                          // 용어 학습 상태 토글 (이미 학습된 용어면 해제, 안된 용어면 학습)
-                         if (actualLearnedTerms.has(term.term)) {
+                         if (localLearnedTerms.has(term.term)) {
                            // 이미 학습된 용어 → 학습 해제 (즉시 시각적 반영)
                            try {
                              const newLocalTerms = new Set([...localLearnedTerms])
@@ -795,23 +785,15 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              setLocalLearnedTerms(newLocalTerms)
                              localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
                              
-                             // 즉시 시각적 반영을 위해 강제 리렌더링 (더 강화)
+                             // 즉시 시각적 반영을 위해 강제 리렌더링
                              setForceUpdate && setForceUpdate(prev => prev + 1)
-                             
-                             // 상태 변경을 즉시 반영하기 위한 추가 강제 리렌더링
-                             setTimeout(() => {
-                               setForceUpdate && setForceUpdate(prev => prev + 1)
-                             }, 0)
                              
                              // React Query 캐시 무효화하여 즉시 UI 업데이트
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
                              
-                             // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
+                             // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화
                              queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
                              queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
-                             
-                             // 백엔드에서 용어 학습 상태 삭제 (API가 없으므로 생략)
-                             // 용어 학습 상태는 localStorage에서만 관리
                              
                              console.log(`❌ 용어 학습 해제: ${term.term}`)
                              
@@ -863,7 +845,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                       className={`px-2 py-1 md:px-3 md:py-2 rounded text-xs font-bold border transition-all touch-optimized mobile-touch-target ${
                         idx === currentTermIndex 
                           ? 'bg-green-500 text-white border-green-600' 
-                          : actualLearnedTerms.has(term.term) 
+                          : localLearnedTerms.has(term.term) 
                             ? 'bg-green-400/80 text-white border-green-500' 
                             : 'bg-white/20 text-white/70 border-white/30 hover:bg-blue-400/40'
                       }`}
@@ -874,7 +856,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                 </div>
                 
                 {/* 학습 완료 축하 메시지 */}
-                {actualLearnedTerms.size === totalTerms && totalTerms > 0 && (
+                {localLearnedTerms.size === totalTerms && totalTerms > 0 && (
                   <div className="mt-3 md:mt-4 text-center animate-bounce">
                     <span className="inline-block bg-green-500 text-white px-3 md:px-4 py-2 rounded-full font-bold shadow text-sm mobile-text">
                       {t('ai.info.card.terms.all.complete')}
