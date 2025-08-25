@@ -3721,7 +3721,7 @@ export default function AdminAIInfoPage() {
                       console.log('📊 백엔드 API 응답 데이터:', response.data)
                       console.log('🔍 백엔드 API 응답 상태:', response.status)
                       console.log('📋 백엔드 API 응답 infos 배열:', response.data.infos)
-                      console.log('🔍 백엔드 API 응답 infos 배열 상세:', response.data.infos.map((info, idx) => ({
+                      console.log('🔍 백엔드 API 응답 infos 배열 상세:', response.data.infos.map((info: any, idx: number) => ({
                         index: idx,
                         title: info.title_ko || info.title,
                         terms_ko: info.terms_ko,
