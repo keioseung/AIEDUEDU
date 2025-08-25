@@ -239,20 +239,42 @@ export default function AdminAIInfoPage() {
                 isMatch = true
               }
             } else if (wordSearchType === 'exact') {
-              // 내용에서 정확히 일치하는 단어 검색
-              if (info.content_ko?.toLowerCase() === wordSearchQuery.toLowerCase() ||
-                  info.content_en?.toLowerCase() === wordSearchQuery.toLowerCase() ||
-                  info.content_ja?.toLowerCase() === wordSearchQuery.toLowerCase() ||
-                  info.content_zh?.toLowerCase() === wordSearchQuery.toLowerCase()) {
-                isMatch = true
+              // 정확히 일치하는 단어 검색 (searchCategory에 따라 내용 또는 관련용어에서 검색)
+              if (searchCategory === 'content') {
+                // 내용에서 정확히 일치
+                if (info.content_ko?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                    info.content_en?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                    info.content_ja?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                    info.content_zh?.toLowerCase() === wordSearchQuery.toLowerCase()) {
+                  isMatch = true
+                }
+              } else if (searchCategory === 'terms') {
+                // 관련용어에서 정확히 일치
+                if (info.terms_ko?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase()) ||
+                    info.terms_en?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase()) ||
+                    info.terms_ja?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase()) ||
+                    info.terms_zh?.some(term => term.term.toLowerCase() === wordSearchQuery.toLowerCase())) {
+                  isMatch = true
+                }
               }
             } else if (wordSearchType === 'contains') {
-              // 내용에서 포함된 단어 검색
-              if (info.content_ko?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
-                  info.content_en?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
-                  info.content_ja?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
-                  info.content_zh?.toLowerCase().includes(wordSearchQuery.toLowerCase())) {
-                isMatch = true
+              // 포함된 단어 검색 (searchCategory에 따라 내용 또는 관련용어에서 검색)
+              if (searchCategory === 'content') {
+                // 내용에서 포함된 단어
+                if (info.content_ko?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                    info.content_en?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                    info.content_ja?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                    info.content_zh?.toLowerCase().includes(wordSearchQuery.toLowerCase())) {
+                  isMatch = true
+                }
+              } else if (searchCategory === 'terms') {
+                // 관련용어에서 포함된 단어
+                if (info.terms_ko?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                    info.terms_en?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                    info.terms_ja?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                    info.terms_zh?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase()))) {
+                  isMatch = true
+                }
               }
             }
             
