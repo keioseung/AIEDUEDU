@@ -3699,6 +3699,13 @@ export default function AdminAIInfoPage() {
                         updatedInfos
                       })
                       
+                      console.log('🔍 수정할 용어 데이터:', {
+                        terms_ko: editingTermsInfo.terms_ko,
+                        terms_en: editingTermsInfo.terms_en,
+                        terms_ja: editingTermsInfo.terms_ja,
+                        terms_zh: editingTermsInfo.terms_zh
+                      })
+                      
                       // aiInfoAPI.add를 직접 호출하여 전체 infos 배열 업데이트
                       console.log('📤 백엔드 API 호출 시작:', {
                         date: editingTermsInfo.date,
@@ -3711,6 +3718,8 @@ export default function AdminAIInfoPage() {
                       })
                       
                       console.log('✅ 백엔드 API 응답:', response)
+                      console.log('📊 백엔드 API 응답 데이터:', response.data)
+                      console.log('🔍 백엔드 API 응답 상태:', response.status)
                       
                       setSuccess('용어가 성공적으로 수정되었습니다!')
                       setShowTermsEditModal(false)
