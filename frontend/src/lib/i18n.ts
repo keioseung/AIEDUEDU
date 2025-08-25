@@ -1685,7 +1685,6 @@ const zh: Record<string, string> = {
   'date.calculator.calendar': '日历',
   
   // Category Mode
-  'category.mode.select': '类别列表',
   'category.mode.loading': '请稍候...',
   'category.mode.count': '个',
   

@@ -68,7 +68,7 @@ export default function AdminAIInfoPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'category'>('date')
-  
+
   // 프롬프트+기반내용 합치기 상태
   const [selectedPromptId, setSelectedPromptId] = useState<number | null>(null)
   const [selectedBaseId, setSelectedBaseId] = useState<number | null>(null)
@@ -2179,7 +2179,7 @@ export default function AdminAIInfoPage() {
             className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
           >
             🔍 단어 검색
-          </button>
+                  </button>
         </div>
                 </div>
               )}

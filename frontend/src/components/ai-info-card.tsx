@@ -335,7 +335,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
       }
     }
   };
-
+  
   // 컴포넌트 마운트 시에만 초기 상태 설정 (한 번만 실행)
   useEffect(() => {
     // localStorage의 userProgress를 우선시하여 초기 학습 상태 설정 (날짜별 모드 우선)
@@ -459,19 +459,19 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
           }
         } else {
           // 아직 학습되지 않은 용어 → 학습 완료
-          try {
-            // localStorage에 즉시 저장 (낙관적 업데이트)
-            const newLocalTerms = new Set([...localLearnedTerms, currentTerm.term])
-            setLocalLearnedTerms(newLocalTerms)
-            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-            
-            // 백엔드 업데이트
-            await updateTermProgressMutation.mutateAsync({
-              sessionId,
-              term: currentTerm.term,
-              date,
-              infoIndex: index
-            })
+        try {
+          // localStorage에 즉시 저장 (낙관적 업데이트)
+          const newLocalTerms = new Set([...localLearnedTerms, currentTerm.term])
+          setLocalLearnedTerms(newLocalTerms)
+          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+          
+          // 백엔드 업데이트
+          await updateTermProgressMutation.mutateAsync({
+            sessionId,
+            term: currentTerm.term,
+            date,
+            infoIndex: index
+          })
 
                                          console.log(`✅ 용어 학습 완료: ${currentTerm.term}`)
 
@@ -479,30 +479,30 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
                              queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
 
-                             // 성취 확인 (지연 실행)
-                             setTimeout(async () => {
-              try {
-                const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
-                if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
-                  setShowAchievement(true)
-                  setTimeout(() => setShowAchievement(false), 3000)
-                }
-              } catch (error) {
-                console.error('Failed to check achievements:', error)
+          // 성취 확인 (지연 실행)
+          setTimeout(async () => {
+            try {
+              const achievementResult = await checkAchievementsMutation.mutateAsync(sessionId)
+              if (achievementResult.new_achievements && achievementResult.new_achievements.length > 0) {
+                setShowAchievement(true)
+                setTimeout(() => setShowAchievement(false), 3000)
               }
-            }, 1000)
-
-            // 진행률 업데이트 콜백 호출
-            if (onProgressUpdate) {
-              onProgressUpdate()
+            } catch (error) {
+              console.error('Failed to check achievements:', error)
             }
-          } catch (error) {
-            console.error('Failed to update term progress:', error)
-            // 에러 시 localStorage 롤백
-            const rollbackTerms = new Set([...localLearnedTerms])
-            rollbackTerms.delete(currentTerm.term)
-            setLocalLearnedTerms(rollbackTerms)
-            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
+          }, 1000)
+
+          // 진행률 업데이트 콜백 호출
+          if (onProgressUpdate) {
+            onProgressUpdate()
+          }
+        } catch (error) {
+          console.error('Failed to update term progress:', error)
+          // 에러 시 localStorage 롤백
+          const rollbackTerms = new Set([...localLearnedTerms])
+          rollbackTerms.delete(currentTerm.term)
+          setLocalLearnedTerms(rollbackTerms)
+          localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
           }
         }
       }
@@ -774,8 +774,8 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                   {currentLanguageTerms?.map((term, idx) => (
                     <button
                       key={term.term}
-                                             onClick={async () => {
-                         setCurrentTermIndex(idx);
+                      onClick={async () => {
+                        setCurrentTermIndex(idx);
                          // 용어 학습 상태 토글 (이미 학습된 용어면 해제, 안된 용어면 학습)
                          if (localLearnedTerms.has(term.term)) {
                            // 이미 학습된 용어 → 학습 해제 (즉시 시각적 반영)
@@ -810,17 +810,17 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                          } else {
                            // 아직 학습되지 않은 용어 → 학습 완료
                            try {
-                             const newLocalTerms = new Set([...localLearnedTerms, term.term])
-                             setLocalLearnedTerms(newLocalTerms)
-                             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
-                             
-                             // 백엔드 업데이트
-                             await updateTermProgressMutation.mutateAsync({
-                               sessionId,
-                               term: term.term,
-                               date,
-                               infoIndex: index
-                             })
+                            const newLocalTerms = new Set([...localLearnedTerms, term.term])
+                            setLocalLearnedTerms(newLocalTerms)
+                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...newLocalTerms]))
+                            
+                            // 백엔드 업데이트
+                            await updateTermProgressMutation.mutateAsync({
+                              sessionId,
+                              term: term.term,
+                              date,
+                              infoIndex: index
+                            })
                              
                              // React Query 캐시 무효화하여 즉시 UI 업데이트
                              queryClient.invalidateQueries({ queryKey: ['learned-terms', sessionId, date, index] })
@@ -830,21 +830,21 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              // 진행률 탭 데이터 새로고침을 위한 쿼리 무효화 (AI 정보 카드와 동일)
                              queryClient.invalidateQueries({ queryKey: ['user-stats', sessionId] })
                              queryClient.invalidateQueries({ queryKey: ['period-stats', sessionId] })
-                             
-                             // 진행률 업데이트 콜백 호출
-                             if (onProgressUpdate) {
-                               onProgressUpdate()
-                             }
-                           } catch (error) {
-                             console.error('Failed to update term progress:', error)
-                             // 에러 시 localStorage 롤백
-                             const rollbackTerms = new Set([...localLearnedTerms])
-                             rollbackTerms.delete(term.term)
-                             setLocalLearnedTerms(rollbackTerms)
-                             localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
-                           }
-                         }
-                       }}
+                            
+                            // 진행률 업데이트 콜백 호출
+                            if (onProgressUpdate) {
+                              onProgressUpdate()
+                            }
+                          } catch (error) {
+                            console.error('Failed to update term progress:', error)
+                            // 에러 시 localStorage 롤백
+                            const rollbackTerms = new Set([...localLearnedTerms])
+                            rollbackTerms.delete(term.term)
+                            setLocalLearnedTerms(rollbackTerms)
+                            localStorage.setItem(`learnedTerms_${sessionId}_${date}_${index}`, JSON.stringify([...rollbackTerms]))
+                          }
+                        }
+                      }}
                       className={`px-2 py-1 md:px-3 md:py-2 rounded text-xs font-bold border transition-all touch-optimized mobile-touch-target ${
                         idx === currentTermIndex 
                           ? 'bg-green-500 text-white border-green-600' 
@@ -872,27 +872,27 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
         </div>
       )}
 
-             {/* 액션 버튼 */}
-       <div className="flex gap-2 md:gap-3">
-         <button
-           onClick={handleLearnToggle}
-           className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${
-             isLearned
-               ? 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700 cursor-pointer'
-               : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 cursor-pointer'
-           }`}
-         >
-           <BookOpen className="w-4 h-4" />
-           <span className="hidden sm:inline">
-             {isLearned ? '학습완료' : '학습하기'}
-           </span>
-           <span className="sm:hidden">
-             {isLearned ? '완료' : '학습'}
-           </span>
-         </button>
+      {/* 액션 버튼 */}
+      <div className="flex gap-2 md:gap-3">
+        <button
+          onClick={handleLearnToggle}
+          className={`flex-1 flex items-center justify-center gap-2 p-2.5 md:p-3 rounded-lg text-sm font-medium transition-all touch-optimized mobile-touch-target active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${
+            isLearned
+              ? 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700 cursor-pointer'
+              : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 cursor-pointer'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" />
+          <span className="hidden sm:inline">
+            {isLearned ? '학습완료' : '학습하기'}
+          </span>
+          <span className="sm:hidden">
+            {isLearned ? '완료' : '학습'}
+          </span>
+        </button>
          
          
-       </div>
+      </div>
 
       {/* 학습 완료 알림 */}
       <AnimatePresence>

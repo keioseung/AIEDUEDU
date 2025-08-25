@@ -700,7 +700,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
            <div key={info.id} className="relative">
                {/* 제목 카드 */}
                <div className="bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl p-4 shadow-lg shadow-purple-900/30 backdrop-blur-xl">
-                 
+
 
                                    {/* 카테고리와 3개 아이콘을 상단에 나란히 배치 */}
                  <div className="flex items-center justify-between mb-3">
@@ -714,26 +714,26 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                    {/* 3개 아이콘을 카테고리 오른쪽에 나란히 배열 */}
                    <div className="flex items-center gap-2">
                      {/* 1. 학습완료 여부 아이콘 */}
-                     {(() => {
-                       // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
-                       let isLearned = false
-                       if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
-                         try {
-                           const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                           const sessionProgress = userProgress[sessionId]
+                   {(() => {
+                     // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
+                     let isLearned = false
+                     if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
+                       try {
+                         const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                         const sessionProgress = userProgress[sessionId]
 
-                           if (sessionProgress && sessionProgress[info.date]) {
-                             const learnedIndices = sessionProgress[info.date] || []
-                             isLearned = learnedIndices.includes(info.info_index)
+                         if (sessionProgress && sessionProgress[info.date]) {
+                           const learnedIndices = sessionProgress[info.date] || []
+                           isLearned = learnedIndices.includes(info.info_index)
                            }
-                         } catch (error) {
-                           console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                       } catch (error) {
+                         console.error('로컬 스토리지 데이터 파싱 오류:', error)
                          }
                        }
 
-                       return (
+                     return (
                          <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm transition-all duration-200 ${
-                           isLearned 
+                         isLearned 
                              ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg shadow-green-500/25' 
                              : 'bg-gradient-to-br from-slate-400 to-gray-500 text-white shadow-lg shadow-gray-500/25'
                          }`}>
@@ -742,9 +742,9 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                            ) : (
                              <FaLightbulb className="w-4 h-4" />
                            )}
-                         </div>
-                       )
-                     })()}
+                       </div>
+                     )
+                   })()}
 
                      {/* 2. 즐겨찾기 아이콘 */}
                      <button
@@ -768,7 +768,7 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                        {isExpanded ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                      </button>
                    </div>
-                 </div>
+                   </div>
 
                  {/* 제목과 날짜 정보를 전체 너비로 표시 */}
                  <div className="mb-3">
