@@ -238,7 +238,7 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
     }
   }, [date, index])
   
-  // 실제 학습된 용어는 localStorage 데이터만 사용 (React Query 데이터는 백엔드 동기화용)
+  // 실제 학습된 용어는 localStorage 데이터만 사용 (기본값 없음)
   const actualLearnedTerms = new Set<string>()
   
   // localStorage에서 실제 학습된 용어만 가져오기 (기본값 없음)
@@ -801,6 +801,11 @@ function AIInfoCard({ info, index, date, sessionId, onProgressUpdate, forceUpdat
                              if (onProgressUpdate) {
                                onProgressUpdate()
                              }
+                             
+                             // 즉시 시각적 반영을 위한 추가 강제 리렌더링
+                             setTimeout(() => {
+                               setForceUpdate && setForceUpdate(prev => prev + 1)
+                             }, 0)
                            } catch (error) {
                              console.error('Failed to remove term progress:', error)
                            }
