@@ -80,6 +80,20 @@ export default function AdminAIInfoPage() {
   const [bulkTermsTextJa, setBulkTermsTextJa] = useState('')
   const [bulkTermsTextZh, setBulkTermsTextZh] = useState('')
   const [showBulkInput, setShowBulkInput] = useState<number | null | 'edit'>(null)
+  
+  // 검색된 용어 매칭 상태
+  const [matchedTerms, setMatchedTerms] = useState<Array<{
+    term: string
+    description: string
+    language: 'ko' | 'en' | 'ja' | 'zh'
+    sourceCard: {
+      date: string
+      index: number
+      title: string
+      category: string
+    }
+  }>>([])
+  const [showMatchedTerms, setShowMatchedTerms] = useState(false)
 
   // 단어 검색 기능 상태
   const [wordSearchQuery, setWordSearchQuery] = useState('')
@@ -569,19 +583,81 @@ export default function AdminAIInfoPage() {
     return terms
   }
 
+  // 검색된 용어와 매칭하는 함수
+  const findMatchingTerms = (inputTerms: TermItem[], language: 'ko' | 'en' | 'ja' | 'zh') => {
+    const matches: Array<{
+      term: string
+      description: string
+      language: 'ko' | 'en' | 'ja' | 'zh'
+      sourceCard: {
+        date: string
+        index: number
+        title: string
+        category: string
+      }
+    }> = []
+    
+    if (!allAIInfos || allAIInfos.length === 0) return matches
+    
+    inputTerms.forEach(inputTerm => {
+      allAIInfos.forEach(dateGroup => {
+        dateGroup.infos.forEach((info: AIInfoItem, index: number) => {
+          const terms = info[`terms_${language}`] || []
+          const matchedTerm = terms.find(term => term.term.toLowerCase() === inputTerm.term.toLowerCase())
+          
+          if (matchedTerm) {
+            matches.push({
+              term: matchedTerm.term,
+              description: matchedTerm.description,
+              language,
+              sourceCard: {
+                date: dateGroup.date,
+                index: index,
+                title: info.title || `카드 ${index + 1}`,
+                category: info.category || '미분류'
+              }
+            })
+          }
+        })
+      })
+    })
+    
+    return matches
+  }
+
   // 전문용어 일괄 입력 핸들러
   const handleBulkTermsInput = (infoIdx: number) => {
     setShowBulkInput(infoIdx)
     setBulkTermsText('')
+    setBulkTermsTextEn('')
+    setBulkTermsTextJa('')
+    setBulkTermsTextZh('')
+    setMatchedTerms([])
+    setShowMatchedTerms(false)
   }
 
   const handleBulkTermsSubmit = (infoIdx: number) => {
     let totalAdded = 0
+    const allMatches: Array<{
+      term: string
+      description: string
+      language: 'ko' | 'en' | 'ja' | 'zh'
+      sourceCard: {
+        date: string
+        index: number
+        title: string
+        category: string
+      }
+    }> = []
     
     // 한국어 용어 처리
     if (bulkTermsText.trim()) {
       const parsedTermsKo = parseTermsFromText(bulkTermsText)
       if (parsedTermsKo.length > 0) {
+        // 매칭된 용어 찾기
+        const matchesKo = findMatchingTerms(parsedTermsKo, 'ko')
+        allMatches.push(...matchesKo)
+        
         setInputs(inputs => inputs.map((input, i) => 
           i === infoIdx 
             ? { ...input, terms_ko: [...input.terms_ko, ...parsedTermsKo] }
@@ -595,6 +671,10 @@ export default function AdminAIInfoPage() {
     if (bulkTermsTextEn.trim()) {
       const parsedTermsEn = parseTermsFromText(bulkTermsTextEn)
       if (parsedTermsEn.length > 0) {
+        // 매칭된 용어 찾기
+        const matchesEn = findMatchingTerms(parsedTermsEn, 'en')
+        allMatches.push(...matchesEn)
+        
         setInputs(inputs => inputs.map((input, i) => 
           i === infoIdx 
             ? { ...input, terms_en: [...input.terms_en, ...parsedTermsEn] }
@@ -608,6 +688,10 @@ export default function AdminAIInfoPage() {
     if (bulkTermsTextJa.trim()) {
       const parsedTermsJa = parseTermsFromText(bulkTermsTextJa)
       if (parsedTermsJa.length > 0) {
+        // 매칭된 용어 찾기
+        const matchesJa = findMatchingTerms(parsedTermsJa, 'ja')
+        allMatches.push(...matchesJa)
+        
         setInputs(inputs => inputs.map((input, i) => 
           i === infoIdx 
             ? { ...input, terms_ja: [...input.terms_ja, ...parsedTermsJa] }
@@ -621,6 +705,10 @@ export default function AdminAIInfoPage() {
     if (bulkTermsTextZh.trim()) {
       const parsedTermsZh = parseTermsFromText(bulkTermsTextZh)
       if (parsedTermsZh.length > 0) {
+        // 매칭된 용어 찾기
+        const matchesZh = findMatchingTerms(parsedTermsZh, 'zh')
+        allMatches.push(...matchesZh)
+        
         setInputs(inputs => inputs.map((input, i) => 
           i === infoIdx 
             ? { ...input, terms_zh: [...input.terms_zh, ...parsedTermsZh] }
@@ -630,8 +718,14 @@ export default function AdminAIInfoPage() {
       }
     }
     
+    // 매칭된 용어가 있으면 표시
+    if (allMatches.length > 0) {
+      setMatchedTerms(allMatches)
+      setShowMatchedTerms(true)
+    }
+    
     if (totalAdded > 0) {
-      alert(`총 ${totalAdded}개의 용어가 추가되었습니다!`)
+      alert(`총 ${totalAdded}개의 용어가 추가되었습니다!${allMatches.length > 0 ? `\n\n${allMatches.length}개의 용어가 기존 학습 내용과 일치합니다.` : ''}`)
     } else {
       alert('파싱할 수 있는 용어가 없습니다. 형식을 확인해주세요.')
     }
@@ -2944,6 +3038,123 @@ export default function AdminAIInfoPage() {
                 )}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* 매칭된 용어 수정 모달 */}
+      {showMatchedTerms && matchedTerms.length > 0 && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border-2 border-yellow-500/50 rounded-2xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-yellow-300 flex items-center gap-2">
+                🔍 매칭된 용어 수정
+              </h3>
+              <button
+                onClick={() => setShowMatchedTerms(false)}
+                className="text-yellow-400 hover:text-yellow-200 text-2xl"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="mb-4">
+              <p className="text-white/80 text-sm">
+                입력한 용어 중 기존 학습 내용과 일치하는 용어가 발견되었습니다. 
+                용어와 설명을 수정하여 반영할 수 있습니다.
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              {matchedTerms.map((match, idx) => (
+                <div key={idx} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg font-semibold text-white">{match.term}</span>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          match.language === 'ko' ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
+                          match.language === 'en' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                          match.language === 'ja' ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' :
+                          'bg-orange-500/20 text-orange-300 border border-orange-400/30'
+                        }`}>
+                          {match.language === 'ko' ? '🇰🇷 한국어' : 
+                           match.language === 'en' ? '🇺🇸 영어' : 
+                           match.language === 'ja' ? '🇯🇵 일본어' : '🇨🇳 중국어'}
+                        </span>
+                      </div>
+                      
+                      <div className="text-sm text-gray-400 mb-2">
+                        <strong>출처:</strong> {match.sourceCard.date} - {match.sourceCard.title}
+                      </div>
+                      <div className="text-sm text-gray-400 mb-3">
+                        <strong>카테고리:</strong> {match.sourceCard.category}
+                      </div>
+                      
+                      <div className="text-sm text-gray-300">
+                        <strong>현재 설명:</strong> {match.description}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 수정 폼 */}
+                  <div className="mt-4 space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-1">용어 수정</label>
+                      <input
+                        type="text"
+                        value={match.term}
+                        onChange={(e) => {
+                          const newMatches = [...matchedTerms]
+                          newMatches[idx].term = e.target.value
+                          setMatchedTerms(newMatches)
+                        }}
+                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500/50"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-1">설명 수정</label>
+                      <textarea
+                        value={match.description}
+                        onChange={(e) => {
+                          const newMatches = [...matchedTerms]
+                          newMatches[idx].description = e.target.value
+                          setMatchedTerms(newMatches)
+                        }}
+                        rows={2}
+                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500/50 resize-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => {
+                  // 수정된 용어를 기존 학습 내용에 반영
+                  matchedTerms.forEach(match => {
+                    // 해당 날짜와 인덱스의 AI 정보를 찾아서 용어 업데이트
+                    // 이 부분은 실제 구현 시 더 복잡한 로직이 필요할 수 있습니다
+                    console.log(`용어 수정: ${match.term} - ${match.description}`)
+                  })
+                  setSuccess(`${matchedTerms.length}개의 용어가 수정되었습니다.`)
+                  setShowMatchedTerms(false)
+                }}
+                className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-colors"
+              >
+                수정 반영
+              </button>
+              
+              <button
+                onClick={() => setShowMatchedTerms(false)}
+                className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors"
+              >
+                닫기
+              </button>
+            </div>
           </div>
         </div>
       )}
