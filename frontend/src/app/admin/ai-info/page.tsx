@@ -1555,7 +1555,7 @@ export default function AdminAIInfoPage() {
                       <input
                         type="radio"
                         value="content"
-                        checked={wordSearchType === 'content' || wordSearchType === 'exact' || wordSearchType === 'contains'}
+                        checked={wordSearchType === 'content'}
                         onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
                         className="text-blue-500 focus:ring-blue-500"
                       />
