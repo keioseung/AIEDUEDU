@@ -1688,72 +1688,64 @@ export default function AdminAIInfoPage() {
                     </div>
                     
                     {/* 관련 용어 검색 결과 상세 표시 */}
-                    {wordSearchType === 'terms' && (
+                    {(wordSearchType === 'terms' || wordSearchType === 'exact') && (
                       <div className="mt-4 p-4 bg-gray-700/30 rounded-lg border border-gray-600">
                         <h5 className="text-md font-medium text-white mb-3 flex items-center gap-2">
                           🔍 검색된 관련 용어
                         </h5>
                         
                         {/* 정확히 일치 검색 시 모든 관련 용어 표시 */}
-                        {(() => {
-                          // 현재 검색 타입이 'exact'인지 확인
-                          const isExactSearch = wordSearchType === 'exact';
-                          
-                          if (isExactSearch) {
-                            return (
-                              <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
-                                <h6 className="text-sm font-medium text-blue-300 mb-2">
-                                  📚 이 학습 카드의 모든 관련 용어 (총 {(() => {
-                                    let totalTerms = 0;
-                                    ['ko', 'en', 'ja', 'zh'].forEach(lang => {
-                                      const termsKey = `terms_${lang}` as keyof AIInfoItem;
-                                      const terms = (info[termsKey] as TermItem[] | undefined) || [];
-                                      totalTerms += terms.length;
-                                    });
-                                    return totalTerms;
-                                  })()}개)
-                                </h6>
+                        {wordSearchType === 'exact' && (
+                          <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+                            <h6 className="text-sm font-medium text-blue-300 mb-2">
+                              📚 이 학습 카드의 모든 관련 용어 (총 {(() => {
+                                let totalTerms = 0;
+                                ['ko', 'en', 'ja', 'zh'].forEach(lang => {
+                                  const termsKey = `terms_${lang}` as keyof AIInfoItem;
+                                  const terms = (info[termsKey] as TermItem[] | undefined) || [];
+                                  totalTerms += terms.length;
+                                });
+                                return totalTerms;
+                              })()}개)
+                            </h6>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {['ko', 'en', 'ja', 'zh'].map(lang => {
+                                const termsKey = `terms_${lang}` as keyof AIInfoItem;
+                                const terms = (info[termsKey] as TermItem[] | undefined) || [];
                                 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                  {['ko', 'en', 'ja', 'zh'].map(lang => {
-                                    const termsKey = `terms_${lang}` as keyof AIInfoItem;
-                                    const terms = (info[termsKey] as TermItem[] | undefined) || [];
+                                if (terms.length === 0) return null;
+                                
+                                return (
+                                  <div key={lang} className="space-y-2">
+                                    <div className="flex items-center gap-2">
+                                      <span className={`text-xs px-2 py-1 rounded-full ${
+                                        lang === 'ko' ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
+                                        lang === 'en' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                                        lang === 'ja' ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' :
+                                        'bg-orange-500/20 text-orange-300 border border-orange-400/30'
+                                      }`}>
+                                        {lang === 'ko' ? '🇰🇷 한국어' : 
+                                         lang === 'en' ? '🇺🇸 영어' : 
+                                         lang === 'ja' ? '🇯🇵 일본어' : '🇨🇳 중국어'}
+                                      </span>
+                                      <span className="text-xs text-gray-400">({terms.length}개)</span>
+                                    </div>
                                     
-                                    if (terms.length === 0) return null;
-                                    
-                                    return (
-                                      <div key={lang} className="space-y-2">
-                                        <div className="flex items-center gap-2">
-                                          <span className={`text-xs px-2 py-1 rounded-full ${
-                                            lang === 'ko' ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
-                                            lang === 'en' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
-                                            lang === 'ja' ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' :
-                                            'bg-orange-500/20 text-orange-300 border border-orange-400/30'
-                                          }`}>
-                                            {lang === 'ko' ? '🇰🇷 한국어' : 
-                                             lang === 'en' ? '🇺🇸 영어' : 
-                                             lang === 'ja' ? '🇯🇵 일본어' : '🇨🇳 중국어'}
-                                          </span>
-                                          <span className="text-xs text-gray-400">({terms.length}개)</span>
+                                    <div className="space-y-1">
+                                      {terms.map((term, termIndex) => (
+                                        <div key={termIndex} className="bg-gray-800/50 border border-gray-600 rounded p-2">
+                                          <div className="text-sm font-medium text-white mb-1">{term.term}</div>
+                                          <div className="text-xs text-gray-300">{term.description}</div>
                                         </div>
-                                        
-                                        <div className="space-y-1">
-                                          {terms.map((term, termIndex) => (
-                                            <div key={termIndex} className="bg-gray-800/50 border border-gray-600 rounded p-2">
-                                              <div className="text-sm font-medium text-white mb-1">{term.term}</div>
-                                              <div className="text-xs text-gray-300">{term.description}</div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            );
-                          }
-                          return null;
-                        })()}
+                                      ))}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                         
                         {/* 기존 검색된 용어 표시 */}
                         <div className="space-y-3">
