@@ -1731,7 +1731,6 @@ const zh: Record<string, string> = {
   'quiz.explanation.correct.meaning': '的正确含义是：',
   
   // Loading Message
-  'loading.please.wait': '请稍等片刻。',
   
   // Quiz
   'quiz.title': '测验',
