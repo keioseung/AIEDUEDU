@@ -1573,15 +1573,15 @@ export default function AdminAIInfoPage() {
                     </label>
                   </div>
                   
-                  {/* 2단계: 세부 검색 조건 선택 (내용으로 검색 선택 시에만) */}
-                  {(wordSearchType === 'content' || wordSearchType === 'exact' || wordSearchType === 'contains') && (
+                  {/* 2단계: 세부 검색 조건 선택 (내용으로 검색 또는 관련 용어로 검색 선택 시) */}
+                  {(wordSearchType === 'content' || wordSearchType === 'exact' || wordSearchType === 'contains' || wordSearchType === 'terms') && (
                     <div className="ml-6 flex gap-3">
                       <label className="flex items-center gap-2 text-sm text-gray-300">
                         <input
                           type="radio"
                           value="content"
                           checked={wordSearchType === 'content'}
-                          onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
+                          onChange={(e) => setWordSearchType('content')}
                           className="text-blue-500 focus:ring-blue-500"
                         />
                         일반 검색
@@ -1591,7 +1591,7 @@ export default function AdminAIInfoPage() {
                           type="radio"
                           value="exact"
                           checked={wordSearchType === 'exact'}
-                          onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
+                          onChange={(e) => setWordSearchType('exact')}
                           className="text-blue-500 focus:ring-blue-500"
                         />
                         정확히 일치
@@ -1601,7 +1601,7 @@ export default function AdminAIInfoPage() {
                           type="radio"
                           value="contains"
                           checked={wordSearchType === 'contains'}
-                          onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
+                          onChange={(e) => setWordSearchType('contains')}
                           className="text-blue-500 focus:ring-blue-500"
                         />
                         포함된 단어
@@ -1693,6 +1693,61 @@ export default function AdminAIInfoPage() {
                         <h5 className="text-md font-medium text-white mb-3 flex items-center gap-2">
                           🔍 검색된 관련 용어
                         </h5>
+                        
+                        {/* 정확히 일치 검색 시 모든 관련 용어 표시 */}
+                        {wordSearchType === 'exact' && (
+                          <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+                            <h6 className="text-sm font-medium text-blue-300 mb-2">
+                              📚 이 학습 카드의 모든 관련 용어 (총 {(() => {
+                                let totalTerms = 0;
+                                ['ko', 'en', 'ja', 'zh'].forEach(lang => {
+                                  const termsKey = `terms_${lang}` as keyof AIInfoItem;
+                                  const terms = (info[termsKey] as TermItem[] | undefined) || [];
+                                  totalTerms += terms.length;
+                                });
+                                return totalTerms;
+                              })()}개)
+                            </h6>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {['ko', 'en', 'ja', 'zh'].map(lang => {
+                                const termsKey = `terms_${lang}` as keyof AIInfoItem;
+                                const terms = (info[termsKey] as TermItem[] | undefined) || [];
+                                
+                                if (terms.length === 0) return null;
+                                
+                                return (
+                                  <div key={lang} className="space-y-2">
+                                    <div className="flex items-center gap-2">
+                                      <span className={`text-xs px-2 py-1 rounded-full ${
+                                        lang === 'ko' ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' :
+                                        lang === 'en' ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
+                                        lang === 'ja' ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' :
+                                        'bg-orange-500/20 text-orange-300 border border-orange-400/30'
+                                      }`}>
+                                        {lang === 'ko' ? '🇰🇷 한국어' : 
+                                         lang === 'en' ? '🇺🇸 영어' : 
+                                         lang === 'ja' ? '🇯🇵 일본어' : '🇨🇳 중국어'}
+                                      </span>
+                                      <span className="text-xs text-gray-400">({terms.length}개)</span>
+                                    </div>
+                                    
+                                    <div className="space-y-1">
+                                      {terms.map((term, termIndex) => (
+                                        <div key={termIndex} className="bg-gray-800/50 border border-gray-600 rounded p-2">
+                                          <div className="text-sm font-medium text-white mb-1">{term.term}</div>
+                                          <div className="text-xs text-gray-300">{term.description}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* 기존 검색된 용어 표시 */}
                         <div className="space-y-3">
                           {(() => {
                             const matchedTerms: Array<{
