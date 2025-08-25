@@ -700,20 +700,20 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
 
       {/* 모바일 최적화 검색바 */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4 z-10" />
         <input
           ref={searchInputRef}
           type="text"
           placeholder={t('terms.search.placeholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 bg-white/10 border-2 border-purple-600/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-sm shadow-lg shadow-purple-900/30"
+          className="w-full pl-9 pr-12 py-2.5 bg-white/10 border-2 border-purple-600/50 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-sm shadow-lg shadow-purple-900/30"
         />
         {searchQuery && (
           <button
             onTouchStart={handleWebViewTouch(() => setSearchQuery(''))}
             onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white min-h-[36px] min-w-[36px] webview-button"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white min-h-[36px] min-w-[36px] webview-button z-10"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <X className="w-4 h-4" />
@@ -1144,6 +1144,78 @@ function LearnedTermsSection({ sessionId, currentLanguage, selectedDate: propSel
           {/* 스와이프 안내 */}
           <div className="text-center mt-4 text-white/40 text-xs">
             {t('terms.card.swipe.guide')}
+          </div>
+        </motion.div>
+      )}
+
+      {/* 학습할 용어가 없을 때의 따뜻한 메시지 */}
+      {!isLoading && filteredTerms.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="glass backdrop-blur-xl rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center text-white shadow-xl min-h-[400px] border border-white/10 bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-purple-900/40"
+        >
+          {/* 메인 아이콘 */}
+          <div className="relative mb-6">
+            <BookOpen className="w-16 h-16 md:w-20 md:h-20 text-blue-400 mb-4" />
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+              <span className="text-xs font-bold text-white">✨</span>
+            </div>
+          </div>
+          
+          {/* 메인 제목 */}
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            {localLanguage === 'ko' ? '용어학습 여정을 시작해보세요! 📚' :
+             localLanguage === 'en' ? 'Start Your Terms Learning Journey! 📚' :
+             localLanguage === 'ja' ? '用語学習の旅を始めましょう！📚' :
+             '开始您的术语学习之旅！📚'}
+          </h2>
+          
+          {/* 설명 텍스트 */}
+          <p className="text-white/80 text-base md:text-lg leading-relaxed mb-6 max-w-md">
+            {localLanguage === 'ko' ? '현재 학습할 용어가 없습니다. 다른 날짜를 선택하거나 검색어를 변경해보세요!' :
+             localLanguage === 'en' ? 'There are no terms to learn at the moment. Try selecting a different date or changing your search terms!' :
+             localLanguage === 'ja' ? '現在学習する用語がありません。別の日付を選択するか、検索語を変更してみてください！' :
+             '目前没有要学习的术语。请尝试选择其他日期或更改搜索词！'}
+          </p>
+          
+          {/* 액션 버튼들 */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <button
+              onClick={() => setSelectedDate(null)}
+              className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium text-sm hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              📅 {localLanguage === 'ko' ? '전체 용어 보기' :
+                   localLanguage === 'en' ? 'View All Terms' :
+                   localLanguage === 'ja' ? '全用語表示' :
+                   '查看所有术语'}
+            </button>
+            <button
+              onClick={() => setSearchQuery('')}
+              className="px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-medium text-sm hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              🔍 {localLanguage === 'ko' ? '검색 초기화' :
+                   localLanguage === 'en' ? 'Reset Search' :
+                   localLanguage === 'ja' ? '検索リセット' :
+                   '重置搜索'}
+            </button>
+          </div>
+          
+          {/* 추가 안내 */}
+          <div className="text-white/60 text-sm max-w-md">
+            <p className="mb-2">
+              {localLanguage === 'ko' ? '💡 팁: 날짜를 선택하지 않으면 모든 용어를 볼 수 있습니다.' :
+               localLanguage === 'en' ? '💡 Tip: If you don\'t select a date, you can see all terms.' :
+               localLanguage === 'ja' ? '💡 ヒント: 日付を選択しないと、すべての用語を見ることができます。' :
+               '💡 提示：如果不选择日期，您可以看到所有术语。'}
+            </p>
+            <p>
+              {localLanguage === 'ko' ? '🌟 새로운 용어가 추가되면 자동으로 표시됩니다.' :
+               localLanguage === 'en' ? '🌟 New terms will be displayed automatically when added.' :
+               localLanguage === 'ja' ? '🌟 新しい用語が追加されると自動的に表示されます。' :
+               '🌟 添加新术语时会自动显示。'}
+            </p>
           </div>
         </motion.div>
       )}
