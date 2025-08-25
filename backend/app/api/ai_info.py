@@ -1961,25 +1961,29 @@ def update_terms_only(date: str, item_index: int, terms_data: TermsUpdate, db: S
         # 모든 용어 수정 (새로운 데이터가 제공된 경우)
         if terms_data.terms_ko is not None:
             print(f"한국어 용어 전체 수정 시도: {terms_data.terms_ko}")
-            existing_terms_ko = terms_data.terms_ko
+            # TermItem 객체를 딕셔너리로 변환
+            existing_terms_ko = [term.dict() for term in terms_data.terms_ko]
             print(f"한국어 용어 전체 수정됨: {existing_terms_ko}")
             print(f"수정 후 한국어 용어 개수: {len(existing_terms_ko)}")
         
         if terms_data.terms_en is not None:
             print(f"영어 용어 전체 수정 시도: {terms_data.terms_en}")
-            existing_terms_en = terms_data.terms_en
+            # TermItem 객체를 딕셔너리로 변환
+            existing_terms_en = [term.dict() for term in terms_data.terms_en]
             print(f"영어 용어 전체 수정됨: {existing_terms_en}")
             print(f"수정 후 영어 용어 개수: {len(existing_terms_en)}")
         
         if terms_data.terms_ja is not None:
             print(f"일본어 용어 전체 수정 시도: {terms_data.terms_ja}")
-            existing_terms_ja = terms_data.terms_ja
+            # TermItem 객체를 딕셔너리로 변환
+            existing_terms_ja = [term.dict() for term in terms_data.terms_ja]
             print(f"일본어 용어 전체 수정됨: {existing_terms_ja}")
             print(f"수정 후 일본어 용어 개수: {len(existing_terms_ja)}")
         
         if terms_data.terms_zh is not None:
             print(f"중국어 용어 전체 수정 시도: {terms_data.terms_zh}")
-            existing_terms_zh = terms_data.terms_zh
+            # TermItem 객체를 딕셔너리로 변환
+            existing_terms_zh = [term.dict() for term in terms_data.terms_zh]
             print(f"중국어 용어 전체 수정됨: {existing_terms_zh}")
             print(f"수정 후 중국어 용어 개수: {len(existing_terms_zh)}")
         
