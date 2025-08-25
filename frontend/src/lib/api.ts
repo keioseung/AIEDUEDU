@@ -297,7 +297,11 @@ export const aiInfoAPI = {
   
   // 카테고리만 업데이트하는 새로운 API
   updateCategoryOnly: (date: string, infoIndex: number, category: string) => 
-    api.patch(`/api/ai-info/${date}/category/${infoIndex}?category=${category}`),
+    api.patch(`/api/ai-info/${date}/category/${infoIndex}?category=${encodeURIComponent(category)}`),
+  
+  // 용어만 업데이트하는 새로운 API
+  updateTermsOnly: (date: string, itemIndex: number, termsData: any) => 
+    api.put(`/api/ai-info/${date}/terms/${itemIndex}`, termsData),
 }
 
 // Quiz API

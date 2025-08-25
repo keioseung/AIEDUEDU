@@ -133,6 +133,8 @@ export default function AdminAIInfoPage() {
   // 용어 업데이트 함수
   const handleTermUpdate = async (date: string, itemIndex: number, language: 'ko' | 'en' | 'ja' | 'zh', oldTerm: string, newTerm: string, newDescription: string) => {
     try {
+      console.log('🔧 용어 업데이트 시작:', { date, itemIndex, language, oldTerm, newTerm, newDescription })
+      
       // 현재 검색 결과에서 해당 항목 찾기
       const currentItem = wordSearchResults.find(item => item.date === date && item.info_index === itemIndex)
       if (!currentItem) {
@@ -140,31 +142,37 @@ export default function AdminAIInfoPage() {
         return
       }
       
-      // 용어 업데이트
-      const termsKey = `terms_${language}` as keyof AIInfoItem
-      const currentTerms = (currentItem[termsKey] as TermItem[]) || []
-      const updatedTerms = currentTerms.map(term => 
-        term.term === oldTerm 
-          ? { ...term, term: newTerm, description: newDescription }
-          : term
-      )
-      
-      // 전체 항목 업데이트
-      const updatedItem = { ...currentItem, [termsKey]: updatedTerms }
-      
-      // updateItemMutation 사용하여 업데이트
-      await updateItemMutation.mutateAsync({
-        date,
-        itemIndex,
-        data: updatedItem
-      })
-      
-      // 검색 결과 새로고침
-      if (wordSearchQuery.trim()) {
-        performWordSearch()
+      // 새로 만든 용어 수정 API를 사용하여 업데이트
+      const termsUpdateData = {
+        target_index: itemIndex,
+        target_terms_ko_first: language === 'ko' ? newTerm : undefined,
+        target_terms_ko_first_desc: language === 'ko' ? newDescription : undefined,
+        target_terms_en_first: language === 'en' ? newTerm : undefined,
+        target_terms_en_first_desc: language === 'en' ? newDescription : undefined,
+        target_terms_ja_first: language === 'ja' ? newTerm : undefined,
+        target_terms_ja_first_desc: language === 'ja' ? newDescription : undefined,
+        target_terms_zh_first: language === 'zh' ? newTerm : undefined,
+        target_terms_zh_first_desc: language === 'zh' ? newDescription : undefined
       }
       
-      setSuccess('용어가 성공적으로 업데이트되었습니다!')
+      console.log('📤 새로운 용어 수정 API 호출:', termsUpdateData)
+      
+      const response = await aiInfoAPI.updateTermsOnly(date, itemIndex, termsUpdateData)
+      
+      console.log('✅ 새로운 용어 수정 API 응답:', response)
+      
+      if (response.data.success) {
+        console.log('✅ 용어 수정 성공!')
+        
+        // 검색 결과 새로고침
+        if (wordSearchQuery.trim()) {
+          performWordSearch()
+        }
+        
+        setSuccess('용어가 성공적으로 업데이트되었습니다!')
+      } else {
+        throw new Error(response.data.message || '용어 수정에 실패했습니다.')
+      }
     } catch (error: any) {
       console.error('용어 업데이트 실패:', error)
       setError(`용어 업데이트에 실패했습니다: ${error?.message || '알 수 없는 오류'}`)
@@ -467,14 +475,14 @@ export default function AdminAIInfoPage() {
       console.log('✅ 항목 삭제 성공:', response)
       return response
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data, variables: any) => {
       console.log('🎉 항목 삭제 완료:', variables, data)
       refetchAIInfo()
       refetchDates()
       refetchAllAIInfo()
       setSuccess('항목이 삭제되었습니다!')
     },
-    onError: (error: any, variables) => {
+    onError: (error: any, variables: any) => {
       console.error('❌ 항목 삭제 실패:', variables, error)
       console.error('에러 상세:', {
         message: error?.message,
@@ -492,7 +500,7 @@ export default function AdminAIInfoPage() {
       console.log('✏️ 항목 수정 시도:', { date, itemIndex, data })
       
       // 기존 데이터를 가져와서 특정 항목만 수정
-      let existingData = allAIInfos.find(item => item.date === date)
+      let existingData = allAIInfos.find((item: any) => item.date === date)
       
       // allAIInfos에서 찾지 못한 경우, 직접 API로 데이터를 가져옴
       if (!existingData) {
@@ -530,7 +538,7 @@ export default function AdminAIInfoPage() {
       console.log('✅ 항목 수정 성공:', response)
       return response
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data, variables: any) => {
       console.log('🎉 항목 수정 완료:', variables, data)
       refetchAIInfo()
       refetchDates()
@@ -544,7 +552,7 @@ export default function AdminAIInfoPage() {
       })
       setSuccess('항목이 수정되었습니다!')
     },
-    onError: (error: any, variables) => {
+    onError: (error: any, variables: any) => {
       console.error('❌ 항목 수정 실패:', variables, error)
       console.error('에러 상세:', {
         message: error?.message,
@@ -661,7 +669,7 @@ export default function AdminAIInfoPage() {
   })
 
   const handleInputChange = (idx: number, field: 'title_ko' | 'title_en' | 'title_ja' | 'title_zh' | 'content_ko' | 'content_en' | 'content_ja' | 'content_zh' | 'category', value: string) => {
-    setInputs(inputs => inputs.map((input, i) => i === idx ? { ...input, [field]: value } : input))
+    setInputs((inputs: any) => inputs.map((input: any, i: number) => i === idx ? { ...input, [field]: value } : input))
   }
 
   const handleAddInput = () => {
@@ -1989,7 +1997,20 @@ export default function AdminAIInfoPage() {
                                   
                                   {/* 수정 반영 버튼 */}
                                   <button
-                                    onClick={() => handleTermUpdate(info.date || '', info.info_index || 0, term.language, term.term, term.term, term.description)}
+                                    onClick={() => {
+                                      // 수정된 용어와 설명 가져오기
+                                      const updatedTerm = newTerms.find(t => t.term === term.term)
+                                      if (updatedTerm) {
+                                        handleTermUpdate(
+                                          info.date || '', 
+                                          info.info_index || 0, 
+                                          term.language, 
+                                          term.term, // 원래 용어 (oldTerm)
+                                          updatedTerm.term, // 수정된 용어 (newTerm)
+                                          updatedTerm.description // 수정된 설명
+                                        )
+                                      }
+                                    }}
                                     className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-xs rounded transition-colors"
                                   >
                                     수정 반영
@@ -3760,47 +3781,39 @@ export default function AdminAIInfoPage() {
                       })
                       
                       try {
-                        const response = await aiInfoAPI.add({
-                          date: editingTermsInfo.date,
-                          infos: updatedInfos
-                        })
+                        // 새로운 용어 수정 API 사용
+                        const termsUpdateData = {
+                          target_index: editingTermsInfo.infoIndex,
+                          target_terms_ko_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_ko?.[0]?.term,
+                          target_terms_ko_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_ko?.[0]?.description,
+                          target_terms_en_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_en?.[0]?.term,
+                          target_terms_en_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_en?.[0]?.description,
+                          target_terms_ja_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_ja?.[0]?.term,
+                          target_terms_ja_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_ja?.[0]?.description,
+                          target_terms_zh_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_zh?.[0]?.term,
+                          target_terms_zh_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_zh?.[0]?.description
+                        }
                         
-                        console.log('✅ 백엔드 API 응답:', response)
-                        console.log('📊 백엔드 API 응답 데이터:', response.data)
-                        console.log('🔍 백엔드 API 응답 상태:', response.status)
-                        console.log('📋 백엔드 API 응답 infos 배열:', response.data.infos)
-                        console.log('🔍 백엔드 API 응답 infos 배열 상세:', response.data.infos.map((info: any, idx: number) => ({
-                          index: idx,
-                          title: info.title_ko || info.title,
-                          terms_ko: info.terms_ko,
-                          terms_en: info.terms_en,
-                          terms_ja: info.terms_ja,
-                          terms_zh: info.terms_zh
-                        })))
+                        console.log('📤 새로운 용어 수정 API 호출:', termsUpdateData)
                         
-                        // 수정 후 데이터를 다시 가져와서 확인
-                        console.log('🔄 수정 후 데이터 재확인 시작...')
-                        const verifyResponse = await aiInfoAPI.getByDate(editingTermsInfo.date)
-                        console.log('🔍 수정 후 데이터 재확인 결과:', verifyResponse.data)
-                        if (verifyResponse.data && verifyResponse.data[editingTermsInfo.infoIndex]) {
-                          const modifiedItem = verifyResponse.data[editingTermsInfo.infoIndex]
-                          console.log('🔍 수정된 항목의 용어 데이터:', {
-                            terms_ko: modifiedItem.terms_ko,
-                            terms_en: modifiedItem.terms_en,
-                            terms_ja: modifiedItem.terms_ja,
-                            terms_zh: modifiedItem.terms_zh
-                          })
-                          
-                          // 수정된 항목의 첫 번째 용어를 상세히 확인
-                          if (modifiedItem.terms_ko && modifiedItem.terms_ko.length > 0) {
-                            console.log('🔍 수정된 항목의 첫 번째 한국어 용어:', modifiedItem.terms_ko[0])
-                          }
-                          if (modifiedItem.terms_en && modifiedItem.terms_en.length > 0) {
-                            console.log('🔍 수정된 항목의 첫 번째 영어 용어:', modifiedItem.terms_en[0])
-                          }
+                        const response = await aiInfoAPI.updateTermsOnly(
+                          editingTermsInfo.date,
+                          editingTermsInfo.infoIndex,
+                          termsUpdateData
+                        )
+                        
+                        console.log('✅ 새로운 용어 수정 API 응답:', response)
+                        console.log('📊 응답 데이터:', response.data)
+                        
+                        if (response.data.success) {
+                          console.log('✅ 용어 수정 성공!')
+                          console.log('📋 수정된 데이터:', response.data.updated_data)
+                        } else {
+                          console.error('❌ 용어 수정 실패:', response.data.message)
+                          throw new Error(response.data.message)
                         }
                       } catch (error: any) {
-                        console.error('❌ 백엔드 API 호출 실패:', error)
+                        console.error('❌ 새로운 용어 수정 API 호출 실패:', error)
                         console.error('❌ 에러 상세:', {
                           message: error?.message,
                           response: error?.response?.data,

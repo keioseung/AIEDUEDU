@@ -6,7 +6,7 @@ import re
 
 from ..database import get_db
 from ..models import AIInfo
-from ..schemas import AIInfoCreate, AIInfoResponse, AIInfoItem, TermItem
+from ..schemas import AIInfoCreate, AIInfoResponse, AIInfoItem, TermItem, TermsUpdate
 from ..utils.ai_classifier import ai_classifier
 
 router = APIRouter()
@@ -1891,3 +1891,108 @@ def update_category_only(date: str, info_index: int, category: str, db: Session 
     except Exception as e:
         print(f"Error in update_category_only: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to update category: {str(e)}")
+
+@router.put("/{date}/terms/{item_index}")
+def update_terms_only(date: str, item_index: int, terms_data: TermsUpdate, db: Session = Depends(get_db)):
+    """특정 날짜와 항목의 용어만 수정합니다."""
+    try:
+        print(f"=== 용어 수정 시작 ===")
+        print(f"날짜: {date}")
+        print(f"항목 인덱스: {item_index}")
+        print(f"수정할 용어 데이터: {terms_data}")
+        
+        # 기존 AI 정보 조회
+        ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
+        if not ai_info:
+            raise HTTPException(status_code=404, detail=f"날짜 {date}에 해당하는 AI 정보를 찾을 수 없습니다.")
+        
+        # item_index에 따른 필드 선택
+        if item_index == 0:
+            terms_ko_field = 'info1_terms_ko'
+            terms_en_field = 'info1_terms_en'
+            terms_ja_field = 'info1_terms_ja'
+            terms_zh_field = 'info1_terms_zh'
+        elif item_index == 1:
+            terms_ko_field = 'info2_terms_ko'
+            terms_en_field = 'info2_terms_en'
+            terms_ja_field = 'info2_terms_ja'
+            terms_zh_field = 'info2_terms_zh'
+        elif item_index == 2:
+            terms_ko_field = 'info3_terms_ko'
+            terms_en_field = 'info3_terms_en'
+            terms_ja_field = 'info3_terms_ja'
+            terms_zh_field = 'info3_terms_zh'
+        else:
+            raise HTTPException(status_code=400, detail=f"잘못된 항목 인덱스: {item_index}")
+        
+        # 기존 용어 데이터 파싱
+        try:
+            existing_terms_ko = json.loads(getattr(ai_info, terms_ko_field) or '[]')
+            existing_terms_en = json.loads(getattr(ai_info, terms_en_field) or '[]')
+            existing_terms_ja = json.loads(getattr(ai_info, terms_ja_field) or '[]')
+            existing_terms_zh = json.loads(getattr(ai_info, terms_zh_field) or '[]')
+        except json.JSONDecodeError:
+            existing_terms_ko = existing_terms_en = existing_terms_ja = existing_terms_zh = []
+        
+        print(f"기존 한국어 용어: {existing_terms_ko}")
+        print(f"기존 영어 용어: {existing_terms_en}")
+        
+        # 첫 번째 용어 수정 (존재하는 경우에만)
+        if len(existing_terms_ko) > 0 and terms_data.target_terms_ko_first is not None:
+            existing_terms_ko[0]['term'] = terms_data.target_terms_ko_first
+            if terms_data.target_terms_ko_first_desc:
+                existing_terms_ko[0]['description'] = terms_data.target_terms_ko_first_desc
+            print(f"한국어 첫 번째 용어 수정됨: {existing_terms_ko[0]}")
+        
+        if len(existing_terms_en) > 0 and terms_data.target_terms_en_first is not None:
+            existing_terms_en[0]['term'] = terms_data.target_terms_en_first
+            if terms_data.target_terms_en_first_desc:
+                existing_terms_en[0]['description'] = terms_data.target_terms_en_first_desc
+            print(f"영어 첫 번째 용어 수정됨: {existing_terms_en[0]}")
+        
+        if len(existing_terms_ja) > 0 and terms_data.target_terms_ja_first is not None:
+            existing_terms_ja[0]['term'] = terms_data.target_terms_ja_first
+            if terms_data.target_terms_ja_first_desc:
+                existing_terms_ja[0]['description'] = terms_data.target_terms_ja_first_desc
+            print(f"일본어 첫 번째 용어 수정됨: {existing_terms_ja[0]}")
+        
+        if len(existing_terms_zh) > 0 and terms_data.target_terms_zh_first is not None:
+            existing_terms_zh[0]['term'] = terms_data.target_terms_zh_first
+            if terms_data.target_terms_zh_first_desc:
+                existing_terms_zh[0]['description'] = terms_data.target_terms_zh_first_desc
+            print(f"중국어 첫 번째 용어 수정됨: {existing_terms_zh[0]}")
+        
+        # 데이터베이스에 업데이트된 용어 저장
+        setattr(ai_info, terms_ko_field, json.dumps(existing_terms_ko))
+        setattr(ai_info, terms_en_field, json.dumps(existing_terms_en))
+        setattr(ai_info, terms_ja_field, json.dumps(existing_terms_ja))
+        setattr(ai_info, terms_zh_field, json.dumps(existing_terms_zh))
+        
+        # 데이터베이스 커밋
+        db.commit()
+        db.refresh(ai_info)
+        
+        print(f"용어 수정 완료! 데이터베이스에 저장됨")
+        
+        # 수정된 데이터 반환
+        return {
+            "success": True,
+            "message": "용어가 성공적으로 수정되었습니다.",
+            "updated_data": {
+                "id": ai_info.id,
+                "date": ai_info.date,
+                "item_index": item_index,
+                "terms_ko": existing_terms_ko,
+                "terms_en": existing_terms_en,
+                "terms_ja": existing_terms_ja,
+                "terms_zh": existing_terms_zh
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"용어 수정 중 오류 발생: {e}")
+        # 데이터베이스 롤백
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"용어 수정 실패: {str(e)}")

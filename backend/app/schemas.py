@@ -72,6 +72,25 @@ class AIInfoResponse(BaseModel):
     class Config:
         from_attributes = True
 
+# 용어 수정을 위한 스키마들
+class TermsUpdate(BaseModel):
+    """특정 항목의 용어만 수정하기 위한 스키마"""
+    target_index: int  # 0, 1, 2 (info1, info2, info3)
+    target_terms_ko_first: Optional[str] = None
+    target_terms_ko_first_desc: Optional[str] = None
+    target_terms_en_first: Optional[str] = None
+    target_terms_en_first_desc: Optional[str] = None
+    target_terms_ja_first: Optional[str] = None
+    target_terms_ja_first_desc: Optional[str] = None
+    target_terms_zh_first: Optional[str] = None
+    target_terms_zh_first_desc: Optional[str] = None
+
+class TermsUpdateResponse(BaseModel):
+    """용어 수정 응답 스키마"""
+    success: bool
+    message: str
+    updated_data: Optional[AIInfoResponse] = None
+
 # Quiz Schemas
 class QuizCreate(BaseModel):
     topic: str
