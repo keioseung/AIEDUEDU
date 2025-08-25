@@ -702,84 +702,84 @@ export default function AIInfoListMode({ sessionId, currentLanguage, onProgressU
                <div className="bg-gradient-to-br from-slate-800/80 via-purple-900/90 to-slate-800/80 border-2 border-purple-600/50 rounded-xl p-4 shadow-lg shadow-purple-900/30 backdrop-blur-xl">
                  
 
-                                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex-1">
-                      {/* 카테고리 정보를 제일 위로 이동 */}
-                      {info.category && (
-                        <div className="mb-2">
-                          <span className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-blue-600/40 border border-purple-500/50 rounded-lg text-xs font-medium text-white/90 shadow-sm">
-                           🏷️ {t(`category.name.${info.category}`) || info.category}
-                          </span>
-                        </div>
-                      )}
+                                   {/* 카테고리와 3개 아이콘을 상단에 나란히 배치 */}
+                 <div className="flex items-center justify-between mb-3">
+                   {/* 카테고리 정보 */}
+                   {info.category && (
+                     <span className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-blue-600/40 border border-purple-500/50 rounded-lg text-xs font-medium text-white/90 shadow-sm">
+                       🏷️ {t(`category.name.${info.category}`) || info.category}
+                     </span>
+                   )}
+                   
+                   {/* 3개 아이콘을 카테고리 오른쪽에 나란히 배열 */}
+                   <div className="flex items-center gap-2">
+                     {/* 1. 학습완료 여부 아이콘 */}
+                     {(() => {
+                       // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
+                       let isLearned = false
+                       if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
+                         try {
+                           const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
+                           const sessionProgress = userProgress[sessionId]
 
-                      <h3 className="text-lg font-semibold text-white mb-2">{info.title}</h3>
-                      <div className="flex items-center gap-3 text-sm text-white/70">
-                        <span className="flex items-center gap-1">
-                          <FaCalendar className="w-3 h-3" />
-                          {info.date}
-                        </span>
-                      </div>
-                    </div>
+                           if (sessionProgress && sessionProgress[info.date]) {
+                             const learnedIndices = sessionProgress[info.date] || []
+                             isLearned = learnedIndices.includes(info.info_index)
+                           }
+                         } catch (error) {
+                           console.error('로컬 스토리지 데이터 파싱 오류:', error)
+                         }
+                       }
 
-                    {/* 3개 아이콘을 카테고리 오른쪽에 나란히 배열 */}
-                    <div className="flex items-center gap-2 ml-4">
-                      {/* 1. 학습완료 여부 아이콘 */}
-                      {(() => {
-                        // localStorage에서 해당 카드의 학습 상태 확인 (날짜별 모드와 동일)
-                        let isLearned = false
-                        if (typeof window !== 'undefined' && info.date && typeof info.info_index === 'number') {
-                          try {
-                            const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}')
-                            const sessionProgress = userProgress[sessionId]
+                       return (
+                         <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm transition-all duration-200 ${
+                           isLearned 
+                             ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg shadow-green-500/25' 
+                             : 'bg-gradient-to-br from-slate-400 to-gray-500 text-white shadow-lg shadow-gray-500/25'
+                         }`}>
+                           {isLearned ? (
+                             <FaGraduationCap className="w-4 h-4" />
+                           ) : (
+                             <FaLightbulb className="w-4 h-4" />
+                           )}
+                         </div>
+                       )
+                     })()}
 
-                            if (sessionProgress && sessionProgress[info.date]) {
-                              const learnedIndices = sessionProgress[info.date] || []
-                              isLearned = learnedIndices.includes(info.info_index)
-                            }
-                          } catch (error) {
-                            console.error('로컬 스토리지 데이터 파싱 오류:', error)
-                          }
-                        }
+                     {/* 2. 즐겨찾기 아이콘 */}
+                     <button
+                       onClick={() => toggleFavorite(itemKey)}
+                       className={`p-2 rounded-lg transition-all ${
+                         favoriteInfos.has(itemKey)
+                           ? 'text-yellow-400 bg-yellow-400/20'
+                           : 'text-white/70 hover:text-white hover:bg-white/20'
+                       }`}
+                     >
+                       <FaStar 
+                         className={`w-4 h-4 ${favoriteInfos.has(itemKey) ? 'fill-current' : ''}`}
+                       />
+                     </button>
 
-                        return (
-                          <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm transition-all duration-200 ${
-                            isLearned 
-                              ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg shadow-green-500/25' 
-                              : 'bg-gradient-to-br from-slate-400 to-gray-500 text-white shadow-lg shadow-gray-500/25'
-                          }`}>
-                            {isLearned ? (
-                              <FaGraduationCap className="w-4 h-4" />
-                            ) : (
-                              <FaLightbulb className="w-4 h-4" />
-                            )}
-                          </div>
-                        )
-                      })()}
+                     {/* 3. 상세내용 보기 아이콘 */}
+                     <button
+                       onClick={() => toggleItemExpansion(info as AITitleItem)}
+                       className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/20 transition-all"
+                     >
+                       {isExpanded ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                     </button>
+                   </div>
+                 </div>
 
-                      {/* 2. 즐겨찾기 아이콘 */}
-                      <button
-                        onClick={() => toggleFavorite(itemKey)}
-                        className={`p-2 rounded-lg transition-all ${
-                          favoriteInfos.has(itemKey)
-                            ? 'text-yellow-400 bg-yellow-400/20'
-                            : 'text-white/70 hover:text-white hover:bg-white/20'
-                        }`}
-                      >
-                        <FaStar 
-                          className={`w-4 h-4 ${favoriteInfos.has(itemKey) ? 'fill-current' : ''}`}
-                        />
-                      </button>
-
-                      {/* 3. 상세내용 보기 아이콘 */}
-                      <button
-                        onClick={() => toggleItemExpansion(info as AITitleItem)}
-                        className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/20 transition-all"
-                      >
-                        {isExpanded ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
+                 {/* 제목과 날짜 정보를 전체 너비로 표시 */}
+                 <div className="mb-3">
+                   <h3 className="text-lg font-semibold text-white mb-2 leading-tight">{info.title}</h3>
+                   <div className="flex items-center gap-3 text-sm text-white/70">
+                     <span className="flex items-center gap-1">
+                       <FaCalendar className="w-3 h-3" />
+                       {info.date}
+                     </span>
+                   </div>
+                 </div>
 
                  {/* 확장된 상세 내용 */}
                  {isExpanded && (
