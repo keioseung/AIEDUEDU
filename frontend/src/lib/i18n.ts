@@ -1641,7 +1641,6 @@ const zh: Record<string, string> = {
   'ai.info.no.favorites.description': '您还没有收藏任何AI信息。\n将感兴趣的AI信息添加到收藏夹吧！',
   'ai.info.no.favorites.tip.title': '收藏提示',
   'ai.info.no.favorites.tip.description': '将感兴趣的AI信息添加到收藏夹，以后就能轻松找到！',
-  'ai.info.loading': '正在加载AI信息...',
   
   // AI Info List Mode UI
   'ai.info.list.mode.title': 'AI 信息列表',
