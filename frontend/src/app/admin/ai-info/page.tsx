@@ -3720,6 +3720,20 @@ export default function AdminAIInfoPage() {
                       console.log('✅ 백엔드 API 응답:', response)
                       console.log('📊 백엔드 API 응답 데이터:', response.data)
                       console.log('🔍 백엔드 API 응답 상태:', response.status)
+                      console.log('📋 백엔드 API 응답 infos 배열:', response.data.infos)
+                      
+                      // 수정 후 데이터를 다시 가져와서 확인
+                      console.log('🔄 수정 후 데이터 재확인 시작...')
+                      const verifyResponse = await aiInfoAPI.getByDate(editingTermsInfo.date)
+                      console.log('🔍 수정 후 데이터 재확인 결과:', verifyResponse.data)
+                      if (verifyResponse.data && verifyResponse.data[editingTermsInfo.infoIndex]) {
+                        console.log('🔍 수정된 항목의 용어 데이터:', {
+                          terms_ko: verifyResponse.data[editingTermsInfo.infoIndex].terms_ko,
+                          terms_en: verifyResponse.data[editingTermsInfo.infoIndex].terms_en,
+                          terms_ja: verifyResponse.data[editingTermsInfo.infoIndex].terms_ja,
+                          terms_zh: verifyResponse.data[editingTermsInfo.infoIndex].terms_zh
+                        })
+                      }
                       
                       setSuccess('용어가 성공적으로 수정되었습니다!')
                       setShowTermsEditModal(false)
