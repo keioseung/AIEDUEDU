@@ -675,7 +675,7 @@ const en: Record<string, string> = {
   
   // Category Mode
   'category.mode.select': 'Category List',
-  'category.mode.loading': 'しばらくお待ちください。',
+  'category.mode.loading': 'Please wait a moment.',
   'category.mode.count': 'items',
   
   // Category names (display string based)
@@ -1005,7 +1005,7 @@ const en: Record<string, string> = {
   'progress.graph.no.data.tip.description': 'Learn various topics in the AI Info tab to track your progress!',
   
   // Progress Period Change Loading
-  'progress.period.change.loading': 'しばらくお待ちください。',
+  'progress.period.change.loading': 'Please wait a moment.',
   
   // Progress Custom Period Settings
   'progress.custom.period.start.date': 'Start Date',
@@ -1933,13 +1933,15 @@ const zh: Record<string, string> = {
   'progress.graph.no.data.tip.description': '在AI信息标签页学习各种主题，可以跟踪您的进度！',
   
   // 进度期间更改加载
-  'progress.period.change.loading': '请稍候。',
+  'progress.period.change.loading': '请稍等片刻。',
+  
+  // 加载消息
+  'loading.please.wait': '请稍等片刻。',
+  'loading.detail.content': '正在加载详细内容...',
   
   // 进度自定义期间设置
   'progress.custom.period.start.date': '开始日期',
   'progress.custom.period.end.date': '结束日期',
-  
-  'loading.detail.content': '正在加载详细内容...',
   
   // 学习状态显示
   'learning.status.completed': '✅ 学习完成',
@@ -1971,6 +1973,9 @@ const zh: Record<string, string> = {
   'terms.tab.no.terms.message': '没有学习过的术语',
   'terms.tab.no.terms.description': '学习AI信息并注册术语后，在这里查看！',
   'terms.tab.total.available.terms': '总可学习术语: {count}个',
+  
+  // AI信息加载消息
+  'ai.info.loading': '请稍等片刻。',
   
   // 术语学习标签页过滤器UI元素
   'terms.tab.filter.date.filter': '按日期筛选',
@@ -2010,8 +2015,13 @@ const zh: Record<string, string> = {
   'terms.list.scroll.lock': '滚动锁定(长按1秒以上)',
   'terms.list.scroll.mode': '📱 滚动',
   
+  // 类别模式
+  'category.mode.select': '类别列表',
+  'category.mode.loading': '请稍等片刻。',
+  'category.mode.count': '个',
+  
   // 术语学习标签页加载页面
-  'terms.tab.loading': '请稍候。',
+  'terms.tab.loading': '请稍等片刻。',
   
   // 术语学习标签页播放速度设置
   'terms.playback.speed': '播放速度',
