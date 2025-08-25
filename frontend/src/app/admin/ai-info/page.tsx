@@ -98,6 +98,47 @@ export default function AdminAIInfoPage() {
   // 단어 검색 기능 상태
   const [wordSearchQuery, setWordSearchQuery] = useState('')
   const [wordSearchType, setWordSearchType] = useState<'content' | 'terms'>('content')
+  
+  // 용어 업데이트 함수
+  const handleTermUpdate = async (date: string, itemIndex: number, language: 'ko' | 'en' | 'ja' | 'zh', oldTerm: string, newTerm: string, newDescription: string) => {
+    try {
+      // 현재 검색 결과에서 해당 항목 찾기
+      const currentItem = wordSearchResults.find(item => item.date === date && item.info_index === itemIndex)
+      if (!currentItem) {
+        setError('수정할 항목을 찾을 수 없습니다.')
+        return
+      }
+      
+      // 용어 업데이트
+      const termsKey = `terms_${language}` as keyof AIInfoItem
+      const currentTerms = (currentItem[termsKey] as TermItem[]) || []
+      const updatedTerms = currentTerms.map(term => 
+        term.term === oldTerm 
+          ? { ...term, term: newTerm, description: newDescription }
+          : term
+      )
+      
+      // 전체 항목 업데이트
+      const updatedItem = { ...currentItem, [termsKey]: updatedTerms }
+      
+      // updateItemMutation 사용하여 업데이트
+      await updateItemMutation.mutateAsync({
+        date,
+        itemIndex,
+        data: updatedItem
+      })
+      
+      // 검색 결과 새로고침
+      if (wordSearchQuery.trim()) {
+        performWordSearch()
+      }
+      
+      setSuccess('용어가 성공적으로 업데이트되었습니다!')
+    } catch (error: any) {
+      console.error('용어 업데이트 실패:', error)
+      setError(`용어 업데이트에 실패했습니다: ${error?.message || '알 수 없는 오류'}`)
+    }
+  }
   const [wordSearchResults, setWordSearchResults] = useState<AIInfoItem[]>([])
   const [isWordSearching, setIsWordSearching] = useState(false)
   
