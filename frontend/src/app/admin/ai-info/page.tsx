@@ -3759,44 +3759,58 @@ export default function AdminAIInfoPage() {
                         target_terms_en_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_en?.[0]?.description
                       })
                       
-                      const response = await aiInfoAPI.add({
-                        date: editingTermsInfo.date,
-                        infos: updatedInfos
-                      })
-                      
-                      console.log('✅ 백엔드 API 응답:', response)
-                      console.log('📊 백엔드 API 응답 데이터:', response.data)
-                      console.log('🔍 백엔드 API 응답 상태:', response.status)
-                      console.log('📋 백엔드 API 응답 infos 배열:', response.data.infos)
-                      console.log('🔍 백엔드 API 응답 infos 배열 상세:', response.data.infos.map((info: any, idx: number) => ({
-                        index: idx,
-                        title: info.title_ko || info.title,
-                        terms_ko: info.terms_ko,
-                        terms_en: info.terms_en,
-                        terms_ja: info.terms_ja,
-                        terms_zh: info.terms_zh
-                      })))
-                      
-                      // 수정 후 데이터를 다시 가져와서 확인
-                      console.log('🔄 수정 후 데이터 재확인 시작...')
-                      const verifyResponse = await aiInfoAPI.getByDate(editingTermsInfo.date)
-                      console.log('🔍 수정 후 데이터 재확인 결과:', verifyResponse.data)
-                      if (verifyResponse.data && verifyResponse.data[editingTermsInfo.infoIndex]) {
-                        const modifiedItem = verifyResponse.data[editingTermsInfo.infoIndex]
-                        console.log('🔍 수정된 항목의 용어 데이터:', {
-                          terms_ko: modifiedItem.terms_ko,
-                          terms_en: modifiedItem.terms_en,
-                          terms_ja: modifiedItem.terms_ja,
-                          terms_zh: modifiedItem.terms_zh
+                      try {
+                        const response = await aiInfoAPI.add({
+                          date: editingTermsInfo.date,
+                          infos: updatedInfos
                         })
                         
-                        // 수정된 항목의 첫 번째 용어를 상세히 확인
-                        if (modifiedItem.terms_ko && modifiedItem.terms_ko.length > 0) {
-                          console.log('🔍 수정된 항목의 첫 번째 한국어 용어:', modifiedItem.terms_ko[0])
+                        console.log('✅ 백엔드 API 응답:', response)
+                        console.log('📊 백엔드 API 응답 데이터:', response.data)
+                        console.log('🔍 백엔드 API 응답 상태:', response.status)
+                        console.log('📋 백엔드 API 응답 infos 배열:', response.data.infos)
+                        console.log('🔍 백엔드 API 응답 infos 배열 상세:', response.data.infos.map((info: any, idx: number) => ({
+                          index: idx,
+                          title: info.title_ko || info.title,
+                          terms_ko: info.terms_ko,
+                          terms_en: info.terms_en,
+                          terms_ja: info.terms_ja,
+                          terms_zh: info.terms_zh
+                        })))
+                        
+                        // 수정 후 데이터를 다시 가져와서 확인
+                        console.log('🔄 수정 후 데이터 재확인 시작...')
+                        const verifyResponse = await aiInfoAPI.getByDate(editingTermsInfo.date)
+                        console.log('🔍 수정 후 데이터 재확인 결과:', verifyResponse.data)
+                        if (verifyResponse.data && verifyResponse.data[editingTermsInfo.infoIndex]) {
+                          const modifiedItem = verifyResponse.data[editingTermsInfo.infoIndex]
+                          console.log('🔍 수정된 항목의 용어 데이터:', {
+                            terms_ko: modifiedItem.terms_ko,
+                            terms_en: modifiedItem.terms_en,
+                            terms_ja: modifiedItem.terms_ja,
+                            terms_zh: modifiedItem.terms_zh
+                          })
+                          
+                          // 수정된 항목의 첫 번째 용어를 상세히 확인
+                          if (modifiedItem.terms_ko && modifiedItem.terms_ko.length > 0) {
+                            console.log('🔍 수정된 항목의 첫 번째 한국어 용어:', modifiedItem.terms_ko[0])
+                          }
+                          if (modifiedItem.terms_en && modifiedItem.terms_en.length > 0) {
+                            console.log('🔍 수정된 항목의 첫 번째 영어 용어:', modifiedItem.terms_en[0])
+                          }
                         }
-                        if (modifiedItem.terms_en && modifiedItem.terms_en.length > 0) {
-                          console.log('🔍 수정된 항목의 첫 번째 영어 용어:', modifiedItem.terms_en[0])
-                        }
+                      } catch (error: any) {
+                        console.error('❌ 백엔드 API 호출 실패:', error)
+                        console.error('❌ 에러 상세:', {
+                          message: error?.message,
+                          response: error?.response?.data,
+                          status: error?.response?.status,
+                          statusText: error?.response?.statusText,
+                          url: error?.config?.url,
+                          method: error?.config?.method,
+                          data: error?.config?.data
+                        })
+                        throw error
                       }
                       
                       setSuccess('용어가 성공적으로 수정되었습니다!')
