@@ -242,11 +242,11 @@ export default function AdminAIInfoPage() {
               // 정확히 일치하는 단어 검색 (searchCategory에 따라 내용 또는 관련용어에서 검색)
               if (searchCategory === 'content') {
                 // 내용에서 정확히 일치
-                if (info.content_ko?.toLowerCase() === wordSearchQuery.toLowerCase() ||
-                    info.content_en?.toLowerCase() === wordSearchQuery.toLowerCase() ||
-                    info.content_ja?.toLowerCase() === wordSearchQuery.toLowerCase() ||
-                    info.content_zh?.toLowerCase() === wordSearchQuery.toLowerCase()) {
-                  isMatch = true
+              if (info.content_ko?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                  info.content_en?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                  info.content_ja?.toLowerCase() === wordSearchQuery.toLowerCase() ||
+                  info.content_zh?.toLowerCase() === wordSearchQuery.toLowerCase()) {
+                isMatch = true
                 }
               } else if (searchCategory === 'terms') {
                 // 관련용어에서 정확히 일치
@@ -261,11 +261,11 @@ export default function AdminAIInfoPage() {
               // 포함된 단어 검색 (searchCategory에 따라 내용 또는 관련용어에서 검색)
               if (searchCategory === 'content') {
                 // 내용에서 포함된 단어
-                if (info.content_ko?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
-                    info.content_en?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
-                    info.content_ja?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
-                    info.content_zh?.toLowerCase().includes(wordSearchQuery.toLowerCase())) {
-                  isMatch = true
+              if (info.content_ko?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_en?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_ja?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_zh?.toLowerCase().includes(wordSearchQuery.toLowerCase())) {
+                isMatch = true
                 }
               } else if (searchCategory === 'terms') {
                 // 관련용어에서 포함된 단어
@@ -1909,7 +1909,7 @@ export default function AdminAIInfoPage() {
                                       type="text"
                                       value={term.term}
                                       onChange={(e) => {
-                                        // 용어 수정 로직
+                                        // 임시 상태로만 업데이트 (실제 반영은 수정 반영 버튼 클릭 시)
                                         const newTerm = e.target.value
                                         const newWordSearchResults = [...wordSearchResults]
                                         const termsKey = `terms_${term.language}` as keyof AIInfoItem
@@ -1930,7 +1930,7 @@ export default function AdminAIInfoPage() {
                                     <textarea
                                       value={term.description}
                                       onChange={(e) => {
-                                        // 설명 수정 로직
+                                        // 임시 상태로만 업데이트 (실제 반영은 수정 반영 버튼 클릭 시)
                                         const newDescription = e.target.value
                                         const newWordSearchResults = [...wordSearchResults]
                                         const termsKey = `terms_${term.language}` as keyof AIInfoItem
@@ -1940,6 +1940,7 @@ export default function AdminAIInfoPage() {
                                           termToUpdate.description = newDescription
                                           newWordSearchResults[index] = { ...newWordSearchResults[index], [termsKey]: newTerms }
                                           setWordSearchResults(newWordSearchResults)
+                                          // 실제 반영은 수정 반영 버튼 클릭 시에만 수행
                                         }
                                       }}
                                       rows={2}
