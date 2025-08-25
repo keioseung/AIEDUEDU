@@ -1608,7 +1608,8 @@ export default function AdminAIInfoPage() {
                             // 각 언어별로 검색어와 일치하는 용어 찾기
                             const searchLower = wordSearchQuery.toLowerCase()
                             ;['ko', 'en', 'ja', 'zh'].forEach(lang => {
-                              const terms = info[`terms_${lang}`] || []
+                              const termsKey = `terms_${lang}` as keyof AIInfoItem
+                              const terms = (info[termsKey] as TermItem[] | undefined) || []
                               terms.forEach(term => {
                                 if (term.term.toLowerCase().includes(searchLower)) {
                                   matchedTerms.push({
@@ -1659,11 +1660,12 @@ export default function AdminAIInfoPage() {
                                         // 용어 수정 로직
                                         const newTerm = e.target.value
                                         const newWordSearchResults = [...wordSearchResults]
-                                        const newTerms = [...(newWordSearchResults[index][`terms_${term.language}`] || [])]
+                                        const termsKey = `terms_${term.language}` as keyof AIInfoItem
+                                        const newTerms = [...(newWordSearchResults[index][termsKey] as TermItem[] || [])]
                                         const termToUpdate = newTerms.find(t => t.term === term.term)
                                         if (termToUpdate) {
                                           termToUpdate.term = newTerm
-                                          newWordSearchResults[index][`terms_${term.language}`] = newTerms
+                                          newWordSearchResults[index] = { ...newWordSearchResults[index], [termsKey]: newTerms }
                                           setWordSearchResults(newWordSearchResults)
                                         }
                                       }}
@@ -1679,12 +1681,13 @@ export default function AdminAIInfoPage() {
                                         // 설명 수정 로직
                                         const newDescription = e.target.value
                                         const newWordSearchResults = [...wordSearchResults]
-                                        const newTerms = [...(newWordSearchResults[index][`terms_${term.language}`] || [])]
+                                        const termsKey = `terms_${term.language}` as keyof AIInfoItem
+                                        const newTerms = [...(newWordSearchResults[index][termsKey] as TermItem[] || [])]
                                         const termToUpdate = newTerms.find(t => t.term === term.term)
                                         if (termToUpdate) {
-                                                                                   termToUpdate.description = newDescription
-                                         newWordSearchResults[index][`terms_${term.language}`] = newTerms
-                                         setWordSearchResults(newWordSearchResults)
+                                          termToUpdate.description = newDescription
+                                          newWordSearchResults[index] = { ...newWordSearchResults[index], [termsKey]: newTerms }
+                                          setWordSearchResults(newWordSearchResults)
                                         }
                                       }}
                                       rows={2}
