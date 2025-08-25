@@ -392,16 +392,16 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               let termsCount = 0
               for (let infoIndex = 0; infoIndex < 2; infoIndex++) {
                 // AI 정보 카드 학습 여부와 상관없이 용어 학습 상태 확인
-                const key = `learnedTerms_${sessionId}_${dateStr}_${infoIndex}`
-                const stored = localStorage.getItem(key)
-                if (stored) {
-                  try {
-                    const learnedArray = JSON.parse(stored)
-                    if (Array.isArray(learnedArray)) {
-                      termsCount += learnedArray.length
-                    }
-                  } catch (e) {
-                    console.error(`❌ ${key} 파싱 오류:`, e)
+                  const key = `learnedTerms_${sessionId}_${dateStr}_${infoIndex}`
+                  const stored = localStorage.getItem(key)
+                  if (stored) {
+                    try {
+                      const learnedArray = JSON.parse(stored)
+                      if (Array.isArray(learnedArray)) {
+                        termsCount += learnedArray.length
+                      }
+                    } catch (e) {
+                      console.error(`❌ ${key} 파싱 오류:`, e)
                   }
                 }
               }

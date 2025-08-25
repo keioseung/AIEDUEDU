@@ -3679,13 +3679,18 @@ export default function AdminAIInfoPage() {
                       
                       // 특정 infoIndex의 용어만 업데이트
                       if (updatedInfos[editingTermsInfo.infoIndex]) {
+                        const originalInfo = updatedInfos[editingTermsInfo.infoIndex]
+                        console.log('🔍 수정 전 원본 정보:', originalInfo)
+                        
                         updatedInfos[editingTermsInfo.infoIndex] = {
-                          ...updatedInfos[editingTermsInfo.infoIndex],
+                          ...originalInfo,
                           terms_ko: editingTermsInfo.terms_ko,
                           terms_en: editingTermsInfo.terms_en,
                           terms_ja: editingTermsInfo.terms_ja,
                           terms_zh: editingTermsInfo.terms_zh
                         }
+                        
+                        console.log('🔧 수정 후 정보:', updatedInfos[editingTermsInfo.infoIndex])
                       }
                       
                       console.log('🚀 용어 수정 저장 시도:', {
@@ -3695,10 +3700,17 @@ export default function AdminAIInfoPage() {
                       })
                       
                       // aiInfoAPI.add를 직접 호출하여 전체 infos 배열 업데이트
-                      await aiInfoAPI.add({
+                      console.log('📤 백엔드 API 호출 시작:', {
                         date: editingTermsInfo.date,
                         infos: updatedInfos
                       })
+                      
+                      const response = await aiInfoAPI.add({
+                        date: editingTermsInfo.date,
+                        infos: updatedInfos
+                      })
+                      
+                      console.log('✅ 백엔드 API 응답:', response)
                       
                       setSuccess('용어가 성공적으로 수정되었습니다!')
                       setShowTermsEditModal(false)
