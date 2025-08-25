@@ -1937,30 +1937,47 @@ def update_terms_only(date: str, item_index: int, terms_data: TermsUpdate, db: S
         print(f"기존 한국어 용어: {existing_terms_ko}")
         print(f"기존 영어 용어: {existing_terms_en}")
         
-        # 첫 번째 용어 수정 (존재하는 경우에만)
-        if len(existing_terms_ko) > 0 and terms_data.target_terms_ko_first is not None:
+        # 모든 용어 수정 (새로운 데이터가 제공된 경우)
+        if terms_data.terms_ko is not None:
+            existing_terms_ko = terms_data.terms_ko
+            print(f"한국어 용어 전체 수정됨: {existing_terms_ko}")
+        
+        if terms_data.terms_en is not None:
+            existing_terms_en = terms_data.terms_en
+            print(f"영어 용어 전체 수정됨: {existing_terms_en}")
+        
+        if terms_data.terms_ja is not None:
+            existing_terms_ja = terms_data.terms_ja
+            print(f"일본어 용어 전체 수정됨: {existing_terms_ja}")
+        
+        if terms_data.terms_zh is not None:
+            existing_terms_zh = terms_data.terms_zh
+            print(f"중국어 용어 전체 수정됨: {existing_terms_zh}")
+        
+        # 하위 호환성을 위한 첫 번째 용어만 수정하는 방식 (새로운 방식이 사용되지 않은 경우)
+        if terms_data.terms_ko is None and len(existing_terms_ko) > 0 and terms_data.target_terms_ko_first is not None:
             existing_terms_ko[0]['term'] = terms_data.target_terms_ko_first
             if terms_data.target_terms_ko_first_desc:
                 existing_terms_ko[0]['description'] = terms_data.target_terms_ko_first_desc
-            print(f"한국어 첫 번째 용어 수정됨: {existing_terms_ko[0]}")
+            print(f"한국어 첫 번째 용어 수정됨 (하위 호환성): {existing_terms_ko[0]}")
         
-        if len(existing_terms_en) > 0 and terms_data.target_terms_en_first is not None:
+        if terms_data.terms_en is None and len(existing_terms_en) > 0 and terms_data.target_terms_en_first is not None:
             existing_terms_en[0]['term'] = terms_data.target_terms_en_first
             if terms_data.target_terms_en_first_desc:
                 existing_terms_en[0]['description'] = terms_data.target_terms_en_first_desc
-            print(f"영어 첫 번째 용어 수정됨: {existing_terms_en[0]}")
+            print(f"영어 첫 번째 용어 수정됨 (하위 호환성): {existing_terms_en[0]}")
         
-        if len(existing_terms_ja) > 0 and terms_data.target_terms_ja_first is not None:
+        if terms_data.terms_ja is None and len(existing_terms_ja) > 0 and terms_data.target_terms_ja_first is not None:
             existing_terms_ja[0]['term'] = terms_data.target_terms_ja_first
             if terms_data.target_terms_ja_first_desc:
                 existing_terms_ja[0]['description'] = terms_data.target_terms_ja_first_desc
-            print(f"일본어 첫 번째 용어 수정됨: {existing_terms_ja[0]}")
+            print(f"일본어 첫 번째 용어 수정됨 (하위 호환성): {existing_terms_ja[0]}")
         
-        if len(existing_terms_zh) > 0 and terms_data.target_terms_zh_first is not None:
+        if terms_data.terms_zh is None and len(existing_terms_zh) > 0 and terms_data.target_terms_zh_first is not None:
             existing_terms_zh[0]['term'] = terms_data.target_terms_zh_first
             if terms_data.target_terms_zh_first_desc:
                 existing_terms_zh[0]['description'] = terms_data.target_terms_zh_first_desc
-            print(f"중국어 첫 번째 용어 수정됨: {existing_terms_zh[0]}")
+            print(f"중국어 첫 번째 용어 수정됨 (하위 호환성): {existing_terms_zh[0]}")
         
         # 데이터베이스에 업데이트된 용어 저장
         setattr(ai_info, terms_ko_field, json.dumps(existing_terms_ko))

@@ -3785,20 +3785,16 @@ export default function AdminAIInfoPage() {
                       })
                       
                       try {
-                        // 새로운 용어 수정 API 사용
+                        // 새로운 용어 수정 API 사용 - 모든 용어 데이터 전송
                         const termsUpdateData = {
                           target_index: editingTermsInfo.infoIndex,
-                          target_terms_ko_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_ko?.[0]?.term,
-                          target_terms_ko_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_ko?.[0]?.description,
-                          target_terms_en_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_en?.[0]?.term,
-                          target_terms_en_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_en?.[0]?.description,
-                          target_terms_ja_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_ja?.[0]?.term,
-                          target_terms_ja_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_ja?.[0]?.description,
-                          target_terms_zh_first: updatedInfos[editingTermsInfo.infoIndex]?.terms_zh?.[0]?.term,
-                          target_terms_zh_first_desc: updatedInfos[editingTermsInfo.infoIndex]?.terms_zh?.[0]?.description
+                          terms_ko: updatedInfos[editingTermsInfo.infoIndex]?.terms_ko,
+                          terms_en: updatedInfos[editingTermsInfo.infoIndex]?.terms_en,
+                          terms_ja: updatedInfos[editingTermsInfo.infoIndex]?.terms_ja,
+                          terms_zh: updatedInfos[editingTermsInfo.infoIndex]?.terms_zh
                         }
                         
-                        console.log('📤 새로운 용어 수정 API 호출:', termsUpdateData)
+                        console.log('📤 새로운 용어 수정 API 호출 (전체 용어):', termsUpdateData)
                         
                         const response = await aiInfoAPI.updateTermsOnly(
                           editingTermsInfo.date,

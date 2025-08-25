@@ -76,6 +76,14 @@ class AIInfoResponse(BaseModel):
 class TermsUpdate(BaseModel):
     """특정 항목의 용어만 수정하기 위한 스키마"""
     target_index: int  # 0, 1, 2 (info1, info2, info3)
+    
+    # 전체 용어 배열 수정 (새로운 방식)
+    terms_ko: Optional[List[TermItem]] = None
+    terms_en: Optional[List[TermItem]] = None
+    terms_ja: Optional[List[TermItem]] = None
+    terms_zh: Optional[List[TermItem]] = None
+    
+    # 기존 첫 번째 용어만 수정하는 방식 (하위 호환성을 위해 유지)
     target_terms_ko_first: Optional[str] = None
     target_terms_ko_first_desc: Optional[str] = None
     target_terms_en_first: Optional[str] = None
