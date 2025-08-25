@@ -98,6 +98,24 @@ export default function AdminAIInfoPage() {
   // 단어 검색 기능 상태
   const [wordSearchQuery, setWordSearchQuery] = useState('')
   const [wordSearchType, setWordSearchType] = useState<'content' | 'terms' | 'exact' | 'contains'>('content')
+  const [showContentDropdown, setShowContentDropdown] = useState(false)
+  const [showTermsDropdown, setShowTermsDropdown] = useState(false)
+  
+  // 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element
+      if (!target.closest('.dropdown-container')) {
+        setShowContentDropdown(false)
+        setShowTermsDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
   
   // 용어 업데이트 함수
   const handleTermUpdate = async (date: string, itemIndex: number, language: 'ko' | 'en' | 'ja' | 'zh', oldTerm: string, newTerm: string, newDescription: string) => {
@@ -1548,66 +1566,124 @@ export default function AdminAIInfoPage() {
               </label>
               <div className="space-y-3">
                 {/* 검색 조건 선택 */}
-                <div className="space-y-3">
-                  {/* 1단계: 검색 대상 선택 */}
-                  <div className="flex gap-3">
-                    <label className="flex items-center gap-2 text-sm text-gray-300">
-                      <input
-                        type="radio"
-                        value="content"
-                        checked={wordSearchType === 'content'}
-                        onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
-                        className="text-blue-500 focus:ring-blue-500"
-                      />
+                <div className="flex gap-3">
+                  {/* 내용으로 검색 버튼 */}
+                  <div className="relative dropdown-container">
+                    <button
+                      onClick={() => {
+                        setShowContentDropdown(!showContentDropdown)
+                        setShowTermsDropdown(false)
+                        setWordSearchType('content')
+                      }}
+                      className={`px-4 py-2 rounded-lg border transition-colors ${
+                        wordSearchType === 'content' || wordSearchType === 'exact' || wordSearchType === 'contains'
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                      }`}
+                    >
                       내용으로 검색
-                    </label>
-                    <label className="flex items-center gap-2 text-sm text-gray-300">
-                      <input
-                        type="radio"
-                        value="terms"
-                        checked={wordSearchType === 'terms'}
-                        onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms' | 'exact' | 'contains')}
-                        className="text-blue-500 focus:ring-blue-500"
-                      />
-                      관련 용어로 검색
-                    </label>
+                    </button>
+                    
+                    {/* 내용으로 검색 드롭다운 */}
+                    {showContentDropdown && (
+                      <div className="absolute top-full left-0 mt-1 w-48 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-10">
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              setWordSearchType('content')
+                              setShowContentDropdown(false)
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-700 ${
+                              wordSearchType === 'content' ? 'text-blue-400 bg-blue-900/20' : 'text-gray-300'
+                            }`}
+                          >
+                            일반 검색
+                          </button>
+                          <button
+                            onClick={() => {
+                              setWordSearchType('exact')
+                              setShowContentDropdown(false)
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-700 ${
+                              wordSearchType === 'exact' ? 'text-blue-400 bg-blue-900/20' : 'text-gray-300'
+                            }`}
+                          >
+                            정확히 일치
+                          </button>
+                          <button
+                            onClick={() => {
+                              setWordSearchType('contains')
+                              setShowContentDropdown(false)
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-700 ${
+                              wordSearchType === 'contains' ? 'text-blue-400 bg-blue-900/20' : 'text-gray-300'
+                            }`}
+                          >
+                            포함된 단어
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
-                  {/* 2단계: 세부 검색 조건 선택 (내용으로 검색 또는 관련 용어로 검색 선택 시) */}
-                  {(wordSearchType === 'content' || wordSearchType === 'exact' || wordSearchType === 'contains' || wordSearchType === 'terms') && (
-                    <div className="ml-6 flex gap-3">
-                      <label className="flex items-center gap-2 text-sm text-gray-300">
-                        <input
-                          type="radio"
-                          value="content"
-                          checked={wordSearchType === 'content'}
-                          onChange={(e) => setWordSearchType('content')}
-                          className="text-blue-500 focus:ring-blue-500"
-                        />
-                        일반 검색
-                      </label>
-                      <label className="flex items-center gap-2 text-sm text-gray-300">
-                        <input
-                          type="radio"
-                          value="exact"
-                          checked={wordSearchType === 'exact'}
-                          onChange={(e) => setWordSearchType('exact')}
-                          className="text-blue-500 focus:ring-blue-500"
-                        />
-                        정확히 일치
-                      </label>
-                      <label className="flex items-center gap-2 text-sm text-gray-300">
-                        <input
-                          type="radio"
-                          value="contains"
-                          checked={wordSearchType === 'contains'}
-                          onChange={(e) => setWordSearchType('contains')}
-                          className="text-blue-500 focus:ring-blue-500"
-                        />
-                        포함된 단어
-                      </label>
-                    </div>
-                  )}
+                  {/* 관련 용어로 검색 버튼 */}
+                  <div className="relative dropdown-container">
+                    <button
+                      onClick={() => {
+                        setShowTermsDropdown(!showTermsDropdown)
+                        setShowContentDropdown(false)
+                        setWordSearchType('terms')
+                      }}
+                      className={`px-4 py-2 rounded-lg border transition-colors ${
+                        wordSearchType === 'terms'
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                      }`}
+                    >
+                      관련 용어로 검색
+                    </button>
+                    
+                    {/* 관련 용어로 검색 드롭다운 */}
+                    {showTermsDropdown && (
+                      <div className="absolute top-full left-0 mt-1 w-48 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-10">
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              setWordSearchType('terms')
+                              setShowTermsDropdown(false)
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-700 ${
+                              wordSearchType === 'terms' ? 'text-blue-400 bg-blue-900/20' : 'text-gray-300'
+                            }`}
+                          >
+                            일반 검색
+                          </button>
+                          <button
+                            onClick={() => {
+                              setWordSearchType('exact')
+                              setShowTermsDropdown(false)
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-700 ${
+                              wordSearchType === 'exact' ? 'text-blue-400 bg-blue-900/20' : 'text-gray-300'
+                            }`}
+                          >
+                            정확히 일치
+                          </button>
+                          <button
+                            onClick={() => {
+                              setWordSearchType('contains')
+                              setShowTermsDropdown(false)
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-700 ${
+                              wordSearchType === 'contains' ? 'text-blue-400 bg-blue-900/20' : 'text-gray-300'
+                            }`}
+                          >
+                            포함된 단어
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 {/* 검색어 입력 및 검색 버튼 */}
