@@ -3795,6 +3795,20 @@ export default function AdminAIInfoPage() {
                         }
                         
                         console.log('📤 새로운 용어 수정 API 호출 (전체 용어):', termsUpdateData)
+                        console.log('📤 한국어 용어 상세:', {
+                          terms_ko: termsUpdateData.terms_ko,
+                          terms_ko_length: termsUpdateData.terms_ko?.length,
+                          terms_ko_first: termsUpdateData.terms_ko?.[0],
+                          terms_ko_second: termsUpdateData.terms_ko?.[1],
+                          terms_ko_third: termsUpdateData.terms_ko?.[2]
+                        })
+                        console.log('📤 영어 용어 상세:', {
+                          terms_en: termsUpdateData.terms_en,
+                          terms_en_length: termsUpdateData.terms_en?.length,
+                          terms_en_first: termsUpdateData.terms_en?.[0],
+                          terms_en_second: termsUpdateData.terms_en?.[1],
+                          terms_en_third: termsUpdateData.terms_en?.[2]
+                        })
                         
                         const response = await aiInfoAPI.updateTermsOnly(
                           editingTermsInfo.date,

@@ -1900,6 +1900,23 @@ def update_terms_only(date: str, item_index: int, terms_data: TermsUpdate, db: S
         print(f"날짜: {date}")
         print(f"항목 인덱스: {item_index}")
         print(f"수정할 용어 데이터: {terms_data}")
+        print(f"수정할 용어 데이터 타입: {type(terms_data)}")
+        print(f"수정할 용어 데이터 속성들: {dir(terms_data)}")
+        
+        # 각 언어별 용어 데이터 상세 로깅
+        if hasattr(terms_data, 'terms_ko') and terms_data.terms_ko is not None:
+            print(f"한국어 용어 데이터: {terms_data.terms_ko}")
+            print(f"한국어 용어 개수: {len(terms_data.terms_ko)}")
+            if len(terms_data.terms_ko) > 0:
+                print(f"한국어 첫 번째 용어: {terms_data.terms_ko[0]}")
+                print(f"한국어 두 번째 용어: {terms_data.terms_ko[1] if len(terms_data.terms_ko) > 1 else '없음'}")
+        
+        if hasattr(terms_data, 'terms_en') and terms_data.terms_en is not None:
+            print(f"영어 용어 데이터: {terms_data.terms_en}")
+            print(f"영어 용어 개수: {len(terms_data.terms_en)}")
+            if len(terms_data.terms_en) > 0:
+                print(f"영어 첫 번째 용어: {terms_data.terms_en[0]}")
+                print(f"영어 두 번째 용어: {terms_data.terms_en[1] if len(terms_data.terms_en) > 1 else '없음'}")
         
         # 기존 AI 정보 조회
         ai_info = db.query(AIInfo).filter(AIInfo.date == date).first()
@@ -1925,6 +1942,8 @@ def update_terms_only(date: str, item_index: int, terms_data: TermsUpdate, db: S
         else:
             raise HTTPException(status_code=400, detail=f"잘못된 항목 인덱스: {item_index}")
         
+        print(f"선택된 필드: {terms_ko_field}, {terms_en_field}, {terms_ja_field}, {terms_zh_field}")
+        
         # 기존 용어 데이터 파싱
         try:
             existing_terms_ko = json.loads(getattr(ai_info, terms_ko_field) or '[]')
@@ -1936,23 +1955,33 @@ def update_terms_only(date: str, item_index: int, terms_data: TermsUpdate, db: S
         
         print(f"기존 한국어 용어: {existing_terms_ko}")
         print(f"기존 영어 용어: {existing_terms_en}")
+        print(f"기존 한국어 용어 개수: {len(existing_terms_ko)}")
+        print(f"기존 영어 용어 개수: {len(existing_terms_en)}")
         
         # 모든 용어 수정 (새로운 데이터가 제공된 경우)
         if terms_data.terms_ko is not None:
+            print(f"한국어 용어 전체 수정 시도: {terms_data.terms_ko}")
             existing_terms_ko = terms_data.terms_ko
             print(f"한국어 용어 전체 수정됨: {existing_terms_ko}")
+            print(f"수정 후 한국어 용어 개수: {len(existing_terms_ko)}")
         
         if terms_data.terms_en is not None:
+            print(f"영어 용어 전체 수정 시도: {terms_data.terms_en}")
             existing_terms_en = terms_data.terms_en
             print(f"영어 용어 전체 수정됨: {existing_terms_en}")
+            print(f"수정 후 영어 용어 개수: {len(existing_terms_en)}")
         
         if terms_data.terms_ja is not None:
+            print(f"일본어 용어 전체 수정 시도: {terms_data.terms_ja}")
             existing_terms_ja = terms_data.terms_ja
             print(f"일본어 용어 전체 수정됨: {existing_terms_ja}")
+            print(f"수정 후 일본어 용어 개수: {len(existing_terms_ja)}")
         
         if terms_data.terms_zh is not None:
+            print(f"중국어 용어 전체 수정 시도: {terms_data.terms_zh}")
             existing_terms_zh = terms_data.terms_zh
             print(f"중국어 용어 전체 수정됨: {existing_terms_zh}")
+            print(f"수정 후 중국어 용어 개수: {len(existing_terms_zh)}")
         
         # 하위 호환성을 위한 첫 번째 용어만 수정하는 방식 (새로운 방식이 사용되지 않은 경우)
         if terms_data.terms_ko is None and len(existing_terms_ko) > 0 and terms_data.target_terms_ko_first is not None:
@@ -1978,6 +2007,9 @@ def update_terms_only(date: str, item_index: int, terms_data: TermsUpdate, db: S
             if terms_data.target_terms_zh_first_desc:
                 existing_terms_zh[0]['description'] = terms_data.target_terms_zh_first_desc
             print(f"중국어 첫 번째 용어 수정됨 (하위 호환성): {existing_terms_zh[0]}")
+        
+        print(f"최종 수정된 한국어 용어: {existing_terms_ko}")
+        print(f"최종 수정된 영어 용어: {existing_terms_en}")
         
         # 데이터베이스에 업데이트된 용어 저장
         setattr(ai_info, terms_ko_field, json.dumps(existing_terms_ko))
