@@ -2340,21 +2340,6 @@ export default function AdminAIInfoPage() {
                   >
                     {showAllAIInfo ? '전체 보기 숨기기' : '전체 AI 정보 보기'}
                   </button>
-                          <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="검색할 단어를 입력하세요"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm"
-          />
-          <button
-            onClick={searchTermInCards}
-            className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg"
-          >
-            🔍 단어 검색
-                  </button>
-        </div>
                 </div>
               )}
               
