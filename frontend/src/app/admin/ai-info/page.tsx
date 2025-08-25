@@ -81,6 +81,18 @@ export default function AdminAIInfoPage() {
   const [bulkTermsTextZh, setBulkTermsTextZh] = useState('')
   const [showBulkInput, setShowBulkInput] = useState<number | null | 'edit'>(null)
   
+  // 용어 수정 모달 상태
+  const [showTermsEditModal, setShowTermsEditModal] = useState(false)
+  const [editingTermsInfo, setEditingTermsInfo] = useState<{
+    date: string
+    infoIndex: number
+    title: string
+    terms_ko: TermItem[]
+    terms_en: TermItem[]
+    terms_ja: TermItem[]
+    terms_zh: TermItem[]
+  } | null>(null)
+  
   // 검색된 용어 매칭 상태
   const [matchedTerms, setMatchedTerms] = useState<Array<{
     term: string
@@ -158,6 +170,33 @@ export default function AdminAIInfoPage() {
       setError(`용어 업데이트에 실패했습니다: ${error?.message || '알 수 없는 오류'}`)
     }
   }
+
+  // 용어 수정 모달 열기 함수
+  const handleOpenTermsEditModal = async (date: string, infoIndex: number) => {
+    try {
+      // 해당 날짜의 AI 정보 가져오기
+      const response = await aiInfoAPI.getByDate(date)
+      if (response.data && response.data[infoIndex]) {
+        const info = response.data[infoIndex]
+        setEditingTermsInfo({
+          date,
+          infoIndex,
+          title: info.title_ko || info.title || '제목 없음',
+          terms_ko: info.terms_ko || [],
+          terms_en: info.terms_en || [],
+          terms_ja: info.terms_ja || [],
+          terms_zh: info.terms_zh || []
+        })
+        setShowTermsEditModal(true)
+      } else {
+        setError('해당 정보를 찾을 수 없습니다.')
+      }
+    } catch (error: any) {
+      console.error('용어 정보 가져오기 실패:', error)
+      setError(`용어 정보를 가져올 수 없습니다: ${error?.message || '알 수 없는 오류'}`)
+    }
+  }
+
   const [wordSearchResults, setWordSearchResults] = useState<AIInfoItem[]>([])
   const [isWordSearching, setIsWordSearching] = useState(false)
   
@@ -2368,6 +2407,13 @@ export default function AdminAIInfoPage() {
                               수정
                             </button>
                             <button 
+                              onClick={() => handleOpenTermsEditModal(dateItem, idx)} 
+                              className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition flex items-center gap-2"
+                            >
+                              <FaBrain className="w-4 h-4" />
+                              등록된 용어 수정
+                            </button>
+                            <button 
                               onClick={() => handleDeleteItem(dateItem, idx)} 
                               className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition flex items-center gap-2"
                             >
@@ -3449,6 +3495,230 @@ export default function AdminAIInfoPage() {
               >
                 닫기
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* 용어 수정 모달 */}
+      {showTermsEditModal && editingTermsInfo && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-700">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <FaBrain className="text-purple-400" />
+                  등록된 용어 수정
+                </h2>
+                <button
+                  onClick={() => setShowTermsEditModal(false)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <FaTimes className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="text-white/70">
+                <strong>제목:</strong> {editingTermsInfo.title}
+              </div>
+              <div className="text-white/70">
+                <strong>날짜:</strong> {editingTermsInfo.date} | <strong>항목:</strong> {editingTermsInfo.infoIndex + 1}
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* 한국어 용어 */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    🇰🇷 한국어 용어 ({editingTermsInfo.terms_ko.length}개)
+                  </h3>
+                  {editingTermsInfo.terms_ko.map((term, idx) => (
+                    <div key={idx} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-white mb-1">용어 {idx + 1}</label>
+                        <input
+                          type="text"
+                          value={term.term}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_ko]
+                            newTerms[idx] = { ...newTerms[idx], term: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_ko: newTerms })
+                          }}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-white mb-1">설명</label>
+                        <textarea
+                          value={term.description}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_ko]
+                            newTerms[idx] = { ...newTerms[idx], description: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_ko: newTerms })
+                          }}
+                          rows={2}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 resize-none"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 영어 용어 */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    🇺🇸 영어 용어 ({editingTermsInfo.terms_en.length}개)
+                  </h3>
+                  {editingTermsInfo.terms_en.map((term, idx) => (
+                    <div key={idx} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-white mb-1">Term {idx + 1}</label>
+                        <input
+                          type="text"
+                          value={term.term}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_en]
+                            newTerms[idx] = { ...newTerms[idx], term: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_en: newTerms })
+                          }}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-green-500/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-white mb-1">Description</label>
+                        <textarea
+                          value={term.description}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_en]
+                            newTerms[idx] = { ...newTerms[idx], description: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_en: newTerms })
+                          }}
+                          rows={2}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-green-500/50 resize-none"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 일본어 용어 */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    🇯🇵 일본어 용어 ({editingTermsInfo.terms_ja.length}개)
+                  </h3>
+                  {editingTermsInfo.terms_ja.map((term, idx) => (
+                    <div key={idx} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-white mb-1">用語 {idx + 1}</label>
+                        <input
+                          type="text"
+                          value={term.term}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_ja]
+                            newTerms[idx] = { ...newTerms[idx], term: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_ja: newTerms })
+                          }}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-white mb-1">説明</label>
+                        <textarea
+                          value={term.description}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_ja]
+                            newTerms[idx] = { ...newTerms[idx], description: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_ja: newTerms })
+                          }}
+                          rows={2}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500/50 resize-none"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 중국어 용어 */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    🇨🇳 중국어 용어 ({editingTermsInfo.terms_zh.length}개)
+                  </h3>
+                  {editingTermsInfo.terms_zh.map((term, idx) => (
+                    <div key={idx} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-white mb-1">术语 {idx + 1}</label>
+                        <input
+                          type="text"
+                          value={term.term}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_zh]
+                            newTerms[idx] = { ...newTerms[idx], term: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_zh: newTerms })
+                          }}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-white mb-1">说明</label>
+                        <textarea
+                          value={term.description}
+                          onChange={(e) => {
+                            const newTerms = [...editingTermsInfo.terms_zh]
+                            newTerms[idx] = { ...newTerms[idx], description: e.target.value }
+                            setEditingTermsInfo({ ...editingTermsInfo, terms_zh: newTerms })
+                          }}
+                          rows={2}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500/50 resize-none"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="flex gap-3 mt-8 justify-center">
+                <button
+                  onClick={async () => {
+                    try {
+                      // 수정된 용어를 데이터베이스에 저장
+                      const updatedItem = {
+                        ...editingTermsInfo,
+                        terms_ko: editingTermsInfo.terms_ko,
+                        terms_en: editingTermsInfo.terms_en,
+                        terms_ja: editingTermsInfo.terms_ja,
+                        terms_zh: editingTermsInfo.terms_zh
+                      }
+                      
+                      await updateItemMutation.mutateAsync({
+                        date: editingTermsInfo.date,
+                        itemIndex: editingTermsInfo.infoIndex,
+                        data: updatedItem as any
+                      })
+                      
+                      setSuccess('용어가 성공적으로 수정되었습니다!')
+                      setShowTermsEditModal(false)
+                      setEditingTermsInfo(null)
+                    } catch (error: any) {
+                      console.error('용어 수정 실패:', error)
+                      setError(`용어 수정에 실패했습니다: ${error?.message || '알 수 없는 오류'}`)
+                    }
+                  }}
+                  className="px-8 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                >
+                  <FaSave className="w-4 h-4" />
+                  용어 수정 저장
+                </button>
+                
+                <button
+                  onClick={() => {
+                    setShowTermsEditModal(false)
+                    setEditingTermsInfo(null)
+                  }}
+                  className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors"
+                >
+                  취소
+                </button>
+              </div>
             </div>
           </div>
         </div>
