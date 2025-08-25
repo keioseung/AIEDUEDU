@@ -68,7 +68,7 @@ export default function AdminAIInfoPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'category'>('date')
-
+  
   // 프롬프트+기반내용 합치기 상태
   const [selectedPromptId, setSelectedPromptId] = useState<number | null>(null)
   const [selectedBaseId, setSelectedBaseId] = useState<number | null>(null)
@@ -81,7 +81,13 @@ export default function AdminAIInfoPage() {
   const [bulkTermsTextZh, setBulkTermsTextZh] = useState('')
   const [showBulkInput, setShowBulkInput] = useState<number | null | 'edit'>(null)
 
-  // 날짜별 AI 정보 관리 상태
+  // 단어 검색 기능 상태
+  const [wordSearchQuery, setWordSearchQuery] = useState('')
+  const [wordSearchType, setWordSearchType] = useState<'content' | 'terms'>('content')
+  const [wordSearchResults, setWordSearchResults] = useState<AIInfoItem[]>([])
+  const [isWordSearching, setIsWordSearching] = useState(false)
+  
+  // 날짜별 AI 정보 관리 상태 (기존 기능 유지)
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedDateAIInfo, setSelectedDateAIInfo] = useState<AIInfoItem[]>([])
   const [availableDates, setAvailableDates] = useState<string[]>([])
@@ -122,6 +128,60 @@ export default function AdminAIInfoPage() {
     },
     enabled: !!date,
   })
+
+  // 단어 검색 함수
+  const performWordSearch = async () => {
+    if (!wordSearchQuery.trim()) {
+      setError('검색할 단어를 입력해주세요.')
+      return
+    }
+
+    setIsWordSearching(true)
+    setError('')
+    
+    try {
+      const allData = await refetchAllAIInfo()
+      if (allData.data) {
+        const results: AIInfoItem[] = []
+        
+        allData.data.forEach((dateGroup: any) => {
+          dateGroup.infos.forEach((info: AIInfoItem) => {
+            let isMatch = false
+            
+            if (wordSearchType === 'content') {
+              // 내용에서 검색
+              if (info.content_ko?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_en?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_ja?.toLowerCase().includes(wordSearchQuery.toLowerCase()) ||
+                  info.content_zh?.toLowerCase().includes(wordSearchQuery.toLowerCase())) {
+                isMatch = true
+              }
+            } else if (wordSearchType === 'terms') {
+              // 관련 용어에서 검색
+              if (info.terms_ko?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                  info.terms_en?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                  info.terms_ja?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase())) ||
+                  info.terms_zh?.some(term => term.term.toLowerCase().includes(wordSearchQuery.toLowerCase()))) {
+                isMatch = true
+              }
+            }
+            
+            if (isMatch) {
+              results.push(info)
+            }
+          })
+        })
+        
+        setWordSearchResults(results)
+        setSuccess(`"${wordSearchQuery}" 단어로 ${results.length}개의 결과를 찾았습니다.`)
+      }
+    } catch (error) {
+      console.error('단어 검색 실패:', error)
+      setError('검색 중 오류가 발생했습니다.')
+    } finally {
+      setIsWordSearching(false)
+    }
+  }
 
   // 전체 AI 정보 불러오기
   const { data: allAIInfos = [], refetch: refetchAllAIInfo, isLoading: isLoadingAllAIInfo } = useQuery({
@@ -1330,10 +1390,121 @@ export default function AdminAIInfoPage() {
               AI 정보 관리
             </h2>
             
-            {/* 날짜 선택 */}
+            {/* 단어 검색 기능 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                단어 검색
+              </label>
+              <div className="space-y-3">
+                {/* 검색 조건 선택 */}
+                <div className="flex gap-3">
+                  <label className="flex items-center gap-2 text-sm text-gray-300">
+                    <input
+                      type="radio"
+                      value="content"
+                      checked={wordSearchType === 'content'}
+                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms')}
+                      className="text-blue-500 focus:ring-blue-500"
+                    />
+                    내용으로 검색
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-gray-300">
+                    <input
+                      type="radio"
+                      value="terms"
+                      checked={wordSearchType === 'terms'}
+                      onChange={(e) => setWordSearchType(e.target.value as 'content' | 'terms')}
+                      className="text-blue-500 focus:ring-blue-500"
+                    />
+                    관련 용어로 검색
+                  </label>
+                </div>
+                
+                {/* 검색어 입력 및 검색 버튼 */}
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={wordSearchQuery}
+                    onChange={(e) => setWordSearchQuery(e.target.value)}
+                    placeholder="검색할 단어를 입력하세요"
+                    className="flex-1 px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button
+                    onClick={performWordSearch}
+                    disabled={isWordSearching || !wordSearchQuery.trim()}
+                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                  >
+                    {isWordSearching ? '검색 중...' : '검색'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* 검색 결과 표시 */}
+            {wordSearchResults.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  검색 결과 ({wordSearchResults.length}개)
+                </h3>
+                
+                {wordSearchResults.map((info, index) => (
+                  <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h4 className="text-lg font-medium text-white mb-2">
+                          {info.title || `정보 ${index + 1}`}
+                        </h4>
+                        <p className="text-gray-300 text-sm mb-2">
+                          {info.content ? (info.content.length > 100 ? `${info.content.substring(0, 100)}...` : info.content) : '내용 없음'}
+                        </p>
+                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                          <span>날짜: {info.date}</span>
+                          <span>카테고리: {info.category || '미분류'}</span>
+                        </div>
+                      </div>
+                      
+                      {/* 액션 버튼들 */}
+                      <div className="flex items-center gap-2 ml-4">
+                        {/* 카테고리 변경 */}
+                        <select
+                          value={info.category || ''}
+                          onChange={(e) => handleCategoryChange(info.date || '', info.info_index || 0, e.target.value, info.category || '')}
+                          className="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-sm text-white focus:ring-1 focus:ring-blue-500"
+                        >
+                          <option value="">카테고리 선택</option>
+                          {categories.map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                        </select>
+                        
+                        {/* 수정 버튼 */}
+                        <button
+                          onClick={() => handleEditDateAIInfo(info.date || '', info.info_index || 0)}
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                        >
+                          수정
+                        </button>
+                        
+                        {/* 삭제 버튼 */}
+                        <button
+                          onClick={() => handleDeleteDateAIInfo(info.date || '', info.info_index || 0)}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 날짜 선택 (기존 기능 유지) */}
             <div className="mb-6">
               <label htmlFor="dateSelect" className="block text-sm font-medium text-gray-300 mb-2">
-                날짜 선택
+                날짜별 관리 (기존 기능)
               </label>
               <select
                 id="dateSelect"
@@ -1350,7 +1521,7 @@ export default function AdminAIInfoPage() {
               </select>
             </div>
 
-            {/* 선택된 날짜의 AI 정보 표시 */}
+            {/* 선택된 날짜의 AI 정보 표시 (기존 기능 유지) */}
             {selectedDate && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-white mb-4">
