@@ -3673,42 +3673,41 @@ export default function AdminAIInfoPage() {
                       
                       const existingInfo = existingResponse.data[editingTermsInfo.infoIndex]
                       
-                      // 수정된 용어를 데이터베이스에 저장
-                      // 데이터베이스 컬럼 구조에 맞춰 데이터 구성
-                      const updatedItem = {
-                        // 기존 제목과 내용 유지
-                        [`info${editingTermsInfo.infoIndex + 1}_title_ko`]: existingInfo.title_ko || existingInfo.title || editingTermsInfo.title,
-                        [`info${editingTermsInfo.infoIndex + 1}_title_en`]: existingInfo.title_en || existingInfo.title || editingTermsInfo.title,
-                        [`info${editingTermsInfo.infoIndex + 1}_title_ja`]: existingInfo.title_ja || existingInfo.title || editingTermsInfo.title,
-                        [`info${editingTermsInfo.infoIndex + 1}_title_zh`]: existingInfo.title_zh || existingInfo.title || editingTermsInfo.title,
-                        [`info${editingTermsInfo.infoIndex + 1}_content_ko`]: existingInfo.content_ko || existingInfo.content || '',
-                        [`info${editingTermsInfo.infoIndex + 1}_content_en`]: existingInfo.content_en || existingInfo.content || '',
-                        [`info${editingTermsInfo.infoIndex + 1}_content_ja`]: existingInfo.content_ja || existingInfo.content || '',
-                        [`info${editingTermsInfo.infoIndex + 1}_content_zh`]: existingInfo.content_zh || existingInfo.content || '',
-                        // 용어만 새로 업데이트 (JSON 문자열로 변환)
-                        [`info${editingTermsInfo.infoIndex + 1}_terms_ko`]: JSON.stringify(editingTermsInfo.terms_ko),
-                        [`info${editingTermsInfo.infoIndex + 1}_terms_en`]: JSON.stringify(editingTermsInfo.terms_en),
-                        [`info${editingTermsInfo.infoIndex + 1}_terms_ja`]: JSON.stringify(editingTermsInfo.terms_ja),
-                        [`info${editingTermsInfo.infoIndex + 1}_terms_zh`]: JSON.stringify(editingTermsInfo.terms_zh),
-                        // 기존 카테고리 유지
-                        [`info${editingTermsInfo.infoIndex + 1}_category`]: existingInfo.category || ''
+                      // 백엔드 API 요구사항에 맞게 데이터 구조 수정
+                      // aiInfoAPI.add는 { date, infos: [...] } 형태를 기대함
+                      const updatedInfos = [...existingResponse.data]
+                      
+                      // 특정 infoIndex의 용어만 업데이트
+                      if (updatedInfos[editingTermsInfo.infoIndex]) {
+                        updatedInfos[editingTermsInfo.infoIndex] = {
+                          ...updatedInfos[editingTermsInfo.infoIndex],
+                          terms_ko: editingTermsInfo.terms_ko,
+                          terms_en: editingTermsInfo.terms_en,
+                          terms_ja: editingTermsInfo.terms_ja,
+                          terms_zh: editingTermsInfo.terms_zh
+                        }
                       }
                       
                       console.log('🚀 용어 수정 저장 시도:', {
                         date: editingTermsInfo.date,
                         itemIndex: editingTermsInfo.infoIndex,
-                        updatedItem
+                        updatedInfos
                       })
                       
-                      await updateItemMutation.mutateAsync({
+                      // aiInfoAPI.add를 직접 호출하여 전체 infos 배열 업데이트
+                      await aiInfoAPI.add({
                         date: editingTermsInfo.date,
-                        itemIndex: editingTermsInfo.infoIndex,
-                        data: updatedItem as any
+                        infos: updatedInfos
                       })
                       
                       setSuccess('용어가 성공적으로 수정되었습니다!')
                       setShowTermsEditModal(false)
                       setEditingTermsInfo(null)
+                      
+                      // 데이터 새로고침
+                      refetchAIInfo()
+                      refetchDates()
+                      refetchAllAIInfo()
                     } catch (error: any) {
                       console.error('용어 수정 실패:', error)
                       setError(`용어 수정에 실패했습니다: ${error?.message || '알 수 없는 오류'}`)
